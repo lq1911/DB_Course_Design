@@ -46,6 +46,6 @@ xxx
 
 # 文档示例
 
-见`Docs\FrontEnd_Rquirement\Example.md`
+见`Docs\FrontEnd_Require\Example.md`
 
-[文档示例](../Docs/FrontEnd_Rquirement/Example.md)
+[文档示例](../Docs/FrontEnd_Require/Example.md)
