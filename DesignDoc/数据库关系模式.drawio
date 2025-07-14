@@ -1,0 +1,609 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="27.0.6">
+  <diagram name="第 1 页" id="Xsa5OaGgyORly_YGTe7Q">
+    <mxGraphModel dx="4712" dy="2190" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="uDWj2D1F788SSOLnG00t-1" value=" User" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-626.800048828125" y="1034.4000244140625" width="175" height="376" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-2" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;u&gt;&lt;span style=&quot;font-family: Cambria; font-size: 11pt;&quot;&gt;UserID&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Username&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Password&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;PhoneNumber&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;Email&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Gender&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;FullName&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;Avatar&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;Birthday&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;AccountCreationTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;IsProfilePublic&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-1">
+          <mxGeometry y="26" width="175" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-3" value="Seller" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-301.800048828125" y="474.4000244140625" width="280" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-4" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;u&gt;&lt;span style=&quot;font-family: Cambria; font-size: 11pt;&quot;&gt;UserID&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;SellerRegistrationTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ReputationPoints&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;BanStatus&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;AfterSaleApplicationID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-3">
+          <mxGeometry y="26" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-5" value=" Courier" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-296.800048828125" y="878.4000244140625" width="230" height="286" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-6" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;u&gt;&lt;span style=&quot;font-family: Cambria; font-size: 11pt;&quot;&gt;UserID&amp;nbsp;&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;CourierRegistrationTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;VehicleType&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ReputationPoints&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;TotalDeliveries&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;AvgDeliveryTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;AverageRating&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;MonthlySalary&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-5">
+          <mxGeometry y="26" width="230" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-7" value="Administrator" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-276.800048828125" y="1354.4000244140625" width="230" height="166" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-8" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;u&gt;&lt;span style=&quot;font-family: Cambria; font-size: 11pt;&quot;&gt;UserID&amp;nbsp;&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;AdminRegistrationTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ManagedEntities&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;IssueHandlingScore&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-7">
+          <mxGeometry y="26" width="230" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-9" value="Customer" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-276.800048828125" y="1674.4000244140625" width="230" height="166" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-10" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;u&gt;&lt;span style=&quot;font-family: Cambria; font-size: 11pt;&quot;&gt;&amp;nbsp;UserID&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;DefaultAddress&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ReputationPoints&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;IsMember&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-9">
+          <mxGeometry y="26" width="230" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-11" value="Store" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="273.199951171875" y="544.4000244140625" width="195" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-12" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;&amp;nbsp;StoreID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;StoreName&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;StoreAddress&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;BusinessHours&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;AverageRating&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;MonthlySales&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;StoreFeatures&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;StoreCreationTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;SellerID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-11">
+          <mxGeometry y="26" width="195" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-13" value=" Delivery Task" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="573.199951171875" y="1034.4000244140625" width="175" height="256" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-14" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;TaskID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;EstimatedArrivalTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;EstimatedDeliveryTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;CourierLongitude&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;CourierLatitude&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:宋体;mso-ascii-font-family:Cambria;&lt;br/&gt;mso-hansi-font-family:Cambria;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;font face=&quot;Cambria&quot;&gt;CustomerID&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;StoreID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-13">
+          <mxGeometry y="26" width="175" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-15" value="Delivery Complaint" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="923.199951171875" y="1494.4000244140625" width="220" height="226" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-16" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;&amp;nbsp;ComplaintID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ComplaintReason&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ComplaintTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;CourierID&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;CustomerID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;DeliveryTaskID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-15">
+          <mxGeometry y="26" width="220" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-17" value="After-Sale Application" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="263.199951171875" y="278.4000244140625" width="220" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-18" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;ApplicationID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Description&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;ApplicationTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;CustomerID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;OrderID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-17">
+          <mxGeometry y="26" width="220" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-19" value=" Store Violation Penalty" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="783.199951171875" y="704.4000244140625" width="175" height="226" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-20" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;&lt;u&gt;PenaltyID&lt;/u&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;PenaltyReason&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;PenaltyTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;SellerPenalty&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;StorePenalty&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:宋体;mso-ascii-font-family:Cambria;&lt;br/&gt;mso-hansi-font-family:Cambria;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;font face=&quot;Cambria&quot;&gt;StoreID&lt;/font&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-19">
+          <mxGeometry y="26" width="175" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-21" value="Food Order" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="783.199951171875" y="394.4000244140625" width="220" height="256" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.001;exitY=0.899;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="uDWj2D1F788SSOLnG00t-21" source="uDWj2D1F788SSOLnG00t-23">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-804.199951171875" y="109.5999755859375" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-110" y="233" />
+              <mxPoint x="-110" y="110" />
+              <mxPoint x="-790" y="110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-23" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;OrderID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;PaymentTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Remarks&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;CustomerID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;CartID&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;StoreID&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;SellerID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-21">
+          <mxGeometry y="26" width="220" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-24" value="Coupon" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1063.199951171875" y="1104.4000244140625" width="225" height="286" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-25" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;CouponID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;MinimumSpend&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;DiscountAmount&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;ValidFrom&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;ValidTo&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ApplicableStoreID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;OrderID&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;SellerID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-24">
+          <mxGeometry y="26" width="225" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-26" value="Shopping Cart" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1093.199951171875" y="914.4000244140625" width="165" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-27" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;CartID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;LastUpdatedTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;TotalPrice&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-26">
+          <mxGeometry y="26" width="165" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-28" value="Shopping Cart Item" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1533.199951171875" y="904.4000244140625" width="190" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-29" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;&amp;nbsp;ItemID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;Quantity&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;TotalPrice&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;DishID&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;CartID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-28">
+          <mxGeometry y="26" width="190" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-30" value="Dish" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1553.199951171875" y="374.4000244140625" width="170" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-31" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;DishID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;DishName&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;Price&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Description&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;IsSoldOut&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-30">
+          <mxGeometry y="26" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-32" value="Menu" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1063.199951171875" y="228.4000244140625" width="165" height="166" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-33" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;font-family:Symbol;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;mso-bidi-font-family:&#39;Times New Roman&#39;;&lt;br/&gt;font-size:11.0000pt;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;MenuID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;Version&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;ActivePeriod&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;StoreID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-32">
+          <mxGeometry y="26" width="165" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.007;entryY=0.179;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.005;exitY=0.796;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-36" target="uDWj2D1F788SSOLnG00t-31">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1523.199951171875" y="324.4000244140625" />
+              <mxPoint x="1523.199951171875" y="430.4000244140625" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-35" value="Menu–Dish" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1288.199951171875" y="234.4000244140625" width="190" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-36" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;MenuID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;DishID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-35">
+          <mxGeometry y="26" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-37" value="Favorites Folder" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1333.199951171875" y="1754.4000244140625" width="170" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-38" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;FolderID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;FolderName&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;CustomerID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-37">
+          <mxGeometry y="26" width="170" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-39" value="Favorite Item" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1463.199951171875" y="1410.4000244140625" width="195" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-41" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;&amp;nbsp;ItemID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;FavoritedAt&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;FavoriteReason&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;StoreID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;FolderID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-39">
+          <mxGeometry y="26" width="195" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-42" value="Comment" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="143.199951171875" y="1964.4000244140625" width="245" height="286" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-44" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;&amp;nbsp;CommentID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Content&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;PostedAt&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Likes&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;Replies&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;ReplyToCommentID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;StoreID&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;CommenterID&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-42">
+          <mxGeometry y="26" width="245" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-46" value="Publish Task" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="833.199951171875" y="1004.4000244140625" width="150" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-47" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;SellerID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;DeliveryTaskID&lt;/u&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;PublishTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-46">
+          <mxGeometry y="26" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-48" value="Supervise" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="196.949951171875" y="1434.4000244140625" width="137.5" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-49" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;u&gt;&lt;span style=&quot;font-family:Symbol;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;mso-bidi-font-family:&#39;Times New Roman&#39;;&lt;br/&gt;font-size:11.0000pt;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;AdminID&amp;nbsp;&lt;/span&gt;&lt;/u&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;PenaltyID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-48">
+          <mxGeometry y="26" width="137.5" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-50" value="Accept Task" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="140.699951171875" y="1034.4000244140625" width="172.5" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-51" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;CourierID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;DeliveryTaskID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;AcceptTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-50">
+          <mxGeometry y="26" width="172.5" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-52" value="Review Comment" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="183.199951171875" y="1734.4000244140625" width="180" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-54" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;AdminID&amp;nbsp;&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;CommentID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&amp;nbsp;ReviewTime&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-52">
+          <mxGeometry y="26" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-55" value="Evaluate After-Sale" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="-164.000048828125" y="245.0000244140625" width="220" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-56" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;AdminID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoNormal&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;ApplicationID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-55">
+          <mxGeometry y="26" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-57" value="Evaluate Complaint" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="596.199951171875" y="1494.4000244140625" width="167" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-58" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;AdminID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;ComplaintID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-57">
+          <mxGeometry y="26" width="167" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=-0.002;exitY=0.309;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.360048828125" y="1729.0000244140624" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-6.56" y="1938.6" />
+              <mxPoint x="-6.56" y="1728.6" />
+            </Array>
+            <mxPoint x="693.199951171875" y="1938.9900244140626" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-60" value="Customer–Coupon" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="693.199951171875" y="1874.4000244140625" width="220" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-61" value="&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;CustomerID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;u&gt;CouponID&lt;/u&gt;&lt;/span&gt;&lt;/p&gt;&lt;p class=&quot;MsoListBullet&quot;&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;CouponQuantity&lt;/span&gt;&lt;span style=&quot;mso-spacerun:&#39;yes&#39;;font-family:Cambria;mso-fareast-font-family:&#39;ＭＳ 明朝&#39;;&lt;br/&gt;mso-bidi-font-family:&#39;Times New Roman&#39;;font-size:11.0000pt;&quot;&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="uDWj2D1F788SSOLnG00t-60">
+          <mxGeometry y="26" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=block;startFill=0;endArrow=none;endSize=6;startSize=6;entryX=-0.001;entryY=0.526;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="uDWj2D1F788SSOLnG00t-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-590" y="590" />
+            </Array>
+            <mxPoint x="-590" y="1034.4" as="sourcePoint" />
+            <mxPoint x="-317.820048828125" y="590.3999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=6;entryX=0.638;entryY=0.001;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-6" target="uDWj2D1F788SSOLnG00t-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-542" y="987" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-515" y="940" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=6;entryX=0.557;entryY=1.003;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-8" target="uDWj2D1F788SSOLnG00t-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-512" y="1450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-529" y="1496" />
+              <mxPoint x="-529" y="1450" />
+              <mxPoint x="-529" y="1450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-10" target="uDWj2D1F788SSOLnG00t-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-581" y="1770" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.999;exitY=0.856;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-4" target="uDWj2D1F788SSOLnG00t-17">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-20" y="646" />
+              <mxPoint x="121" y="645" />
+              <mxPoint x="121" y="376" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.02;entryY=0.127;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="273.2" y="828" as="sourcePoint" />
+            <mxPoint x="-21.600048828125093" y="510.9900244140624" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="115.2" y="828" />
+              <mxPoint x="115.2" y="510" />
+              <mxPoint x="-21.8" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;exitX=-0.005;exitY=0.763;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.8" y="1717.09" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="61" y="1236" />
+              <mxPoint x="61" y="1717" />
+            </Array>
+            <mxPoint x="570" y="1235" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.012;entryY=0.091;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;exitX=-0.006;exitY=0.903;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="572.149951171875" y="1280.0900244140623" as="sourcePoint" />
+            <mxPoint x="468.1999511718749" y="593.0000244140625" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="519" y="1280" />
+              <mxPoint x="519" y="593" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;entryX=1;entryY=0.11;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="923" y="1668" as="sourcePoint" />
+            <mxPoint x="-66.800048828125" y="921.0000244140624" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="922" y="1668" />
+              <mxPoint x="39" y="1668" />
+              <mxPoint x="39" y="921" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="923" y="1663" />
+              <mxPoint x="783" y="1663" />
+              <mxPoint x="783" y="1086" />
+              <mxPoint x="749" y="1086" />
+            </Array>
+            <mxPoint x="923" y="1663" as="sourcePoint" />
+            <mxPoint x="749" y="1087" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.003;entryY=0.143;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="527" y="415" />
+              <mxPoint x="527" y="1711" />
+            </Array>
+            <mxPoint x="482.509951171875" y="415" as="sourcePoint" />
+            <mxPoint x="-46.80004882812494" y="1711.4200244140623" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="484.2" y="451" as="sourcePoint" />
+            <mxPoint x="783.2" y="452" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="635.2" y="452" />
+              <mxPoint x="788.2" y="452" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.013;entryY=0.075;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;exitX=-0.001;exitY=0.869;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-20">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="807.099951171875" y="904.3700244140624" as="sourcePoint" />
+            <mxPoint x="468.19495117187506" y="605.3000244140625" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="498" y="904" />
+              <mxPoint x="498" y="605" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.004;exitY=0.636;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-23">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1093.199951171875" y="954.4000244140625" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1053.199951171875" y="566.4000244140625" />
+              <mxPoint x="1053.199951171875" y="954.4000244140625" />
+              <mxPoint x="1089.199951171875" y="954.4000244140625" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-76" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="631" y="581" />
+              <mxPoint x="631" y="581" />
+            </Array>
+            <mxPoint x="782" y="581" as="sourcePoint" />
+            <mxPoint x="468.2" y="581" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.002;entryY=0.073;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="762.809951171875" y="1297.8300244140626" />
+              <mxPoint x="762.809951171875" y="586.8300244140624" />
+            </Array>
+            <mxPoint x="1061.61" y="1298.43" as="sourcePoint" />
+            <mxPoint x="468.1999511718749" y="587.0000244140624" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-25">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1035" y="1332" />
+              <mxPoint x="1035" y="444" />
+            </Array>
+            <mxPoint x="1003" y="444" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.001;entryY=0.08;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.007;exitY=0.903;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="92.72" y="1367" />
+              <mxPoint x="92.72" y="516" />
+            </Array>
+            <mxPoint x="1064.4949511718748" y="1367.1800244140622" as="sourcePoint" />
+            <mxPoint x="-21.80004882812503" y="516.0000244140624" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.976;entryY=0.13;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.705;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1797" y="1050" />
+              <mxPoint x="1797" y="424" />
+            </Array>
+            <mxPoint x="1728.4199511718748" y="1050.4000244140627" as="sourcePoint" />
+            <mxPoint x="1723.199951171875" y="423.67002441406254" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.978;entryY=0.234;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.004;exitY=0.886;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-29" target="uDWj2D1F788SSOLnG00t-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.001;exitY=0.269;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;entryX=1.004;entryY=0.197;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-36" target="uDWj2D1F788SSOLnG00t-33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1230" y="282" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1258" y="282" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.995;entryY=0.048;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="468.2049511718749" y="575.3200244140626" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="563.98" y="355" />
+              <mxPoint x="563.98" y="575" />
+            </Array>
+            <mxPoint x="1063.98" y="355" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.01;entryY=0.272;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.008;exitY=0.854;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-41" target="uDWj2D1F788SSOLnG00t-38">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1713.199951171875" y="1581.4000244140625" />
+              <mxPoint x="1713.199951171875" y="1810.4000244140625" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.004;entryY=0.122;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="808" y="1067" />
+              <mxPoint x="808" y="982" />
+              <mxPoint x="70" y="982" />
+              <mxPoint x="70" y="522" />
+            </Array>
+            <mxPoint x="837.2" y="1067.0700000000002" as="sourcePoint" />
+            <mxPoint x="-21.80004882812511" y="522.0400244140625" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-88" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="833" y="1077" as="sourcePoint" />
+            <mxPoint x="749" y="1077" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="834" y="1077" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-89" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;exitX=-0.001;exitY=0.535;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.580048828125" y="1722.9500244140625" as="targetPoint" />
+            <mxPoint x="783.1999511718752" y="533.0000244140625" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="107" y="533" />
+              <mxPoint x="107" y="1723" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.005;entryY=0.154;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="195.849951171875" y="1483.3999999999999" as="sourcePoint" />
+            <mxPoint x="-46.75004882812514" y="1397.9600244140627" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="73.9" y="1483" />
+              <mxPoint x="73.9" y="1397" />
+              <mxPoint x="-47.1" y="1397" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-91" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;exitX=1.002;exitY=0.794;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.005;entryY=0.123;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-49" target="uDWj2D1F788SSOLnG00t-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="353" y="1524" />
+              <mxPoint x="353" y="884" />
+              <mxPoint x="693" y="884" />
+              <mxPoint x="693" y="755" />
+            </Array>
+            <mxPoint x="780" y="755" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-92" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.006;entryY=0.041;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;exitX=-0.003;exitY=0.222;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-51">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="139.319951171875" y="1085.2600244140624" as="sourcePoint" />
+            <mxPoint x="-66.800048828125" y="914.4000244140626" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="46" y="1085" />
+              <mxPoint x="46" y="914" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.006;entryY=0.119;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-51" target="uDWj2D1F788SSOLnG00t-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.8" y="1734.4" as="targetPoint" />
+            <mxPoint x="1333" y="1864" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="-17" y="1864" />
+              <mxPoint x="-17" y="1734" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-95" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;entryX=0.988;entryY=0.121;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.001;exitY=0.51;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-54">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="388.1599511718749" y="2023.5700244140626" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="506" y="1816" />
+              <mxPoint x="506" y="2024" />
+            </Array>
+            <mxPoint x="366.99995117187507" y="1817.0000244140626" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-96" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;exitX=0.999;exitY=0.736;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-56">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="64" y="330" as="sourcePoint" />
+            <mxPoint x="262" y="330" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.004;entryY=0.241;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.002;exitY=0.301;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-56" target="uDWj2D1F788SSOLnG00t-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-387" y="295" />
+              <mxPoint x="-387" y="1414" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-98" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=-0.015;exitY=0.719;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.730000000000004" y="1704.84" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="923" y="1674" />
+              <mxPoint x="452" y="1674" />
+              <mxPoint x="452" y="1705" />
+            </Array>
+            <mxPoint x="923.1999511718748" y="1665.0000244140624" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-99" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.985;entryY=0.138;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="596" y="1546" as="sourcePoint" />
+            <mxPoint x="-46.80004882812487" y="1390.4000244140627" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="157" y="1546" />
+              <mxPoint x="157" y="1390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-100" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.001;entryY=0.141;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-58" target="uDWj2D1F788SSOLnG00t-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="843" y="1574" />
+              <mxPoint x="843" y="1549" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-101" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.99;entryY=0.087;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1" target="uDWj2D1F788SSOLnG00t-25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="913.199951171875" y="1955.4000244140625" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="1323.199951171875" y="1955.4000244140625" />
+              <mxPoint x="1323.199951171875" y="1153.4000244140625" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.003;entryY=0.104;entryDx=0;entryDy=0;entryPerimeter=0;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="93.199951171875" y="2161.0000244140624" />
+              <mxPoint x="93.199951171875" y="1901.0000244140624" />
+              <mxPoint x="443.199951171875" y="1901.0000244140624" />
+              <mxPoint x="443.199951171875" y="2014.0000244140624" />
+            </Array>
+            <mxPoint x="143.199951171875" y="2160.993939393939" as="sourcePoint" />
+            <mxPoint x="388.9349511718749" y="2014.0400244140624" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.924;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.007;entryY=0.265;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.8000488281251" y="1740.0000244140624" as="targetPoint" />
+            <mxPoint x="145.389951171875" y="2233.1400244140623" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="-27" y="2233" />
+              <mxPoint x="-27" y="1740" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.999;exitY=0.793;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-44">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="391.0049511718752" y="2203.4800244140624" as="sourcePoint" />
+            <mxPoint x="468.309951171875" y="600.0000244140625" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="398" y="2197" />
+              <mxPoint x="506" y="2196" />
+              <mxPoint x="506" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.002;exitY=0.693;exitDx=0;exitDy=0;exitPerimeter=0;endSize=6;" edge="1" parent="1" source="uDWj2D1F788SSOLnG00t-41">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="468.19995117187494" y="612.0000244140628" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1358" y="1554" />
+              <mxPoint x="1358" y="1462" />
+              <mxPoint x="488" y="1462" />
+              <mxPoint x="488" y="612" />
+            </Array>
+            <mxPoint x="1438.0049511718753" y="1572.1500244140623" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uDWj2D1F788SSOLnG00t-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-46.800048828124986" y="1405.0000244140624" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="26" y="1791" />
+              <mxPoint x="26" y="1405" />
+            </Array>
+            <mxPoint x="183" y="1791" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
