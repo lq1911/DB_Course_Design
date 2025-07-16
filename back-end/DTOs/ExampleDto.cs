@@ -2,7 +2,7 @@
 // DTOs/ExampleDto.cs
 // ================================
 
-namespace ProjectName.DTOs
+namespace back_end.DTOs
 {
     // 数据传输对象类，用于前后端通信
     public class ExampleDto
