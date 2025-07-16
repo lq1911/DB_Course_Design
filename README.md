@@ -13,7 +13,7 @@ $ npm run serve
 ```
 
 ## 启动后端
-确认电脑上有安装.NET SDK 8.0.412，若未安装，请到网站https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0下载
+确认电脑上有安装.NET SDK 8.0.412，若未安装，请到网站https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0 下载
 ```bash
 $ cd back-end
 $ dotnet run
