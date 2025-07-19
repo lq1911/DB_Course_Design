@@ -1,10 +1,9 @@
-<!-- The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work. -->
 <template>
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-8">
+<div class="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center py-8">
 <div class="w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden my-8">
 <div class="flex min-h-[800px]">
 <!-- 左侧品牌展示区 -->
-<div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 to-purple-700 relative overflow-hidden">
+<div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-500 to-orange-600 relative overflow-hidden">
 <div class="absolute inset-0 bg-black bg-opacity-20"></div>
 <img
 src="https://readdy.ai/api/search-image?query=modern%20food%20delivery%20service%20illustration%20with%20smartphone%20app%20interface%20showing%20delicious%20meals%20and%20delivery%20person%20on%20motorcycle%20in%20vibrant%20colors%20with%20clean%20minimalist%20background%20design%20professional%20business%20style&width=600&height=700&seq=brand001&orientation=portrait"
@@ -37,8 +36,8 @@ class="w-full h-full object-cover object-top"
 <div class="max-w-md mx-auto w-full overflow-y-auto">
 <!-- Logo -->
 <div class="text-center mb-8">
-<div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-<i class="fas fa-utensils text-2xl text-indigo-600"></i>
+<div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
+<i class="fas fa-utensils text-2xl text-orange-600"></i>
 </div>
 <h2 class="text-3xl font-bold text-gray-900">欢迎使用</h2>
 <p class="text-gray-600 mt-2">请选择您的身份并完成登录或注册</p>
@@ -47,15 +46,15 @@ class="w-full h-full object-cover object-top"
 <div class="flex bg-gray-100 rounded-lg p-1 mb-6">
 <button
 @click="activeTab = 'login'"
-:class="{ 'bg-white shadow-sm text-indigo-600': activeTab === 'login', 'text-gray-600': activeTab !== 'login' }"
-class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap !rounded-button"
+:class="{ 'bg-white shadow-sm text-orange-600': activeTab === 'login', 'text-gray-600': activeTab !== 'login' }"
+class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap rounded-lg"
 >
 登录
 </button>
 <button
 @click="activeTab = 'register'"
-:class="{ 'bg-white shadow-sm text-indigo-600': activeTab === 'register', 'text-gray-600': activeTab !== 'register' }"
-class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap !rounded-button"
+:class="{ 'bg-white shadow-sm text-orange-600': activeTab === 'register', 'text-gray-600': activeTab !== 'register' }"
+class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap rounded-lg"
 >
 注册
 </button>
@@ -67,7 +66,7 @@ class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-2
 <label
 v-for="role in roles"
 :key="role.value"
-:class="{ 'border-indigo-500 bg-indigo-50': selectedRole === role.value, 'border-gray-200 hover:border-gray-300': selectedRole !== role.value }"
+:class="{ 'border-orange-500 bg-orange-50': selectedRole === role.value, 'border-gray-200 hover:border-gray-300': selectedRole !== role.value }"
 class="flex items-center p-3 border-2 rounded-lg cursor-pointer transition-all duration-200"
 >
 <input
@@ -76,7 +75,7 @@ type="radio"
 v-model="selectedRole"
 class="sr-only"
 />
-<i :class="role.icon" class="text-lg mr-3 text-indigo-600"></i>
+<i :class="role.icon" class="text-lg mr-3 text-orange-600"></i>
 <span class="text-sm font-medium text-gray-900">{{ role.label }}</span>
 </label>
 </div>
@@ -90,7 +89,7 @@ class="sr-only"
 type="text"
 v-model="loginForm.account"
 placeholder="请输入手机号或邮箱"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 <i class="fas fa-user absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
 </div>
@@ -102,7 +101,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 :type="showPassword ? 'text' : 'password'"
 v-model="loginForm.password"
 placeholder="请输入密码"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm pr-10"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm pr-10"
 />
 <button
 type="button"
@@ -115,15 +114,15 @@ class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:t
 </div>
 <div class="flex items-center justify-between">
 <label class="flex items-center">
-<input type="checkbox" v-model="rememberPassword" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+<input type="checkbox" v-model="rememberPassword" class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
 <span class="ml-2 text-sm text-gray-600">记住密码</span>
 </label>
-<a href="#" class="text-sm text-indigo-600 hover:text-indigo-500 cursor-pointer">忘记密码？</a>
+<a href="#" class="text-sm text-orange-600 hover:text-orange-500 cursor-pointer">忘记密码？</a>
 </div>
 <button
 type="submit"
 :disabled="isLoading"
-class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap !rounded-button"
+class="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap rounded-lg"
 >
 <i v-if="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
 {{ isLoading ? '登录中...' : '登录' }}
@@ -139,14 +138,14 @@ class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 
 type="text"
 v-model="registerForm.nickname"
 placeholder="请输入昵称"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 mb-1">性别</label>
 <select
 v-model="registerForm.gender"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none bg-white cursor-pointer"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm appearance-none bg-white cursor-pointer"
 >
 <option value="">请选择</option>
 <option value="male">男</option>
@@ -161,13 +160,13 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 type="tel"
 v-model="registerForm.phone"
 placeholder="请输入手机号码"
-class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 <button
 type="button"
 @click="sendVerificationCode"
 :disabled="codeCountdown > 0"
-class="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium cursor-pointer whitespace-nowrap !rounded-button"
+class="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium cursor-pointer whitespace-nowrap rounded-lg"
 >
 {{ codeCountdown > 0 ? `${codeCountdown}s` : '获取验证码' }}
 </button>
@@ -179,7 +178,7 @@ class="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transiti
 type="text"
 v-model="registerForm.verificationCode"
 placeholder="请输入验证码"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div>
@@ -188,7 +187,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 type="email"
 v-model="registerForm.email"
 placeholder="请输入邮箱地址"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div class="grid grid-cols-2 gap-4">
@@ -199,7 +198,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 :type="showRegisterPassword ? 'text' : 'password'"
 v-model="registerForm.password"
 placeholder="请设置密码"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm pr-10"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm pr-10"
 />
 <button
 type="button"
@@ -216,7 +215,7 @@ class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:t
 type="password"
 v-model="registerForm.confirmPassword"
 placeholder="请确认密码"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 </div>
@@ -225,7 +224,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 <input
 type="date"
 v-model="registerForm.birthday"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <!-- 角色特殊信息 -->
@@ -237,7 +236,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 <label class="block text-sm font-medium text-gray-700 mb-1">配送车型</label>
 <select
 v-model="riderInfo.vehicleType"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 >
 <option value="">请选择配送车型</option>
 <option value="electric_bike">电动自行车</option>
@@ -252,7 +251,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 type="number"
 v-model="riderInfo.monthlySalary"
 placeholder="请输入预期月薪"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div>
@@ -261,7 +260,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 type="text"
 v-model="riderInfo.avgDeliveryTime"
 placeholder="例如：30分钟"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 </div>
@@ -272,7 +271,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 <label class="block text-sm font-medium text-gray-700 mb-1">管理对象</label>
 <select
 v-model="adminInfo.managementObject"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 >
 <option value="">请选择管理对象</option>
 <option value="riders">骑手管理</option>
@@ -287,7 +286,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 v-model="adminInfo.handledItems"
 placeholder="请简要说明您将负责处理的主要事项"
 rows="3"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm resize-none"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none"
 ></textarea>
 </div>
 </div>
@@ -301,7 +300,7 @@ type="text"
 v-model="storeInfo.name"
 placeholder="请输入店铺名称"
 maxlength="50"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div class="mt-4">
@@ -310,7 +309,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 type="text"
 v-model="storeInfo.businessHours"
 placeholder="请输入营业时间，例如：周一至周五 9:00-22:00"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div class="mt-4">
@@ -318,7 +317,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 <input
 type="date"
 v-model="storeInfo.establishmentDate"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div class="mt-4">
@@ -327,7 +326,7 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 <button
 type="button"
 @click="showCategoryDropdown = !showCategoryDropdown"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm text-left bg-white cursor-pointer flex items-center justify-between"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm text-left bg-white cursor-pointer flex items-center justify-between"
 >
 <span :class="{ 'text-gray-400': !merchantInfo.category }">
 {{ merchantInfo.category || '请选择经营类别' }}
@@ -352,7 +351,7 @@ class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
 v-model="merchantInfo.address"
 placeholder="请输入详细店铺地址"
 rows="3"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm resize-none"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none"
 ></textarea>
 </div>
 <div class="mt-4">
@@ -361,12 +360,12 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 type="tel"
 v-model="merchantInfo.contactPhone"
 placeholder="请输入店铺联系电话"
-class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
 />
 </div>
 <div class="mt-4">
 <label class="block text-sm font-medium text-gray-700 mb-1">营业执照</label>
-<div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors duration-200">
+<div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors duration-200">
 <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
 <p class="text-sm text-gray-600">点击或拖拽上传营业执照</p>
 <p class="text-xs text-gray-500 mt-1">支持 JPG、PNG 格式，文件大小不超过 5MB</p>
@@ -375,18 +374,18 @@ class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:rin
 </div>
 </div>
 <div class="flex items-center">
-<input type="checkbox" v-model="agreeTerms" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+<input type="checkbox" v-model="agreeTerms" class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
 <span class="ml-2 text-sm text-gray-600">
 我已阅读并同意
-<a href="#" class="text-indigo-600 hover:text-indigo-500 cursor-pointer">用户协议</a>
+<a href="#" class="text-orange-600 hover:text-orange-500 cursor-pointer">用户协议</a>
 和
-<a href="#" class="text-indigo-600 hover:text-indigo-500 cursor-pointer">隐私政策</a>
+<a href="#" class="text-orange-600 hover:text-orange-500 cursor-pointer">隐私政策</a>
 </span>
 </div>
 <button
 type="submit"
 :disabled="isLoading || !agreeTerms"
-class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap !rounded-button"
+class="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap rounded-lg"
 >
 <i v-if="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
 {{ isLoading ? '注册中...' : '注册账号' }}
@@ -397,22 +396,22 @@ class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 
 <div class="mt-6 pt-6 border-t border-gray-200">
 <p class="text-center text-sm text-gray-600 mb-4">或使用第三方账号登录</p>
 <div class="flex justify-center space-x-4">
-<button class="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200 cursor-pointer !rounded-button">
+<button class="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200 cursor-pointer rounded-lg">
 <i class="fab fa-google"></i>
 </button>
-<button class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200 cursor-pointer !rounded-button">
+<button class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200 cursor-pointer rounded-lg">
 <i class="fab fa-facebook-f"></i>
 </button>
-<button class="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors duration-200 cursor-pointer !rounded-button">
+<button class="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors duration-200 cursor-pointer rounded-lg">
 <i class="fab fa-weixin"></i>
 </button>
 </div>
 </div>
 <!-- 底部链接 -->
 <div class="mt-6 text-center text-sm text-gray-600">
-<a href="#" class="hover:text-indigo-600 cursor-pointer">返回首页</a>
+<a href="#" class="hover:text-orange-600 cursor-pointer">返回首页</a>
 <span class="mx-2">|</span>
-<a href="#" class="hover:text-indigo-600 cursor-pointer">联系客服</a>
+<a href="#" class="hover:text-orange-600 cursor-pointer">联系客服</a>
 </div>
 </div>
 </div>
@@ -610,19 +609,7 @@ const getRoleLabel = (value: string) => {
 const role = roles.find(r => r.value === value);
 return role ? role.label : '';
 };
-// 获取星期标签
-const getDayLabel = (day: string) => {
-const dayLabels = {
-monday: '星期一',
-tuesday: '星期二',
-wednesday: '星期三',
-thursday: '星期四',
-friday: '星期五',
-saturday: '星期六',
-sunday: '星期日'
-};
-return dayLabels[day as keyof typeof dayLabels];
-};
+
 const getRoleSpecificTitle = () => {
 switch (selectedRole.value) {
 case 'merchant':
@@ -684,9 +671,5 @@ background-position: right 0.5rem center;
 background-repeat: no-repeat;
 background-size: 1.5em 1.5em;
 padding-right: 2.5rem;
-}
-/* 按钮圆角样式 */
-.login-form-container .\!rounded-button {
-border-radius: 0.5rem;
 }
 </style>
