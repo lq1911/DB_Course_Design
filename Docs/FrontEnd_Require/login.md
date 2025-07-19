@@ -175,4 +175,4 @@
 
 ### UI设计稿
 
-**UI实现**:[原型图跳转](https://readdy.link/share/65c24cf2b09e237ddc952325997ca7f8)。
+**UI实现**:[原型图跳转](https://readdy.link/share/3be25f3cdec452df92289bc8a82f2073)。
