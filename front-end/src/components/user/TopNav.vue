@@ -8,9 +8,12 @@
             </div>
             <!-- 主导航 -->
             <div class="flex items-center space-x-8">
-                <button v-for="(nav, index) in navItems" :key="index" @click="activeTab = nav.key" :class="{
-                    'text-orange-500 border-b-2 border-orange-500': activeTab === nav.key,
-                    'text-gray-600 hover:text-orange-500': activeTab !== nav.key
+                <button v-for="(nav, index) in navItems" 
+                :key="index" 
+                @click="goToPage('/' + nav.key)" 
+                :class="{
+                    'text-orange-500 border-b-2 border-orange-500': route.path === '/' + nav.key,
+                    'text-gray-600 hover:text-orange-500': route.path !== '/' + nav.key
                 }" class="px-4 py-2 font-medium transition-colors duration-200 cursor-pointer whitespace-nowrap !rounded-button">
                     {{ nav.label }}
                 </button>
@@ -18,32 +21,31 @@
             <!-- 右侧功能区 -->
             <div class="flex items-center space-x-4">
                 <SearchBar />
-                <Personal />                
+                <Personal />
             </div>
         </div>
     </nav>
 </template>
 
-<script lang = "ts" setup>
-import { ref } from "vue";
+<script lang="ts" setup>
+import { useRoute } from "vue-router";
 import SearchBar from "@/components/user/SearchBar.vue";
 import Personal from "@/components/user/Personal.vue";
+import router from "@/router";
 
-
-
-const activeTab = ref("home");
-
-
-
+const route = useRoute();
 
 // 导航菜单
 const navItems = [
-  { key: "home", label: "首页" },
-  { key: "recommend", label: "推荐" },
-  { key: "restaurants", label: "商家" },
-  { key: "orders", label: "订单" },
+    { key: "home", label: "首页" },
+    { key: "recommend", label: "推荐" },
+    { key: "restaurants", label: "商家" },
+    { key: "orders", label: "订单" },
 ];
 
 
-</script>
+const goToPage = (path: string) => {
+    router.push(path);
+};
 
+</script>
