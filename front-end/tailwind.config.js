@@ -4,7 +4,12 @@ module.exports = {
     "./public/index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'yahei': ['"Microsoft YaHei"', 'sans-serif'],
+        'hei': ['"SimHei"', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
