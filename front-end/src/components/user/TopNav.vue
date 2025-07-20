@@ -4,16 +4,16 @@
             <!-- Logo -->
             <div class="flex items-center space-x-2">
                 <i class="fas fa-utensils text-orange-500 text-2xl"></i>
-                <span class="text-xl font-bold text-gray-800">美食外卖</span>
+                <span class="text-xl font-bold text-gray-800">{{ name }}</span>
             </div>
             <!-- 主导航 -->
             <div class="flex items-center space-x-8">
                 <button v-for="(nav, index) in navItems" 
-                :key="index" 
-                @click="goToPage('/' + nav.key)" 
+                :path="index" 
+                @click="goToPage(nav.path)" 
                 :class="{
-                    'text-orange-500 border-b-2 border-orange-500': route.path === '/' + nav.key,
-                    'text-gray-600 hover:text-orange-500': route.path !== '/' + nav.key
+                    'text-orange-500 border-b-2 border-orange-500': route.path === nav.path,
+                    'text-gray-600 hover:text-orange-500': route.path !==  nav.path
                 }" class="px-4 py-2 font-medium transition-colors duration-200 cursor-pointer whitespace-nowrap !rounded-button">
                     {{ nav.label }}
                 </button>
@@ -33,19 +33,28 @@ import SearchBar from "@/components/user/SearchBar.vue";
 import Personal from "@/components/user/Personal.vue";
 import router from "@/router";
 
+const name = '名字暂定';
 const route = useRoute();
 
 // 导航菜单
 const navItems = [
-    { key: "home", label: "首页" },
-    { key: "recommend", label: "推荐" },
-    { key: "restaurants", label: "商家" },
-    { key: "orders", label: "订单" },
+    { path: "/home", label: "首页" },
+    { path: "/recommend", label: "推荐" },
+    { path: "/restaurants", label: "商家" },
+    { path: "/orders", label: "订单" },
 ];
 
 
 const goToPage = (path: string) => {
-    router.push(path);
+    router.push(path).then(() => {
+        const page = navItems.find(nav => nav.path === path);
+        if (page) {
+            document.title = `${page.label} - ${name}`;
+        }
+        else {
+            document.title = `${name}`;   
+        }
+    });
 };
 
 </script>
