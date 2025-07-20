@@ -2,7 +2,7 @@
     <TopNav />
     <main class="pt-20 min-h-screen">
         <div class="max-w-screen-xl mx-auto px-6 py-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-8">我的订单</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-8 text-left">我的订单</h1>
             <!-- 订单状态标签 -->
             <div class="flex space-x-1 mb-8 bg-white rounded-lg p-2 shadow-sm">
                 <button v-for="(status, index) in orderStatuses" :key="index" @click="activeOrderStatus = status.key"
@@ -15,7 +15,7 @@
             </div>
             <!-- 订单列表 -->
             <div class="space-y-4">
-                <div v-for="(order, index) in filteredOrders" :key="index" class="bg-white rounded-lg shadow-md p-6">
+                <div v-for="(order, index) in filteredOrders" :key="index" class="bg-white rounded-lg shadow-md p-6 text-left">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="font-bold text-lg">{{ order.restaurantName }}</h3>

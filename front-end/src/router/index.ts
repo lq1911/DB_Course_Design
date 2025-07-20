@@ -2,8 +2,8 @@
 
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
-import LoginView from '../views/login/LoginView.vue'
-import UserHomeView from '../views/user/UserHome.vue'
+import LoginView from '@/views/login/LoginView.vue'
+import UserHomeView from '@/views/user/UserHome.vue'
 import UserRecommendView from '@/views/user/UserRecommend.vue'
 import UserRestaurantsView from '@/views/user/UserRestaurants.vue'
 import UserOrderView from '@/views/user/UserOrders.vue'

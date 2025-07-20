@@ -17,10 +17,10 @@
             </div>
             <div class="grid grid-cols-4 gap-6">
                 <div v-for="(item, index) in recommendedItems" :key="index"
-                    class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                    class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer text-left">
                     <img :src="item.image" :alt="item.name" class="w-full h-48 object-cover object-top" />
                     <div class="p-4">
-                        <h3 class="font-bold text-lg mb-2">{{ item.name }}</h3>
+                        <h3 class="font-bold text-lg mb-2 font-black font-yahei">{{ item.name }}</h3>
                         <p class="text-gray-600 text-sm mb-3">{{ item.description }}</p>
                         <div class="flex items-center justify-between">
                             <span class="text-orange-500 font-bold text-lg">¥{{ item.price }}</span>
