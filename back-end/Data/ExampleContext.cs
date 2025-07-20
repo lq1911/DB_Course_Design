@@ -11,6 +11,7 @@ namespace back_end.Data
     {
         public ExampleContext(DbContextOptions<ExampleContext> options) : base(options) { }
 
-        // public DbSet<ExampleEntity> ExampleEntities { get; set; }
+        // 为每个模型创建 DbSet 属性
+        public DbSet<ExampleEntity> ExampleEntities { get; set; }
     }
 }
