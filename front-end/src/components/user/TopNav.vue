@@ -1,4 +1,4 @@
-<template>>
+<template>
     <nav class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
         <div class="w-full max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
             <!-- Logo -->
