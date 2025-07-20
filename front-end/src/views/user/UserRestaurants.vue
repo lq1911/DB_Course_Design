@@ -1,62 +1,52 @@
 <template>
-  <div>
-    <!-- 顶部导航栏固定显示 -->
-    <TopNav />
+  <TopNav />
 
-    <main class="pt-20 min-h-screen max-w-screen-xl mx-auto px-6 flex gap-8">
-      <!-- 筛选栏 -->
-      <SieveStore class="w-64" />
-
-      <!-- 商家列表 -->
-      <section class="flex-1">
-        <div class="grid grid-cols-2 gap-6">
-          <div
-            v-for="(restaurant, index) in allRestaurants"
-            :key="index"
-            class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-          >
-            <img
-              :src="restaurant.image"
-              :alt="restaurant.name"
-              class="w-full h-48 object-cover object-top"
-            />
-            <div class="p-6">
-              <div class="flex justify-between items-start mb-3">
-                <h3 class="font-bold text-xl">{{ restaurant.name }}</h3>
-                <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs">
-                  {{ restaurant.category }}
-                </span>
-              </div>
-              <div class="flex items-center justify-between text-sm text-gray-600 mb-3">
-                <span class="flex items-center">
-                  <i class="fas fa-star text-yellow-400 mr-1"></i>
-                  {{ restaurant.rating }}
-                </span>
-                <span>月售 {{ restaurant.monthlySales }}</span>
-              </div>
-              <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
-                <span>{{ restaurant.deliveryTime }}</span>
-                <span>起送 ¥{{ restaurant.minOrder }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-orange-500 font-medium">{{ restaurant.promotion }}</span>
-                <button
-                  class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-                >
-                  进入店铺
-                </button>
-              </div>
+  <main class="pt-20 min-h-screen max-w-screen-xl mx-auto px-6 flex gap-8">
+    <SieveStore class="w-64" />
+    <!-- 商家列表 -->
+    <section class="flex-1">
+      <div class="grid grid-cols-2 gap-6">
+        <div v-for="(restaurant, index) in allRestaurants" :key="index"
+          class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+          <img :src="restaurant.image" :alt="restaurant.name" class="w-full h-48 object-cover object-top" />
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="font-bold text-xl">{{ restaurant.name }}</h3>
+              <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs">
+                {{ restaurant.category }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between text-sm text-gray-600 mb-3">
+              <span class="flex items-center">
+                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                {{ restaurant.rating }}
+              </span>
+              <span>月售 {{ restaurant.monthlySales }}</span>
+            </div>
+            <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+              <span>{{ restaurant.deliveryTime }}</span>
+              <span>起送 ¥{{ restaurant.minOrder }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-orange-500 font-medium">{{ restaurant.promotion }}</span>
+              <button
+                class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+                进入店铺
+              </button>
             </div>
           </div>
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
 </template>
 
 <script lang="ts" setup>
 import TopNav from '@/components/user/TopNav.vue';
 import SieveStore from '@/components/user/SieveStore.vue';
+import Footer from '@/components/user/Footer.vue';
 
 // 所有商家
 const allRestaurants = [

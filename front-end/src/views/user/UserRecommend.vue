@@ -1,6 +1,6 @@
 <template>
+    <TopNav />
     <main class="pt-20 min-h-screen">
-        <TopNav />
 
         <div v-if="route.path === '/recommend'" class="max-w-screen-xl mx-auto px-6 py-8">
             <div class="flex justify-between items-center mb-8">
@@ -35,10 +35,13 @@
             </div>
         </div>
     </main>
+
+    <Footer />
 </template>
 
 <script lang="ts" setup>
 import TopNav from '@/components/user/TopNav.vue';
+import Footer from '@/components/user/Footer.vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
