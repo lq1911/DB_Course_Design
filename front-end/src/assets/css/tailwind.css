@@ -1,0 +1,5 @@
+/* 文件路径: src/assets/css/tailwind.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
