@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\DB_Course_Design\\back-end\\back-end.csproj": {}
+    "/root/projects/back-end/back-end.csproj": {}
   },
   "projects": {
-    "E:\\DB_Course_Design\\back-end\\back-end.csproj": {
+    "/root/projects/back-end/back-end.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\DB_Course_Design\\back-end\\back-end.csproj",
+        "projectUniqueName": "/root/projects/back-end/back-end.csproj",
         "projectName": "back-end",
-        "projectPath": "E:\\DB_Course_Design\\back-end\\back-end.csproj",
-        "packagesPath": "C:\\Users\\Drink\\.nuget\\packages\\",
-        "outputPath": "E:\\DB_Course_Design\\back-end\\obj\\",
+        "projectPath": "/root/projects/back-end/back-end.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/root/projects/back-end/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Drink\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -36,11 +32,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -49,19 +40,11 @@
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[8.0.18, )"
-            },
-            "Oracle.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.23.90, )"
-            },
-            "Oracle.ManagedDataAccess.Core": {
-              "target": "Package",
-              "version": "[23.9.1, )"
+              "version": "[8.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.6.2, )"
+              "version": "[6.4.0, )"
             }
           },
           "imports": [
@@ -83,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

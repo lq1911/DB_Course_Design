@@ -1,50 +1,35 @@
+using Microsoft.EntityFrameworkCore;
+using Oracle.EntityFrameworkCore;
+using BackEnd.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// ===============================
-// 注册服务（Service）、数据库上下文（DbContext）、仓储（Repository）
-// ===============================
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5250); // 让外网访问这个端口
+});
 
-// 示例依赖注入（使用 Oracle 数据库连接）
-// builder.Services.AddDbContext<ExampleContext>(options =>
-//     options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
+// 数据库上下文注册
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 注入业务逻辑和数据访问服务
-// builder.Services.AddScoped<IExampleRepository, ExampleRepository>();
-// builder.Services.AddScoped<IExampleService, ExampleService>();
-
-// 注册控制器和 Swagger 文档
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 注册 CORS 策略（可选）
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
 
-// ===============================
-// 配置中间件管道
-// ===============================
-
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+     app.UseSwagger();
+     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-// 启用 CORS（如有前端跨域需求）
-app.UseCors("AllowAll");
-
-app.UseAuthorization();
-
+// 使用 Controllers 路由
 app.MapControllers();
 
 app.Run();
