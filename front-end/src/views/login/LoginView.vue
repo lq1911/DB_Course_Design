@@ -403,15 +403,15 @@ const modalTitle = ref('');//弹窗的标题
 const modalContent = ref('');//弹窗的内容 
 // 角色选项
 const roles = [
-    { value: 'admin', label: '管理员', icon: 'fas fa-user-shield' },
-    { value: 'merchant', label: '商家', icon: 'fas fa-store' },
-    { value: 'rider', label: '骑手', icon: 'fas fa-motorcycle' },
-    { value: 'consumer', label: '消费者', icon: 'fas fa-user' }
+{ value: 'admin', label: '管理员', icon: 'fas fa-user-shield' },
+{ value: 'merchant', label: '商家', icon: 'fas fa-store' },
+{ value: 'rider', label: '骑手', icon: 'fas fa-motorcycle' },
+{ value: 'consumer', label: '消费者', icon: 'fas fa-user' }
 ];
 // 经营类别
 const categories = [
-    '中式快餐', '西式快餐', '日韩料理', '甜品饮品',
-    '火锅烧烤', '地方小吃', '健康轻食', '咖啡茶饮'
+'中式快餐', '西式快餐', '日韩料理', '甜品饮品',
+'火锅烧烤', '地方小吃', '健康轻食', '咖啡茶饮'
 ];
 // 登录表单
 const loginForm = reactive({

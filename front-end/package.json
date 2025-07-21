@@ -48,7 +48,11 @@
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     },
-    "rules": {}
+    "rules": {
+      "vue/multi-word-component-names": "off",
+      "vue/require-v-for-key": "warn",
+      "no-unreachable": "warn"
+    }
   },
   "browserslist": [
     "> 1%",

@@ -1,5 +1,6 @@
 // vue.config.js
 const { defineConfig } = require('@vue/cli-service')
+const path = require('path')
 
 module.exports = defineConfig({
 
@@ -21,7 +22,8 @@ module.exports = defineConfig({
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.vue', '.json'],
       alias: {
-        'vue$': 'vue/dist/vue.esm-bundler.js'
+        'vue$': 'vue/dist/vue.esm-bundler.js',
+        '@': path.resolve(__dirname, 'src')
       }
     }
   },

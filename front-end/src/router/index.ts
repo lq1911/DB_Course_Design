@@ -2,12 +2,17 @@
 
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
-import LoginView from '../views/login/LoginView.vue'
+import LoginView from '@/views/login/LoginView.vue'
+import UserHomeView from '@/views/user/UserHome.vue'
+import UserRecommendView from '@/views/user/UserRecommend.vue'
+import UserRestaurantsView from '@/views/user/UserRestaurants.vue'
+import UserOrderView from '@/views/user/UserOrders.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/login'
+    // redirect: '/login'
+    redirect: '/home'
   },
   {
     path: '/login',
@@ -16,6 +21,26 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '外卖管理平台-登录'
     }
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: UserHomeView
+  },
+  {
+    path: '/recommend',
+    name: 'Recommend',
+    component: UserRecommendView
+  },
+  {
+    path: '/restaurants',
+    name: 'Restaurant',
+    component: UserRestaurantsView
+  },
+  {
+    path: '/orders',
+    name: 'Order',
+    component: UserOrderView
   }
 ]
 

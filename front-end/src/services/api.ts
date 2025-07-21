@@ -39,7 +39,6 @@ interface RegistrationData {
   phone: string;
   email: string;
   gender: string;
-  avatarUrl?: string;
   birthday: string;
   isPublic: number;
   verificationCode: string;
