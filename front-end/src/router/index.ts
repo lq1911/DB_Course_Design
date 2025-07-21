@@ -12,7 +12,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    component: LoginView
+    component: LoginView,
+    meta: {
+      title: '外卖管理平台-登录'
+    }
   }
 ]
 
