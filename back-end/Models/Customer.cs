@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Demo.Models
-{
+namespace BackEnd.Models{
     public class Customer
     {
         [Key, ForeignKey("User")]
@@ -18,5 +15,4 @@ namespace Demo.Models
 
         public int IsMember { get; set; } = 0;
     }
-
 }
