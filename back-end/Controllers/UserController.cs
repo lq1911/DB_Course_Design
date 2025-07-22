@@ -10,11 +10,13 @@ namespace BackEnd.Controllers
     {
         private readonly IUserService _service;
 
+        // 构造函数注入业务层
         public UserController(IUserService service)
         {
             _service = service;
         }
 
+        // 配置API接口，这样前端调用接口的时候的格式应该是  '[地址]:[端口]/api/User/GetAll'
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -22,6 +24,7 @@ namespace BackEnd.Controllers
             return Ok(users);
         }
 
+        // '[地址]:[端口]/api/User/{id}'
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -30,6 +33,7 @@ namespace BackEnd.Controllers
             return Ok(user);
         }
 
+        // '[地址]:[端口]/api/User/Add'
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
         {
