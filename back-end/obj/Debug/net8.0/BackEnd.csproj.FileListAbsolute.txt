@@ -57,3 +57,6 @@
 /root/projects/BackEnd/obj/Debug/net8.0/BackEnd.pdb
 /root/projects/BackEnd/obj/Debug/net8.0/BackEnd.genruntimeconfig.cache
 /root/projects/BackEnd/obj/Debug/net8.0/ref/BackEnd.dll
+D:\Homework\database\外卖\back-end\obj\Debug\net8.0\BackEnd.dll
+D:\Homework\database\外卖\back-end\obj\Debug\net8.0\refint\BackEnd.dll
+D:\Homework\database\外卖\back-end\obj\Debug\net8.0\BackEnd.pdb

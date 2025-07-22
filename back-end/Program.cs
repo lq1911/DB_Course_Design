@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Oracle.EntityFrameworkCore;
 using BackEnd.Data;
+using BackEnd.Repositories;
+using BackEnd.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,14 +15,21 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 启用 MVC 控制器支持
+builder.Services.AddControllers();
+
+// 注册 Repository 层
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// 注册 Service 层
+builder.Services.AddScoped<IUserService, UserService>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 如果是开发环境，启用 Swagger UI 来浏览 API 接口文档
 if (app.Environment.IsDevelopment())
 {
      app.UseSwagger();
