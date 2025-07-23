@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Oracle.EntityFrameworkCore;
 using BackEnd.Data;
-using BackEnd.Repositories;
-using BackEnd.Services;
+using BackEnd.Repositories.Interfaces;
+using BackEnd.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
