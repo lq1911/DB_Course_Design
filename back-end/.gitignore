@@ -1,0 +1,83 @@
+##########################
+# Build results
+##########################
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+
+##########################
+# Visual Studio files
+##########################
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.VC.opendb
+
+##########################
+# ASP.NET
+##########################
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+##########################
+# Entity Framework
+##########################
+*.ide.db
+*.sqlite
+
+##########################
+# Rider
+##########################
+.idea/
+*.sln.iml
+
+##########################
+# NuGet packages
+##########################
+*.nupkg
+*.snupkg
+# NuGet v3 folder-based cache
+~/.nuget/packages/
+# NuGet Symbol Server
+.nuget/
+
+##########################
+# Resharper
+##########################
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+##########################
+# DotCover
+##########################
+*.dotCover
+
+##########################
+# DotTrace
+##########################
+*.dotTrace
+
+##########################
+# Test Results
+##########################
+[Tt]est[Rr]esult*/
+TestResult.xml
+nunit-*.xml
+*.trx
+
+##########################
+# Others
+##########################
+*.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.swp
+
+obj/
+bin/
