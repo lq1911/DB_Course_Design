@@ -2,11 +2,12 @@
 
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
+import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
-import UserHomeView from '@/views/user/UserHome.vue'
-import UserRecommendView from '@/views/user/UserRecommend.vue'
-import UserRestaurantsView from '@/views/user/UserRestaurants.vue'
-import UserOrderView from '@/views/user/UserOrders.vue'
+import UserHomeView from '@/views/user/Homepage/UserHome.vue'
+import UserRecommendView from '@/views/user/Homepage/UserRecommend.vue'
+import UserRestaurantsView from '@/views/user/Homepage/UserRestaurants.vue'
+import UserOrderView from '@/views/user/Homepage/UserOrders.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,28 +20,40 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Login',
     component: LoginView,
     meta: {
-      title: '外卖管理平台-登录'
+      title: '登录'
     }
   },
   {
     path: '/home',
     name: 'Home',
-    component: UserHomeView
+    component: UserHomeView,
+    meta: {
+      title: '首页'
+    }
   },
   {
     path: '/recommend',
     name: 'Recommend',
-    component: UserRecommendView
+    component: UserRecommendView,
+    meta: {
+      title: '推荐'
+    }
   },
   {
     path: '/restaurants',
     name: 'Restaurant',
-    component: UserRestaurantsView
+    component: UserRestaurantsView,
+    meta: {
+      title: '商家'
+    }
   },
   {
     path: '/orders',
     name: 'Order',
-    component: UserOrderView
+    component: UserOrderView,
+    meta: {
+      title: '订单'
+    }
   }
 ]
 
@@ -48,5 +61,12 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL), 
   routes,
 })
+
+router.afterEach((to) => {
+  const name = getProjectName().projectName;
+  const title = to.meta.title as string;
+
+  document.title = (`${name} - ${title}`);
+});
 
 export default router
