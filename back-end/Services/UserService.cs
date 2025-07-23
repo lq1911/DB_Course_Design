@@ -69,7 +69,7 @@ namespace BackEnd.Services
             };
         }
 
-        public async Task<bool> UpdateUserAsync(int id, CreateUserDto dto)
+        public async Task<bool> UpdateUserAsync(int id, UpdateUserDto dto)
         {
             var user = await _repo.GetByIdAsync(id);
             if (user == null) return false;
