@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BackEnd.Dtos.User
 {
-	// 用于更新用户数据
-	public class CreateUserDto
+	// 鐢ㄤ簬鏇存柊鐢ㄦ埛鏁版嵁
+	public class UpdateteUserDto
 	{
 		[Required]
 		[MaxLength(15)]
