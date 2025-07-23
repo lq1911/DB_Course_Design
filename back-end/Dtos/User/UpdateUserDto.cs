@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace BackEnd.Dtos.User
 {
     // 用于更新用户数据
-    public class UpdateteUserDto
+    public class UpdateUserDto
     {
 	[Required]
 	[MaxLength(15)]
