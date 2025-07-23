@@ -4,7 +4,7 @@ using BackEnd.Data;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Repositories;
 using BackEnd.Services.Interfaces;
-using BackEnd.Services；
+using BackEnd.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +20,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-<<<<<<< HEAD
-=======
 // 启用 MVC 控制器支持
 builder.Services.AddControllers();
 
@@ -31,7 +29,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // 注册 Service 层
 builder.Services.AddScoped<IUserService, UserService>();
 
->>>>>>> 37caea39f263fb547fb7173af396b034eba0afb9
 var app = builder.Build();
 
 // 如果是开发环境，启用 Swagger UI 来浏览 API 接口文档
@@ -43,12 +40,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-<<<<<<< HEAD
 app.UseAuthorization();
 
-=======
-// 使用 Controllers 路由
->>>>>>> 37caea39f263fb547fb7173af396b034eba0afb9
 app.MapControllers();
 
 app.Run();
