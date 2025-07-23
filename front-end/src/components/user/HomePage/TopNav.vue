@@ -29,11 +29,12 @@
 
 <script lang="ts" setup>
 import { useRoute } from "vue-router";
-import SearchBar from "@/components/user/SearchBar.vue";
-import Personal from "@/components/user/Personal.vue";
+import { getProjectName } from '@/stores/name'
+import SearchBar from "@/components/user/HomePage/SearchBar.vue";
+import Personal from "@/components/user/HomePage/Personal.vue";
 import router from "@/router";
 
-const name = '名字暂定';
+const name = getProjectName().projectName;
 const route = useRoute();
 
 // 导航菜单
@@ -46,15 +47,7 @@ const navItems = [
 
 
 const goToPage = (path: string) => {
-    router.push(path).then(() => {
-        const page = navItems.find(nav => nav.path === path);
-        if (page) {
-            document.title = `${page.label} - ${name}`;
-        }
-        else {
-            document.title = `${name}`;   
-        }
-    });
+    router.push(path)
 };
 
 </script>

@@ -79,8 +79,8 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import TopNav from '@/components/user/TopNav.vue';
-import Footer from '@/components/user/Footer.vue';
+import TopNav from '@/components/user/HomePage/TopNav.vue';
+import Footer from '@/components/user/HomePage/Footer.vue';
 
 const activeOrderStatus = ref("all");
 
