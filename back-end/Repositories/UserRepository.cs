@@ -9,36 +9,36 @@ namespace BackEnd.Repositories
 	{
 		private readonly AppDbContext _context;
 
-		// Í¨¹ı¹¹Ôìº¯Êı×¢ÈëÊı¾İ¿âÉÏÏÂÎÄ
+		// é€šè¿‡æ„é€ å‡½æ•°æ³¨å…¥æ•°æ®åº“ä¸Šä¸‹æ–‡
 		public UserRepository(AppDbContext context)
 		{
-			_context = context;
+		    _context = context;
 		}
 
-		// ¶ÔÊı¾İ½øĞĞ²Ù×÷
+		// å¯¹æ•°æ®è¿›è¡Œæ“ä½œ
 		public async Task<IEnumerable<User>> GetAllAsync()
 		{
-			return await _context.Users.ToListAsync();
+		    return await _context.Users.ToListAsync();
 		}
 
 		public async Task<User?> GetByIdAsync(int id)
 		{
-			return await _context.Users.FindAsync(id);
+		    return await _context.Users.FindAsync(id);
 		}
 
 		public async Task AddAsync(User user)
 		{
-			await _context.Users.AddAsync(user);
+		    await _context.Users.AddAsync(user);
 		}
 
 		public async Task DeleteAsync(User user)
 		{
-			_context.Users.Remove(user);
+		    _context.Users.Remove(user);
 		}
 
 		public async Task SaveAsync()
 		{
-			await _context.SaveChangesAsync();
+		    await _context.SaveChangesAsync();
 		}
 	}
 }
