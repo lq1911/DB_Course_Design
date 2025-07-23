@@ -2,7 +2,7 @@ using System;
 
 namespace BackEnd.Dtos.User
 {
-    // ÓÃÓÚÓÃ»§ĞÅÏ¢µÄ¶ÁÈ¡
+    // ç”¨äºç”¨æˆ·ä¿¡æ¯çš„è¯»å–
     public class UserDto
     {
         public int Id { get; set; }              
