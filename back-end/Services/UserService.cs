@@ -1,4 +1,4 @@
-using BackEnd.Dtos;
+using BackEnd.Dtos.User;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
@@ -9,7 +9,7 @@ namespace BackEnd.Services
     {
         private readonly IUserRepository _repo;
 
-        // Í¨¹ı¹¹Ôìº¯Êı×¢Èë²Ö´¢²ã
+        // é€šè¿‡æ„é€ å‡½æ•°æ³¨å…¥ä»“å‚¨å±‚
         public UserService(IUserRepository repo)
         {
             _repo = repo;
@@ -17,10 +17,10 @@ namespace BackEnd.Services
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            // µ÷ÓÃ²Ö´¢²ãµÄ»ñÈ¡ËùÓĞÓÃ»§Êı¾İµÄ²Ù×÷
+            // è°ƒç”¨ä»“å‚¨å±‚çš„è·å–æ‰€æœ‰ç”¨æˆ·æ•°æ®çš„æ“ä½œ
             var users = await _repo.GetAllAsync();
 
-            // ½«ÊµÌåÀàÓ³ÉäÎª DTO£¬¼´»ñÈ¡ĞèÒª´«ÊäÖÁÇ°¶ËµÄÊı¾İ
+            // å°†å®ä½“ç±»æ˜ å°„ä¸º DTOï¼Œå³è·å–éœ€è¦ä¼ è¾“è‡³å‰ç«¯çš„æ•°æ®
             return users.Select(u => new UserDto
             {
                 UserID = u.UserID,
@@ -31,7 +31,7 @@ namespace BackEnd.Services
 
         public async Task<UserDto?> GetUserByIdAsync(int id)
         {
-            // µ÷ÓÃ²Ö´¢²ãµÄÖ¸¶¨ÓÃ»§Êı¾İµÄ²Ù×÷
+            // è°ƒç”¨ä»“å‚¨å±‚çš„æŒ‡å®šç”¨æˆ·æ•°æ®çš„æ“ä½œ
             var user = await _repo.GetByIdAsync(id);
             if (user == null) return null;
 
@@ -54,9 +54,9 @@ namespace BackEnd.Services
                 AccountCreationTime = DateTime.UtcNow
             };
 
-            // ÔÚ²Ö´¢²ãÌí¼ÓÓÃ»§µÄ²Ù×÷
+            // åœ¨ä»“å‚¨å±‚æ·»åŠ ç”¨æˆ·çš„æ“ä½œ
             await _repo.AddAsync(user);
-            // ²Ö´¢²ã½øĞĞ±£´æµÄ²Ù×÷
+            // ä»“å‚¨å±‚è¿›è¡Œä¿å­˜çš„æ“ä½œ
             await _repo.SaveAsync();
 
             return new UserDto
@@ -74,7 +74,7 @@ namespace BackEnd.Services
             var user = await _repo.GetByIdAsync(id);
             if (user == null) return false;
 
-            // ĞŞ¸Ä²Ö¿â²ãÊı¾İ
+            // ä¿®æ”¹ä»“åº“å±‚æ•°æ®
             user.Username = dto.Username;
             user.Password = dto.Password;
             user.Email = dto.Email;
@@ -89,7 +89,7 @@ namespace BackEnd.Services
             var user = await _repo.GetByIdAsync(id);
             if (user == null) return false;
 
-            // É¾³ı²Ö¿â²ãÖ¸¶¨ÓÃ»§µÄ²Ù×÷
+            // åˆ é™¤ä»“åº“å±‚æŒ‡å®šç”¨æˆ·çš„æ“ä½œ
             await _repo.DeleteAsync(user);
             await _repo.SaveAsync();
             return true;
