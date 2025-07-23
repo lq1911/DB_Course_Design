@@ -4,17 +4,15 @@ namespace BackEnd.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        // »ñÈ¡ËùÓĞÓÃ»§
+        // è·å–æ‰€æœ‰ç”¨æˆ·
         Task<IEnumerable<User>> GetAllAsync();
-        // ¸ù¾İÓÃ»§ID»ñÈ¡ÓÃ»§
+        // æ ¹æ®ç”¨æˆ·IDè·å–ç”¨æˆ·
         Task<User?> GetByIdAsync(int id);
-        // Ìí¼ÓÒ»¸öĞÂÓÃ»§
+        // æ·»åŠ ä¸€ä¸ªæ–°ç”¨æˆ·
         Task AddAsync(User user);
-        // ¸üĞÂÖ¸¶¨ÓÃ»§ĞÅÏ¢
-        Task<bool> UpdateUserAsync(User user);
-        // É¾³ıÖ¸¶¨IDµÄÓÃ»§¡£
+        // åˆ é™¤æŒ‡å®šIDçš„ç”¨æˆ·ã€‚
         Task DeleteAsync(User user);
-        // ±£´æ²Ù×÷
+        // ä¿å­˜æ“ä½œ
         Task SaveAsync();
     }
 }
