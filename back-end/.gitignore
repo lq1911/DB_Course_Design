@@ -5,6 +5,7 @@
 [Oo]bj/
 [Ll]og/
 *.log
+back-end/.vs
 
 ##########################
 # Visual Studio files
