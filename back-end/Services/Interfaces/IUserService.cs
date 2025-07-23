@@ -1,18 +1,18 @@
-using BackEnd.Dtos;
+using BackEnd.Dtos.User;
 
 namespace BackEnd.Services.Interfaces
 {
     public interface IUserService
     {
-        // »ñÈ¡ËùÓĞÓÃ»§
+        // è·å–æ‰€æœ‰ç”¨æˆ·
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
-        // ¸ù¾İID»ñÈ¡ÓÃ»§
+        // æ ¹æ®IDè·å–ç”¨æˆ·
         Task<UserDto?> GetUserByIdAsync(int id);
-        // ´´½¨ĞÂÓÃ»§
+        // åˆ›å»ºæ–°ç”¨æˆ·
         Task<UserDto> CreateUserAsync(CreateUserDto dto);
-        // ¸üĞÂÓÃ»§
+        // æ›´æ–°ç”¨æˆ·
         Task<bool> UpdateUserAsync(int id, CreateUserDto dto);
-        // É¾³ıÓÃ»§
+        // åˆ é™¤ç”¨æˆ·
         Task<bool> DeleteUserAsync(int id);
     }
 }
