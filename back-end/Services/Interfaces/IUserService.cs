@@ -11,7 +11,7 @@ namespace BackEnd.Services.Interfaces
         // 创建新用户
         Task<UserDto> CreateUserAsync(CreateUserDto dto);
         // 更新用户
-        Task<bool> UpdateUserAsync(int id, CreateUserDto dto);
+        Task<bool> UpdateUserAsync(int id, UpdateUserDto dto);
         // 删除用户
         Task<bool> DeleteUserAsync(int id);
     }
