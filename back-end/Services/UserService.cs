@@ -64,8 +64,6 @@ namespace BackEnd.Services
                 UserID = user.UserID,
                 Username = user.Username,
                 Email = user.Email,
-                FullName = user.FullName,
-                PhoneNumber = user.PhoneNumber
             };
         }
 
