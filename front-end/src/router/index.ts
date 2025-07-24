@@ -54,7 +54,24 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '订单'
     }
-  }
+  },
+  {
+    path: '/courier',
+    name: 'Courier',
+    component: () => import('@/views/courier/CourierView.vue'),
+    meta: {
+      title: '骑手'
+    }
+  },
+    {
+    path: '/courier/account',
+    name: 'AccountSettings',
+    // 使用路由懒加载，优化性能
+    component: () => import('../views/courier/AccountSettings.vue'), 
+    meta: {
+      title: '账户设置'
+    }
+  },
 ]
 
 const router = createRouter({
