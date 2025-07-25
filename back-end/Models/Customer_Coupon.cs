@@ -5,6 +5,7 @@ namespace BackEnd.Models{
     public class Customer_Coupon
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CustomerID { get; set; }
         [ForeignKey("CustomerID")]
         public Customer Customer { get; set; }

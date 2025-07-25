@@ -28,7 +28,7 @@ namespace BackEnd.Models{
 
         public int? OrderID { get; set; }
         [ForeignKey("OrderID")]
-        public Order Order { get; set; }
+        public FoodOrder Order { get; set; }
 
         [Required]
         public int SellerID { get; set; }

@@ -5,6 +5,7 @@ namespace BackEnd.Models{
     public class Customer
     {
         [Key, ForeignKey("User")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID { get; set; }
         public User User { get; set; }
 

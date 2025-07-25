@@ -5,6 +5,7 @@ namespace BackEnd.Models{
     public class Evaluate_AfterSale
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdminID { get; set; }
         [ForeignKey("AdminID")]
         public Administrator Admin { get; set; }
