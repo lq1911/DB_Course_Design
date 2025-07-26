@@ -16,19 +16,20 @@ namespace BackEnd.Repositories
             _context = context;
         }
 
+
         public async Task<IEnumerable<AfterSaleApplication>> GetAllAsync()
         {
-            // 预加载关联的 Customer 和 Order 数据
-            return await _context.After_Sale_Applications
+            // 修正：使用 AppDbContext 中定义的正确属性名 "AfterSaleApplications"
+            return await _context.AfterSaleApplications
                                  .Include(a => a.Customer)
-                                 .Include(a => a.Order) // 这里的 Order 是 AfterSaleApplication 实体中的导航属性名
+                                 .Include(a => a.Order)
                                  .ToListAsync();
         }
 
         public async Task<AfterSaleApplication?> GetByIdAsync(int id)
         {
-            // 对于单个查询，同样建议预加载关联数据
-            return await _context.After_Sale_Applications
+            // 修正：使用 AppDbContext 中定义的正确属性名 "AfterSaleApplications"
+            return await _context.AfterSaleApplications
                                  .Include(a => a.Customer)
                                  .Include(a => a.Order)
                                  .FirstOrDefaultAsync(a => a.ApplicationID == id);
@@ -36,18 +37,21 @@ namespace BackEnd.Repositories
 
         public async Task AddAsync(AfterSaleApplication application)
         {
-            await _context.After_Sale_Applications.AddAsync(application);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "AfterSaleApplications"
+            await _context.AfterSaleApplications.AddAsync(application);
         }
 
         public async Task UpdateAsync(AfterSaleApplication application)
         {
-            _context.After_Sale_Applications.Update(application);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "AfterSaleApplications"
+            _context.AfterSaleApplications.Update(application);
             await SaveAsync();
         }
 
         public Task DeleteAsync(AfterSaleApplication application)
         {
-            _context.After_Sale_Applications.Remove(application);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "AfterSaleApplications"
+            _context.AfterSaleApplications.Remove(application);
             return Task.CompletedTask;
         }
 

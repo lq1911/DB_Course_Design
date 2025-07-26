@@ -18,8 +18,8 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Customer_Coupon>> GetAllAsync()
         {
-            // 预加载关联的 Customer 和 Coupon 数据
-            return await _context.Customer_Coupon
+            // 修正：使用 AppDbContext 中定义的正确属性名 "Customer_Coupons"
+            return await _context.Customer_Coupons
                                  .Include(cc => cc.Customer)
                                  .Include(cc => cc.Coupon)
                                  .ToListAsync();
@@ -27,24 +27,29 @@ namespace BackEnd.Repositories
 
         public async Task<Customer_Coupon?> GetByIdAsync(int customerId, int couponId)
         {
-            // 对于复合主键，使用 FindAsync 并按顺序传入主键值
-            return await _context.Customer_Coupon.FindAsync(customerId, couponId);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "Customer_Coupons"
+            return await _context.Customer_Coupons.FindAsync(customerId, couponId);
         }
 
         public async Task AddAsync(Customer_Coupon customerCoupon)
         {
-            await _context.Customer_Coupon.AddAsync(customerCoupon);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "Customer_Coupons"
+            await _context.Customer_Coupons.AddAsync(customerCoupon);
         }
 
         public async Task UpdateAsync(Customer_Coupon customerCoupon)
         {
-            _context.Customer_Coupon.Update(customerCoupon);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "Customer_Coupons"
+            _context.Customer_Coupons.Update(customerCoupon);
             await SaveAsync();
         }
 
+
+
         public Task DeleteAsync(Customer_Coupon customerCoupon)
         {
-            _context.Customer_Coupon.Remove(customerCoupon);
+            // 修正：使用 AppDbContext 中定义的正确属性名 "Customer_Coupons"
+            _context.Customer_Coupons.Remove(customerCoupon);
             return Task.CompletedTask;
         }
 

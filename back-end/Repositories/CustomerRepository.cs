@@ -18,14 +18,14 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            // 预加载关联的 User 数据
-            return await _context.Customers
-                                 .Include(c => c.User)
-                                 .ToListAsync();
+            // 由于 Customer 实体中没有 User 导航属性，我们无法使用 .Include()
+            // 这里只会查询出 Customers 表自身的数据
+            return await _context.Customers.ToListAsync();
         }
 
         public async Task<Customer?> GetByIdAsync(int id)
         {
+            // FindAsync 只查询主表，不受导航属性影响
             return await _context.Customers.FindAsync(id);
         }
 
