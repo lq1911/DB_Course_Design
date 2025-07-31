@@ -1,4 +1,5 @@
 .DS_Store
 back-end/obj/
 back-end/bin/
-backend/.vs/
+back-end/.vs/
+DB_Course_Design.sln
