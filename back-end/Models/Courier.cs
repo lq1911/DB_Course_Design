@@ -5,7 +5,6 @@ namespace BackEnd.Models{
     public class Courier
     {
         [Key, ForeignKey("User")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID { get; set; }
         public User User { get; set; }
 
