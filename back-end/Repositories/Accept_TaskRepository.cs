@@ -21,7 +21,7 @@ namespace BackEnd.Repositories
             // 【最佳实践】使用 Include 可以在一次数据库查询中加载关联的 Courier 和 DeliveryTask 数据，
             // 避免了后续访问这些属性时产生额外的数据库查询（N+1 问题）。
             // 这不违反示例的核心逻辑，但能极大提升性能。
-            return await _context.Accept_Task
+            return await _context.Accept_Tasks
                                  .Include(at => at.Courier)
                                  .Include(at => at.DeliveryTask)
                                  .ToListAsync();
@@ -30,23 +30,23 @@ namespace BackEnd.Repositories
         public async Task<Accept_Task?> GetByIdAsync(int courierId, int deliveryTaskId)
         {
             // 对于复合主键，FindAsync 是最高效的查询方式。
-            return await _context.Accept_Task.FindAsync(courierId, deliveryTaskId);
+            return await _context.Accept_Tasks.FindAsync(courierId, deliveryTaskId);
         }
 
         public async Task AddAsync(Accept_Task acceptTask)
         {
-            await _context.Accept_Task.AddAsync(acceptTask);
+            await _context.Accept_Tasks.AddAsync(acceptTask);
         }
 
         public async Task UpdateAsync(Accept_Task acceptTask)
         {
-            _context.Accept_Task.Update(acceptTask);
+            _context.Accept_Tasks.Update(acceptTask);
             await SaveAsync(); // 遵循示例风格，在Update内部直接调用Save
         }
 
         public Task DeleteAsync(Accept_Task acceptTask)
         {
-            _context.Accept_Task.Remove(acceptTask);
+            _context.Accept_Tasks.Remove(acceptTask);
             // 遵循示例风格，此方法只标记状态，但为了匹配接口定义返回一个已完成的 Task
             return Task.CompletedTask; 
         }
