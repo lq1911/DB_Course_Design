@@ -24,6 +24,34 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 // 注册 Repository 层
+// Repository 层注入，接口在前，实现类在后
+
+builder.Services.AddScoped<IAccept_TaskRepository, Accept_TaskRepository>();
+builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+builder.Services.AddScoped<IAfterSaleApplicationRepository, AfterSaleApplicationRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+builder.Services.AddScoped<ICourierRepository, CourierRepository>();
+builder.Services.AddScoped<ICustomer_CouponRepository, Customer_CouponRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IDeliveryComplaintRepository, DeliveryComplaintRepository>();
+builder.Services.AddScoped<IDeliveryTaskRepository, DeliveryTaskRepository>();
+builder.Services.AddScoped<IDishRepository, DishRepository>();
+builder.Services.AddScoped<IEvaluate_AfterSaleRepository, Evaluate_AfterSaleRepository>();
+builder.Services.AddScoped<IEvaluate_ComplaintRepository, Evaluate_ComplaintRepository>();
+builder.Services.AddScoped<IFavoriteItemRepository, FavoriteItemRepository>();
+builder.Services.AddScoped<IFavoritesFolderRepository, FavoritesFolderRepository>();
+builder.Services.AddScoped<IFoodOrderRepository, FoodOrderRepository>();
+builder.Services.AddScoped<IMenu_DishRepository, Menu_DishRepository>();
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IPublish_TaskRepository, Publish_TaskRepository>();
+builder.Services.AddScoped<IReview_CommentRepository, Review_CommentRepository>();
+builder.Services.AddScoped<ISellerRepository, SellerRepository>();
+builder.Services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IStoreViolationPenaltyRepository, StoreViolationPenaltyRepository>();
+builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // 注册 Service 层
