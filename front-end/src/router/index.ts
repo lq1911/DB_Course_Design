@@ -9,12 +9,25 @@ import UserRecommendView from '@/views/user/Homepage/UserRecommend.vue'
 import UserRestaurantsView from '@/views/user/Homepage/UserRestaurants.vue'
 import UserOrderView from '@/views/user/Homepage/UserOrders.vue'
 
+import MerchantHomeView from '@/views/merchant/MerchantHomeView.vue'
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     // redirect: '/login'
-    redirect: '/home'
+    // redirect: '/home'
+    redirect: '/MerchantHome'
   },
+
+  {
+    path: '/MerchantHome',
+    name: 'MerchantHome',
+    component: MerchantHomeView,
+    meta: {
+      title: '商家'
+    }
+  },
+
   {
     path: '/login',
     name: 'Login',

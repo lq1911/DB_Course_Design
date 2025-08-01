@@ -14,7 +14,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "element-plus/global" // 添加 Element Plus 全局类型
     ],
     "paths": {
       "@/*": [
@@ -34,7 +35,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/views/merchant/MerchantHomeView.vue"  ],
   "exclude": [
     "node_modules"
   ]
