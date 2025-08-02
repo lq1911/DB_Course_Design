@@ -10,24 +10,20 @@ import UserRestaurantsView from '@/views/user/Homepage/UserRestaurants.vue'
 import UserOrderView from '@/views/user/Homepage/UserOrders.vue'
 
 import MerchantHomeView from '@/views/merchant/MerchantHomeView.vue'
+import MerchantOrdersView from '@/views/merchant/MerchantOrdersView.vue'
+import MerchantCouponsView from '@/views/merchant/MerchantCouponsView.vue'
+import MerchantAftersaleView from '@/views/merchant/MerchantAftersaleView.vue'
+import MerchantProfileView from '@/views/merchant/MerchantProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     // redirect: '/login'
     // redirect: '/home'
-    redirect: '/MerchantHome'
+     redirect: '/MerchantHome'
+    // redirect: '/MerchantOrders'
+    // redirect: '/MerchantCoupons'
   },
-
-  {
-    path: '/MerchantHome',
-    name: 'MerchantHome',
-    component: MerchantHomeView,
-    meta: {
-      title: '商家'
-    }
-  },
-
   {
     path: '/login',
     name: 'Login',
@@ -67,7 +63,49 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '订单'
     }
+  },
+  // -----商家页面start----- 
+  {
+    path: '/MerchantHome',
+    name: 'MerchantHome',
+    component: MerchantHomeView,
+    meta: {
+      title: '商家主页'
+    }
+  },
+  {
+    path: '/MerchantOrders',
+    name: 'MerchantOrders',
+    component: MerchantOrdersView,
+    meta: {
+      title: '商家订单页'
+    }
+  },
+  {
+    path: '/MerchantCoupons',
+    name: 'MerchantCoupons',
+    component: MerchantCouponsView,
+    meta: {
+      title: '商家配券页'
+    }
+  },
+  {
+    path: '/MerchantAftersale',
+    name: 'MerchantAftersale',
+    component: MerchantAftersaleView,
+    meta: {
+      title: '商家售后页'
+    }
+  },
+  {
+    path: '/MerchantProfile',
+    name: 'MerchantProfile',
+    component: MerchantProfileView,
+    meta: {
+      title: '商家个人页'
+    }
   }
+  // -----商家页面end-----
 ]
 
 const router = createRouter({
