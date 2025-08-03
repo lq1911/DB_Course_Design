@@ -2,3 +2,4 @@
 back-end/obj/
 back-end/bin/
 backend/.vs/
+*.sln
