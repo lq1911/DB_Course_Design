@@ -55,7 +55,7 @@ interface RegistrationData {
 
 // 创建一个 Axios 实例，您可以配置基础 URL 和超时时间
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api', // 这里是您后端服务器的地址和基础路径
+  baseURL: 'http://localhost:5240/api', // 这里是您后端服务器的地址和基础路径
   timeout: 10000, // 请求超时时间
   headers: {
     'Content-Type': 'application/json'
