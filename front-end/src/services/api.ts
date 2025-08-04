@@ -2,25 +2,25 @@
 import axios from 'axios';
 
 
-//变量声明
+//变量声明，登录
 interface UserData {
   account: string;
   password: string;
   role: 'consumer' | 'rider' | 'admin' |'merchant' | string;
 }
 
-/** 骑手特定信息接口 */
+/** 骑手特定信息接口，登录 */
 interface RiderInfo {
   vehicleType: string;
 }
 
-/** 管理员特定信息接口 */
+/** 管理员特定信息接口，登录 */
 interface AdminInfo {
   managementObject: string;
   handledItems: string;
 }
 
-/** 店铺/商家特定信息接口 */
+/** 店铺/商家特定信息接口，登录 */
 interface StoreInfo {
   name: string;
   address: string;
@@ -74,3 +74,41 @@ export default {
   }
   // ...未来可以添加更多接口，比如获取用户信息、更新资料等
 };
+
+
+// 获取用户资料
+export const fetchUserProfile = () => apiClient.get('/profile');
+
+// 获取工作状态
+export const fetchWorkStatus = () => apiClient.get('/work-status');
+
+// 获取位置信息 (已补全)
+export const fetchLocationInfo = () => apiClient.get('/location');
+
+
+// --- 订单管理 ---
+
+// 获取订单列表
+export const fetchOrders = (status: string) => apiClient.get(`/orders?status=${status}`);
+
+// 接受订单
+export const acceptOrderAPI = (orderId: string) => apiClient.post(`/orders/${orderId}/accept`);
+
+// 拒绝订单
+export const rejectOrderAPI = (orderId: string) => apiClient.post(`/orders/${orderId}/reject`);
+
+
+// --- 收入与状态变更 ---
+
+// 获取收入汇总数据
+export const fetchIncomeData = () => apiClient.get('/earnings/summary');
+
+// 获取收入明细列表 (已补全)
+export const fetchEarnings = () => apiClient.get('/earnings/details');
+
+// 切换工作状态
+export const toggleWorkStatusAPI = (status: boolean) => apiClient.post('/work-status/toggle', { status });
+
+export const updateUserProfile = (profileData: any) => apiClient.put('/profile', profileData);
+
+export const fetchNewOrder = (notificationId: string) => apiClient.get(`/orders/new/${notificationId}`);

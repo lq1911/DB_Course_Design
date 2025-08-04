@@ -1,6 +1,6 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
@@ -8,24 +8,25 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<Seller> entity)
         {
-            entity.ToTable("SELLERS");
-            entity.HasKey(s => s.UserID);
-            
-            // 映射列名到Oracle数据库中的大写列名
-            entity.Property(s => s.UserID).HasColumnName("USERID");
-            
-            // 移除DATE类型指定，让Entity Framework自动处理
-            entity.Property(s => s.SellerRegistrationTime).HasColumnName("SELLERREGISTRATIONTIME").IsRequired();
-            
-            entity.Property(s => s.ReputationPoints).HasColumnName("REPUTATIONPOINTS").HasDefaultValue(0);
-            entity.Property(s => s.BanStatus).HasColumnName("BANSTATUS").IsRequired().HasMaxLength(10).HasDefaultValue("Normal");
-            entity.Property(s => s.AfterSaleApplicationID).HasColumnName("AFTERSALEAPPLICATIONID");
-            
-            entity.HasOne(s => s.User).WithOne().HasForeignKey<Seller>(s => s.UserID);
-            entity.HasOne(s => s.AfterSaleApplication)
-                   .WithMany()
-                   .HasForeignKey(s => s.AfterSaleApplicationID)
-                   .OnDelete(DeleteBehavior.Restrict);
+
+            entity.ToTable("SELLER");
+
+            entity.HasKey(e => e.UserID);
+            entity.Property(e => e.UserID).HasColumnName("USERID");
+            entity.Property(e => e.SellerRegistrationTime).HasColumnName("SELLERREGISTRATIONTIME").IsRequired();
+            entity.Property(e => e.ReputationPoints).HasColumnName("REPUTATIONPOINTS").HasDefaultValue(0);
+            entity.Property(e => e.BanStatus).HasColumnName("BANSTATUS").IsRequired().HasMaxLength(10);
+            entity.Property(e => e.AfterSaleApplicationID).HasColumnName("AFTERSALEAPPLICATIONID");
+
+            entity.HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Seller>(e => e.UserID);
+
+            entity.HasOne(e => e.AfterSaleApplication)
+                .WithMany()
+                .HasForeignKey(e => e.AfterSaleApplicationID)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
