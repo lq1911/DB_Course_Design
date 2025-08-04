@@ -18,8 +18,23 @@ namespace BackEnd.Repositories
         // 根据商家ID获取店铺信息
         public async Task<Store?> GetStoreBySellerIdAsync(int sellerId)
         {
-            return await _context.Stores
-                .FirstOrDefaultAsync(s => s.SellerID == sellerId);
+            try
+            {
+                Console.WriteLine($"=== Repository层: 根据商家ID获取店铺信息，商家ID: {sellerId} ===");
+                
+                var store = await _context.Stores
+                    .FirstOrDefaultAsync(s => s.SellerID == sellerId);
+                
+                Console.WriteLine($"查询结果: {(store == null ? "null" : $"StoreID={store.StoreID}, Name={store.StoreName}")}");
+                
+                return store;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"获取店铺信息异常: {ex.Message}");
+                Console.WriteLine($"异常堆栈: {ex.StackTrace}");
+                throw;
+            }
         }
 
         // 根据商家ID获取商家信息

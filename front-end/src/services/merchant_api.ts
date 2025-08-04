@@ -2,17 +2,29 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5240/api',
+  baseURL: 'http://localhost:5250/api',
   timeout: 5000,
 });
 
 // 获取店铺概览数据
 export const getShopOverview = async () => {
   try {
+    console.log('正在请求店铺概览数据...');
     const response = await api.get('/shop/overview');
+    console.log('店铺概览数据响应:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('获取店铺概览数据失败:', error);
+  } catch (error: any) {
+    console.error('获取店铺概览数据失败:');
+    console.error('错误类型:', error.constructor.name);
+    console.error('错误消息:', error.message);
+    if (error.response) {
+      console.error('响应状态:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      console.error('响应头:', error.response.headers);
+    } else if (error.request) {
+      console.error('请求配置:', error.request);
+    }
+    console.error('完整错误对象:', error);
     throw error;
   }
 };
@@ -20,10 +32,22 @@ export const getShopOverview = async () => {
 // 获取店铺基本信息
 export const getShopInfo = async () => {
   try {
+    console.log('正在请求店铺基本信息...');
     const response = await api.get('/shop/info');
+    console.log('店铺基本信息响应:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('获取店铺基本信息失败:', error);
+  } catch (error: any) {
+    console.error('获取店铺基本信息失败:');
+    console.error('错误类型:', error.constructor.name);
+    console.error('错误消息:', error.message);
+    if (error.response) {
+      console.error('响应状态:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      console.error('响应头:', error.response.headers);
+    } else if (error.request) {
+      console.error('请求配置:', error.request);
+    }
+    console.error('完整错误对象:', error);
     throw error;
   }
 };
@@ -31,10 +55,22 @@ export const getShopInfo = async () => {
 // 获取商家信息
 export const getMerchantInfo = async () => {
   try {
+    console.log('正在请求商家信息...');
     const response = await api.get('/merchant/info');
+    console.log('商家信息响应:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('获取商家信息失败:', error);
+  } catch (error: any) {
+    console.error('获取商家信息失败:');
+    console.error('错误类型:', error.constructor.name);
+    console.error('错误消息:', error.message);
+    if (error.response) {
+      console.error('响应状态:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      console.error('响应头:', error.response.headers);
+    } else if (error.request) {
+      console.error('请求配置:', error.request);
+    }
+    console.error('完整错误对象:', error);
     throw error;
   }
 };

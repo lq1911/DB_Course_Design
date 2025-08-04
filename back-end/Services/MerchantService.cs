@@ -16,10 +16,14 @@ namespace BackEnd.Services
 
         public async Task<ShopOverviewResponseDto> GetShopOverviewAsync(int sellerId)
         {
+            Console.WriteLine($"=== Service层: 获取店铺概览，商家ID: {sellerId} ===");
+            
             var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
+            Console.WriteLine($"店铺信息: {(store == null ? "null" : $"StoreID={store.StoreID}, Name={store.StoreName}")}");
             
             if (store == null)
             {
+                Console.WriteLine("店铺不存在，返回默认数据");
                 return new ShopOverviewResponseDto
                 {
                     Rating = 0,
@@ -29,17 +33,24 @@ namespace BackEnd.Services
             }
 
             var rating = await _merchantRepository.GetStoreRatingAsync(store.StoreID);
+            Console.WriteLine($"店铺评分: {rating}");
+            
             var monthlySales = await _merchantRepository.GetStoreMonthlySalesAsync(store.StoreID);
+            Console.WriteLine($"月销量: {monthlySales}");
             
             // TODO: 需要在Store模型中添加StoreStatus字段来判断营业状态
             var isOpen = true; // 暂时默认为营业中
+            Console.WriteLine($"营业状态: {isOpen}");
 
-            return new ShopOverviewResponseDto
+            var result = new ShopOverviewResponseDto
             {
                 Rating = rating,
                 MonthlySales = monthlySales,
                 IsOpen = isOpen
             };
+            
+            Console.WriteLine($"返回结果: {System.Text.Json.JsonSerializer.Serialize(result)}");
+            return result;
         }
 
         public async Task<ShopInfoResponseDto?> GetShopInfoAsync(int sellerId)

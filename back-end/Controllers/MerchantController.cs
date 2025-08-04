@@ -32,13 +32,55 @@ namespace BackEnd.Controllers
         {
             try
             {
+                Console.WriteLine("=== 开始处理店铺概览请求 ===");
                 var sellerId = GetCurrentSellerId();
+                Console.WriteLine($"当前商家ID: {sellerId}");
+                
                 var result = await _merchantService.GetShopOverviewAsync(sellerId);
+                Console.WriteLine($"店铺概览数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
+                
                 return Ok(new { data = result });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = ex.Message });
+                Console.WriteLine($"=== 店铺概览请求异常 ===");
+                Console.WriteLine($"异常类型: {ex.GetType().Name}");
+                Console.WriteLine($"异常消息: {ex.Message}");
+                Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"内部异常: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, new { error = ex.Message, details = ex.StackTrace });
+            }
+        }
+
+        // GET: api/shop/overview (为了兼容前端)
+        [HttpGet("/api/shop/overview")]
+        public async Task<ActionResult<ShopOverviewResponseDto>> GetShopOverviewForFrontend()
+        {
+            try
+            {
+                Console.WriteLine("=== 开始处理前端店铺概览请求 ===");
+                var sellerId = GetCurrentSellerId();
+                Console.WriteLine($"当前商家ID: {sellerId}");
+                
+                var result = await _merchantService.GetShopOverviewAsync(sellerId);
+                Console.WriteLine($"店铺概览数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
+                
+                return Ok(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"=== 前端店铺概览请求异常 ===");
+                Console.WriteLine($"异常类型: {ex.GetType().Name}");
+                Console.WriteLine($"异常消息: {ex.Message}");
+                Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"内部异常: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, new { error = ex.Message, details = ex.StackTrace });
             }
         }
 
@@ -48,14 +90,65 @@ namespace BackEnd.Controllers
         {
             try
             {
+                Console.WriteLine("=== 开始处理店铺信息请求 ===");
                 var sellerId = GetCurrentSellerId();
+                Console.WriteLine($"当前商家ID: {sellerId}");
+                
                 var result = await _merchantService.GetShopInfoAsync(sellerId);
-                if (result == null) return NotFound();
+                if (result == null)
+                {
+                    Console.WriteLine("店铺信息为空，返回404");
+                    return NotFound(new { error = "店铺信息不存在" });
+                }
+                
+                Console.WriteLine($"店铺信息数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
                 return Ok(new { data = result });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = ex.Message });
+                Console.WriteLine($"=== 店铺信息请求异常 ===");
+                Console.WriteLine($"异常类型: {ex.GetType().Name}");
+                Console.WriteLine($"异常消息: {ex.Message}");
+                Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"内部异常: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, new { error = ex.Message, details = ex.StackTrace });
+            }
+        }
+
+        // GET: api/shop/info (为了兼容前端)
+        [HttpGet("/api/shop/info")]
+        public async Task<ActionResult<ShopInfoResponseDto>> GetShopInfoForFrontend()
+        {
+            try
+            {
+                Console.WriteLine("=== 开始处理前端店铺信息请求 ===");
+                var sellerId = GetCurrentSellerId();
+                Console.WriteLine($"当前商家ID: {sellerId}");
+                
+                var result = await _merchantService.GetShopInfoAsync(sellerId);
+                if (result == null)
+                {
+                    Console.WriteLine("店铺信息为空，返回404");
+                    return NotFound(new { error = "店铺信息不存在" });
+                }
+                
+                Console.WriteLine($"店铺信息数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
+                return Ok(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"=== 前端店铺信息请求异常 ===");
+                Console.WriteLine($"异常类型: {ex.GetType().Name}");
+                Console.WriteLine($"异常消息: {ex.Message}");
+                Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"内部异常: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, new { error = ex.Message, details = ex.StackTrace });
             }
         }
 
@@ -65,14 +158,31 @@ namespace BackEnd.Controllers
         {
             try
             {
+                Console.WriteLine("=== 开始处理商家信息请求 ===");
                 var sellerId = GetCurrentSellerId();
+                Console.WriteLine($"当前商家ID: {sellerId}");
+                
                 var result = await _merchantService.GetMerchantInfoAsync(sellerId);
-                if (result == null) return NotFound();
+                if (result == null)
+                {
+                    Console.WriteLine("商家信息为空，返回404");
+                    return NotFound(new { error = "商家信息不存在" });
+                }
+                
+                Console.WriteLine($"商家信息数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
                 return Ok(new { data = result });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = ex.Message });
+                Console.WriteLine($"=== 商家信息请求异常 ===");
+                Console.WriteLine($"异常类型: {ex.GetType().Name}");
+                Console.WriteLine($"异常消息: {ex.Message}");
+                Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"内部异常: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, new { error = ex.Message, details = ex.StackTrace });
             }
         }
 

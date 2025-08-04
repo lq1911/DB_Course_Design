@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5240); // 修改为前端期望的端口
+    options.ListenAnyIP(5250); // 修改为前端期望的端口
 });
 
 // 数据库上下文注册
