@@ -95,12 +95,6 @@ namespace BackEnd.Controllers
                 Console.WriteLine($"当前商家ID: {sellerId}");
                 
                 var result = await _merchantService.GetShopInfoAsync(sellerId);
-                if (result == null)
-                {
-                    Console.WriteLine("店铺信息为空，返回404");
-                    return NotFound(new { error = "店铺信息不存在" });
-                }
-                
                 Console.WriteLine($"店铺信息数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
                 return Ok(new { data = result });
             }
@@ -129,12 +123,6 @@ namespace BackEnd.Controllers
                 Console.WriteLine($"当前商家ID: {sellerId}");
                 
                 var result = await _merchantService.GetShopInfoAsync(sellerId);
-                if (result == null)
-                {
-                    Console.WriteLine("店铺信息为空，返回404");
-                    return NotFound(new { error = "店铺信息不存在" });
-                }
-                
                 Console.WriteLine($"店铺信息数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
                 return Ok(new { data = result });
             }
@@ -163,12 +151,6 @@ namespace BackEnd.Controllers
                 Console.WriteLine($"当前商家ID: {sellerId}");
                 
                 var result = await _merchantService.GetMerchantInfoAsync(sellerId);
-                if (result == null)
-                {
-                    Console.WriteLine("商家信息为空，返回404");
-                    return NotFound(new { error = "商家信息不存在" });
-                }
-                
                 Console.WriteLine($"商家信息数据: {System.Text.Json.JsonSerializer.Serialize(result)}");
                 return Ok(new { data = result });
             }

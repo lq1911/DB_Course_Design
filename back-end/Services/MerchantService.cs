@@ -19,26 +19,15 @@ namespace BackEnd.Services
             Console.WriteLine($"=== Service层: 获取店铺概览，商家ID: {sellerId} ===");
             
             var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
-            Console.WriteLine($"店铺信息: {(store == null ? "null" : $"StoreID={store.StoreID}, Name={store.StoreName}")}");
+            Console.WriteLine($"店铺信息: StoreID={store.StoreID}, Name={store.StoreName}, Rating={store.AverageRating}, Sales={store.MonthlySales}");
             
-            if (store == null)
-            {
-                Console.WriteLine("店铺不存在，返回默认数据");
-                return new ShopOverviewResponseDto
-                {
-                    Rating = 0,
-                    MonthlySales = 0,
-                    IsOpen = false
-                };
-            }
-
-            var rating = await _merchantRepository.GetStoreRatingAsync(store.StoreID);
-            Console.WriteLine($"店铺评分: {rating}");
+            // 直接使用数据库中的评分和销量数据
+            var rating = store.AverageRating;
+            Console.WriteLine($"店铺评分(从数据库): {rating}");
             
-            var monthlySales = await _merchantRepository.GetStoreMonthlySalesAsync(store.StoreID);
-            Console.WriteLine($"月销量: {monthlySales}");
+            var monthlySales = store.MonthlySales;
+            Console.WriteLine($"月销量(从数据库): {monthlySales}");
             
-            // TODO: 需要在Store模型中添加StoreStatus字段来判断营业状态
             var isOpen = true; // 暂时默认为营业中
             Console.WriteLine($"营业状态: {isOpen}");
 
@@ -55,12 +44,15 @@ namespace BackEnd.Services
 
         public async Task<ShopInfoResponseDto?> GetShopInfoAsync(int sellerId)
         {
+            Console.WriteLine($"=== Service层: 获取店铺信息，商家ID: {sellerId} ===");
+            
             var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
-            if (store == null) return null;
-
             var seller = await _merchantRepository.GetSellerByIdAsync(sellerId);
+            
+            Console.WriteLine($"店铺信息: StoreID={store.StoreID}, Name={store.StoreName}, Address={store.StoreAddress}");
+            Console.WriteLine($"商家信息: ReputationPoints={seller.ReputationPoints}");
 
-            return new ShopInfoResponseDto
+            var result = new ShopInfoResponseDto
             {
                 Id = store.StoreID.ToString(),
                 Name = store.StoreName,
@@ -68,19 +60,27 @@ namespace BackEnd.Services
                 Address = store.StoreAddress,
                 BusinessHours = store.BusinessHours.ToString("HH:mm"),
                 Feature = store.StoreFeatures,
-                CreditScore = seller?.ReputationPoints
+                CreditScore = seller.ReputationPoints
             };
+            
+            Console.WriteLine($"返回结果: {System.Text.Json.JsonSerializer.Serialize(result)}");
+            return result;
         }
 
         public async Task<MerchantInfoResponseDto?> GetMerchantInfoAsync(int sellerId)
         {
+            Console.WriteLine($"=== Service层: 获取商家信息，商家ID: {sellerId} ===");
+            
             var user = await _merchantRepository.GetUserBySellerIdAsync(sellerId);
-            if (user == null) return null;
+            Console.WriteLine($"用户信息: Username={user.Username}");
 
-            return new MerchantInfoResponseDto
+            var result = new MerchantInfoResponseDto
             {
                 Username = user.Username
             };
+            
+            Console.WriteLine($"返回结果: {System.Text.Json.JsonSerializer.Serialize(result)}");
+            return result;
         }
 
         public async Task<CommonResponseDto> ToggleBusinessStatusAsync(int sellerId, ToggleBusinessStatusRequestDto request)
