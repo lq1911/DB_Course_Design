@@ -1,10 +1,16 @@
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models
 {
     public class User
-    { 
+    {
+        // 用户类
+        // 主码：UserID
+
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID { get; set; }
 
         [Required]
@@ -36,6 +42,16 @@ namespace BackEnd.Models
         [Required]
         public DateTime AccountCreationTime { get; set; }
 
-        public int IsProfilePublic { get; set; } = 0;
+        public ProfilePrivacyLevel IsProfilePublic { get; set; } = ProfilePrivacyLevel.Private;
+
+        // 用户的角色名称
+        [Required]
+        public UserIdentity Role { get; set; } = UserIdentity.Customer;
+
+        // 用户的身份
+        public Customer? Customer { get; set; }
+        public Courier? Courier { get; set; }
+        public Administrator? Administrator { get; set; }
+        public Seller? Seller { get; set; }
     }
 }
