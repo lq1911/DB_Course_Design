@@ -5,10 +5,10 @@ namespace BackEnd.Models
 {
     public class Comment
     {
-        // è¯„ä»·ç±»ï¼š
-        // ä¸»ç ï¼šCommentID
-        // å¤–ç ï¼šReplyToCommentIDï¼ŒStoreIDï¼ŒCommenterID
-        
+        // ÆÀ¼ÛÀà£º
+        // Ö÷Âë£ºCommentID
+        // ÍâÂë£ºReplyToCommentID£¬StoreID£¬CommenterID
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CommentID { get; set; }
@@ -37,8 +37,11 @@ namespace BackEnd.Models
         [ForeignKey("CommenterID")]
         public Customer Commenter { get; set; } = null!;
 
-        // å¤šå¯¹å¤šå…³ç³»
-        // å¯ä»¥ç”±å¤šä¸ªç®¡ç†å‘˜è´Ÿè´£
+        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
+        public ICollection<Comment>? CommentReplies { get; set; }
+
+        // ¶à¶Ô¶à¹ØÏµ
+        // ¿ÉÒÔÓÉ¶à¸ö¹ÜÀíÔ±¸ºÔğ
         public ICollection<Review_Comment> ReviewComments { get; set; } = new List<Review_Comment>();
     }
 
