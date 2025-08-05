@@ -74,7 +74,7 @@ namespace BackEnd.Models
         public ICollection<FoodOrder>? FoodOrders { get; set; }
 
         // 优惠券类
-        public ICollection<CouponManager>? CouponsManager { get; set; }
+        public ICollection<CouponManager>? CouponManagers { get; set; }
 
         // 菜单
         public ICollection<Menu>? Menus { get; set; }
