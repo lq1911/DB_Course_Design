@@ -6,9 +6,9 @@ namespace BackEnd.Models
 {
     public class Seller
     {
-        // ÉÌ¼ÒÀà
-        // Ö÷Âë£ºUserID
-        // ÍâÂë£ºUserID
+        // å•†å®¶ç±»
+        // ä¸»ç ï¼šUserID
+        // å¤–ç ï¼šUserID
 
         [Key, ForeignKey("User")]
         public int UserID { get; set; }
@@ -22,24 +22,24 @@ namespace BackEnd.Models
         [Required]
         public SellerState BanStatus { get; set; } = SellerState.Normal;
 
-        // ÉÌ¼ÒºÍµêÆÌÒ»¶ÔÒ»
+        // å•†å®¶å’Œåº—é“ºä¸€å¯¹ä¸€
         [Required]
         public Store? Store { get; set; }
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ÅäËÍÈÎÎñ
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
+        // é…é€ä»»åŠ¡
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
 
-        // ³ö²Í¶©µ¥
+        // å‡ºé¤è®¢å•
         public ICollection<FoodOrder>? FoodOrders { get; set; }
 
-        // ÓÅ»İÈ¯Àà
-        public ICollection<CouponManager>? CouponsManager { get; set; }
+        // ä¼˜æƒ åˆ¸ç±»
+        public ICollection<CouponManager>? CouponManagers { get; set; }
 
-        // ÊÛºóÉêÇë
+        // å”®åç”³è¯·
         public ICollection<AfterSaleApplication>? AfterSaleApplications { get; set; }
 
-        // Î¥¹æµêÆÌ´¦·£
+        // è¿è§„åº—é“ºå¤„ç½š
         public ICollection<StoreViolationPenalty>? StoreViolationPenalties { get; set; }
     }
 }
