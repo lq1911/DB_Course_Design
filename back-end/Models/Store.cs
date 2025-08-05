@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BackEnd.Models.Enums
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
