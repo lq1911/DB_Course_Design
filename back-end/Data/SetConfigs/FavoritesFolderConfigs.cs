@@ -1,6 +1,6 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
@@ -8,12 +8,16 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<FavoritesFolder> entity)
         {
-            entity.ToTable("FavoritesFolder");
-            entity.HasKey(f => f.FolderID);
-            entity.Property(f => f.FolderName).IsRequired().HasMaxLength(50);
-            entity.HasOne(f => f.Customer)
-                   .WithMany()
-                   .HasForeignKey(f => f.CustomerID);
+            entity.ToTable("FAVORITESFOLDER");
+
+            entity.HasKey(e => e.FolderID);
+            entity.Property(e => e.FolderID).HasColumnName("FOLDERID");
+            entity.Property(e => e.FolderName).HasColumnName("FOLDERNAME").IsRequired().HasMaxLength(50);
+            entity.Property(e => e.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
+
+            entity.HasOne(e => e.Customer)
+                .WithMany()
+                .HasForeignKey(e => e.CustomerID);
         }
     }
 }

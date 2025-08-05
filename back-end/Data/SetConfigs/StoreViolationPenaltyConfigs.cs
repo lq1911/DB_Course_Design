@@ -1,6 +1,6 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
@@ -8,15 +8,19 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<StoreViolationPenalty> entity)
         {
-            entity.ToTable("StoreViolationPenalty");
-            entity.HasKey(p => p.PenaltyID);
-            entity.Property(p => p.PenaltyReason).IsRequired().HasMaxLength(255);
-            entity.Property(p => p.PenaltyTime).IsRequired();
-            entity.Property(p => p.SellerPenalty).HasMaxLength(50);
-            entity.Property(p => p.StorePenalty).HasMaxLength(50);
-            entity.HasOne(p => p.Store)
-                   .WithMany()
-                   .HasForeignKey(p => p.StoreID);
+            entity.ToTable("STOREVIOLATIONPENALTY");
+
+            entity.HasKey(e => e.PenaltyID);
+            entity.Property(e => e.PenaltyID).HasColumnName("PENALTYID");
+            entity.Property(e => e.PenaltyReason).HasColumnName("PENALTYREASON").IsRequired().HasMaxLength(255);
+            entity.Property(e => e.PenaltyTime).HasColumnName("PENALTYTIME").IsRequired();
+            entity.Property(e => e.SellerPenalty).HasColumnName("SELLERPENALTY").HasMaxLength(50);
+            entity.Property(e => e.StorePenalty).HasColumnName("STOREPENALTY").HasMaxLength(50);
+            entity.Property(e => e.StoreID).HasColumnName("STOREID").IsRequired();
+
+            entity.HasOne(e => e.Store)
+                .WithMany()
+                .HasForeignKey(e => e.StoreID);
         }
     }
 }

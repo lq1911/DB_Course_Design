@@ -1,22 +1,27 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
-namespace BackEnd.SetConfigs
+namespace BackEnd.Data.SetConfigs
 {
-    public class ReviewCommentConfig : IEntityTypeConfiguration<Review_Comment>
+    public class Review_CommentConfig : IEntityTypeConfiguration<Review_Comment>
     {
         public void Configure(EntityTypeBuilder<Review_Comment> entity)
         {
-            entity.ToTable("ReviewComment");
-            entity.HasKey(rc => new { rc.AdminID, rc.CommentID });
-            entity.Property(rc => rc.ReviewTime).IsRequired();
-            entity.HasOne(rc => rc.Admin)
-                   .WithMany()
-                   .HasForeignKey(rc => rc.AdminID);
-            entity.HasOne(rc => rc.Comment)
-                   .WithMany()
-                   .HasForeignKey(rc => rc.CommentID);
+            entity.ToTable("REVIEW_COMMENT");
+
+            entity.HasKey(e => new { e.AdminID, e.CommentID });
+            entity.Property(e => e.AdminID).HasColumnName("ADMINID");
+            entity.Property(e => e.CommentID).HasColumnName("COMMENTID");
+            entity.Property(e => e.ReviewTime).HasColumnName("REVIEWTIME").IsRequired();
+
+            entity.HasOne(e => e.Admin)
+                .WithMany()
+                .HasForeignKey(e => e.AdminID);
+
+            entity.HasOne(e => e.Comment)
+                .WithMany()
+                .HasForeignKey(e => e.CommentID);
         }
     }
 }
