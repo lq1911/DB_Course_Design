@@ -28,6 +28,10 @@ namespace BackEnd.Models
         [Required]
         public DishIsSoldOut IsSoldOut { get; set; } = DishIsSoldOut.IsSoldOut;
 
+        // 一对多导航属性
+        // 购物车项
+        public ICollection<ShoppingCartItem>? ShoppingCartItems { get; set; }
+
         // 多对多关系
         // 一个菜品可以出现在多个菜单中
         public ICollection<Menu_Dish> MenuDishes { get; set; } = new List<Menu_Dish>();
