@@ -15,24 +15,25 @@ namespace BackEnd.Data.EntityConfigs
 
             // 配置列属性和名称
             builder.Property(ec => ec.AdminID).HasColumnName("ADMINID");
-            
+
             builder.Property(ec => ec.ComplaintID).HasColumnName("COMPLAINTID");
 
             // ---------------------------------------------------------------
             // 配置外键关系
             // ---------------------------------------------------------------
-            
+
             // 关系一: Evaluate_Complaint -> Administrator (多对一)
-            // 由于 Administrator 类中没有反向导航属性，我们使用不带参数的 WithMany()
             builder.HasOne(ec => ec.Admin)
-                   .WithMany()
-                   .HasForeignKey(ec => ec.AdminID);
+                   .WithMany(a => a.EvaluateComplaints)
+                   .HasForeignKey(ec => ec.AdminID)
+                   .OnDelete(DeleteBehavior.Restrict); // 防止直接通过中间实体删除主实体
+
 
             // 关系二: Evaluate_Complaint -> DeliveryComplaint (多对一)
-            // 由于 DeliveryComplaint 类中没有反向导航属性，我们使用不带参数的 WithMany()
             builder.HasOne(ec => ec.Complaint)
-                   .WithMany()
-                   .HasForeignKey(ec => ec.ComplaintID);
+                   .WithMany(dc => dc.EvaluateComplaints)
+                   .HasForeignKey(ec => ec.ComplaintID)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

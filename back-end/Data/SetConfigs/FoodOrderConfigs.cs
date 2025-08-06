@@ -1,39 +1,68 @@
+using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
     public class FoodOrderConfig : IEntityTypeConfiguration<FoodOrder>
     {
-        public void Configure(EntityTypeBuilder<FoodOrder> entity)
+        public void Configure(EntityTypeBuilder<FoodOrder> builder)
         {
-            entity.ToTable("FOODORDER");
+            builder.ToTable("FOODORDER");
 
-            entity.HasKey(e => e.OrderID);
-            entity.Property(e => e.OrderID).HasColumnName("ORDERID");
-            entity.Property(e => e.PaymentTime).HasColumnName("PAYMENTTIME").IsRequired();
-            entity.Property(e => e.Remarks).HasColumnName("REMARKS").HasMaxLength(255);
-            entity.Property(e => e.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
-            entity.Property(e => e.CartID).HasColumnName("CARTID").IsRequired();
-            entity.Property(e => e.StoreID).HasColumnName("STOREID").IsRequired();
-            entity.Property(e => e.SellerID).HasColumnName("SELLERID").IsRequired();
+            builder.HasKey(fo => fo.OrderID);
+            builder.Property(fo => fo.OrderID).HasColumnName("ORDERID").ValueGeneratedOnAdd();
 
-            entity.HasOne(e => e.Customer)
-                .WithMany()
-                .HasForeignKey(e => e.CustomerID);
+            builder.Property(fo => fo.PaymentTime).HasColumnName("PAYMENTTIME").IsRequired();
 
-            entity.HasOne(e => e.Cart)
-                .WithMany()
-                .HasForeignKey(e => e.CartID);
+            builder.Property(fo => fo.Remarks).HasColumnName("REMARKS").HasMaxLength(255);
 
-            entity.HasOne(e => e.Store)
-                .WithMany()
-                .HasForeignKey(e => e.StoreID);
+            builder.Property(fo => fo.Rating).HasColumnName("RATING").HasColumnType("decimal(2,1)");
 
-            entity.HasOne(e => e.Seller)
-                .WithMany()
-                .HasForeignKey(e => e.SellerID);
+            builder.Property(fo => fo.RatingComment).HasColumnName("RATINGCOMMENT").HasMaxLength(500);
+
+            builder.Property(fo => fo.RatingTime).HasColumnName("RATINGTIME");
+
+            builder.Property(fo => fo.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
+
+            builder.Property(fo => fo.CartID).HasColumnName("CARTID").IsRequired();
+
+            builder.Property(fo => fo.StoreID).HasColumnName("STOREID").IsRequired();
+
+            // ---------------------------------------------------------------
+            // 配置关系
+            // ---------------------------------------------------------------
+
+            // 关系一: FoodOrder -> Customer (多对一)
+            builder.HasOne(e => e.Customer)
+                   .WithMany(c => c.FoodOrders)
+                   .HasForeignKey(e => e.CustomerID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止删除仍有订单的顾客
+
+            // 关系二: FoodOrder -> ShoppingCart (一对一)
+            // 一个订单对应一个购物车，一个购物车结算后也只生成一个订单
+            builder.HasOne(e => e.Cart)
+                   .WithOne(c => c.Order)
+                   .HasForeignKey<FoodOrder>(e => e.CartID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止删除已生成订单的购物车
+
+            // 关系三: FoodOrder -> Store (多对一)
+            builder.HasOne(e => e.Store)
+                   .WithMany(s => s.FoodOrders)
+                   .HasForeignKey(e => e.StoreID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止删除仍有订单的商店
+
+            // 关系四: FoodOrder -> Coupon (一对多)
+            builder.HasMany(e => e.Coupons)
+                   .WithOne(c => c.Order)
+                   .HasForeignKey(c => c.OrderID)
+                   .OnDelete(DeleteBehavior.SetNull); // 订单删除时，关联的优惠券设为未使用，而不是删除优惠券本身
+
+            // 关系五: FoodOrder -> AfterSaleApplication (一对多)
+            builder.HasMany(e => e.AfterSaleApplications)
+                   .WithOne(a => a.Order)
+                   .HasForeignKey(a => a.OrderID)
+                   .OnDelete(DeleteBehavior.Cascade); // 当订单被删除时，其所有售后申请都应被级联删除
         }
     }
 }

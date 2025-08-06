@@ -12,43 +12,37 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.HasKey(c => c.CouponID);
 
-            builder.Property(c => c.CouponID).HasColumnName("COUPONID");
+            builder.Property(c => c.CouponID).HasColumnName("COUPONID").ValueGeneratedOnAdd();
 
-            builder.Property(c => c.MinimumSpend).HasColumnName("MINIMUMSPEND").IsRequired().HasColumnType("decimal(10,2)");
-            
-            builder.Property(c => c.DiscountAmount).HasColumnName("DISCOUNTAMOUNT").IsRequired().HasColumnType("decimal(10,2)");
-            
-            builder.Property(c => c.ValidFrom).HasColumnName("VALIDFROM").IsRequired();
-            
-            builder.Property(c => c.ValidTo).HasColumnName("VALIDTO").IsRequired();
-            
-            builder.Property(c => c.ApplicableStoreID).HasColumnName("APPLICABLESTOREID");
-            
-            builder.Property(c => c.OrderID).HasColumnName("ORDERID");
-            
-            builder.Property(c => c.SellerID).HasColumnName("SELLERID").IsRequired();
+            builder.Property(c => c.CouponState).HasColumnName("COUPONSTATE").HasConversion<string>().HasMaxLength(20).IsRequired();
+
+            builder.Property(c => c.CouponManagerID).HasColumnName("COUPONMANAGERID").IsRequired();
+
+            builder.Property(c => c.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
+
+            builder.Property(c => c.OrderID).HasColumnName("ORDERID").IsRequired(false);
 
             // ---------------------------------------------------------------
             // 配置外键关系
             // ---------------------------------------------------------------
-            
-            // 关系一: Coupon -> Store (多对一, 可选)
-            // 由于 Store 类中没有反向导航属性，我们使用不带参数的 WithMany()
-            builder.HasOne(c => c.Store)
-                   .WithMany()
-                   .HasForeignKey(c => c.ApplicableStoreID);
 
-            // 关系二: Coupon -> Order (多对一, 可选)
-            // 由于 Order 类中没有反向导航属性，我们使用不带参数的 WithMany()
+            // 关系一: Coupon -> CouponManager (多对一)
+            builder.HasOne(c => c.CouponManager)
+                   .WithMany(cm => cm.Coupons)
+                   .HasForeignKey(c => c.CouponManagerID)
+                   .OnDelete(DeleteBehavior.Cascade); // 当优惠券模板删除时，所有相关优惠券也删除
+
+            // 关系二: Coupon -> Customer (多对一)
+            builder.HasOne(c => c.Customer)
+                   .WithMany(cu => cu.Coupons)
+                   .HasForeignKey(c => c.CustomerID)
+                   .OnDelete(DeleteBehavior.Restrict); // 防止删除有优惠券的客户
+
+            // 关系三: Coupon -> FoodOrder (多对一)
             builder.HasOne(c => c.Order)
-                   .WithMany()
-                   .HasForeignKey(c => c.OrderID);
-
-            // 关系三: Coupon -> Seller (多对一)
-            // 由于 Seller 类中没有反向导航属性，我们使用不带参数的 WithMany()
-            builder.HasOne(c => c.Seller)
-                   .WithMany()
-                   .HasForeignKey(c => c.SellerID);
+                   .WithMany(o => o.Coupons)
+                   .HasForeignKey(c => c.OrderID)
+                   .OnDelete(DeleteBehavior.SetNull); // 订单删除时，将优惠券的 OrderID 设为 NULL
         }
     }
 }
