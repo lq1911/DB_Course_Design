@@ -35,6 +35,8 @@
     "tailwindcss": "^4.1.11",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
+    "unplugin-auto-import": "^19.3.0",
+    "unplugin-vue-components": "^28.8.0",
     "vue-cli-plugin-tailwind": "~3.0.0",
     "vue-loader": "^17.3.1"
   },
