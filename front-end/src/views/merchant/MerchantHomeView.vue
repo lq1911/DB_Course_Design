@@ -221,7 +221,7 @@ import {
   getMerchantInfo, 
   toggleBusinessStatus as apiToggleBusinessStatus,
   updateShopField
-} from '@/services/merchant_api';
+} from '@/api/merchant_api';
 
 // 默认空值
 const defaultShopInfo = {
@@ -395,10 +395,10 @@ const fetchAllData = async () => {
 };
 
 // 切换营业状态
-const toggleBusinessStatus = async (value: boolean) => {
+const toggleBusinessStatus = async (value: string | number | boolean) => {
   try {
     await ElMessageBox.confirm(
-      `确定要${value ? '开启营业' : '暂停营业'}吗？`,
+      `确定要${Boolean(value) ? '开启营业' : '暂停营业'}吗？`,
       '提示',
       {
         confirmButtonText: '确定',
@@ -408,9 +408,9 @@ const toggleBusinessStatus = async (value: boolean) => {
     );
     
     // 调用API更新状态
-    await apiToggleBusinessStatus(value);
+    await apiToggleBusinessStatus(Boolean(value));
     
-    isOpen.value = value;
+    isOpen.value = Boolean(value);
     ElMessage({
       type: 'success',
       message: `已${value ? '开启营业' : '暂停营业'}`
