@@ -8,8 +8,7 @@
             </div>
             <!-- 主导航 -->
             <div class="flex items-center space-x-8">
-                <button v-for="(nav, index) in navItems" 
-                :path="index" 
+                <button v-for="nav in navItems" 
                 @click="goToPage(nav.path)" 
                 :class="{
                     'text-orange-500 border-b-2 border-orange-500': route.path === nav.path,

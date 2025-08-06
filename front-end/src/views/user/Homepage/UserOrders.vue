@@ -80,7 +80,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import TopNav from '@/components/user/HomePage/TopNav.vue';
-import Footer from '@/components/user/HomePage/Footer.vue';
+import Footer from '@/components/user/Footer.vue';
 
 const activeOrderStatus = ref("all");
 
