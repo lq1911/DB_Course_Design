@@ -31,8 +31,5 @@ namespace BackEnd.Models
         // 一对多导航属性
         // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
-
-        // 配送投诉
-        public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }
     }
 }

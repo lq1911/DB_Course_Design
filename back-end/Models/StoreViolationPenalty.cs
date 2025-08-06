@@ -31,11 +31,6 @@ namespace BackEnd.Models
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
 
-        [Required]
-        public int SellerID { get; set; }
-        [ForeignKey("SellerID")]
-        public Seller Seller { get; set; } = null!;
-
         // 多对多关系
         // 可以由多个管理员负责
         public ICollection<Supervise> Supervises { get; set; } = new List<Supervise>();

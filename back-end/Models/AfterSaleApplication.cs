@@ -21,19 +21,9 @@ namespace BackEnd.Models
         public DateTime ApplicationTime { get; set; }
 
         [Required]
-        public int CustomerID { get; set; }
-        [ForeignKey("CustomerID")]
-        public Customer Customer { get; set; } = null!;
-
-        [Required]
         public int OrderID { get; set; }
         [ForeignKey("OrderID")]
         public FoodOrder Order { get; set; } = null!;
-
-        [Required]
-        public int SellerID { get; set; }
-        [ForeignKey("SellerID")]
-        public Seller Seller { get; set; } = null!;
 
         // 多对多关系
         // 可以由多个管理员负责

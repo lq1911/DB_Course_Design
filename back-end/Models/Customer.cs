@@ -31,14 +31,8 @@ namespace BackEnd.Models
         // 优惠券
         public ICollection<Coupon>? Coupons { get; set; }
 
-        // 售后申请
-        public ICollection<AfterSaleApplication>? AfterSaleApplications { get; set; }
-
         // 收藏夹
         public ICollection<FavoritesFolder>? FavoritesFolders { get; set; }
-
-        // 配送投诉
-        public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }
 
         // 评论
         public ICollection<Comment>? Comments { get; set; }

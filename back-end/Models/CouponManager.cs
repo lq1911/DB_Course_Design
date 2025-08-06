@@ -27,11 +27,6 @@ namespace BackEnd.Models
         [Required]
         public DateTime ValidTo { get; set; }
 
-        [Required]
-        public int SellerID { get; set; }
-        [ForeignKey("SellerID")]
-        public Seller Seller { get; set; } = null!;
-
         public int StoreID { get; set; }
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
