@@ -337,8 +337,8 @@ const useMockData = true;
 
 // 动态导入API模块
 // 注意: 我们需要确保真实api.ts也导出了同名函数(如fetchEarnings), 即使它们暂时为空
-import * as RealAPI from '@/services/api';
-import * as MockAPI from '@/services/api.mock';
+import * as RealAPI from '@/api/api';
+import * as MockAPI from '@/api/api.mock';
 
 const api = useMockData ? MockAPI : RealAPI;
 

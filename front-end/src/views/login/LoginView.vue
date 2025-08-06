@@ -385,7 +385,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import api from '@/services/api'; // 导入我们的 API 服务
+import api from '@/api/api'; // 导入我们的 API 服务
 import axios from 'axios';
 
 // 响应式数据
