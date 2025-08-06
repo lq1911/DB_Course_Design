@@ -121,8 +121,8 @@ import { ElMessage } from 'element-plus';
 
 // 使用组件内的API切换开关
 const useMockData = true; 
-import * as RealAPI from '@/services/api';
-import * as MockAPI from '@/services/api.mock';
+import * as RealAPI from '@/api/api';
+import * as MockAPI from '@/api/api.mock';
 const api = useMockData ? MockAPI : RealAPI;
 const fileInput = ref<HTMLInputElement>();
 const avatarUrl = ref('');
