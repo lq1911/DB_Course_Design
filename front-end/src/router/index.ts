@@ -1,6 +1,5 @@
 // src/router/index.ts
 
-
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
@@ -8,24 +7,22 @@ import LoginView from '@/views/login/LoginView.vue'
 //分解的各部分路由
 import userRoutes from './userRoutes'
 import courierRoutes from './courierRoutes'
+import inStoreRoutes from './inStoreRoutes'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    //修改用来测试页面
-    // redirect: '/login'
-    redirect: '/home'
+    redirect: '/login'
   },
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: {
-      title: '登录'
-    }
+    meta: { title: '登录'}
   },
   ...userRoutes,
-  ...courierRoutes
+  ...courierRoutes,
+  ...inStoreRoutes
 ]
 
 const router = createRouter({
@@ -35,7 +32,11 @@ const router = createRouter({
 
 router.afterEach((to) => {
   const name = getProjectName().projectName;
-  const title = to.meta.title as string;
+  let title = to.meta.title as string;
+
+  if (!title) {
+    title = "热爱每一餐"
+  }
 
   document.title = (`${name} - ${title}`);
 });
