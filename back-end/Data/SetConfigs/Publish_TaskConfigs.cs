@@ -1,22 +1,27 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
-    public class PublishTaskConfig : IEntityTypeConfiguration<Publish_Task>
+    public class Publish_TaskConfig : IEntityTypeConfiguration<Publish_Task>
     {
         public void Configure(EntityTypeBuilder<Publish_Task> entity)
         {
-            entity.ToTable("PublishTask");
-            entity.HasKey(pt => new { pt.SellerID, pt.DeliveryTaskID });
-            entity.Property(pt => pt.PublishTime).IsRequired();
-            entity.HasOne(pt => pt.Seller)
-                   .WithMany()
-                   .HasForeignKey(pt => pt.SellerID);
-            entity.HasOne(pt => pt.DeliveryTask)
-                   .WithMany()
-                   .HasForeignKey(pt => pt.DeliveryTaskID);
+            entity.ToTable("PUBLISH_TASK");
+
+            entity.HasKey(e => new { e.SellerID, e.DeliveryTaskID });
+            entity.Property(e => e.SellerID).HasColumnName("SELLERID");
+            entity.Property(e => e.DeliveryTaskID).HasColumnName("DELIVERYTASKID");
+            entity.Property(e => e.PublishTime).HasColumnName("PUBLISHTIME").IsRequired();
+
+            entity.HasOne(e => e.Seller)
+                .WithMany()
+                .HasForeignKey(e => e.SellerID);
+
+            entity.HasOne(e => e.DeliveryTask)
+                .WithMany()
+                .HasForeignKey(e => e.DeliveryTaskID);
         }
     }
 }

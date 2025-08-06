@@ -5,6 +5,7 @@ namespace BackEnd.Models{
     public class Accept_Task
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CourierID { get; set; }
         [ForeignKey("CourierID")]
         public Courier Courier { get; set; }

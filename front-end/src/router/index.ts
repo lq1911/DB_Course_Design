@@ -4,10 +4,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
-import UserHomeView from '@/views/user/Homepage/UserHome.vue'
-import UserRecommendView from '@/views/user/Homepage/UserRecommend.vue'
-import UserRestaurantsView from '@/views/user/Homepage/UserRestaurants.vue'
-import UserOrderView from '@/views/user/Homepage/UserOrders.vue'
+
+//分解的各部分路由
+import userRoutes from './userRoutes'
+import courierRoutes from './courierRoutes'
 
 import MerchantHomeView from '@/views/merchant/MerchantHomeView.vue'
 import MerchantOrdersView from '@/views/merchant/MerchantOrdersView.vue'
@@ -18,6 +18,7 @@ import MerchantProfileView from '@/views/merchant/MerchantProfileView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    //修改用来测试页面
     // redirect: '/login'
     // redirect: '/home'
      redirect: '/MerchantHome'
@@ -32,38 +33,9 @@ const routes: Array<RouteRecordRaw> = [
       title: '登录'
     }
   },
-  {
-    path: '/home',
-    name: 'Home',
-    component: UserHomeView,
-    meta: {
-      title: '首页'
-    }
-  },
-  {
-    path: '/recommend',
-    name: 'Recommend',
-    component: UserRecommendView,
-    meta: {
-      title: '推荐'
-    }
-  },
-  {
-    path: '/restaurants',
-    name: 'Restaurant',
-    component: UserRestaurantsView,
-    meta: {
-      title: '商家'
-    }
-  },
-  {
-    path: '/orders',
-    name: 'Order',
-    component: UserOrderView,
-    meta: {
-      title: '订单'
-    }
-  },
+  ...userRoutes,
+  ...courierRoutes
+  
   // -----商家页面start----- 
   {
     path: '/MerchantHome',

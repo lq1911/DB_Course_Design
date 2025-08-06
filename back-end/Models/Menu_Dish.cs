@@ -5,6 +5,7 @@ namespace BackEnd.Models{
    public class Menu_Dish
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MenuID { get; set; }
         [ForeignKey("MenuID")]
         public Menu Menu { get; set; }

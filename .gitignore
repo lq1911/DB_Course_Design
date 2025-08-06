@@ -1,5 +1,7 @@
 .DS_Store
 back-end/obj/
 back-end/bin/
+.vs/
 backend/.vs/
 *.sln
+

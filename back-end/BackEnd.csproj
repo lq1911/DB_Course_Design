@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <RootNamespace>back_end</RootNamespace>
+    <RootNamespace>BackEnd</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
@@ -8,10 +8,12 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<ShoppingCart> entity)
         {
-            entity.ToTable("ShoppingCart");
-            entity.HasKey(c => c.CartID);
-            entity.Property(c => c.LastUpdatedTime).IsRequired();
-            entity.Property(c => c.TotalPrice).HasColumnType("decimal(10,2)").HasDefaultValue(0.00m);
+            entity.ToTable("SHOPPINGCART");
+
+            entity.HasKey(e => e.CartID);
+            entity.Property(e => e.CartID).HasColumnName("CARTID");
+            entity.Property(e => e.LastUpdatedTime).HasColumnName("LASTUPDATEDTIME").IsRequired();
+            entity.Property(e => e.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(10,2)").HasDefaultValue(0.00m);
         }
     }
 }

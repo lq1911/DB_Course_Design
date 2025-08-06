@@ -30,6 +30,11 @@ namespace BackEnd.Repositories
 	{
             await _context.Users.AddAsync(user);
 	}
+	public async Task UpdateAsync(User user)
+        {
+            _context.Set<User>().Update(user);
+            await SaveAsync();
+        }
 
 	public async Task DeleteAsync(User user)
 	{
