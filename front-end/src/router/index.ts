@@ -1,5 +1,4 @@
 // src/router/index.ts
-
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
@@ -8,12 +7,8 @@ import LoginView from '@/views/login/LoginView.vue'
 import userRoutes from './userRoutes'
 import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
+import merchantRoutes from './merchantRoutes'
 
-import MerchantHomeView from '@/views/merchant/MerchantHomeView.vue'
-import MerchantOrdersView from '@/views/merchant/MerchantOrdersView.vue'
-import MerchantCouponsView from '@/views/merchant/MerchantCouponsView.vue'
-import MerchantAftersaleView from '@/views/merchant/MerchantAftersaleView.vue'
-import MerchantProfileView from '@/views/merchant/MerchantProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -28,49 +23,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   ...userRoutes,
   ...courierRoutes,
-  ...inStoreRoutes
-  // -----商家页面start----- 
-  {
-    path: '/MerchantHome',
-    name: 'MerchantHome',
-    component: MerchantHomeView,
-    meta: {
-      title: '商家主页'
-    }
-  },
-  {
-    path: '/MerchantOrders',
-    name: 'MerchantOrders',
-    component: MerchantOrdersView,
-    meta: {
-      title: '商家订单页'
-    }
-  },
-  {
-    path: '/MerchantCoupons',
-    name: 'MerchantCoupons',
-    component: MerchantCouponsView,
-    meta: {
-      title: '商家配券页'
-    }
-  },
-  {
-    path: '/MerchantAftersale',
-    name: 'MerchantAftersale',
-    component: MerchantAftersaleView,
-    meta: {
-      title: '商家售后页'
-    }
-  },
-  {
-    path: '/MerchantProfile',
-    name: 'MerchantProfile',
-    component: MerchantProfileView,
-    meta: {
-      title: '商家个人页'
-    }
-  }
-  // -----商家页面end-----
+  ...inStoreRoutes,
+  ...merchantRoutes
 ]
 
 const router = createRouter({
