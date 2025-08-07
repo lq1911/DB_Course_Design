@@ -33,6 +33,6 @@ namespace BackEnd.Models
 
         // 多对多关系
         // 可以由多个管理员负责
-        public ICollection<Supervise> Supervises { get; set; } = new List<Supervise>();
+        public ICollection<Supervise_> Supervise_s { get; set; } = new List<Supervise_>();
     }
 }

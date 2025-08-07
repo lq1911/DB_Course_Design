@@ -28,7 +28,7 @@ namespace BackEnd.Models
         public ICollection<Review_Comment> ReviewComments { get; set; } = new List<Review_Comment>();
 
         // 监督违规店铺
-        public ICollection<Supervise> Supervises { get; set; } = new List<Supervise>();
+        public ICollection<Supervise_> Supervise_s { get; set; } = new List<Supervise_>();
 
         // 处理售后请求
         public ICollection<Evaluate_AfterSale> EvaluateAfterSales { get; set; } = new List<Evaluate_AfterSale>();
@@ -41,7 +41,7 @@ namespace BackEnd.Models
         public IEnumerable<Comment> Comments => ReviewComments.Select(rc => rc.Comment);
 
         [NotMapped]
-        public IEnumerable<StoreViolationPenalty> Penalties => Supervises.Select(s => s.Penalty);
+        public IEnumerable<StoreViolationPenalty> Penalties => Supervise_s.Select(s => s.Penalty);
 
         [NotMapped]
         public IEnumerable<AfterSaleApplication> Applications => EvaluateAfterSales.Select(eas => eas.Application);
