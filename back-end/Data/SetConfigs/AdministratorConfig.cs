@@ -35,8 +35,8 @@ namespace BackEnd.Data.EntityConfigs
                    .HasForeignKey(rc => rc.AdminID)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            // 配置多对多关系: Administrator -> Supervise
-            builder.HasMany(a => a.Supervises)
+            // 配置多对多关系: Administrator -> Supervise_
+            builder.HasMany(a => a.Supervise_s)
                    .WithOne(s => s.Admin)
                    .HasForeignKey(s => s.AdminID)
                    .OnDelete(DeleteBehavior.Restrict);

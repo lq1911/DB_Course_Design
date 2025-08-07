@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models
 {
-    public class Supervise
+    public class Supervise_
     {
         // 管理员与违规店铺处罚之间的监督关系
         // 主码：AdminID，PenaltyID
