@@ -1,4 +1,4 @@
-﻿namespace BackEnd.Models.Enums
+namespace BackEnd.Models.Enums
 {
     // 用户身份
     public enum UserIdentity
