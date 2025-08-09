@@ -6,21 +6,31 @@ namespace BackEnd.Data.SetConfigs
 {
     public class Menu_DishConfig : IEntityTypeConfiguration<Menu_Dish>
     {
-        public void Configure(EntityTypeBuilder<Menu_Dish> entity)
+        public void Configure(EntityTypeBuilder<Menu_Dish> builder)
         {
-            entity.ToTable("MENU_DISH");
+            builder.ToTable("MENU_DISH");
 
-            entity.HasKey(e => new { e.MenuID, e.DishID });
-            entity.Property(e => e.MenuID).HasColumnName("MENUID");
-            entity.Property(e => e.DishID).HasColumnName("DISHID");
+            builder.HasKey(md => new { md.MenuID, md.DishID });
 
-            entity.HasOne(e => e.Menu)
-                .WithMany()
-                .HasForeignKey(e => e.MenuID);
+            builder.Property(md => md.MenuID).HasColumnName("MENUID");
 
-            entity.HasOne(e => e.Dish)
-                .WithMany()
-                .HasForeignKey(e => e.DishID);
+            builder.Property(md => md.DishID).HasColumnName("DISHID");
+
+            // ---------------------------------------------------------------
+            // 配置关系
+            // ---------------------------------------------------------------
+
+            // 关系一: Menu_Dish -> Menu (多对一)
+            builder.HasOne(md => md.Menu)
+                   .WithMany(m => m.MenuDishes) 
+                   .HasForeignKey(md => md.MenuID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过中间表删除主表记录
+
+            // 关系二: Menu_Dish -> Dish (多对一)
+            builder.HasOne(md => md.Dish)
+                   .WithMany(d => d.MenuDishes) 
+                   .HasForeignKey(md => md.DishID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过中间表删除主表记录
         }
     }
 }

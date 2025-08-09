@@ -12,27 +12,29 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.HasKey(asa => asa.ApplicationID);
 
-            builder.Property(asa => asa.ApplicationID).HasColumnName("APPLICATIONID");
+            builder.Property(asa => asa.ApplicationID).HasColumnName("APPLICATIONID").ValueGeneratedOnAdd(); // 明确指定自增主键
 
             builder.Property(asa => asa.Description).HasColumnName("DESCRIPTION").IsRequired().HasMaxLength(255);
-            
-            builder.Property(asa => asa.ApplicationTime).HasColumnName("APPLICATIONTIME").IsRequired();
-            
-            builder.Property(asa => asa.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
-            
-            builder.Property(asa => asa.OrderID).HasColumnName("ORDERID").IsRequired();
-            
-            // 配置多对一关系: AfterSaleApplication -> Customer
-            // 由于 Customer 类中没有反向导航属性，我们使用不带参数的 WithMany()
-            builder.HasOne(asa => asa.Customer)
-                   .WithMany()
-                   .HasForeignKey(asa => asa.CustomerID);
 
-            // 配置多对一关系: AfterSaleApplication -> Order
-            // 由于 Order 类中没有反向导航属性，我们使用不带参数的 WithMany()
+            builder.Property(asa => asa.ApplicationTime).HasColumnName("APPLICATIONTIME").IsRequired();
+
+            builder.Property(asa => asa.OrderID).HasColumnName("ORDERID").IsRequired();
+
+            // ---------------------------------------------------------------
+            // 配置外键关系
+            // ---------------------------------------------------------------
+
+            // 配置多对一关系: AfterSaleApplication -> FoodOrder
             builder.HasOne(asa => asa.Order)
-                   .WithMany()
-                   .HasForeignKey(asa => asa.OrderID);
+                   .WithMany(fo => fo.AfterSaleApplications)
+                   .HasForeignKey(asa => asa.OrderID)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            // 配置多对多关系: AfterSaleApplication -> Administrator (通过 Evaluate_AfterSale)
+            builder.HasMany(asa => asa.EvaluateAfterSales)
+                   .WithOne(eas => eas.Application)
+                   .HasForeignKey(eas => eas.ApplicationID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

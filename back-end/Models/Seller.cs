@@ -1,12 +1,18 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace BackEnd.Models{
+using BackEnd.Models.Enums;
+
+namespace BackEnd.Models
+{
     public class Seller
     {
+        // 商家类
+        // 主码：UserID
+        // 外码：UserID
+
         [Key, ForeignKey("User")]
         public int UserID { get; set; }
-        public User User { get; set; }
+        public User User { get; set; } = null!;
 
         [Required]
         public DateTime SellerRegistrationTime { get; set; }
@@ -14,11 +20,9 @@ namespace BackEnd.Models{
         public int ReputationPoints { get; set; } = 0;
 
         [Required]
-        [StringLength(10)]
-        public string BanStatus { get; set; } = "Normal";
+        public SellerState BanStatus { get; set; } = SellerState.Normal;
 
-        public int? AfterSaleApplicationID { get; set; }
-        [ForeignKey("AfterSaleApplicationID")]
-        public AfterSaleApplication AfterSaleApplication { get; set; }
+        // 商家和店铺一对一
+        public Store? Store { get; set; }
     }
 }

@@ -12,39 +12,34 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.HasKey(dc => dc.ComplaintID);
 
-            builder.Property(dc => dc.ComplaintID).HasColumnName("COMPLAINTID");
+            builder.Property(dc => dc.ComplaintID).HasColumnName("COMPLAINTID").ValueGeneratedOnAdd();
 
             builder.Property(dc => dc.ComplaintReason).HasColumnName("COMPLAINTREASON").IsRequired().HasMaxLength(255);
-            
+
             builder.Property(dc => dc.ComplaintTime).HasColumnName("COMPLAINTTIME").IsRequired();
-            
+
             builder.Property(dc => dc.CourierID).HasColumnName("COURIERID").IsRequired();
-            
+
             builder.Property(dc => dc.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
-            
+
             builder.Property(dc => dc.DeliveryTaskID).HasColumnName("DELIVERYTASKID").IsRequired();
-            
+
             // ---------------------------------------------------------------
             // 配置外键关系
             // ---------------------------------------------------------------
-            
-            // 关系一: DeliveryComplaint -> Courier (多对一)
-            // 由于 Courier 类中没有反向导航属性，我们使用不带参数的 WithMany()
-            builder.HasOne(dc => dc.Courier)
-                   .WithMany()
-                   .HasForeignKey(dc => dc.CourierID);
 
-            // 关系二: DeliveryComplaint -> Customer (多对一)
-            // 由于 Customer 类中没有反向导航属性，我们使用不带参数的 WithMany()
-            builder.HasOne(dc => dc.Customer)
-                   .WithMany()
-                   .HasForeignKey(dc => dc.CustomerID);
-
-            // 关系三: DeliveryComplaint -> DeliveryTask (多对一)
-            // 由于 DeliveryTask 类中没有反向导航属性，我们使用不带参数的 WithMany()
+            // 关系一: DeliveryComplaint <-> DeliveryTask (多对一)
             builder.HasOne(dc => dc.DeliveryTask)
-                   .WithMany()
-                   .HasForeignKey(dc => dc.DeliveryTaskID);
+                   .WithMany(dt => dt.DeliveryComplaints)
+                   .HasForeignKey(dc => dc.DeliveryTaskID)
+                   .OnDelete(DeleteBehavior.Cascade); // 如果配送任务记录被删除，相关的投诉也应被删除
+
+            // 关系二: 与 Administrator 的多对多关系 (通过 Evaluate_Complaint)
+            // 投诉记录被删除时，相关的处理记录也应被级联删除
+            builder.HasMany(dc => dc.EvaluateComplaints)
+                   .WithOne(ec => ec.Complaint) // 假设 Evaluate_Complaint 中有 Complaint 导航属性
+                   .HasForeignKey(ec => ec.ComplaintID) // 假设 Evaluate_Complaint 中有 ComplaintID 外键
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
