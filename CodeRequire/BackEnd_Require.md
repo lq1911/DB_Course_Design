@@ -9,24 +9,6 @@
 
 ---
 
-## 请求体参数
-
-> 参考需求文档
-
-| 参数名 | 类型 | 是否必填 | 说明 |
-|--------|------|------|------|
-| `variable_1` | int/string... | 是 | xxx |
-| `variable_2` | int/string... | 是 | xxx |
-
-## 请求示例
-
-```json
-{
-  "variable_1": "xxx",
-  "variable_2": "xxx"
-}
-```
-
 ## 返回结果
 ```json
 {
