@@ -9,13 +9,6 @@ import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
 
-
-import MerchantHomeView from '@/views/merchant/MerchantHomeView.vue'
-import MerchantOrdersView from '@/views/merchant/MerchantOrdersView.vue'
-import MerchantCouponsView from '@/views/merchant/MerchantCouponsView.vue'
-import MerchantAftersaleView from '@/views/merchant/MerchantAftersaleView.vue'
-import MerchantProfileView from '@/views/merchant/MerchantProfileView.vue'
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
