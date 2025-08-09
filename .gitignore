@@ -1,11 +1,6 @@
 .DS_Store
 back-end/obj/
 back-end/bin/
-<<<<<<< HEAD
+.vs/
 backend/.vs/
 *.sln
-=======
-back-end/.vs/
-DB_Course_Design.sln
-.vs/
->>>>>>> adca6ddafff3c90ff5b8066ce2f64c12074475df

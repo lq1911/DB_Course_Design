@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import TopNav from '@/components/user/HomePage/TopNav.vue';
-import Footer from '@/components/user/HomePage/Footer.vue';
+import Footer from '@/components/user/Footer.vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();

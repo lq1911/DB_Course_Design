@@ -1,6 +1,4 @@
 // src/router/index.ts
-
-
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
@@ -8,6 +6,9 @@ import LoginView from '@/views/login/LoginView.vue'
 //分解的各部分路由
 import userRoutes from './userRoutes'
 import courierRoutes from './courierRoutes'
+import inStoreRoutes from './inStoreRoutes'
+import merchantRoutes from './merchantRoutes'
+
 
 import MerchantHomeView from '@/views/merchant/MerchantHomeView.vue'
 import MerchantOrdersView from '@/views/merchant/MerchantOrdersView.vue'
@@ -18,100 +19,18 @@ import MerchantProfileView from '@/views/merchant/MerchantProfileView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    //修改用来测试页面
-    // redirect: '/login'
-    // redirect: '/home'
-     redirect: '/MerchantHome'
-    // redirect: '/MerchantOrders'
-    // redirect: '/MerchantCoupons'
+    redirect: '/login'
   },
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: {
-      title: '登录'
-    }
+    meta: { title: '登录'}
   },
-<<<<<<< HEAD
-  {
-    path: '/home',
-    name: 'Home',
-    component: UserHomeView,
-    meta: {
-      title: '首页'
-    }
-  },
-  {
-    path: '/recommend',
-    name: 'Recommend',
-    component: UserRecommendView,
-    meta: {
-      title: '推荐'
-    }
-  },
-  {
-    path: '/restaurants',
-    name: 'Restaurant',
-    component: UserRestaurantsView,
-    meta: {
-      title: '商家'
-    }
-  },
-  {
-    path: '/orders',
-    name: 'Order',
-    component: UserOrderView,
-    meta: {
-      title: '订单'
-    }
-  },
-  // -----商家页面start----- 
-  {
-    path: '/MerchantHome',
-    name: 'MerchantHome',
-    component: MerchantHomeView,
-    meta: {
-      title: '商家主页'
-    }
-  },
-  {
-    path: '/MerchantOrders',
-    name: 'MerchantOrders',
-    component: MerchantOrdersView,
-    meta: {
-      title: '商家订单页'
-    }
-  },
-  {
-    path: '/MerchantCoupons',
-    name: 'MerchantCoupons',
-    component: MerchantCouponsView,
-    meta: {
-      title: '商家配券页'
-    }
-  },
-  {
-    path: '/MerchantAftersale',
-    name: 'MerchantAftersale',
-    component: MerchantAftersaleView,
-    meta: {
-      title: '商家售后页'
-    }
-  },
-  {
-    path: '/MerchantProfile',
-    name: 'MerchantProfile',
-    component: MerchantProfileView,
-    meta: {
-      title: '商家个人页'
-    }
-  }
-  // -----商家页面end-----
-=======
   ...userRoutes,
-  ...courierRoutes
->>>>>>> adca6ddafff3c90ff5b8066ce2f64c12074475df
+  ...courierRoutes,
+  ...inStoreRoutes,
+  ...merchantRoutes
 ]
 
 const router = createRouter({
@@ -121,7 +40,11 @@ const router = createRouter({
 
 router.afterEach((to) => {
   const name = getProjectName().projectName;
-  const title = to.meta.title as string;
+  let title = to.meta.title as string;
+
+  if (!title) {
+    title = "热爱每一餐"
+  }
 
   document.title = (`${name} - ${title}`);
 });

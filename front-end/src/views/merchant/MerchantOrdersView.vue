@@ -326,10 +326,10 @@ const handleMenuClick = (menuItem: typeof menuItems[number]) => {
 const autoAcceptOrders = ref(false);
 
 
-const toggleAutoAcceptOrders = (value: boolean) => {
+const toggleAutoAcceptOrders = (value: string | number | boolean) => {
   ElMessage({
     type: 'success',
-    message: `已${value ? '开启' : '关闭'}自动接单`
+    message: `已${Boolean(value) ? '开启' : '关闭'}自动接单`
   });
 };
 
@@ -414,6 +414,7 @@ const createDish = () => {
   dishes.value.push({
     id: newId,
     ...newDish.value,
+    price: Number(newDish.value.price),
     image: 'https://readdy.ai/api/search-image?query=delicious%20Chinese%20cuisine%20dish%20beautifully%20plated%20on%20white%20background%20professional%20food%20photography&width=80&height=80&seq=dish-new&orientation=squarish'
   });
   showDishForm.value = false;
