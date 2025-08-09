@@ -418,6 +418,7 @@ import {
   Close,
   Delete,
 } from '@element-plus/icons-vue';
+import { getMerchantInfo } from '@/services/merchant_api';
 
 import axios from 'axios';
 
@@ -439,10 +440,12 @@ const handleMenuClick = (menuItem: typeof menuItems[number]) => {
   router.push({ name: menuItem.routeName });
 };
 
-// 商家信息
-const merchantInfo = ref({
+// 商家名相关
+const defaultMerchantInfo = {
   username: ''
-});
+};
+const isLoading = ref(true);
+const merchantInfo = ref({ ...defaultMerchantInfo });
 
 // 优惠券列表相关
 const loading = ref(false);
@@ -604,23 +607,6 @@ const handleSelectionChange = (val: any[]) => {
   selectedCoupons.value = val;
 };
 
-// // 新建优惠券
-// const handleCreate = () => {
-//   isEditMode.value = false;
-//   currentCouponId.value = '';
-//   Object.assign(couponForm, {
-//     name: '',
-//     type: 'fixed',
-//     value: 5,
-//     minAmount: 20,
-//     totalQuantity: 100,
-//     startTime: '',
-//     endTime: '',
-//     description: ''
-//   });
-//   showCouponForm.value = true;
-// };
-
 // 编辑优惠券
 const handleEdit = (row: any) => {
   isEditMode.value = true;
@@ -741,8 +727,34 @@ const initData = async () => {
   await Promise.all([fetchCoupons(), fetchStats()]);
 };
 
+
+// 获取所有数据
+const fetchAllData = async () => {
+  try {
+    isLoading.value = true;
+    
+    // 并行请求所有数据
+    const [merchant] = await Promise.all([
+      getMerchantInfo()
+    ]);
+    
+    // 更新商家信息
+    if (merchant.data) {
+      merchantInfo.value = { ...defaultMerchantInfo, ...merchant.data };
+    }
+    
+  } catch (error) {
+    ElMessage.error('获取数据失败，请稍后重试');
+    // 使用默认空值
+    merchantInfo.value = { ...defaultMerchantInfo };
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 onMounted(() => {
   initData();
+  fetchAllData();
 });
 </script>
 
