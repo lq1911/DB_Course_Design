@@ -42,22 +42,6 @@
               </el-icon>
               <span class="font-medium">{{ item.label }}</span>
             </div>
-
-            <!-- <div
-              v-for="(item, index) in menuItems"
-              :key="index"
-              @click="activeMenu = item.key"
-              :class="{
-                'bg-orange-50 text-[#F9771C] border-r-3 border-[#F9771C]': activeMenu === item.key,
-                'text-gray-700 hover:bg-gray-50': activeMenu !== item.key
-              }"
-              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button"
-            >
-              <el-icon class="mr-3 text-lg">
-                <component :is="item.icon" />
-              </el-icon>
-              <span class="font-medium">{{ item.label }}</span>
-            </div> -->
           </div>
         </nav>
       </aside>
