@@ -24,10 +24,6 @@
             <div class="flex items-center space-x-8">
                 <div class="relative">
                     <img :src="storeInfo.image" alt="商家头像" class="w-28 h-28 rounded-2xl object-cover shadow-lg" />
-                    <div
-                        class="absolute -bottom-2 -right-2 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        <i class="fas fa-check-circle mr-1"></i>认证商家
-                    </div>
                 </div>
                 <div class="flex-1">
                     <div class="flex items-center space-x-4 mb-3">
@@ -85,18 +81,26 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import type { StoreInfo } from '@/api/store_info'
+
 const route = useRoute();
 const router = useRouter();
 
-const storeID = computed(() => route.params.id);
+// 从父组件获得信息
+const props = defineProps<{
+    storeInfo: StoreInfo | null;
+    storeID: string;
+}>()
+
+const storeID = props.storeID;
 
 const tabs = computed( () => [
-    { path: `/store/${storeID.value}/order`, label: "点餐" },
-    { path: `/store/${storeID.value}/comment`, label: "评价" },
-    { path: `/store/${storeID.value}/info`, label: "商家" },
+    { path: `/store/${storeID}/order`, label: "点餐" },
+    { path: `/store/${storeID}/comment`, label: "评价" },
+    { path: `/store/${storeID}/info`, label: "商家" },
 ]);
 
-//测试使用
+//测试使用，最后删除
 import { storeInfo } from '@/api/store_info'
 import { deliveryTask } from '@/api/store_info'
 
