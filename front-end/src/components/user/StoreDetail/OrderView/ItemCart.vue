@@ -21,9 +21,8 @@
       class="fixed inset-0 z-50 overflow-hidden"
       @click="showCart = false"
     >
-      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
       <div
-        class="absolute right-0 top-0 h-full w-96 bg-white shadow-xl transform transition-transform duration-300"
+        class="absolute right-0 top-0 h-full w-96 bg-white shadow-xl"
         @click.stop
       >
         <div class="flex flex-col h-full">
@@ -52,7 +51,6 @@
               >
                 <img
                   :src="item.image"
-                  alt="商品图片"
                   class="w-12 h-12 object-cover rounded object-top"
                 />
                 <div class="flex-1">
@@ -68,8 +66,7 @@
                   >
                     <i class="fas fa-minus text-xs"></i>
                   </button>
-                  <span class="w-6 text-center text-sm"
-                    >{{ item.quantity }}</span
+                  <span class="w-6 text-center text-sm">{{ item.quantity }}</span
                   >
                   <button
                     @click="emit('increase', item.id)"
@@ -84,9 +81,7 @@
           <div v-if="cartItems.length > 0" class="border-t p-4">
             <div class="flex items-center justify-between mb-4">
               <span class="text-lg font-semibold text-gray-900">总计</span>
-              <span class="text-xl font-bold text-[#F9771C]"
-                >¥{{ totalPrice.toFixed(2) }}</span
-              >
+              <span class="text-xl font-bold text-[#F9771C]">¥{{ totalPrice.toFixed(2) }}</span>
             </div>
             <button
               class="w-full bg-[#F9771C] text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
