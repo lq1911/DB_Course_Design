@@ -1,18 +1,16 @@
 <template>
-    <StoreNav />
-    <!-- <MenuList  />
-    <DishIntro />
+    <MenuList  />
+    <!--<DishIntro />
     <ItemCart /> -->
     
 </template>
 
 <script setup>
-import StoreNav from '@/components/user/StoreDetail/StoreNav.vue';
 import MenuList from '@/components/user/StoreDetail/OrderView/MenuList.vue';
-import DishIntro from '@/components/user/StoreDetail/OrderView/DishIntro.vue';
-import ItemCart from '@/components/user/StoreDetail/OrderView/ItemCart.vue';
+// import DishIntro from '@/components/user/StoreDetail/OrderView/DishIntro.vue';
+// import ItemCart from '@/components/user/StoreDetail/OrderView/ItemCart.vue';
 
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 const categories = [
   { id: 1, name: "招牌推荐" },

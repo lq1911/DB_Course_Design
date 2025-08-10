@@ -82,38 +82,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import router from "@/router";
-import { StoreInfo, getStoreInfo, DeliveryTask, getDeliveryTask } from '@/api/store_info'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const tabs = [
-    { path: "/store", label: "点单" },
-    { path: "/store/comment", label: "评价" },
-    { path: "/store/info", label: "商家" },
-];
+const route = useRoute();
+const router = useRouter();
 
-//实际使用代码
-// const storeInfo = ref<StoreInfo | null>(null)
-// const deliveryTask = ref<DeliveryTask | null>(null)
+const storeID = computed(() => route.params.id);
 
-// onMounted(async () => {
-//     storeInfo.value = await getStoreInfo()
-//     deliveryTask.value = await getDeliveryTask()
-// })
+const tabs = computed( () => [
+    { path: `/store/${storeID.value}/order`, label: "点餐" },
+    { path: `/store/${storeID.value}/comment`, label: "评价" },
+    { path: `/store/${storeID.value}/info`, label: "商家" },
+]);
 
 //测试使用
 import { storeInfo } from '@/api/store_info'
 import { deliveryTask } from '@/api/store_info'
 
-const route = useRoute()
-
 function goBack() {
-    router.back()
+    router.push(`/home`);
 }
 
 function goToPage(path: string) {
-    router.push(path)
+    router.push(path);
 }
 
 </script>
