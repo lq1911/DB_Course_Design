@@ -18,8 +18,6 @@ export interface DeliveryTask{
     deliveryFee: number
 }
 
-
-
 export async function getStoreInfo(id: string): Promise<StoreInfo> {
     return getData<StoreInfo>(id);
 }
