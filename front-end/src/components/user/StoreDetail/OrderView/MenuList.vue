@@ -1,5 +1,6 @@
 <template>
-    <div class="w-1/6 bg-white rounded-lg shadow-sm ml-[5%] mt-5 border-2" style="box-shadow: 2px 0 4px rgba(0,0,0,0.05)">
+    <div class="w-1/6 bg-white rounded-lg shadow-sm ml-[5%] mt-5 border-2" 
+            style="box-shadow: 2px 0 4px rgba(0,0,0,0.05)">
         <div class="py-4">
             <div v-for="(category, index) in props.categories" @click="selectCategory(category.id)"
                 :class="{
@@ -19,7 +20,7 @@
 import { defineProps, defineEmits } from "vue"
 
 const props = defineProps < {
-    categories: Array <{ id: number; name: string }>
+    categories: Array<{ id: number; name: string }>;
     activeCategory: number;
 }>();
 
