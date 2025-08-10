@@ -1,6 +1,8 @@
 <template>
-    <StoreNav :storeInfo="storeInfo" :storeID="storeID" />
-    <router-view />
+    <div>
+        <StoreNav :storeInfo="storeInfo" :storeID="storeID" />
+        <router-view />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -20,7 +22,7 @@ onMounted(async () => {
     storeInfo.value = await getStoreInfo(storeID.value);
 })
 
-watch(storeID, async(newID, oldID) => {
+watch(storeID, async (newID, oldID) => {
     if (newID != oldID) {
         storeInfo.value = await getStoreInfo(storeID.value);
     }
