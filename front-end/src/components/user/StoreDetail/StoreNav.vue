@@ -91,7 +91,7 @@ const router = useRouter();
 const storeID = computed(() => route.params.id);
 
 const tabs = computed( () => [
-    { path: `/store/${storeID.value}/order`, label: "点餐界面" },
+    { path: `/store/${storeID.value}/order`, label: "点餐" },
     { path: `/store/${storeID.value}/comment`, label: "评价" },
     { path: `/store/${storeID.value}/info`, label: "商家" },
 ]);
