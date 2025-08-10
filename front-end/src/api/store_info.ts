@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { getData } from '@/api/multiuse_function'
 
 export interface StoreInfo{
     id: string
@@ -18,24 +18,14 @@ export interface DeliveryTask{
     deliveryFee: number
 }
 
+
+
 export async function getStoreInfo(id: string): Promise<StoreInfo> {
-    try {
-        const response = await axios.get(`/api/stores/${id}`);
-        return response.data;
-    } catch (error: any) {
-        console.log(`请求失败: ${error.response.status}，报错信息为${error.response.message}`)
-        throw error;
-    }
+    return getData<StoreInfo>(id);
 }
 
 export async function getDeliveryTask(id: string): Promise<DeliveryTask>{
-    try {
-        const response = await axios.get(`/api/?/${id}`);
-        return response.data
-    } catch (error: any) {
-        console.log(`请求失败: ${error.response.status}，报错信息为${error.response.message}`)
-        throw error;
-    }
+    return getData<DeliveryTask>(id);
 }
 
 export const storeInfo = {
