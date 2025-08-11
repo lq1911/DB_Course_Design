@@ -1,4 +1,6 @@
 using BackEnd.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BackEnd.Repositories.Interfaces
 {
@@ -10,6 +12,7 @@ namespace BackEnd.Repositories.Interfaces
         Task<User?> GetByIdAsync(int id);
         // 添加一个新用户
         Task AddAsync(User user);
+        Task UpdateAsync(User user);
         // 删除指定ID的用户。
         Task DeleteAsync(User user);
         // 保存操作

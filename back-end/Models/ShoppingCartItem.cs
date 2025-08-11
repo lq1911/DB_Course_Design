@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace BackEnd.Models{
-   public class CartItem
+   public class ShoppingCartItem
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

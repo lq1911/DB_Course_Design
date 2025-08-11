@@ -1,6 +1,6 @@
-using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BackEnd.Models;
 
 namespace BackEnd.Data.SetConfigs
 {
@@ -8,16 +8,23 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<Seller> entity)
         {
-            entity.ToTable("Seller");
-            entity.HasKey(s => s.UserID);
-            entity.Property(s => s.SellerRegistrationTime).IsRequired();
-            entity.Property(s => s.ReputationPoints).HasDefaultValue(0);
-            entity.Property(s => s.BanStatus).IsRequired().HasMaxLength(10).HasDefaultValue("Normal");
-            entity.HasOne(s => s.User).WithOne().HasForeignKey<Seller>(s => s.UserID);
-            entity.HasOne(s => s.AfterSaleApplication)
-                   .WithMany()
-                   .HasForeignKey(s => s.AfterSaleApplicationID)
-                   .OnDelete(DeleteBehavior.Restrict);
+            entity.ToTable("SELLER");
+
+            entity.HasKey(e => e.UserID);
+            entity.Property(e => e.UserID).HasColumnName("USERID");
+            entity.Property(e => e.SellerRegistrationTime).HasColumnName("SELLERREGISTRATIONTIME").IsRequired();
+            entity.Property(e => e.ReputationPoints).HasColumnName("REPUTATIONPOINTS").HasDefaultValue(0);
+            entity.Property(e => e.BanStatus).HasColumnName("BANSTATUS").IsRequired().HasMaxLength(10);
+            entity.Property(e => e.AfterSaleApplicationID).HasColumnName("AFTERSALEAPPLICATIONID");
+
+            entity.HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Seller>(e => e.UserID);
+
+            entity.HasOne(e => e.AfterSaleApplication)
+                .WithMany()
+                .HasForeignKey(e => e.AfterSaleApplicationID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

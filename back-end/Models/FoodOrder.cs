@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace BackEnd.Models{
-   public class Order
+   public class FoodOrder
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

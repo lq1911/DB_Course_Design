@@ -5,6 +5,7 @@ namespace BackEnd.Models{
     public class Publish_Task
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SellerID { get; set; }
         [ForeignKey("SellerID")]
         public Seller Seller { get; set; }
