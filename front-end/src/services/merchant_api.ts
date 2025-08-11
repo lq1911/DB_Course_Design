@@ -109,7 +109,7 @@ interface NewDishData {
 }
 
 // 聊天消息类型
-interface ChatMessage {
+export interface ChatMessage {
   sender: 'user' | 'merchant';
   content: string;
   time: string;
@@ -381,6 +381,122 @@ export const saveQuickPhrase = async (phrase: string) => {
   }
 };
 */
+// ==================== 售后与评论管理接口 ====================
+
+// 评论类型
+export interface Review {
+  id: number;
+  orderNo: string;
+  user: { name: string; phone: string; avatar?: string };
+  rating: number;
+  content: string;
+  images?: string[];
+  createdAt: string;
+  reply?: { content: string };
+}
+
+// 获取售后申请相关接口
+export interface AfterSaleTimeline {
+  time: string;
+  text: string;
+  operator?: string;
+}
+export interface AfterSaleApplication {
+  id: number;
+  orderNo: string;
+  type: '退款' | '退货' | '投诉';
+  user: { name: string; phone: string; avatar?: string };
+  reason: string;
+  detail?: string;
+  status: '待处理' | '已同意' | '已拒绝' | '协商中' | '已完成';
+  refundAmount?: number;
+  evidenceImages?: string[];
+  createdAt: string;
+  timeline?: AfterSaleTimeline[];
+}
+export interface PageResult<T> {
+  list: T[];
+  total: number;
+}
+
+export interface AfterSaleListParams {
+  page: number;
+  pageSize: number;
+  type?: '退款' | '退货' | '投诉';
+  status?: '待处理' | '已同意' | '已拒绝' | '协商中' | '已完成';
+  keyword?: string;
+}
+
+// 获取售后申请列表（分页，带筛选）
+export const getAfterSaleList = async (
+  params: AfterSaleListParams
+): Promise<PageResult<AfterSaleApplication>> => {
+  const res = await api.get('/aftersale/applications', { params });
+  return res.data as PageResult<AfterSaleApplication>;
+};
+
+// 获取售后申请详情
+export const getAfterSaleDetail = async (id: number): Promise<AfterSaleApplication> => {
+  const res = await api.get(`/aftersale/applications/${id}`);
+  return res.data;
+};
+
+// 处理售后申请
+export const decideAfterSale = async (
+  id: number,
+  action: 'approve' | 'reject' | 'negotiate',
+  data: { remark: string; refundAmount?: number; nextContactAt?: string }
+) => {
+  return api.post(`/aftersale/applications/${id}/decision`, { action, ...data });
+};
+
+// 获取评论列表
+export const getReviewList = async (params: any): Promise<PageResult<Review>> => {
+  const res = await api.get('/reviews', { params });
+  return res.data;
+};
+
+// 回复评论
+export const replyReview = async (id: number, content: string) => {
+  return api.post(`/reviews/${id}/reply`, { content });
+};
+
+// 已移除评论申诉相关接口
+
+// ==================== 处罚记录相关接口 ====================
+export interface PenaltyRecord {
+  id: string;
+  reason: string;
+  time: string;
+  merchantAction: string;
+  platformAction: string;
+  status?: '未申诉' | '申诉中' | '已处理';
+  amount?: number;
+  evidenceImages?: string[];
+  timeline?: Array<{ time: string; text: string; operator?: string }>;
+}
+
+// 获取处罚记录列表
+export const getPenaltyList = async (params?: {
+  status?: '未申诉' | '申诉中' | '已处理';
+  keyword?: string;
+}) => {
+  const res = await api.get('/penalties', { params });
+  return res.data as PenaltyRecord[];
+};
+
+// 获取处罚详情
+export const getPenaltyDetail = async (id: string) => {
+  const res = await api.get(`/penalties/${id}`);
+  return res.data as PenaltyRecord;
+};
+
+// 提交处罚申诉
+export const appealPenalty = async (id: string, reason: string, evidenceImages?: string[]) => {
+  const res = await api.post(`/penalties/${id}/appeal`, { reason, evidenceImages });
+  return res.data;
+};
+
 // ==================== 工具函数 ====================
 
 // 通用错误处理
@@ -440,3 +556,4 @@ api.interceptors.response.use(
     return Promise.reject(new Error(errorMessage));
   }
 );
+
