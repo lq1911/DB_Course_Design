@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class FavoritesFolder
     {
-        // ÊÕ²Ø¼ĞÀà
-        // Ö÷Âë£ºFolderID
-        // ÍâÂë£ºCustomerID
+        // æ”¶è—å¤¹ç±»
+        // ä¸»ç ï¼šFolderID
+        // å¤–ç ï¼šCustomerID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,7 +22,7 @@ namespace BackEnd.Models
         [ForeignKey("CustomerID")]
         public Customer Customer { get; set; } = null!;
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
         public ICollection<FavoriteItem>? FavoriteItems { get; set; }
     }
 }

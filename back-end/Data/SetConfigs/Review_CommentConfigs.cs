@@ -19,20 +19,20 @@ namespace BackEnd.Data.SetConfigs
             builder.Property(rc => rc.ReviewTime).HasColumnName("REVIEWTIME").IsRequired();
 
             // ---------------------------------------------------------------
-            // ¹ØÏµÅäÖÃ
+            // å…³ç³»é…ç½®
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: Review_Comment -> Administrator (¶à¶ÔÒ»)
+            // å…³ç³»ä¸€: Review_Comment -> Administrator (å¤šå¯¹ä¸€)
             builder.HasOne(rc => rc.Admin)
-                   .WithMany(a => a.ReviewComments) 
+                   .WithMany(a => a.ReviewComments)
                    .HasForeignKey(rc => rc.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹Í¨¹ıÉ¾³ıÉóºË¼ÇÂ¼À´É¾³ı¹ÜÀíÔ±
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢é€šè¿‡åˆ é™¤å®¡æ ¸è®°å½•æ¥åˆ é™¤ç®¡ç†å‘˜
 
-            // ¹ØÏµ¶ş: Review_Comment -> Comment (¶à¶ÔÒ»)
+            // å…³ç³»äºŒ: Review_Comment -> Comment (å¤šå¯¹ä¸€)
             builder.HasOne(rc => rc.Comment)
-                   .WithMany(c => c.ReviewComments) 
+                   .WithMany(c => c.ReviewComments)
                    .HasForeignKey(rc => rc.CommentID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹Í¨¹ıÉ¾³ıÉóºË¼ÇÂ¼À´É¾³ıÆÀÂÛ
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢é€šè¿‡åˆ é™¤å®¡æ ¸è®°å½•æ¥åˆ é™¤è¯„è®º
         }
     }
 }

@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -18,21 +16,38 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Administrator>> GetAllAsync()
         {
-            // 对于一对一关系，同样建议使用 Include 预加载关联的 User 数据
             return await _context.Administrators
                                  .Include(a => a.User)
+                                 .Include(a => a.ReviewComments)
+                                    .ThenInclude(rc => rc.Comment)
+                                 .Include(a => a.Supervise_s)
+                                      .ThenInclude(s => s.Penalty)
+                                 .Include(a => a.EvaluateAfterSales)
+                                      .ThenInclude(eas => eas.Application)
+                                 .Include(a => a.EvaluateComplaints)
+                                     .ThenInclude(ec => ec.Complaint)
                                  .ToListAsync();
         }
 
         public async Task<Administrator?> GetByIdAsync(int id)
         {
-            // FindAsync 对任何类型的主键都有效
-            return await _context.Administrators.FindAsync(id);
+            return await _context.Administrators
+                                 .Include(a => a.User)
+                                 .Include(a => a.ReviewComments)
+                                    .ThenInclude(rc => rc.Comment)
+                                 .Include(a => a.Supervise_s)
+                                      .ThenInclude(s => s.Penalty)
+                                 .Include(a => a.EvaluateAfterSales)
+                                      .ThenInclude(eas => eas.Application)
+                                 .Include(a => a.EvaluateComplaints)
+                                     .ThenInclude(ec => ec.Complaint)
+                                 .FirstOrDefaultAsync(a => a.UserID == id);
         }
 
         public async Task AddAsync(Administrator administrator)
         {
             await _context.Administrators.AddAsync(administrator);
+            await SaveAsync();
         }
 
         public async Task UpdateAsync(Administrator administrator)
@@ -41,10 +56,10 @@ namespace BackEnd.Repositories
             await SaveAsync();
         }
 
-        public Task DeleteAsync(Administrator administrator)
+        public async Task DeleteAsync(Administrator administrator)
         {
             _context.Administrators.Remove(administrator);
-            return Task.CompletedTask;
+            await SaveAsync();
         }
 
         public async Task SaveAsync()

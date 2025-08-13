@@ -17,29 +17,35 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Review_Comment>> GetAllAsync()
         {
-            return await _context.Set<Review_Comment>().ToListAsync();
+            return await _context.Review_Comments
+                                 .Include(rc => rc.Admin)   // 关联管理员
+                                 .Include(rc => rc.Comment) // 关联评论
+                                 .ToListAsync();
         }
 
-        public async Task<Review_Comment?> GetByIdAsync(int id)
+        public async Task<Review_Comment?> GetByIdAsync(int adminId, int commentId)
         {
-            return await _context.Set<Review_Comment>().FindAsync(id);
+            return await _context.Review_Comments
+                                 .Include(rc => rc.Admin)
+                                 .Include(rc => rc.Comment)
+                                 .FirstOrDefaultAsync(rc => rc.AdminID == adminId && rc.CommentID == commentId);
         }
 
-        public async Task AddAsync(Review_Comment review_comment)
+        public async Task AddAsync(Review_Comment reviewComment)
         {
-            _context.Set<Review_Comment>().Add(review_comment);
+            await _context.Review_Comments.AddAsync(reviewComment);
             await SaveAsync();
         }
 
-        public async Task UpdateAsync(Review_Comment review_comment)
+        public async Task UpdateAsync(Review_Comment reviewComment)
         {
-            _context.Set<Review_Comment>().Update(review_comment);
+            _context.Review_Comments.Update(reviewComment);
             await SaveAsync();
         }
 
-        public async Task DeleteAsync(Review_Comment review_comment)
+        public async Task DeleteAsync(Review_Comment reviewComment)
         {
-            _context.Set<Review_Comment>().Remove(review_comment);
+            _context.Review_Comments.Remove(reviewComment);
             await SaveAsync();
         }
 

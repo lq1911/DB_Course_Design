@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class DeliveryTask
     {
-        // ÅäËÍÈÎÎñÀà
-        // Ö÷Âë£ºTaskID
-        // ÍâÂë£ºCustomerID£¬StoreID£¬SellerID£¬CourierID
+        // é…é€ä»»åŠ¡ç±»
+        // ä¸»ç ï¼šTaskID
+        // å¤–ç ï¼šCustomerIDï¼ŒStoreIDï¼ŒSellerIDï¼ŒCourierID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,11 +25,11 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(10,6)")]
         public decimal? CourierLatitude { get; set; }
 
-        // ·¢²¼ÈÎÎñÊ±¼ä
+        // å‘å¸ƒä»»åŠ¡æ—¶é—´
         [Required]
         public DateTime PublishTime { get; set; }
 
-        // ½Óµ¥Ê±¼ä
+        // æ¥å•æ—¶é—´
         [Required]
         public DateTime AcceptTime { get; set; }
 
@@ -48,8 +48,8 @@ namespace BackEnd.Models
         [ForeignKey("CourierID")]
         public Courier Courier { get; set; } = null!;
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ÅäËÍÍ¶Ëß
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
+        // é…é€æŠ•è¯‰
         public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }
     }
 }

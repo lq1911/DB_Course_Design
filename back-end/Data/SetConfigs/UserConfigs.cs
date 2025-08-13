@@ -10,62 +10,62 @@ namespace BackEnd.Data.SetConfigs
         {
             builder.ToTable("USER");
 
-            // --- Ö÷¼üºÍ»ù´¡ÊôĞÔÅäÖÃ ---
+            // --- ä¸»é”®å’ŒåŸºç¡€å±æ€§é…ç½® ---
             builder.HasKey(u => u.UserID);
             builder.Property(u => u.UserID).HasColumnName("USERID").ValueGeneratedOnAdd();
 
             builder.Property(u => u.Username).HasColumnName("USERNAME").IsRequired().HasMaxLength(15);
 
-            // ½¨Òé£ºÃÜÂë´æ´¢µÄÊÇ¹şÏ£Öµ£¬³¤¶ÈÍ¨³£½Ï³¤¡£128Î»ÊÇÒ»¸öºÏÀíµÄÑ¡Ôñ¡£
+            // å»ºè®®ï¼šå¯†ç å­˜å‚¨çš„æ˜¯å“ˆå¸Œå€¼ï¼Œé•¿åº¦é€šå¸¸è¾ƒé•¿ã€‚128ä½æ˜¯ä¸€ä¸ªåˆç†çš„é€‰æ‹©ã€‚
             builder.Property(u => u.Password).HasColumnName("PASSWORD").IsRequired().HasMaxLength(128);
 
-            // ĞŞÕı£ºPhoneNumber ÊÇ long ÀàĞÍ£¬²»Ó¦ÓĞ MaxLength ÏŞÖÆ¡£
+            // ä¿®æ­£ï¼šPhoneNumber æ˜¯ long ç±»å‹ï¼Œä¸åº”æœ‰ MaxLength é™åˆ¶ã€‚
             builder.Property(u => u.PhoneNumber).HasColumnName("PHONENUMBER").IsRequired();
 
             builder.Property(u => u.Email).HasColumnName("EMAIL").IsRequired().HasMaxLength(30);
 
-            // ĞŞÕı£ºÓëÄ£ĞÍ [MaxLength(2)] ±£³ÖÒ»ÖÂ
+            // ä¿®æ­£ï¼šä¸æ¨¡å‹ [MaxLength(2)] ä¿æŒä¸€è‡´
             builder.Property(u => u.Gender).HasColumnName("GENDER").HasMaxLength(2);
 
-            // ĞŞÕı£ºÓëÄ£ĞÍ [MaxLength(6)] ±£³ÖÒ»ÖÂ
+            // ä¿®æ­£ï¼šä¸æ¨¡å‹ [MaxLength(6)] ä¿æŒä¸€è‡´
             builder.Property(u => u.FullName).HasColumnName("FULLNAME").HasMaxLength(6);
 
             builder.Property(u => u.Avatar).HasColumnName("AVATAR").HasMaxLength(255);
             builder.Property(u => u.Birthday).HasColumnName("BIRTHDAY");
             builder.Property(u => u.AccountCreationTime).HasColumnName("ACCOUNTCREATIONTIME").IsRequired();
 
-            // --- Ã¶¾ÙÀàĞÍÅäÖÃ ---
-            // ½«Ã¶¾Ù´æ´¢Îª×Ö·û´®£¬±ãÓÚÊı¾İ¿âÔÄ¶ÁºÍµ÷ÊÔ
+            // --- æšä¸¾ç±»å‹é…ç½® ---
+            // å°†æšä¸¾å­˜å‚¨ä¸ºå­—ç¬¦ä¸²ï¼Œä¾¿äºæ•°æ®åº“é˜…è¯»å’Œè°ƒè¯•
             builder.Property(u => u.IsProfilePublic).HasColumnName("ISPROFILEPUBLIC").IsRequired().HasConversion<string>().HasMaxLength(20);
             builder.Property(u => u.Role).HasColumnName("ROLE").IsRequired().HasConversion<string>().HasMaxLength(20);
 
             // ---------------------------------------------------------------
-            // ¹ØÏµÅäÖÃ£ºÓÃ»§×÷ÎªÖ÷±í£¬Óë¸÷¸ö½ÇÉ«×Ó±í½¨Á¢Ò»¶ÔÒ»¹ØÏµ
+            // å…³ç³»é…ç½®ï¼šç”¨æˆ·ä½œä¸ºä¸»è¡¨ï¼Œä¸å„ä¸ªè§’è‰²å­è¡¨å»ºç«‹ä¸€å¯¹ä¸€å…³ç³»
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: User -> Customer (Ò»¶ÔÒ»)
+            // å…³ç³»ä¸€: User -> Customer (ä¸€å¯¹ä¸€)
             builder.HasOne(u => u.Customer)
-                   .WithOne(c => c.User) // ÔÚ Customer Ä£ĞÍÖĞ£¬·´Ïòµ¼º½ÊôĞÔÎª User
-                   .HasForeignKey<Customer>(c => c.UserID) // Íâ¼üÔÚ Customer ±íÉÏ
-                   .OnDelete(DeleteBehavior.Cascade); // µ± User ±»É¾³ıÊ±£¬Æä¹ØÁªµÄ Customer Éí·İÒ²Ó¦±»¼¶ÁªÉ¾³ı¡£
+                   .WithOne(c => c.User) // åœ¨ Customer æ¨¡å‹ä¸­ï¼Œåå‘å¯¼èˆªå±æ€§ä¸º User
+                   .HasForeignKey<Customer>(c => c.UserID) // å¤–é”®åœ¨ Customer è¡¨ä¸Š
+                   .OnDelete(DeleteBehavior.Cascade); // å½“ User è¢«åˆ é™¤æ—¶ï¼Œå…¶å…³è”çš„ Customer èº«ä»½ä¹Ÿåº”è¢«çº§è”åˆ é™¤ã€‚
 
-            // ¹ØÏµ¶ş: User -> Courier (Ò»¶ÔÒ»)
+            // å…³ç³»äºŒ: User -> Courier (ä¸€å¯¹ä¸€)
             builder.HasOne(u => u.Courier)
-                   .WithOne(c => c.User) // ÔÚ Courier Ä£ĞÍÖĞ£¬·´Ïòµ¼º½ÊôĞÔÎª User
-                   .HasForeignKey<Courier>(c => c.UserID) // Íâ¼üÔÚ Courier ±íÉÏ
-                   .OnDelete(DeleteBehavior.Cascade); // µ± User ±»É¾³ıÊ±£¬Æä¹ØÁªµÄ Courier Éí·İÒ²Ó¦±»¼¶ÁªÉ¾³ı¡£
+                   .WithOne(c => c.User) // åœ¨ Courier æ¨¡å‹ä¸­ï¼Œåå‘å¯¼èˆªå±æ€§ä¸º User
+                   .HasForeignKey<Courier>(c => c.UserID) // å¤–é”®åœ¨ Courier è¡¨ä¸Š
+                   .OnDelete(DeleteBehavior.Cascade); // å½“ User è¢«åˆ é™¤æ—¶ï¼Œå…¶å…³è”çš„ Courier èº«ä»½ä¹Ÿåº”è¢«çº§è”åˆ é™¤ã€‚
 
-            // ¹ØÏµÈı: User -> Administrator (Ò»¶ÔÒ»)
+            // å…³ç³»ä¸‰: User -> Administrator (ä¸€å¯¹ä¸€)
             builder.HasOne(u => u.Administrator)
-                   .WithOne(a => a.User) // ÔÚ Administrator Ä£ĞÍÖĞ£¬·´Ïòµ¼º½ÊôĞÔÎª User
-                   .HasForeignKey<Administrator>(a => a.UserID) // Íâ¼üÔÚ Administrator ±íÉÏ
-                   .OnDelete(DeleteBehavior.Cascade); // µ± User ±»É¾³ıÊ±£¬Æä¹ØÁªµÄ Administrator Éí·İÒ²Ó¦±»¼¶ÁªÉ¾³ı¡£
+                   .WithOne(a => a.User) // åœ¨ Administrator æ¨¡å‹ä¸­ï¼Œåå‘å¯¼èˆªå±æ€§ä¸º User
+                   .HasForeignKey<Administrator>(a => a.UserID) // å¤–é”®åœ¨ Administrator è¡¨ä¸Š
+                   .OnDelete(DeleteBehavior.Cascade); // å½“ User è¢«åˆ é™¤æ—¶ï¼Œå…¶å…³è”çš„ Administrator èº«ä»½ä¹Ÿåº”è¢«çº§è”åˆ é™¤ã€‚
 
-            // ¹ØÏµËÄ: User -> Seller (Ò»¶ÔÒ»)
+            // å…³ç³»å››: User -> Seller (ä¸€å¯¹ä¸€)
             builder.HasOne(u => u.Seller)
-                   .WithOne(s => s.User) // ÔÚ Seller Ä£ĞÍÖĞ£¬·´Ïòµ¼º½ÊôĞÔÎª User
-                   .HasForeignKey<Seller>(s => s.UserID) // Íâ¼üÔÚ Seller ±íÉÏ
-                   .OnDelete(DeleteBehavior.Cascade); // µ± User ±»É¾³ıÊ±£¬Æä¹ØÁªµÄ Seller Éí·İÒ²Ó¦±»¼¶ÁªÉ¾³ı¡£
+                   .WithOne(s => s.User) // åœ¨ Seller æ¨¡å‹ä¸­ï¼Œåå‘å¯¼èˆªå±æ€§ä¸º User
+                   .HasForeignKey<Seller>(s => s.UserID) // å¤–é”®åœ¨ Seller è¡¨ä¸Š
+                   .OnDelete(DeleteBehavior.Cascade); // å½“ User è¢«åˆ é™¤æ—¶ï¼Œå…¶å…³è”çš„ Seller èº«ä»½ä¹Ÿåº”è¢«çº§è”åˆ é™¤ã€‚
         }
     }
 }

@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -18,20 +16,30 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            // 由于 Customer 实体中没有 User 导航属性，我们无法使用 .Include()
-            // 这里只会查询出 Customers 表自身的数据
-            return await _context.Customers.ToListAsync();
+            return await _context.Customers
+                                 .Include(c => c.DeliveryTasks)
+                                 .Include(c => c.FoodOrders)
+                                 .Include(c => c.Coupons)
+                                 .Include(c => c.FavoritesFolders)
+                                 .Include(c => c.Comments)
+                                 .ToListAsync();
         }
 
         public async Task<Customer?> GetByIdAsync(int id)
         {
-            // FindAsync 只查询主表，不受导航属性影响
-            return await _context.Customers.FindAsync(id);
+            return await _context.Customers
+                                 .Include(c => c.DeliveryTasks)
+                                 .Include(c => c.FoodOrders)
+                                 .Include(c => c.Coupons)
+                                 .Include(c => c.FavoritesFolders)
+                                 .Include(c => c.Comments)
+                                 .FirstOrDefaultAsync(c => c.UserID == id);
         }
 
         public async Task AddAsync(Customer customer)
         {
             await _context.Customers.AddAsync(customer);
+            await SaveAsync();
         }
 
         public async Task UpdateAsync(Customer customer)
@@ -40,10 +48,10 @@ namespace BackEnd.Repositories
             await SaveAsync();
         }
 
-        public Task DeleteAsync(Customer customer)
+        public async Task DeleteAsync(Customer customer)
         {
             _context.Customers.Remove(customer);
-            return Task.CompletedTask;
+            await SaveAsync();
         }
 
         public async Task SaveAsync()

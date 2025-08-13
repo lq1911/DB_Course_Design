@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class ShoppingCartItem
     {
-        // ¹ºÎï³µÏîÀà
-        // Ö÷Âë£ºItemID
-        // ÍâÂë£ºDishID£¬CartID
+        // è´­ç‰©è½¦é¡¹ç±»
+        // ä¸»ç ï¼šItemID
+        // å¤–ç ï¼šDishIDï¼ŒCartID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

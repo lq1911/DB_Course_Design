@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class ShoppingCart
     {
-        // ¹ºÎï³µÀà
-        // Ö÷Âë£ºCartID
-        // ÍâÂë£ºOrderID
+        // è´­ç‰©è½¦ç±»
+        // ä¸»ç ï¼šCartID
+        // å¤–ç ï¼šOrderID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,8 +23,8 @@ namespace BackEnd.Models
         [ForeignKey("OrderID")]
         public FoodOrder? Order { get; set; }
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ¹ºÎï³µÏî
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
+        // è´­ç‰©è½¦é¡¹
         public ICollection<ShoppingCartItem>? ShoppingCartItems { get; set; }
     }
 }
