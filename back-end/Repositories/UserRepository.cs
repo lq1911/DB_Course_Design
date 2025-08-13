@@ -26,9 +26,15 @@ namespace BackEnd.Repositories
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<User?> GetByPhoneAsync(long phoneNumber)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+        }
+
         public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
+            await SaveAsync();
         }
         public async Task UpdateAsync(User user)
         {
@@ -45,6 +51,15 @@ namespace BackEnd.Repositories
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsByPhoneAsync(string phone)
+        {
+            if (long.TryParse(phone, out long phoneNumber))
+            {
+                return await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
+            }
+            return false;
         }
     }
 }

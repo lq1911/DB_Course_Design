@@ -18,7 +18,7 @@ namespace BackEnd.Models
         public string Username { get; set; } = null!;
 
         [Required]
-        [MaxLength(10)]
+        [MaxLength(60)]
         public string Password { get; set; } = null!;
 
         [Required]
