@@ -6,10 +6,9 @@
 
     <div
       v-if="showUserPanel"
-      class="fixed inset-0 z-50"
+      class="fixed inset-0"
       @click="showUserPanel = false"
     >
-      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
       <div
         class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl"
         @click.stop
@@ -77,11 +76,8 @@ const userInfo = {
 // 用户菜单
 const userMenus = [
   { icon: "fas fa-map-marker-alt", label: "收货地址管理" },
-  { icon: "fas fa-heart", label: "收藏的商家" },
   { icon: "fas fa-ticket-alt", label: "我的优惠券" },
   { icon: "fas fa-cog", label: "账户设置" },
-  { icon: "fas fa-headset", label: "客服中心" },
-  { icon: "fas fa-question-circle", label: "帮助中心" },
 ];
 
 </script>

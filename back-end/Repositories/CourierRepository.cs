@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -18,20 +16,24 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Courier>> GetAllAsync()
         {
-            // 预加载关联的 User 数据
             return await _context.Couriers
                                  .Include(c => c.User)
+                                 .Include(c => c.DeliveryTasks)
                                  .ToListAsync();
         }
 
         public async Task<Courier?> GetByIdAsync(int id)
         {
-            return await _context.Couriers.FindAsync(id);
+            return await _context.Couriers
+                                 .Include(c => c.User)
+                                 .Include(c => c.DeliveryTasks)
+                                 .FirstOrDefaultAsync(c => c.UserID == id);
         }
 
         public async Task AddAsync(Courier courier)
         {
             await _context.Couriers.AddAsync(courier);
+            await SaveAsync();
         }
 
         public async Task UpdateAsync(Courier courier)
@@ -40,10 +42,10 @@ namespace BackEnd.Repositories
             await SaveAsync();
         }
 
-        public Task DeleteAsync(Courier courier)
+        public async Task DeleteAsync(Courier courier)
         {
             _context.Couriers.Remove(courier);
-            return Task.CompletedTask;
+            await SaveAsync();
         }
 
         public async Task SaveAsync()

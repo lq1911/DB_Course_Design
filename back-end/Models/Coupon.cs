@@ -1,39 +1,37 @@
-using System;
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace BackEnd.Models{
+
+namespace BackEnd.Models
+{
     public class Coupon
     {
+        // 优惠券类
+        // 主码：CouponID
+        // 外码：CouponManagerID，CustomerID，OrderID
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CouponID { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal MinimumSpend { get; set; }
+        public CouponState CouponState { get; set; } = CouponState.Unused;
 
         [Required]
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal DiscountAmount { get; set; }
+        public int CouponManagerID { get; set; }
+        [ForeignKey("CouponManagerID")]
+        public CouponManager CouponManager { get; set; } = null!;
 
         [Required]
-        public DateTime ValidFrom { get; set; }
-
-        [Required]
-        public DateTime ValidTo { get; set; }
-
-        public int? ApplicableStoreID { get; set; }
-        [ForeignKey("ApplicableStoreID")]
-        public Store Store { get; set; }
+        public int CustomerID { get; set; }
+        [ForeignKey("CustomerID")]
+        public Customer Customer { get; set; } = null!;
 
         public int? OrderID { get; set; }
         [ForeignKey("OrderID")]
-        public FoodOrder Order { get; set; }
+        public FoodOrder? Order { get; set; }
 
-        [Required]
-        public int SellerID { get; set; }
-        [ForeignKey("SellerID")]
-        public Seller Seller { get; set; }
+        [NotMapped]
+        public bool IsExpired => CouponManager.ValidTo < DateTime.Now;
+
     }
-
 }

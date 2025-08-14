@@ -15,6 +15,6 @@ import HeroBanner from '@/components/user/HomePage/HeroBanner.vue';
 import FoodCategory from '@/components/user/HomePage/FoodCategory.vue';
 import Discount from '@/components/user/HomePage/Discount.vue';
 import PopularStore from '@/components/user/HomePage/PopularStore.vue';
-import Footer from '@/components/user/HomePage/Footer.vue';
+import Footer from '@/components/user/Footer.vue';
 
 </script>

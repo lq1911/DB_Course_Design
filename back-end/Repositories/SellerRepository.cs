@@ -1,9 +1,7 @@
-using BackEnd.Models;
 using BackEnd.Data;
+using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -17,29 +15,35 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Seller>> GetAllAsync()
         {
-            return await _context.Set<Seller>().ToListAsync();
+            return await _context.Sellers
+                                 .Include(s => s.User)   // 关联用户信息
+                                 .Include(s => s.Store)  // 关联店铺信息
+                                 .ToListAsync();
         }
 
         public async Task<Seller?> GetByIdAsync(int id)
         {
-            return await _context.Set<Seller>().FindAsync(id);
+            return await _context.Sellers
+                                 .Include(s => s.User)
+                                 .Include(s => s.Store)
+                                 .FirstOrDefaultAsync(s => s.UserID == id);
         }
 
         public async Task AddAsync(Seller seller)
         {
-            _context.Set<Seller>().Add(seller);
+            await _context.Sellers.AddAsync(seller);
             await SaveAsync();
         }
 
         public async Task UpdateAsync(Seller seller)
         {
-            _context.Set<Seller>().Update(seller);
+            _context.Sellers.Update(seller);
             await SaveAsync();
         }
 
         public async Task DeleteAsync(Seller seller)
         {
-            _context.Set<Seller>().Remove(seller);
+            _context.Sellers.Remove(seller);
             await SaveAsync();
         }
 

@@ -20,7 +20,31 @@
 
 ### 调用接口
 
-**1. 菜单接口**
+**1. 商家接口**
+
+- 用来获得商家的详细信息
+
+- 输入表单说明
+
+| 字段名   | 类型   | 是否必填 | 说明 |
+| -------- | ------ | -------- | ----- |
+| StoreId | int | 是 | 店铺编号 |
+
+- 获得信息说明
+
+| 字段名   | 说明   |
+| -------- | ----- |
+| Store.StoreID | 店铺编号 |
+| Store.StoreName | 店铺名 |
+| Store.StoreImage | 店铺头像 |
+| Store.StoreAddress | 店铺地址 |
+| Store.OpenTime | 上班时间 |
+| Store.CloseTime | 下班时间 |
+| Store.AverageRating | 店铺评分 |
+| Store.MonthlySales | 店铺月销量 |
+| Store.Features | 店铺特色 |
+
+**2. 菜单接口**
 
 - 用来获得商家的菜单信息
 
@@ -40,25 +64,12 @@
 | 字段名   | 说明   |
 | -------- | ----- |
 | Dish.DishID | 菜品编号 |
+| StoreCatory | 所属菜单分类 |
 | Dish.DishName | 菜品名称 |
-| Dish.Price | 菜品价格 |
 | Dish.Discripstion | 菜品描述 |
+| Dish.Price | 菜品价格 |
+| Dish.Image | 菜品图片 |
 | Dish.IsSoldOut | 是否售罄 |
-
-**2. 购物车接口**
-
-- 用来修改用户的购物车
-
-- 输入表单说明
-
-| 字段名   | 类型   | 是否必填 | 说明 |
-| -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-| StoreId | int | 是 | 店铺编号 |
-| Dish.DishId | int | 是 | 菜品编号 |
-| ShoppingCartItem.Quantity | int | 是 | 菜品数量 |
-| ShoppingCartItem.TotalPrice | int | 是 | 总价格 |
-| ShoppingCart.LastUpdateTime | int | 是 | 最后修改时间 |
 
 **3. 评价接口**
 
@@ -68,22 +79,28 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
 | StoreId | int | 是 | 店铺编号 |
 
 - 获得信息说明
 
 | 字段名   | 说明   |
 | -------- | ----- |
+| CommentList | 评论数组Array<Comment> |
+
+> 以下为上面评论数组中`Comment`对象的具体属性
+
+| 字段名   | 说明   |
+| -------- | ----- |
 | Comment.CommentID | 评价ID |
+| Custommer.CustommerName | 用户姓名 |
+| Comment.Rating | 评价分数 |
+| Comment.PostedAt | 评价时间 |
 | Comment.Content | 评价内容 |
-| Comment.Likes | 喜欢 |
-| Comment.Replies | 回复信息 |
-| Comment.CommenterID | 评价者ID |
+| Custommer.Avator | 用户头像 |
 
-**4. 商家接口**
+**4. 评价状态接口**
 
-- 用来获得商家的详细信息
+- 用来获得商家的评价状态信息
 
 - 输入表单说明
 
@@ -95,12 +112,7 @@
 
 | 字段名   | 说明   |
 | -------- | ----- |
-| Store.StoreName | 店铺名 |
-| Store.StoreAddress | 店铺地址 |
-| Store.BusinessHours | 工作时间 |
-| Store.AverageRating | 店铺评分 |
-| Store.MonthlySales | 店铺月销量 |
-| Store.Features | 店铺特色 |
+| CommentStatus | 返回<number>数组，分别为和1~5分的评论的数量，分数和数组下标对应 |
 
 ---
 

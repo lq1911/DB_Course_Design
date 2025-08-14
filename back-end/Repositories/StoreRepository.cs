@@ -1,9 +1,7 @@
-using BackEnd.Models;
 using BackEnd.Data;
+using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -17,29 +15,47 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Store>> GetAllAsync()
         {
-            return await _context.Set<Store>().ToListAsync();
+            return await _context.Stores
+                                 .Include(s => s.Seller)
+                                 .Include(s => s.FoodOrders)
+                                 .Include(s => s.CouponManagers)
+                                 .Include(s => s.Menus)
+                                 .Include(s => s.FavoriteItems)
+                                 .Include(s => s.StoreViolationPenalties)
+                                 .Include(s => s.Comments)
+                                 .Include(s => s.DeliveryTasks)
+                                 .ToListAsync();
         }
 
         public async Task<Store?> GetByIdAsync(int id)
         {
-            return await _context.Set<Store>().FindAsync(id);
+            return await _context.Stores
+                                 .Include(s => s.Seller)
+                                 .Include(s => s.FoodOrders)
+                                 .Include(s => s.CouponManagers)
+                                 .Include(s => s.Menus)
+                                 .Include(s => s.FavoriteItems)
+                                 .Include(s => s.StoreViolationPenalties)
+                                 .Include(s => s.Comments)
+                                 .Include(s => s.DeliveryTasks)
+                                 .FirstOrDefaultAsync(s => s.StoreID == id);
         }
 
         public async Task AddAsync(Store store)
         {
-            _context.Set<Store>().Add(store);
+            await _context.Stores.AddAsync(store);
             await SaveAsync();
         }
 
         public async Task UpdateAsync(Store store)
         {
-            _context.Set<Store>().Update(store);
+            _context.Stores.Update(store);
             await SaveAsync();
         }
 
         public async Task DeleteAsync(Store store)
         {
-            _context.Set<Store>().Remove(store);
+            _context.Stores.Remove(store);
             await SaveAsync();
         }
 

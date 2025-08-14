@@ -40,10 +40,10 @@
 
 | 字段名   | 说明   |
 | -------- | ----- |
+| store.ID | 店铺编号 |
 | store.AverageRating | 店铺均分 |
 | store.Name | 店铺名字 |
 | store. MonthlySales | 店铺月销售量 |
-
 
 **2. 搜索接口**
 
@@ -68,12 +68,69 @@
 | store.MonthlySales | 店铺月销售量 |
 | store.StoreAddress | 店铺地址 |
 
+**3. 订单接口**
+
+- 用来获取用户历史订单数据
+
+- 输入表单说明
+
+| 字段名   | 类型   | 是否必填 | 说明 |
+| -------- | ------ | -------- | ----- |
+| UserId | int | 是 | 消费者编号 |
+
+
+- 获得信息说明
+
 | 字段名   | 说明   |
 | -------- | ----- |
-| Dish.DishName | 美食名字 |
-| Dish.Discription | 美食描述 |
-| Dish.Price | 美食价格 |
-| Dish.Quantity | 美食销售量 |
+| Order.OrderID | 订单均分 |
+| Order.PaymentTime | 支付时间 |
+| Order.CartID | 购物车编号 |
+| Order.StoreID | 店铺编号 |
+| Store.Image | 店铺图片 |
+| Store.Name | 店铺 |
+| Cart.? | 已购商品信息(待添加) |
+
+
+**4. 用户信息接口**
+
+- 用来获取用户的信息
+
+- 输入表单说明
+
+| 字段名   | 类型   | 是否必填 | 说明 |
+| -------- | ------ | -------- | ----- |
+| UserId | int | 是 | 消费者编号 |
+
+- 获得信息说明
+
+| 字段名   | 说明   |
+| -------- | ----- |
+| User.Name | 用户昵称 |
+| User.PhoneNumber | 用户号码 |
+| User.Avatar | 用户头像 |
+
+**5. 优惠券接口**
+
+- 用来查询用户优惠券
+
+- 输入表单说明
+
+| 字段名   | 类型   | 是否必填 | 说明 |
+| -------- | ------ | -------- | ----- |
+| UserId | int | 是 | 消费者编号 |
+
+- 获得信息说明
+
+| 字段名   | 说明   |
+| -------- | ----- |
+| Coupon.CouponID | 优惠券编号 |
+| Coupon.CouponState | 优惠券状态 |
+| Coupon.OrderID | 订单编号 |
+| Coupon.CouponManagerID | 优惠券管理器编号 |
+| Coupon.MinimumSpend | 最低消费 |
+| Coupon.DiscountAmount | 优惠金额 |
+| Coupon.ValidTo | 有效期截至时间 |
 
 ---
 

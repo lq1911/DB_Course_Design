@@ -6,22 +6,33 @@ namespace BackEnd.Data.SetConfigs
 {
     public class Review_CommentConfig : IEntityTypeConfiguration<Review_Comment>
     {
-        public void Configure(EntityTypeBuilder<Review_Comment> entity)
+        public void Configure(EntityTypeBuilder<Review_Comment> builder)
         {
-            entity.ToTable("REVIEW_COMMENT");
+            builder.ToTable("REVIEW_COMMENT");
 
-            entity.HasKey(e => new { e.AdminID, e.CommentID });
-            entity.Property(e => e.AdminID).HasColumnName("ADMINID");
-            entity.Property(e => e.CommentID).HasColumnName("COMMENTID");
-            entity.Property(e => e.ReviewTime).HasColumnName("REVIEWTIME").IsRequired();
+            builder.HasKey(rc => new { rc.AdminID, rc.CommentID });
 
-            entity.HasOne(e => e.Admin)
-                .WithMany()
-                .HasForeignKey(e => e.AdminID);
+            builder.Property(rc => rc.AdminID).HasColumnName("ADMINID");
 
-            entity.HasOne(e => e.Comment)
-                .WithMany()
-                .HasForeignKey(e => e.CommentID);
+            builder.Property(rc => rc.CommentID).HasColumnName("COMMENTID");
+
+            builder.Property(rc => rc.ReviewTime).HasColumnName("REVIEWTIME").IsRequired();
+
+            // ---------------------------------------------------------------
+            // 关系配置
+            // ---------------------------------------------------------------
+
+            // 关系一: Review_Comment -> Administrator (多对一)
+            builder.HasOne(rc => rc.Admin)
+                   .WithMany(a => a.ReviewComments)
+                   .HasForeignKey(rc => rc.AdminID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过删除审核记录来删除管理员
+
+            // 关系二: Review_Comment -> Comment (多对一)
+            builder.HasOne(rc => rc.Comment)
+                   .WithMany(c => c.ReviewComments)
+                   .HasForeignKey(rc => rc.CommentID)
+                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过删除审核记录来删除评论
         }
     }
 }

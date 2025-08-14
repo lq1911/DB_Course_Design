@@ -10,7 +10,7 @@ namespace BackEnd.Controllers
     {
         private readonly IUserService _service;
 
-        // 构造函数注入业务层
+        // 构造函数注入业务层 
         public UserController(IUserService service)
         {
             _service = service;

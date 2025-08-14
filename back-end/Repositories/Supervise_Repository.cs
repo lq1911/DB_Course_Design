@@ -17,29 +17,36 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Supervise_>> GetAllAsync()
         {
-            return await _context.Set<Supervise_>().ToListAsync();
+            return await _context.Supervise_s
+                                 .Include(s => s.Admin)   // 管理员
+                                 .Include(s => s.Penalty) // 处罚记录
+                                 .ToListAsync();
         }
 
-        public async Task<Supervise_?> GetByIdAsync(int id)
+        // 复合主键查询
+        public async Task<Supervise_?> GetByIdAsync(int adminId, int penaltyId)
         {
-            return await _context.Set<Supervise_>().FindAsync(id);
+            return await _context.Supervise_s
+                                 .Include(s => s.Admin)
+                                 .Include(s => s.Penalty)
+                                 .FirstOrDefaultAsync(s => s.AdminID == adminId && s.PenaltyID == penaltyId);
         }
 
         public async Task AddAsync(Supervise_ supervise_)
         {
-            _context.Set<Supervise_>().Add(supervise_);
+            await _context.Supervise_s.AddAsync(supervise_);
             await SaveAsync();
         }
 
         public async Task UpdateAsync(Supervise_ supervise_)
         {
-            _context.Set<Supervise_>().Update(supervise_);
+            _context.Supervise_s.Update(supervise_);
             await SaveAsync();
         }
 
         public async Task DeleteAsync(Supervise_ supervise_)
         {
-            _context.Set<Supervise_>().Remove(supervise_);
+            _context.Supervise_s.Remove(supervise_);
             await SaveAsync();
         }
 
