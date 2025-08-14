@@ -12,7 +12,7 @@
                             <div class="flex items-center space-x-2">
                                 <span class="text-lg font-bold text-[#F9771C]">¥{{ item.price }}</span>
                             </div>
-                            <div class="flex items-center space-x-2">
+                            <div v-if="!isItemSoldOut(item.isSoldOut)" class="flex items-center space-x-2">
                                 <button @click="emit('decrease', item.id)" :disabled="!getItemQuantity(item.id)"
                                     class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-300 disabled:opacity-50 cursor-pointer !rounded-button whitespace-nowrap">
                                     <i class="fas fa-minus text-xs"></i>
@@ -22,6 +22,9 @@
                                     class="w-8 h-8 rounded-full bg-[#F9771C] text-white flex items-center justify-center hover:bg-orange-600 cursor-pointer !rounded-button whitespace-nowrap">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
+                            </div>
+                            <div v-else>
+                                <span>已售罄</span>
                             </div>
                         </div>
                     </div>
@@ -47,6 +50,7 @@ const props = defineProps<{
     menuItems: MenuItem | null;
 }>();
 
+const isItemSoldOut = (isSoldOut?: number) =>  isSoldOut !== 0 ; // 等于0返回False
 const getCurrentMenuItems = () => menuItems.filter(item => item.categoryId === props.activeCategory);
 const getItemQuantity = (itemId: number) => props.cart[itemId] || 0;
 
