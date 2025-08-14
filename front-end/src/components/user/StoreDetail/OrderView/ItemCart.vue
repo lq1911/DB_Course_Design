@@ -97,16 +97,11 @@
 <script setup lang="ts">
 import { ref, computed, defineProps, defineEmits } from 'vue'
 
+import type { MenuItem } from '@/api/store_info'
+
 const props = defineProps<{
   cart: Record<number, number>;
-  menuItems: Array<{
-        id: number,
-        categoryId: number,
-        name: string,
-        description: string,
-        price: number,
-        image: string
-    }>;
+  menuItems: MenuItem | null;
 }>();
 
 const emit = defineEmits<{
@@ -120,7 +115,7 @@ const cartItems = computed(() => {
   return Object.entries(props.cart)
     .filter(([, quantity]) => quantity > 0)
     .map(([itemId, quantity]) => {
-      const item = props.menuItems.find((item) => item.id === parseInt(itemId));
+      const item = menuItems.find((item) => item.id === parseInt(itemId));
       return item ? { ...item, quantity } : null;
     })
     .filter((item): item is Exclude<typeof item, null> => item !== null);
@@ -140,4 +135,6 @@ const totalItems = computed(() => {
   return Object.values(props.cart).reduce((sum, quantity) => sum + quantity, 0);
 });
 
+// 测试代码
+import { menuItems } from '@/api/store_info';
 </script>
