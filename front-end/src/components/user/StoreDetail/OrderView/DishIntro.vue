@@ -1,9 +1,10 @@
 <template>
-        <div class="mt-5 bg-white border-2 rounded-lg shadow-sm p-6">
-            <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="item in getCurrentMenuItems()" :key="item.id"
-                    class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    <img :src="item.image" class="w-full h-48 object-cover object-top" />
+    <div class="mt-5 mr-10 ml-5 w-full bg-white border-2 rounded-lg shadow-sm p-2"
+    >
+        <div v-if="getCurrentMenuItems().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="item in getCurrentMenuItems()" :key="item.id">
+                <div v-if="item" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md">
+                    <img :src="item.image" class="w-full h-84 object-cover object-top" />
                     <div class="p-4">
                         <h4 class="font-semibold text-gray-900 mb-2">{{ item.name }}</h4>
                         <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ item.description }}</p>
@@ -24,30 +25,29 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
+        <div v-else class="flex justify-center items-center py-10 text-gray-500">
+            抱歉，该菜单下暂时没有菜品~
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 
+import type { MenuItem } from '@/api/store_info'
+
 const props = defineProps<{
     categories: Array<{ id: number, name: string }>;
     activeCategory: number;
     cart: Record<number, number>;
-    menuItems: Array<{
-        id: number,
-        categoryId: number,
-        name: string,
-        description: string,
-        price: number,
-        image: string
-    }>;
+    menuItems: MenuItem | null;
 }>();
 
-const getCurrentCategory = () => props.categories.find(cat => cat.id === props.activeCategory);
-const getCurrentMenuItems = () => props.menuItems.filter(item => item.categoryId === props.activeCategory);
+const getCurrentMenuItems = () => menuItems.filter(item => item.categoryId === props.activeCategory);
 const getItemQuantity = (itemId: number) => props.cart[itemId] || 0;
 
 const emit = defineEmits<{
@@ -55,4 +55,6 @@ const emit = defineEmits<{
     (e: 'decrease', itemId: number): void;
 }>();
 
+// 测试代码
+import { menuItems } from '@/api/store_info';
 </script>
