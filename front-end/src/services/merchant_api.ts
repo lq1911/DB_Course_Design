@@ -6,220 +6,151 @@ const api = axios.create({
   timeout: 5000,
 });
 
-// 获取店铺概览数据
-export const getShopOverview = async () => {
-  try {
-    const response = await api.get('/shop/overview');
-    return response.data;
-  } catch (error) {
-    console.error('获取店铺概览数据失败:', error);
-    throw error;
-  }
-};
-
-// 获取店铺基本信息
-export const getShopInfo = async () => {
-  try {
-    const response = await api.get('/shop/info');
-    return response.data;
-  } catch (error) {
-    console.error('获取店铺基本信息失败:', error);
-    throw error;
-  }
-};
-
-// 获取商家信息
-export const getMerchantInfo = async () => {
-  try {
-    const response = await api.get('/merchant/info');
-    return response.data;
-  } catch (error) {
-    console.error('获取商家信息失败:', error);
-    throw error;
-  }
-};
-
-// 切换营业状态
-export const toggleBusinessStatus = async (status: boolean) => {
-  try {
-    const response = await api.patch('/shop/status', { isOpen: status });
-    return response.data;
-  } catch (error) {
-    console.error('切换营业状态失败:', error);
-    throw error;
-  }
-};
-
-// 更新店铺信息
-export const updateShopField = async (field: string, value: string) => {
-  try {
-    const response = await api.patch('/shop/update-field', {
-      field,  // 字段名
-      value   // 字段值
-    });
-    return response.data;
-  } catch (error) {
-    console.error(`更新${field}失败:`, error);
-    throw error;
-  }
-};
+// 注：移除与数据库无关的店铺/商家信息与营业状态接口
 
 
 // ==================== 类型定义 ====================
 
-// 订单相关类型
-interface UserInfo {
-  name: string;
-  phone: string;
-  avatar?: string;
+// 订单相关类型（对齐数据库 FoodOrder）
+export interface FoodOrder {
+  orderId: number;        // FoodOrder.OrderID
+  paymentTime: string;    // FoodOrder.PaymentTime (ISO string)
+  remarks?: string;       // FoodOrder.Remarks
+  customerId: number;     // FoodOrder.CustomerID
+  cartId: number;         // FoodOrder.CartID
+  storeId: number;        // FoodOrder.StoreID
+  sellerId: number;       // FoodOrder.SellerID
 }
 
-interface OrderDish {
-  name: string;
-  price: number;
-  quantity: number;
+// 菜品相关类型（对齐数据库 Dish）
+export interface Dish {
+  dishId: number;         // Dish.DishID
+  dishName: string;       // Dish.DishName
+  price: number;          // Dish.Price (decimal)
+  description: string;    // Dish.Description
+  isSoldOut: number;      // Dish.IsSoldOut (0/1)
 }
 
-interface Order {
-  orderNo: string;
-  payTime: string;
-  status: '未接单' | '已接单' | '已出餐' | '配送中' | '已送达';
-  remark: string;
-  userInfo: UserInfo;
-  dishes: OrderDish[];
-}
-
-// 菜品相关类型
-interface Dish {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
+export interface NewDishData {
+  dishName: string;
+  price: string | number;
   description: string;
-  status: '上架中' | '已下架';
-  image: string;
-}
-
-interface NewDishData {
-  name: string;
-  price: string;
-  category: string;
-  description: string;
-  imagePreview?: string;
+  isSoldOut?: number; // 默认 0
 }
 
 // 聊天消息类型
-export interface ChatMessage {
-  sender: 'user' | 'merchant';
-  content: string;
-  time: string;
+// 购物车及条目（用于展示订单明细）
+export interface CartItemDishRef {
+  dishId: number;
+  dishName: string;
+  price: number;
+  description: string;
+  isSoldOut: number;
+}
+
+export interface ShoppingCartItem {
+  itemId: number;       // ShoppingCartItem.ItemID
+  quantity: number;     // ShoppingCartItem.Quantity
+  totalPrice: number;   // ShoppingCartItem.TotalPrice
+  dishId: number;       // ShoppingCartItem.DishID
+  cartId: number;       // ShoppingCartItem.CartID
+  dish?: CartItemDishRef; // 级联 Dish（便于前端展示，可选）
+}
+
+// 优惠券相关类型（对齐数据库 Coupon）
+export interface Coupon {
+  couponId: number;           // Coupon.CouponID
+  minimumSpend: number;       // Coupon.MinimumSpend
+  discountAmount: number;     // Coupon.DiscountAmount
+  validFrom: string;          // Coupon.ValidFrom (ISO string)
+  validTo: string;            // Coupon.ValidTo (ISO string)
+  applicableStoreId: number;  // Coupon.ApplicableStoreID
+  orderId?: number;           // Coupon.OrderID (可选，关联订单)
+  sellerId: number;           // Coupon.SellerID
+}
+
+// 客户优惠券关联类型（对齐数据库 Customer_Coupon）
+export interface CustomerCoupon {
+  customerId: number;         // Customer_Coupon.CustomerID
+  couponId: number;           // Customer_Coupon.CouponID
+  couponQuantity: number;     // Customer_Coupon.CouponQuantity
+}
+
+// 订单优惠券信息（用于前端展示）
+export interface OrderCouponInfo {
+  couponId: number;
+  couponName?: string;        // 前端展示用，可能需要从其他地方获取
+  description?: string;       // 前端展示用
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  validFrom: string;
+  validTo: string;
+  isUsed: boolean;
 }
 
 
 // ==================== 订单管理接口 ====================
 
-// 获取订单列表 - 返回符合Order类型的数据
-export const getOrders = async (params?: {
-  status?: 'all' | '未接单' | '已接单' | '已出餐' | '配送中' | '已送达';
-}) => {
+// 获取订单列表（FoodOrder）
+export const getOrders = async (params?: { sellerId?: number; storeId?: number }) => {
   try {
     const response = await api.get('/orders', { params });
-    // 返回的数据应该是Order[]类型
-    return response.data as Order[];
+    // 统一映射为驼峰命名
+    const list = (response.data || []).map((o: any) => ({
+      orderId: o.OrderID ?? o.orderId,
+      paymentTime: o.PaymentTime ?? o.paymentTime,
+      remarks: o.Remarks ?? o.remarks,
+      customerId: o.CustomerID ?? o.customerId,
+      cartId: o.CartID ?? o.cartId,
+      storeId: o.StoreID ?? o.storeId,
+      sellerId: o.SellerID ?? o.sellerId,
+    })) as FoodOrder[];
+    return list;
   } catch (error) {
     console.error('获取订单列表失败:', error);
     throw error;
   }
 };
 
-// 订单详情类型定义
-interface OrderDetail extends Order {
-  deliveryAddress: string;
-  fees: {
-    originalPrice: number;
-    packingFee: number;
-    deliveryFee: number;
-    couponDiscount: number;
-    finalPrice: number;
-    couponName?: string;
-  };
-}
-
-// 获取订单详情 - 包含费用明细等完整信息
-export const getOrderDetail = async (orderNo: string) => {
+// 获取单个订单（FoodOrder）
+export const getOrderById = async (orderId: number) => {
   try {
-    const response = await api.get(`/orders/${orderNo}`);
-    return response.data as OrderDetail;
+    const response = await api.get(`/orders/${orderId}`);
+    const o = response.data;
+    const mapped: FoodOrder = {
+      orderId: o.OrderID ?? o.orderId,
+      paymentTime: o.PaymentTime ?? o.paymentTime,
+      remarks: o.Remarks ?? o.remarks,
+      customerId: o.CustomerID ?? o.customerId,
+      cartId: o.CartID ?? o.cartId,
+      storeId: o.StoreID ?? o.storeId,
+      sellerId: o.SellerID ?? o.sellerId,
+    };
+    return mapped;
   } catch (error) {
     console.error('获取订单详情失败:', error);
     throw error;
   }
 };
 
-// 更新订单状态
-export const updateOrderStatus = async (orderNo: string, status: '已接单' | '已出餐' | '配送中' | '已送达') => {
-  try {
-    const response = await api.patch(`/orders/${orderNo}/status`, { status });
-    return response.data;
-  } catch (error) {
-    console.error('更新订单状态失败:', error);
-    throw error;
-  }
-};
+// 注：数据库中 FoodOrder 未包含“状态”等字段，移除状态更新/发布配送相关接口
 
-// 发布配送任务 - 将订单状态从"已出餐"改为"配送中"
-export const publishDeliveryTask = async (orderNo: string) => {
-  try {
-    const response = await api.post(`/orders/${orderNo}/publish-delivery`);
-    return response.data;
-  } catch (error) {
-    console.error('发布配送任务失败:', error);
-    throw error;
-  }
-};
-
-// 获取自动接单状态
-export const getAutoAcceptStatus = async () => {
-  try {
-    const response = await api.get('/shop/auto-accept-status');
-    return response.data as { autoAcceptOrders: boolean };
-  } catch (error) {
-    console.error('获取自动接单状态失败:', error);
-    throw error;
-  }
-};
-
-// 切换自动接单状态
-export const toggleAutoAcceptOrders = async (enabled: boolean) => {
-  try {
-    const response = await api.patch('/shop/auto-accept', { enabled });
-    return response.data;
-  } catch (error) {
-    console.error('切换自动接单状态失败:', error);
-    throw error;
-  }
-};
-
-// 模拟添加新订单 - 用于测试
-export const addNewOrder = async () => {
-  try {
-    const response = await api.post('/orders/simulate-new');
-    return response.data as Order;
-  } catch (error) {
-    console.error('模拟新订单失败:', error);
-    throw error;
-  }
-};
+// 注：移除自动接单/模拟订单等与数据库不一致的接口
 
 // ==================== 菜品管理接口 ====================
 
-// 获取菜品列表
-export const getDishes = async (params?: {
-  status?: 'all' | '上架中' | '已下架';
-}) => {
+// 获取菜品列表（对齐 Dish）
+export const getDishes = async () => {
   try {
-    const response = await api.get('/dishes', { params });
-    return response.data as Dish[];
+    const response = await api.get('/dishes');
+    const list = (response.data || []).map((d: any) => ({
+      dishId: d.DishID ?? d.dishId,
+      dishName: d.DishName ?? d.dishName,
+      price: d.Price ?? d.price,
+      description: d.Description ?? d.description,
+      isSoldOut: d.IsSoldOut ?? d.isSoldOut,
+    })) as Dish[];
+    return list;
   } catch (error) {
     console.error('获取菜品列表失败:', error);
     throw error;
@@ -229,15 +160,22 @@ export const getDishes = async (params?: {
 // 创建菜品
 export const createDish = async (dishData: NewDishData) => {
   try {
-    const response = await api.post('/dishes', {
-      name: dishData.name,
-      price: Number(dishData.price),
-      category: dishData.category,
-      description: dishData.description,
-      status: '上架中',
-      image: dishData.imagePreview || 'https://readdy.ai/api/search-image?query=delicious%20Chinese%20cuisine%20dish%20beautifully%20plated%20on%20white%20background%20professional%20food%20photography&width=80&height=80&seq=dish-new&orientation=squarish'
-    });
-    return response.data as Dish;
+    const payload = {
+      DishName: dishData.dishName,
+      Price: Number(dishData.price),
+      Description: dishData.description,
+      IsSoldOut: dishData.isSoldOut ?? 0,
+    };
+    const response = await api.post('/dishes', payload);
+    const d = response.data;
+    const mapped: Dish = {
+      dishId: d.DishID ?? d.dishId,
+      dishName: d.DishName ?? d.dishName,
+      price: d.Price ?? d.price,
+      description: d.Description ?? d.description,
+      isSoldOut: d.IsSoldOut ?? d.isSoldOut,
+    };
+    return mapped;
   } catch (error) {
     console.error('创建菜品失败:', error);
     throw error;
@@ -246,105 +184,290 @@ export const createDish = async (dishData: NewDishData) => {
 
 // 更新菜品信息
 export const updateDish = async (dishId: number, dishData: {
-  name?: string;
+  dishName?: string;
   price?: number;
-  category?: string;
   description?: string;
-  image?: string;
+  isSoldOut?: number;
 }) => {
   try {
-    const response = await api.patch(`/dishes/${dishId}`, dishData);
-    return response.data as Dish;
+    const payload: any = {};
+    if (dishData.dishName !== undefined) payload.DishName = dishData.dishName;
+    if (dishData.price !== undefined) payload.Price = dishData.price;
+    if (dishData.description !== undefined) payload.Description = dishData.description;
+    if (dishData.isSoldOut !== undefined) payload.IsSoldOut = dishData.isSoldOut;
+    const response = await api.patch(`/dishes/${dishId}`, payload);
+    const d = response.data;
+    const mapped: Dish = {
+      dishId: d.DishID ?? d.dishId,
+      dishName: d.DishName ?? d.dishName,
+      price: d.Price ?? d.price,
+      description: d.Description ?? d.description,
+      isSoldOut: d.IsSoldOut ?? d.isSoldOut,
+    };
+    return mapped;
   } catch (error) {
     console.error('更新菜品信息失败:', error);
     throw error;
   }
 };
 
-// 切换菜品上下架状态
-export const toggleDishStatus = async (dishId: number, status: '上架中' | '已下架') => {
+// 切换菜品售罄状态（0/1）
+export const toggleDishSoldOut = async (dishId: number, isSoldOut: number) => {
   try {
-    const response = await api.patch(`/dishes/${dishId}/toggle-status`, { status });
+    const response = await api.patch(`/dishes/${dishId}/soldout`, { IsSoldOut: isSoldOut });
     return response.data;
   } catch (error) {
-    console.error('切换菜品状态失败:', error);
+    console.error('切换菜品售罄状态失败:', error);
     throw error;
   }
 };
 
-// 获取菜品分类数据 - 返回Vue中定义的categoryMap结构
-export const getDishCategories = async () => {
+// 获取购物车条目（含菜品）
+export const getCartItems = async (cartId: number) => {
   try {
-    const response = await api.get('/dishes/categories');
-    return response.data as {
-      [key: string]: string[];
+    const response = await api.get(`/carts/${cartId}/items`);
+    const list = (response.data || []).map((it: any) => ({
+      itemId: it.ItemID ?? it.itemId,
+      quantity: it.Quantity ?? it.quantity,
+      totalPrice: it.TotalPrice ?? it.totalPrice,
+      dishId: it.DishID ?? it.dishId,
+      cartId: it.CartID ?? it.cartId,
+      dish: {
+        dishId: it.Dish?.DishID ?? it.dish?.dishId,
+        dishName: it.Dish?.DishName ?? it.dish?.dishName,
+        price: it.Dish?.Price ?? it.dish?.price,
+        description: it.Dish?.Description ?? it.dish?.description,
+        isSoldOut: it.Dish?.IsSoldOut ?? it.dish?.isSoldOut,
+      } as CartItemDishRef,
+    })) as ShoppingCartItem[];
+    return list;
+  } catch (error) {
+    console.error('获取购物车条目失败:', error);
+    throw error;
+  }
+};
+
+// 获取订单优惠券信息
+export const getOrderCoupons = async (orderId: number) => {
+  try {
+    const response = await api.get(`/orders/${orderId}/coupons`);
+    const list = (response.data || []).map((c: any) => ({
+      couponId: c.CouponID ?? c.couponId,
+      minimumSpend: c.MinimumSpend ?? c.minimumSpend,
+      discountAmount: c.DiscountAmount ?? c.discountAmount,
+      validFrom: c.ValidFrom ?? c.validFrom,
+      validTo: c.ValidTo ?? c.validTo,
+      applicableStoreId: c.ApplicableStoreID ?? c.applicableStoreId,
+      orderId: c.OrderID ?? c.orderId,
+      sellerId: c.SellerID ?? c.sellerId,
+    })) as Coupon[];
+
+    // 转换为前端展示格式
+    return list.map(coupon => ({
+      couponId: coupon.couponId,
+      couponName: `优惠券${coupon.couponId}`, // 可以根据需要从其他地方获取名称
+      description: `满${coupon.minimumSpend}减${coupon.discountAmount}元`,
+      discountType: 'fixed' as const, // 根据数据库结构，这里都是固定金额折扣
+      discountValue: coupon.discountAmount,
+      validFrom: coupon.validFrom,
+      validTo: coupon.validTo,
+      isUsed: true, // 订单中的优惠券都是已使用的
+    })) as OrderCouponInfo[];
+  } catch (error) {
+    console.error('获取订单优惠券信息失败:', error);
+    throw error;
+  }
+};
+
+// ==================== 配送任务与骑手信息 ====================
+
+export interface DeliveryTask {
+  taskId: number;                 // DeliveryTask.TaskID
+  estimatedArrivalTime: string;   // EstimatedArrivalTime
+  estimatedDeliveryTime: string;  // EstimatedDeliveryTime
+  courierLongitude?: number | null; // CourierLongitude
+  courierLatitude?: number | null;  // CourierLatitude
+  customerId: number;             // CustomerID
+  storeId: number;                // StoreID
+}
+
+export interface PublishTask {
+  sellerId: number;         // SellerID
+  deliveryTaskId: number;   // DeliveryTaskID
+  publishTime: string;      // PublishTime
+}
+
+export interface AcceptTask {
+  courierId: number;        // CourierID
+  deliveryTaskId: number;   // DeliveryTaskID
+  acceptTime: string;       // AcceptTime
+}
+
+export interface CourierSummary {
+  userId: number;           // Courier.UserID
+  courierRegistrationTime?: string; // Courier.CourierRegistrationTime
+  vehicleType: string;      // Courier.VehicleType
+  reputationPoints: number; // Courier.ReputationPoints
+  totalDeliveries: number;  // Courier.TotalDeliveries
+  avgDeliveryTime: number;  // Courier.AvgDeliveryTime
+  averageRating: number;    // Courier.AverageRating
+  monthlySalary: number;    // Courier.MonthlySalary
+  fullName?: string;        // 从User表关联获取
+  phoneNumber?: number;     // 从User表关联获取
+}
+
+export interface OrderDeliveryInfo {
+  deliveryTask?: DeliveryTask;
+  publish?: PublishTask;
+  accept?: AcceptTask;
+  courier?: CourierSummary;
+}
+
+// 商家发布配送任务（基于订单）
+export const publishDeliveryTaskForOrder = async (
+  orderId: number,
+  payload: { estimatedArrivalTime: string; estimatedDeliveryTime: string }
+) => {
+  try {
+    const response = await api.post(`/delivery-tasks/publish`, {
+      OrderID: orderId,
+      EstimatedArrivalTime: payload.estimatedArrivalTime,
+      EstimatedDeliveryTime: payload.estimatedDeliveryTime,
+    });
+    const data = response.data || {};
+    // 预计返回包含 DeliveryTask 与 PublishTask 信息
+    const mapDelivery = (dt: any): DeliveryTask | undefined =>
+      dt
+        ? {
+          taskId: dt.TaskID ?? dt.taskId,
+          estimatedArrivalTime: dt.EstimatedArrivalTime ?? dt.estimatedArrivalTime,
+          estimatedDeliveryTime: dt.EstimatedDeliveryTime ?? dt.estimatedDeliveryTime,
+          courierLongitude: dt.CourierLongitude ?? dt.courierLongitude ?? null,
+          courierLatitude: dt.CourierLatitude ?? dt.courierLatitude ?? null,
+          customerId: dt.CustomerID ?? dt.customerId,
+          storeId: dt.StoreID ?? dt.storeId,
+        }
+        : undefined;
+    const mapPublish = (pt: any): PublishTask | undefined =>
+      pt
+        ? {
+          sellerId: pt.SellerID ?? pt.sellerId,
+          deliveryTaskId: pt.DeliveryTaskID ?? pt.deliveryTaskId,
+          publishTime: pt.PublishTime ?? pt.publishTime,
+        }
+        : undefined;
+    return {
+      deliveryTask: mapDelivery(data.DeliveryTask ?? data.deliveryTask),
+      publish: mapPublish(data.Publish ?? data.publish),
+    } as { deliveryTask?: DeliveryTask; publish?: PublishTask };
+  } catch (error) {
+    console.error('发布配送任务失败:', error);
+    throw error;
+  }
+};
+
+// 获取订单对应的配送任务与骑手信息
+export const getOrderDeliveryInfo = async (orderId: number) => {
+  try {
+    const response = await api.get(`/orders/${orderId}/delivery-info`);
+    const data = response.data || {};
+    const deliveryTask: DeliveryTask | undefined = data.DeliveryTask || data.deliveryTask
+      ? {
+        taskId: (data.DeliveryTask || data.deliveryTask).TaskID ?? (data.DeliveryTask || data.deliveryTask).taskId,
+        estimatedArrivalTime: (data.DeliveryTask || data.deliveryTask).EstimatedArrivalTime ?? (data.DeliveryTask || data.deliveryTask).estimatedArrivalTime,
+        estimatedDeliveryTime: (data.DeliveryTask || data.deliveryTask).EstimatedDeliveryTime ?? (data.DeliveryTask || data.deliveryTask).estimatedDeliveryTime,
+        courierLongitude: (data.DeliveryTask || data.deliveryTask).CourierLongitude ?? (data.DeliveryTask || data.deliveryTask).courierLongitude ?? null,
+        courierLatitude: (data.DeliveryTask || data.deliveryTask).CourierLatitude ?? (data.DeliveryTask || data.deliveryTask).courierLatitude ?? null,
+        customerId: (data.DeliveryTask || data.deliveryTask).CustomerID ?? (data.DeliveryTask || data.deliveryTask).customerId,
+        storeId: (data.DeliveryTask || data.deliveryTask).StoreID ?? (data.DeliveryTask || data.deliveryTask).storeId,
+      }
+      : undefined;
+    const publish: PublishTask | undefined = data.Publish || data.publish
+      ? {
+        sellerId: (data.Publish || data.publish).SellerID ?? (data.Publish || data.publish).sellerId,
+        deliveryTaskId: (data.Publish || data.publish).DeliveryTaskID ?? (data.Publish || data.publish).deliveryTaskId,
+        publishTime: (data.Publish || data.publish).PublishTime ?? (data.Publish || data.publish).publishTime,
+      }
+      : undefined;
+    const accept: AcceptTask | undefined = data.Accept || data.accept
+      ? {
+        courierId: (data.Accept || data.accept).CourierID ?? (data.Accept || data.accept).courierId,
+        deliveryTaskId: (data.Accept || data.accept).DeliveryTaskID ?? (data.Accept || data.accept).deliveryTaskId,
+        acceptTime: (data.Accept || data.accept).AcceptTime ?? (data.Accept || data.accept).acceptTime,
+      }
+      : undefined;
+    const courier: CourierSummary | undefined = data.Courier || data.courier
+      ? {
+        userId: (data.Courier || data.courier).UserID ?? (data.Courier || data.courier).userId,
+        courierRegistrationTime: (data.Courier || data.courier).CourierRegistrationTime ?? (data.Courier || data.courier).courierRegistrationTime,
+        vehicleType: (data.Courier || data.courier).VehicleType ?? (data.Courier || data.courier).vehicleType,
+        reputationPoints: (data.Courier || data.courier).ReputationPoints ?? (data.Courier || data.courier).reputationPoints,
+        totalDeliveries: (data.Courier || data.courier).TotalDeliveries ?? (data.Courier || data.courier).totalDeliveries,
+        avgDeliveryTime: (data.Courier || data.courier).AvgDeliveryTime ?? (data.Courier || data.courier).avgDeliveryTime,
+        averageRating: (data.Courier || data.courier).AverageRating ?? (data.Courier || data.courier).averageRating,
+        monthlySalary: (data.Courier || data.courier).MonthlySalary ?? (data.Courier || data.courier).monthlySalary,
+        fullName: (data.Courier || data.courier).FullName ?? (data.Courier || data.courier).fullName,
+        phoneNumber: (data.Courier || data.courier).PhoneNumber ?? (data.Courier || data.courier).phoneNumber,
+      }
+      : undefined;
+    return { deliveryTask, publish, accept, courier } as OrderDeliveryInfo;
+  } catch (error) {
+    console.error('获取订单配送信息失败:', error);
+    throw error;
+  }
+};
+
+// ==================== 商家接单/拒单 ====================
+
+export interface OrderDecision {
+  orderId: number;
+  decision: 'accepted' | 'rejected';
+  decidedAt: string;
+  reason?: string;
+}
+
+// 商家接单
+export const acceptOrder = async (orderId: number) => {
+  try {
+    const res = await api.post(`/orders/${orderId}/accept`);
+    const d = res.data || {};
+    const mapped: OrderDecision = {
+      orderId: d.OrderID ?? d.orderId ?? orderId,
+      decision: 'accepted',
+      decidedAt: d.DecidedAt ?? d.decidedAt ?? new Date().toISOString(),
     };
+    return mapped;
   } catch (error) {
-    console.error('获取菜品分类失败:', error);
+    console.error('商家接单失败:', error);
     throw error;
   }
 };
 
-// ==================== 沟通聊天接口 ====================
-
-// 获取与用户的聊天记录
-export const getChatMessages = async (orderNo: string) => {
+// 商家拒单
+export const rejectOrder = async (orderId: number, reason?: string) => {
   try {
-    const response = await api.get(`/chat/order/${orderNo}/messages`);
-    return response.data as ChatMessage[];
+    const res = await api.post(`/orders/${orderId}/reject`, { reason });
+    const d = res.data || {};
+    const mapped: OrderDecision = {
+      orderId: d.OrderID ?? d.orderId ?? orderId,
+      decision: 'rejected',
+      decidedAt: d.DecidedAt ?? d.decidedAt ?? new Date().toISOString(),
+      reason: d.Reason ?? d.reason ?? reason,
+    };
+    return mapped;
   } catch (error) {
-    console.error('获取聊天记录失败:', error);
+    console.error('商家拒单失败:', error);
     throw error;
   }
 };
 
-// 发送消息给用户
-export const sendMessage = async (orderNo: string, content: string) => {
-  try {
-    const response = await api.post(`/chat/order/${orderNo}/send`, {
-      content,
-      sender: 'merchant',
-      time: new Date().toLocaleTimeString()
-    });
-    return response.data as ChatMessage;
-  } catch (error) {
-    console.error('发送消息失败:', error);
-    throw error;
-  }
-};
+// 注：数据库未定义菜品“分类/图片”，移除相关接口
 
-// 模拟用户拨号 - 用于callUser功能
-export const callUser = async (phone: string) => {
-  try {
-    const response = await api.post('/communication/call', { phone });
-    return response.data;
-  } catch (error) {
-    console.error('拨打电话失败:', error);
-    throw error;
-  }
-};
+// 注：数据库未定义聊天/拨号相关实体，移除相关接口
 
 
 
-// ==================== 图片上传接口 ====================
-
-// 上传菜品图片
-export const uploadDishImage = async (file: File) => {
-  try {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    const response = await api.post('/upload/dish-image', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data as { imageUrl: string };
-  } catch (error) {
-    console.error('上传菜品图片失败:', error);
-    throw error;
-  }
-};
+// 注：数据库未定义菜品图片，移除图片上传接口
 /*
 // ==================== 表情和常用语接口 ====================
 
