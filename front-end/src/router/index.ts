@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   ...userRoutes,
-  ...courierRoutes,
+  ...courierRoutes
   
   // -----商家页面start----- 
   {
