@@ -18,7 +18,7 @@
     </header>
 
     <div class="flex pt-16">
-      <aside class="fixed left-0 top-16 bottom-0 w-52 bg-white shadow-sm overflow-y-auto">
+      <aside class="fixed left-0 top-16 bottom-0 w-52 bg-white shadow-sm overflow-y-auto z-50">
         <nav class="p-4">
           <div class="space-y-2">
             <div
@@ -52,8 +52,8 @@
               <span class="text-red-800">{{ errorMessage }}</span>
             </div>
             <div class="flex items-center space-x-2">
-              <button @click="retryLoad" class="text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded text-sm">重试</button>
-              <button @click="clearError" class="text-red-400 hover:text-red-600 transition-colors">
+              <button @click="retryLoad" class="btn-error">重试</button>
+              <button @click="clearError" class="btn-icon text-red-400 hover:text-red-600">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -69,24 +69,24 @@
               :key="tab.value"
               @click="activeOrderTab = tab.value"
               :class="{
-                'bg-[#F9771C] text-white': activeOrderTab === tab.value,
-                'bg-gray-100 text-gray-700 hover:bg-gray-200': activeOrderTab !== tab.value
+                'tab-button active': activeOrderTab === tab.value,
+                'tab-button': activeOrderTab !== tab.value
               }"
-              class="px-4 py-2 rounded-md transition-colors cursor-pointer whitespace-nowrap !rounded-button"
+              class="whitespace-nowrap"
             >
-              {{ tab.label }}
+              <span>{{ tab.label }}</span>
             </button>
           </div>
         </div>
 
         <div v-if="activeOrderTab === 'orders'">
-          <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/30 overflow-hidden relative">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F9771C]/20 via-[#F9771C]/10 to-transparent"></div>
+          <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/30 overflow-hidden relative z-10 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.01]">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F9771C] via-[#FF8C42] to-transparent"></div>
 
             <!-- 工具栏：自动接单开关 -->
-            <div class="p-4 flex items-center justify-end gap-4">
-              <div class="flex items-center gap-3 bg-white/70 px-4 py-2 rounded-2xl border border-gray-200">
-                <span class="text-sm text-gray-700">自动接单</span>
+            <div class="p-6 flex items-center justify-end gap-4">
+              <div class="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-yellow-50 px-6 py-3 rounded-2xl border border-orange-200/50 shadow-lg backdrop-blur-sm">
+                <span class="text-sm font-medium text-orange-800">自动接单</span>
                 <el-switch
                   v-model="autoAcceptOrders"
                   @change="(v:any)=>onAutoAcceptChange(Boolean(v))"
@@ -129,42 +129,42 @@
                   <div class="flex flex-wrap items-center gap-2">
                     <button
                       @click="showOrderDetails(scope.row)"
-                      class="bg-[#F9771C] text-white px-5 py-1.5 min-w-[100px] rounded-2xl text-xs hover:bg-[#E16A0E] transition-all duration-300 cursor-pointer font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 shrink-0"
+                      class="btn-primary btn-small shrink-0"
                     >
                       详细信息
                     </button>
                     <button
                       v-if="!scope.row.localStatus || scope.row.localStatus === 'rejected'"
                       @click="acceptOrder(scope.row)"
-                      class="bg-blue-600 text-white px-5 py-1.5 min-w-[100px] rounded-2xl text-xs hover:bg-blue-700 transition-colors shrink-0"
+                      class="btn-success btn-small shrink-0"
                     >
                       接单
                     </button>
                     <button
                       v-if="!scope.row.localStatus || scope.row.localStatus === 'accepted'"
                       @click="rejectOrder(scope.row)"
-                      class="bg-red-600 text-white px-5 py-1.5 min-w-[100px] rounded-2xl text-xs hover:bg-red-700 transition-colors shrink-0"
+                      class="btn-danger btn-small shrink-0"
                     >
                       拒单
                     </button>
                     <button
                       v-if="!scope.row.deliveryStatus || scope.row.deliveryStatus === 'none'"
                       @click="openPublishDialog(scope.row)"
-                      class="bg-green-600 text-white px-5 py-1.5 min-w-[100px] rounded-2xl text-xs hover:bg-green-700 transition-colors shrink-0"
+                      class="btn-info btn-small shrink-0"
                     >
                       发布配送
                     </button>
                     <button
                       v-else-if="scope.row.deliveryStatus === 'published'"
                       @click="openDeliveryInfo(scope.row)"
-                      class="bg-blue-600 text-white px-5 py-1.5 min-w-[100px] rounded-2xl text-xs hover:bg-blue-700 transition-colors shrink-0"
+                      class="btn-warning btn-small shrink-0"
                     >
                       骑手已接单
                     </button>
                     <button
                       v-if="scope.row.deliveryStatus === 'published'"
                       @click="openDeliveryInfo(scope.row)"
-                      class="bg-purple-600 text-white px-5 py-1.5 min-w-[100px] rounded-2xl text-xs hover:bg-purple-700 transition-colors shrink-0"
+                      class="btn-secondary btn-small shrink-0"
                     >
                       骑手信息
                     </button>
@@ -176,14 +176,14 @@
         </div>
 
         <div v-else-if="activeOrderTab === 'dishes'">
-          <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 mb-6 shadow-2xl border border-orange-200/30 flex items-center justify-between">
-            <div class="text-sm text-gray-600">管理菜品</div>
-            <button @click="showDishForm = true" class="bg-[#F9771C] text-white px-5 py-2 rounded-2xl hover:bg-[#E16A0E] transition-all duration-300 cursor-pointer font-semibold shadow-2xl">
+          <div class="bg-gradient-to-r from-orange-50 to-yellow-50 backdrop-blur-md rounded-3xl p-6 mb-6 shadow-2xl border border-orange-200/30 flex items-center justify-between relative z-10 transform transition-all duration-300 hover:shadow-3xl">
+            <div class="text-sm font-medium text-orange-800">管理菜品</div>
+            <button @click="showDishForm = true" class="btn-primary btn-medium">
               新增菜品
             </button>
           </div>
 
-          <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
+          <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden relative z-10 transform transition-all duration-300 hover:shadow-3xl">
             <el-table 
               :data="dishes" 
               style="width: 100%" 
@@ -209,8 +209,8 @@
               <el-table-column label="操作" width="200">
                 <template #default="scope">
                   <div class="flex space-x-2">
-                    <button @click="editDish(scope.row)" class="bg-[#F9771C] hover:bg-[#E16A0E] text-white px-3 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap !rounded-button">编辑</button>
-                    <button @click="toggleSoldOut(scope.row)" class="text-white px-3 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap !rounded-button" :class="{ 'bg-red-600 hover:bg-red-700': scope.row.isSoldOut === 0, 'bg-green-600 hover:bg-green-700': scope.row.isSoldOut === 1 }">
+                    <button @click="editDish(scope.row)" class="btn-primary btn-small">编辑</button>
+                    <button @click="toggleSoldOut(scope.row)" class="btn-small" :class="{ 'btn-danger': scope.row.isSoldOut === 0, 'btn-success': scope.row.isSoldOut === 1 }">
                       {{ scope.row.isSoldOut === 0 ? '设为售罄' : '设为在售' }}
                     </button>
                   </div>
@@ -220,21 +220,21 @@
           </div>
 
           <!-- 新增菜品弹窗 -->
-          <div v-if="showDishForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-6 w-[500px]">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">新增菜品</h3>
+          <div v-if="showDishForm" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-8 w-[500px] shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+              <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">新增菜品</h3>
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">菜品名称</label>
-                  <input v-model="newDish.dishName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm" placeholder="请输入菜品名称" />
+                  <input v-model="newDish.dishName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品名称" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">价格</label>
-                  <input v-model="newDish.price" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm" placeholder="请输入价格" />
+                  <input v-model="newDish.price" type="number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入价格" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">描述</label>
-                  <textarea v-model="newDish.description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" placeholder="请输入菜品描述"></textarea>
+                  <textarea v-model="newDish.description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品描述"></textarea>
                 </div>
                 <div class="flex items-center space-x-2">
                   <input id="newSoldOut" type="checkbox" v-model="newDish.isSoldOut" true-value="1" false-value="0" />
@@ -242,37 +242,37 @@
                 </div>
               </div>
               <div class="flex justify-end space-x-3 mt-6">
-                <button @click="showDishForm = false" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors cursor-pointer whitespace-nowrap !rounded-button">取消</button>
-                <button @click="createDishHandler" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap !rounded-button">创建</button>
+                <button @click="showDishForm = false" class="btn-outline btn-medium">取消</button>
+                <button @click="createDishHandler" class="btn-info btn-medium">创建</button>
               </div>
             </div>
           </div>
 
           <!-- 编辑菜品弹窗 -->
-          <div v-if="showEditForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-6 w-[500px]">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">编辑菜品</h3>
+          <div v-if="showEditForm" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-8 w-[500px] shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+              <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">编辑菜品</h3>
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">菜品名称</label>
-                  <input v-model="editingDish.dishName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm" placeholder="请输入菜品名称" />
+                  <input v-model="editingDish.dishName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品名称" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">价格</label>
-                  <input v-model="editingDish.price" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm" placeholder="请输入价格" />
+                  <input v-model="editingDish.price" type="number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入价格" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">描述</label>
-                  <textarea v-model="editingDish.description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" placeholder="请输入菜品描述"></textarea>
+                  <textarea v-model="editingDish.description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品描述"></textarea>
                 </div>
                 <div class="flex items-center space-x-2">
                   <input id="editSoldOut" type="checkbox" v-model="editingDish.isSoldOut" true-value="1" false-value="0" />
                   <label for="editSoldOut" class="text-sm text-gray-700">售罄</label>
                 </div>
               </div>
-              <div class="flex justify-end space-x-3 mt-6">
-                <button @click="showEditForm = false" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors cursor-pointer whitespace-nowrap !rounded-button">取消</button>
-                <button @click="updateDishHandler" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap !rounded-button">保存</button>
+              <div class="flex justify-end space-x-4 mt-8">
+                <button @click="showEditForm = false" class="btn-outline btn-medium">取消</button>
+                <button @click="updateDishHandler" class="btn-info btn-medium">保存</button>
               </div>
             </div>
           </div>
@@ -281,14 +281,14 @@
     </div>
 
     <!-- 订单详情对话框 -->
-    <div v-if="showOrderDetailsDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg w-[720px] max-h-[80vh] flex flex-col overflow-hidden">
-        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+    <div v-if="showOrderDetailsDialog" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl w-[720px] max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-yellow-50">
           <div>
-            <div class="text-lg font-medium text-gray-900">订单详细信息</div>
-            <div class="text-sm text-gray-500">订单ID: {{ selectedOrder?.orderId }}</div>
+            <div class="text-xl font-bold text-gray-900">订单详细信息</div>
+            <div class="text-sm text-orange-600 font-medium">订单ID: {{ selectedOrder?.orderId }}</div>
           </div>
-          <button @click="closeOrderDetailsDialog" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <button @click="closeOrderDetailsDialog" class="btn-icon text-gray-400 hover:text-gray-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -358,38 +358,38 @@
         </div>
 
         <div class="p-4 border-t border-gray-200 flex justify-end">
-          <button @click="closeOrderDetailsDialog" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">关闭</button>
+          <button @click="closeOrderDetailsDialog" class="btn-outline btn-medium">关闭</button>
         </div>
       </div>
     </div>
 
     <!-- 发布配送任务对话框 -->
-    <div v-if="showPublishDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg w-[520px] p-6">
-        <div class="text-lg font-semibold mb-4">发布配送任务</div>
+    <div v-if="showPublishDialog" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl w-[520px] p-8 shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+        <div class="text-xl font-bold text-gray-800 mb-6 text-center">发布配送任务</div>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm text-gray-700 mb-1">预计到店时间</label>
-            <input v-model="publishForm.estimatedArrivalTime" type="datetime-local" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm" />
+            <label class="block text-sm font-medium text-gray-700 mb-2">预计到店时间</label>
+            <input v-model="publishForm.estimatedArrivalTime" type="datetime-local" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" />
           </div>
           <div>
-            <label class="block text-sm text-gray-700 mb-1">预计送达时间</label>
-            <input v-model="publishForm.estimatedDeliveryTime" type="datetime-local" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm" />
+            <label class="block text-sm font-medium text-gray-700 mb-2">预计送达时间</label>
+            <input v-model="publishForm.estimatedDeliveryTime" type="datetime-local" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" />
           </div>
         </div>
-        <div class="flex justify-end space-x-2 mt-6">
-          <button @click="closePublishDialog" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">取消</button>
-          <button @click="submitPublish" class="px-4 py-2 bg-[#F9771C] text-white rounded-md hover:bg-[#E16A0E] transition-colors">发布</button>
+        <div class="flex justify-end space-x-4 mt-8">
+          <button @click="closePublishDialog" class="btn-outline btn-medium">取消</button>
+          <button @click="submitPublish" class="btn-primary btn-medium">发布</button>
         </div>
       </div>
     </div>
 
     <!-- 配送信息对话框（展示骑手信息） -->
-    <div v-if="showDeliveryInfoDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg w-[640px] p-6 max-h-[80vh] overflow-auto">
-        <div class="flex items-center justify-between mb-4">
-          <div class="text-lg font-semibold">配送与骑手信息</div>
-          <button @click="closeDeliveryInfoDialog" class="text-gray-400 hover:text-gray-600">
+    <div v-if="showDeliveryInfoDialog" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div class="bg-white rounded-2xl w-[640px] p-8 max-h-[80vh] overflow-auto shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+        <div class="flex items-center justify-between mb-6">
+          <div class="text-xl font-bold text-gray-800">配送与骑手信息</div>
+          <button @click="closeDeliveryInfoDialog" class="btn-icon text-gray-400 hover:text-gray-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
