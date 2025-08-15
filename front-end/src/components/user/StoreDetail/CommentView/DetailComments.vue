@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 
 import type { CommentList } from '@/api/store_info'
 
