@@ -52,7 +52,8 @@ const cart = ref<Record<number, number>>({});
 function increaseQuantity(itemId: number) {
   cart.value[itemId] = (cart.value[itemId] || 0) + 1;
   return cart.value[itemId];
-};
+}
+
 function decreaseQuantity(itemId: number) {
   if (cart.value[itemId] && cart.value[itemId] > 0) {
     cart.value[itemId]--;

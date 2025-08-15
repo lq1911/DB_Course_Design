@@ -398,7 +398,7 @@ const fetchAllData = async () => {
 const toggleBusinessStatus = async (value: string | number | boolean) => {
   try {
     await ElMessageBox.confirm(
-      `确定要${Boolean(value) ? '开启营业' : '暂停营业'}吗？`,
+      `确定要${value ? '开启营业' : '暂停营业'}吗？`,
       '提示',
       {
         confirmButtonText: '确定',

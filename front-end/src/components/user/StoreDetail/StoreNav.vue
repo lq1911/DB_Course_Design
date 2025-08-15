@@ -62,7 +62,7 @@
         <div class="bg-white border-b">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex space-x-8">
-                    <button v-for="tab in tabs"
+                    <button v-for="tab in tabs" :key="tab.label"
                     @click="goToPage(tab.path)" 
                     :class="{
                         'border-b-2 border-[#F9771C] text-[#F9771C]': route.path === tab.path,
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { StoreInfo } from '@/api/store_info'
@@ -92,12 +92,12 @@ const props = defineProps<{
     storeID: string;
 }>()
 
-const storeID = props.storeID;
+const storeID = computed(() => route.params.id as string);
 
 const tabs = computed( () => [
-    { path: `/store/${storeID}/order`, label: "点餐" },
-    { path: `/store/${storeID}/comment`, label: "评价" },
-    { path: `/store/${storeID}/info`, label: "商家" },
+    { path: `/store/${props.storeID}/order`, label: "点餐" },
+    { path: `/store/${props.storeID}/comment`, label: "评价" },
+    { path: `/store/${props.storeID}/info`, label: "商家" },
 ]);
 
 //测试使用，最后删除
