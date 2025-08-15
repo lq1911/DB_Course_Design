@@ -329,7 +329,7 @@ const autoAcceptOrders = ref(false);
 const toggleAutoAcceptOrders = (value: string | number | boolean) => {
   ElMessage({
     type: 'success',
-    message: `已${Boolean(value) ? '开启' : '关闭'}自动接单`
+    message: `已${value ? '开启' : '关闭'}自动接单`
   });
 };
 
