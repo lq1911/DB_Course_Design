@@ -76,39 +76,79 @@ export default {
 };
 
 
-// 获取用户资料
-export const fetchUserProfile = () => apiClient.get('/profile');
+import type {
+    UserProfile,
+    WorkStatus,
+    IncomeData,
+    Order,
+    NewOrder,
+    LocationInfo
+} from './api.mock.ts';
 
-// 获取工作状态
-export const fetchWorkStatus = () => apiClient.get('/work-status');
+/** 获取用户个人资料 */
+export const fetchUserProfile = () => {
+    return apiClient.get<UserProfile>('/user/profile');
+};
 
-// 获取位置信息 (已补全)
-export const fetchLocationInfo = () => apiClient.get('/location');
+/** 获取骑手工作状态 */
+export const fetchWorkStatus = () => {
+    return apiClient.get<WorkStatus>('/user/status');
+};
 
+/** 
+ * 获取收入数据
+ * 注意：根据您最新的 mock 文件，这个接口期望直接返回一个数字 (当月收入)
+ */
+export const fetchIncomeData = () => {
+    // 假设后端接口直接返回一个数字，而不是一个JSON对象
+    // 如果后端返回的是 { "thisMonth": 3450 }，则需要使用 .then(res => res.data.thisMonth) 进行处理
+    return apiClient.get<number>('/user/income/thisMonth');
+};
 
-// --- 订单管理 ---
+/** 
+ * 根据状态获取订单列表 
+ * @param status - 订单状态 ('pending', 'delivering', 'completed')
+ */
+export const fetchOrders = (status: string) => {
+    return apiClient.get<Order[]>('/orders', {
+        params: { status } // 将 status 作为 URL 查询参数，例如: /orders?status=pending
+    });
+};
 
-// 获取订单列表
-export const fetchOrders = (status: string) => apiClient.get(`/orders?status=${status}`);
+/** 获取骑手当前位置信息 */
+export const fetchLocationInfo = () => {
+    return apiClient.get<LocationInfo>('/user/location');
+};
 
-// 接受订单
-export const acceptOrderAPI = (orderId: string) => apiClient.post(`/orders/${orderId}/accept`);
+/** 
+ * 根据通知ID获取新订单详情
+ * @param notificationId - 新订单的推送通知ID
+ */
+export const fetchNewOrder = (notificationId: string) => {
+    return apiClient.get<NewOrder>(`/orders/new/${notificationId}`);
+};
 
-// 拒绝订单
-export const rejectOrderAPI = (orderId: string) => apiClient.post(`/orders/${orderId}/reject`);
+/** 
+ * 切换工作状态 (上班/下班) 
+ * @param newStatus - 新的工作状态 (true: 上线, false: 下线)
+ */
+export const toggleWorkStatusAPI = (newStatus: boolean) => {
+    // 通常使用 POST 或 PUT 请求来改变服务器上的状态
+    return apiClient.post<{ success: boolean }>('/user/status', { isOnline: newStatus });
+};
 
+/** 
+ * 接受订单 
+ * @param orderId - 要接受的订单ID
+ */
+export const acceptOrderAPI = (orderId: string) => {
+    return apiClient.post<{ success: boolean }>(`/orders/${orderId}/accept`);
+};
 
-// --- 收入与状态变更 ---
-
-// 获取收入汇总数据
-export const fetchIncomeData = () => apiClient.get('/earnings/summary');
-
-// 获取收入明细列表 (已补全)
-export const fetchEarnings = () => apiClient.get('/earnings/details');
-
-// 切换工作状态
-export const toggleWorkStatusAPI = (status: boolean) => apiClient.post('/work-status/toggle', { status });
-
-export const updateUserProfile = (profileData: any) => apiClient.put('/profile', profileData);
-
-export const fetchNewOrder = (notificationId: string) => apiClient.get(`/orders/new/${notificationId}`);
+/** 
+ * 拒绝订单 
+ * @param orderId - 要拒绝的订单ID
+ */
+export const rejectOrderAPI = (orderId: string) => {
+    return apiClient.post<{ success: boolean }>(`/orders/${orderId}/reject`);
+};
