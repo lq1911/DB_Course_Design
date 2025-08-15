@@ -6,8 +6,63 @@ const api = axios.create({
   timeout: 5000,
 });
 
-// 注：移除与数据库无关的店铺/商家信息与营业状态接口
+// 获取店铺概览数据
+export const getShopOverview = async () => {
+  try {
+    const response = await api.get('/shop/overview');
+    return response.data;
+  } catch (error) {
+    console.error('获取店铺概览数据失败:', error);
+    throw error;
+  }
+};
 
+// 获取店铺基本信息
+export const getShopInfo = async () => {
+  try {
+    const response = await api.get('/shop/info');
+    return response.data;
+  } catch (error) {
+    console.error('获取店铺基本信息失败:', error);
+    throw error;
+  }
+};
+
+// 获取商家信息
+export const getMerchantInfo = async () => {
+  try {
+    const response = await api.get('/merchant/info');
+    return response.data;
+  } catch (error) {
+    console.error('获取商家信息失败:', error);
+    throw error;
+  }
+};
+
+// 切换营业状态
+export const toggleBusinessStatus = async (status: boolean) => {
+  try {
+    const response = await api.patch('/shop/status', { isOpen: status });
+    return response.data;
+  } catch (error) {
+    console.error('切换营业状态失败:', error);
+    throw error;
+  }
+};
+
+// 更新店铺信息
+export const updateShopField = async (field: string, value: string) => {
+  try {
+    const response = await api.patch('/shop/update-field', {
+      field,  // 字段名
+      value   // 字段值
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`更新${field}失败:`, error);
+    throw error;
+  }
+};
 
 // ==================== 类型定义 ====================
 
@@ -506,37 +561,23 @@ export const saveQuickPhrase = async (phrase: string) => {
 */
 // ==================== 售后与评论管理接口 ====================
 
-// 评论类型
+// 根据数据库设计修改接口
 export interface Review {
-  id: number;
-  orderNo: string;
-  user: { name: string; phone: string; avatar?: string };
-  rating: number;
-  content: string;
-  images?: string[];
-  createdAt: string;
-  reply?: { content: string };
+  id: number;                    // CommentID
+  orderNo: string;              // 从OrderID关联获取
+  user: { name: string; phone: string; avatar?: string }; // 从CommenterID关联User表获取
+  content: string;              // Content
+  createdAt: string;            // PostedAt
 }
 
-// 获取售后申请相关接口
-export interface AfterSaleTimeline {
-  time: string;
-  text: string;
-  operator?: string;
-}
 export interface AfterSaleApplication {
-  id: number;
-  orderNo: string;
-  type: '退款' | '退货' | '投诉';
-  user: { name: string; phone: string; avatar?: string };
-  reason: string;
-  detail?: string;
-  status: '待处理' | '已同意' | '已拒绝' | '协商中' | '已完成';
-  refundAmount?: number;
-  evidenceImages?: string[];
-  createdAt: string;
-  timeline?: AfterSaleTimeline[];
+  id: number;                   // ApplicationID
+  orderNo: string;              // 从OrderID关联获取
+  user: { name: string; phone: string; avatar?: string }; // 从CustomerID关联User表获取
+  reason: string;               // Description
+  createdAt: string;            // ApplicationTime
 }
+
 export interface PageResult<T> {
   list: T[];
   total: number;
@@ -545,8 +586,6 @@ export interface PageResult<T> {
 export interface AfterSaleListParams {
   page: number;
   pageSize: number;
-  type?: '退款' | '退货' | '投诉';
-  status?: '待处理' | '已同意' | '已拒绝' | '协商中' | '已完成';
   keyword?: string;
 }
 
@@ -554,70 +593,175 @@ export interface AfterSaleListParams {
 export const getAfterSaleList = async (
   params: AfterSaleListParams
 ): Promise<PageResult<AfterSaleApplication>> => {
-  const res = await api.get('/aftersale/applications', { params });
-  return res.data as PageResult<AfterSaleApplication>;
+  try {
+    const response = await fetch(`/api/aftersale?${new URLSearchParams({
+      page: params.page.toString(),
+      pageSize: params.pageSize.toString(),
+      ...(params.keyword && { keyword: params.keyword })
+    })}`);
+    
+    if (!response.ok) {
+      throw new Error('获取售后申请列表失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('获取售后申请列表失败:', error);
+    throw error;
+  }
 };
 
 // 获取售后申请详情
 export const getAfterSaleDetail = async (id: number): Promise<AfterSaleApplication> => {
-  const res = await api.get(`/aftersale/applications/${id}`);
-  return res.data;
+  try {
+    const response = await fetch(`/api/aftersale/${id}`);
+    
+    if (!response.ok) {
+      throw new Error('获取售后申请详情失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('获取售后申请详情失败:', error);
+    throw error;
+  }
 };
 
 // 处理售后申请
 export const decideAfterSale = async (
   id: number,
   action: 'approve' | 'reject' | 'negotiate',
-  data: { remark: string; refundAmount?: number; nextContactAt?: string }
+  data: { remark: string }
 ) => {
-  return api.post(`/aftersale/applications/${id}/decision`, { action, ...data });
+  try {
+    const response = await fetch(`/api/aftersale/${id}/decide`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action, ...data }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('处理售后申请失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('处理售后申请失败:', error);
+    throw error;
+  }
 };
 
 // 获取评论列表
 export const getReviewList = async (params: any): Promise<PageResult<Review>> => {
-  const res = await api.get('/reviews', { params });
-  return res.data;
+  try {
+    const response = await fetch(`/api/reviews?${new URLSearchParams({
+      page: params.page.toString(),
+      pageSize: params.pageSize.toString(),
+      ...(params.keyword && { keyword: params.keyword })
+    })}`);
+    
+    if (!response.ok) {
+      throw new Error('获取评论列表失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('获取评论列表失败:', error);
+    throw error;
+  }
 };
 
 // 回复评论
 export const replyReview = async (id: number, content: string) => {
-  return api.post(`/reviews/${id}/reply`, { content });
+  try {
+    const response = await fetch(`/api/reviews/${id}/reply`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('回复评论失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('回复评论失败:', error);
+    throw error;
+  }
 };
 
 // 已移除评论申诉相关接口
 
 // ==================== 处罚记录相关接口 ====================
 export interface PenaltyRecord {
-  id: string;
-  reason: string;
-  time: string;
-  merchantAction: string;
-  platformAction: string;
-  status?: '未申诉' | '申诉中' | '已处理';
-  amount?: number;
-  evidenceImages?: string[];
-  timeline?: Array<{ time: string; text: string; operator?: string }>;
+  id: string;                   // PenaltyID
+  reason: string;               // PenaltyReason
+  time: string;                 // PenaltyTime
+  merchantAction: string;       // SellerPenalty
+  platformAction: string;       // StorePenalty
 }
 
 // 获取处罚记录列表
 export const getPenaltyList = async (params?: {
-  status?: '未申诉' | '申诉中' | '已处理';
   keyword?: string;
 }) => {
-  const res = await api.get('/penalties', { params });
-  return res.data as PenaltyRecord[];
+  try {
+    const response = await fetch(`/api/penalties?${new URLSearchParams({
+      ...(params?.keyword && { keyword: params.keyword })
+    })}`);
+    
+    if (!response.ok) {
+      throw new Error('获取处罚记录失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('获取处罚记录失败:', error);
+    throw error;
+  }
 };
 
 // 获取处罚详情
 export const getPenaltyDetail = async (id: string) => {
-  const res = await api.get(`/penalties/${id}`);
-  return res.data as PenaltyRecord;
+  try {
+    const response = await fetch(`/api/penalties/${id}`);
+    
+    if (!response.ok) {
+      throw new Error('获取处罚详情失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('获取处罚详情失败:', error);
+    throw error;
+  }
 };
 
 // 提交处罚申诉
-export const appealPenalty = async (id: string, reason: string, evidenceImages?: string[]) => {
-  const res = await api.post(`/penalties/${id}/appeal`, { reason, evidenceImages });
-  return res.data;
+export const appealPenalty = async (id: string, reason: string) => {
+  try {
+    const response = await fetch(`/api/penalties/${id}/appeal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ reason }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('申诉处罚失败');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('申诉处罚失败:', error);
+    throw error;
+  }
 };
 
 // ==================== 工具函数 ====================
@@ -679,4 +823,11 @@ api.interceptors.response.use(
     return Promise.reject(new Error(errorMessage));
   }
 );
+
+// 添加缺失的接口
+export interface ChatMessage {
+  sender: 'user' | 'merchant';
+  content: string;
+  time: string;
+}
 
