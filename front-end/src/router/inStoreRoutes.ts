@@ -23,7 +23,7 @@ const inStoreRoutes: Array<RouteRecordRaw> = [
                 path: 'info',
                 component: StoreInfo,
                 meta: {title: '商家信息'}
-            }
+            },
         ]
     },
 ];
