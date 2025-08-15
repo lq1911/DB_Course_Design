@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace BackEnd.Models
 {
-    // ������
-    // ���룺UserID
-    // ���룺UserID
+    // ������
+    // ���룺UserID
+    // ���룺UserID
 
     public class Courier
     {
@@ -28,8 +28,14 @@ namespace BackEnd.Models
 
         public int MonthlySalary { get; set; } = 0;
 
-        // һ�Զർ������
-        // ��������
+       
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
+
+        // 新增属性：表示骑手当前是否在线
+         [Required]
+        public bool IsOnline { get; set; } = false; // 默认为离线
+
+        // 新增属性：记录最近一次开工的时间
+        public DateTime? LastOnlineTime { get; set; } // 可为空，因为离线时没有开工时间
     }
 }

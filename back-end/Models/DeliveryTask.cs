@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
     public class DeliveryTask
     {
-        // ÅäËÍÈÎÎñÀà
-        // Ö÷Âë£ºTaskID
-        // ÍâÂë£ºCustomerID£¬StoreID£¬SellerID£¬CourierID
+
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,11 +24,10 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(10,6)")]
         public decimal? CourierLatitude { get; set; }
 
-        // ·¢²¼ÈÎÎñÊ±¼ä
         [Required]
         public DateTime PublishTime { get; set; }
 
-        // ½Óµ¥Ê±¼ä
+
         [Required]
         public DateTime AcceptTime { get; set; }
 
@@ -48,8 +46,21 @@ namespace BackEnd.Models
         [ForeignKey("CourierID")]
         public Courier Courier { get; set; } = null!;
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ÅäËÍÍ¶Ëß
         public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }
+
+        //8.13
+        // 1. ä»»åŠ¡çš„å½“å‰çŠ¶æ€
+        [Required]
+        public DeliveryStatus Status { get; set; } = DeliveryStatus.Delivering; // é»˜è®¤ä¸ºé…é€ä¸­
+
+        // 2. ä»»åŠ¡å®é™…å®Œæˆçš„æ—¶é—´
+        public DateTime? CompletionTime { get; set; } // å¯ä¸ºç©ºï¼Œå› ä¸ºæœªå®Œæˆæ—¶æ²¡æœ‰å®Œæˆæ—¶é—´
+
+            // --- æ–°å¢çš„å±æ€§ --- 8.14
+        [Required]
+        [Column(TypeName = "decimal(5,2)")] // å‡è®¾é…é€è´¹æœ€å¤šä¸º 999.99
+        public decimal DeliveryFee { get; set; } = 0.00m; // é…é€è´¹
+
     }
-}
+
+}   

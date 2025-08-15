@@ -73,3 +73,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//骑手服务注入
+builder.Services.AddScoped<ICourierService, CourierService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICourierRepository, CourierRepository>();
+
