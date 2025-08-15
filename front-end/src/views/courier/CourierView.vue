@@ -19,34 +19,6 @@
 
         <!-- 状态三: 加载成功 (渲染主要内容) -->
         <div v-else>
-            <!-- 顶部导航栏 -->
-            <div v-if="userProfile && incomeData"
-                class="fixed top-0 left-0 right-0 bg-gradient-to-r from-orange-500 to-orange-400 z-50 px-4 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                            <el-icon class="text-white text-xl">
-                                <User />
-                            </el-icon>
-                        </div>
-                        <div>
-                            <div class="text-base font-medium text-white">{{ userProfile.name }}</div>
-                            <div class="text-xs text-white/80">ID: {{ userProfile.id }}</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-5">
-                        <div class="text-right">
-                            <div class="text-xs text-white/80">今日收入</div>
-                            <div class="text-base font-semibold text-white">¥{{ incomeData.today.toFixed(2) }}</div>
-                        </div>
-                        <div class="w-9 h-9 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                            <el-icon class="text-white text-xl cursor-pointer">
-                                <Bell />
-                            </el-icon>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- 主要内容区域 -->
             <div class="pt-24 pb-20">
@@ -63,8 +35,6 @@
                                     class="px-3 py-1 bg-gradient-to-r from-gray-400 to-gray-500 text-white text-xs rounded-full shadow-sm">
                                     离线</div>
                             </div>
-                            <div class="text-sm text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">在线时长: {{
-                                workStatus.onlineHours }}小时 {{ workStatus.onlineMinutes }}分钟</div>
                         </div>
                         <div class="flex items-center justify-center mb-10">
                             <div class="relative">
@@ -82,21 +52,7 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-3 gap-6 text-center">
-                            <div class="bg-orange-50 rounded-2xl py-4 px-2">
-                                <div class="text-xl font-semibold text-orange-500 mb-1">{{ workStatus.todayOrders }}
-                                </div>
-                                <div class="text-xs text-gray-600">今日接单</div>
-                            </div>
-                            <div class="bg-blue-50 rounded-2xl py-4 px-2">
-                                <div class="text-xl font-semibold text-blue-500 mb-1">{{ workStatus.completedOrders }}
-                                </div>
-                                <div class="text-xs text-gray-600">已完成</div>
-                            </div>
-                            <div class="bg-green-50 rounded-2xl py-4 px-2">
-                                <div class="text-xl font-semibold text-green-500 mb-1">{{ workStatus.punctualityRate }}%
-                                </div>
-                                <div class="text-xs text-gray-600">准时率</div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -143,57 +99,13 @@
                                 <div class="text-xs text-gray-500 mb-2">{{ order.address }}</div>
                                 <div class="flex items-center justify-between">
                                     <div class="text-sm font-medium text-orange-500">¥{{ order.fee }}</div>
-                                    <div class="text-xs text-gray-400">{{ order.time }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 收益中心页面 -->
-                <div v-if="currentTab === 'earnings' && incomeData" class="mx-4 mt-4">
-                    <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                        <div class="text-center mb-4">
-                            <div class="text-2xl font-bold text-gray-900">¥{{ incomeData.thisMonth.toFixed(2) }}</div>
-                            <div class="text-sm text-gray-500">本月总收入</div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-4 text-center">
-                            <div>
-                                <div class="text-lg font-semibold text-gray-900">¥{{ incomeData.today.toFixed(2) }}
-                                </div>
-                                <div class="text-xs text-gray-500">今日收入</div>
-                            </div>
-                            <div>
-                                <div class="text-lg font-semibold text-gray-900">¥{{ incomeData.thisWeek.toFixed(2) }}
-                                </div>
-                                <div class="text-xs text-gray-500">本周收入</div>
-                            </div>
-                            <div>
-                                <div class="text-lg font-semibold text-gray-900">{{ incomeData.monthlyOrders }}</div>
-                                <div class="text-xs text-gray-500">本月单数</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-sm p-4">
-                        <div class="text-lg font-semibold text-gray-900 mb-3">收入明细</div>
-                        <div v-if="!earnings || earnings.length === 0" class="text-center text-gray-400 py-12">
-                            <el-icon class="text-4xl mb-2">
-                                <Coin />
-                            </el-icon>
-                            <p>暂无收入明细记录</p>
-                        </div>
-                        <div v-else class="space-y-3">
-                            <div v-for="earning in earnings" :key="earning.id"
-                                class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                                <div>
-                                    <div class="text-sm font-medium text-gray-900">{{ earning.type }}</div>
-                                    <div class="text-xs text-gray-500">{{ earning.date }}</div>
-                                </div>
-                                <div class="text-sm font-medium text-green-600">+¥{{ earning.amount }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- 个人中心页面 -->
                 <div v-if="currentTab === 'profile' && userProfile" class="mx-4 mt-4">
@@ -219,6 +131,10 @@
                                 <div class="text-lg font-semibold text-gray-900">{{ userProfile.creditScore }}</div>
                                 <div class="text-xs text-gray-500">信誉积分</div>
                             </div>
+                             <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <div class="text-lg font-semibold text-gray-900">{{ income }}</div>
+                                <div class="text-xs text-gray-500">薪资</div>
+                            </div>                           
                         </div>
                     </div>
 
@@ -308,7 +224,8 @@
             </div>
 
             <!-- 底部导航栏 -->
-            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 grid grid-cols-4 py-2">
+            <!-- 底部导航栏 -->
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2">
                 <div v-for="tab in tabs" :key="tab.key"
                     class="flex flex-col items-center justify-center py-2 cursor-pointer"
                     :class="{ 'text-orange-500': currentTab === tab.key }" @click="currentTab = tab.key">
@@ -336,7 +253,7 @@ import {
 const useMockData = true;
 
 // 动态导入API模块
-// 注意: 我们需要确保真实api.ts也导出了同名函数(如fetchEarnings), 即使它们暂时为空
+// 注意: 我们需要确保真实api.ts也导出了同名函数, 即使它们暂时为空
 import * as RealAPI from '@/api/api';
 import * as MockAPI from '@/api/api.mock';
 
@@ -344,10 +261,7 @@ const api = useMockData ? MockAPI : RealAPI;
 
 // --- 接口定义 ---
 interface UserProfile { name: string; id: string; registerDate: string; rating: number; creditScore: number; }
-interface WorkStatus { isOnline: boolean; onlineHours: number; onlineMinutes: number; todayOrders: number; completedOrders: number; punctualityRate: number; }
-interface DailyIncome { today: number; thisWeek: number; thisMonth: number; monthlyOrders: number; }
 interface Order { id: string; status: string; restaurant: string; address: string; fee: string; time: string; statusText: string; }
-interface Earning { id: number; type: string; date: string; amount: string; }
 interface NewOrder {
     id: string;
     restaurantName: string;
@@ -361,11 +275,10 @@ interface NewOrder {
 
 // --- 状态定义 ---
 const userProfile = ref<UserProfile | null>(null);
-const workStatus = ref<WorkStatus | null>(null);
-const incomeData = ref<DailyIncome | null>(null);
 const locationInfo = ref<any | null>(null);
 const orders = ref<Order[]>([]);
-const earnings = ref<Earning[]>([]);
+const income=ref<number>(0);
+const workStatus = ref<{ isOnline: boolean } | null>(null);
 
 const isLoading = ref(true);
 const errorState = ref<string | null>(null);
@@ -382,7 +295,6 @@ let countdownTimer: number | null = null;
 const tabs = [
     { key: 'home', label: '工作台', icon: HomeFilled },
     { key: 'orders', label: '订单', icon: DocumentCopy },
-    { key: 'earnings', label: '收益', icon: Coin },
     { key: 'profile', label: '我的', icon: UserFilled }
 ];
 const orderTabs = [
@@ -402,23 +314,20 @@ const loadDashboardData = async () => {
             statusRes,
             incomeRes,
             ordersRes,
-            earningsRes,
             locationRes
         ] = (await Promise.all([
             api.fetchUserProfile(),
             api.fetchWorkStatus(),
             api.fetchIncomeData(),
             api.fetchOrders('pending'),
-            api.fetchEarnings(),
             api.fetchLocationInfo()
-        ])) as [{ data: any }, { data: any }, { data: any }, { data: any }, { data: any }, { data: any }];
+        ])) as [{ data: any }, { data: any }, { data: any }, { data: any }, { data: any }];
 
         // 赋值
         userProfile.value = profileRes.data;
         workStatus.value = statusRes.data;
-        incomeData.value = incomeRes.data;
+        income.value = incomeRes.data;
         orders.value = ordersRes.data;
-        earnings.value = earningsRes.data; // <-- 赋值给 earnings
         locationInfo.value = locationRes.data; // <-- 赋值给 locationInfo
 
     } catch (error) {
@@ -458,7 +367,7 @@ const acceptOrder = async () => {
         await api.acceptOrderAPI(newOrderInfo.value.id);
         closeOrderModal(); // 使用新的关闭函数
         ElMessage.success('订单已接受！');
-        const res = await api.fetchOrders(activeOrderTab.value) as {data: any[]};
+        const res = await api.fetchOrders(activeOrderTab.value) as { data: any[] };
         orders.value = res.data;
     } catch (error) {
         ElMessage.error('接受订单失败');
@@ -496,7 +405,7 @@ const handleNewOrderPush = async (notification: { notificationId: string }) => {
         // 调用API获取订单详情
         const res = await api.fetchNewOrder(notification.notificationId) as { data: NewOrder };
         newOrderInfo.value = res.data;
-        
+
         // 成功获取数据后，开始倒计时
         startCountdown();
 
