@@ -32,7 +32,7 @@ namespace BackEnd.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreViolationPenalty> StoreViolationPenalties { get; set; }
-        public DbSet<Supervise_> Supervise_s { get; set; } 
+        public DbSet<Supervise_> Supervise_s { get; set; }
 
 
         public DbSet<User> Users { get; set; }

@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class Administrator
     {
-        // ¹ÜÀíÔ±Àà
-        // Ö÷Âë£ºUserID
-        // ÍâÂë£ºUserID
+        // ç®¡ç†å‘˜ç±»
+        // ä¸»ç ï¼šUserID
+        // å¤–ç ï¼šUserID
 
         [Key, ForeignKey("User")]
         public int UserID { get; set; }
@@ -23,20 +23,20 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(3,2)")]
         public decimal IssueHandlingScore { get; set; } = 0.00m;
 
-        // ¶à¶Ô¶à¹ØÏµ
-        // ÉóºËÆÀÂÛ
+        // å¤šå¯¹å¤šå…³ç³»
+        // å®¡æ ¸è¯„è®º
         public ICollection<Review_Comment> ReviewComments { get; set; } = new List<Review_Comment>();
 
-        // ¼à¶½Î¥¹æµêÆÌ
+        // ç›‘ç£è¿è§„åº—é“º
         public ICollection<Supervise_> Supervise_s { get; set; } = new List<Supervise_>();
 
-        // ´¦ÀíÊÛºóÇëÇó
+        // å¤„ç†å”®åè¯·æ±‚
         public ICollection<Evaluate_AfterSale> EvaluateAfterSales { get; set; } = new List<Evaluate_AfterSale>();
 
-        // ´¦ÀíÅäËÍÍ¶Ëß
+        // å¤„ç†é…é€æŠ•è¯‰
         public ICollection<Evaluate_Complaint> EvaluateComplaints { get; set; } = new List<Evaluate_Complaint>();
 
-        // ±ã½İÊôĞÔ
+        // ä¾¿æ·å±æ€§
         [NotMapped]
         public IEnumerable<Comment> Comments => ReviewComments.Select(rc => rc.Comment);
 

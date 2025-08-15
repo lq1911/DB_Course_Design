@@ -6,7 +6,9 @@ namespace BackEnd.Models
 {
     public class DeliveryTask
     {
-
+        // 配送任务类
+        // 主码：TaskID
+        // 外码：CustomerID，StoreID，SellerID，CourierID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -24,10 +26,11 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(10,6)")]
         public decimal? CourierLatitude { get; set; }
 
+        // 发布任务时间
         [Required]
         public DateTime PublishTime { get; set; }
 
-
+        // 接单时间
         [Required]
         public DateTime AcceptTime { get; set; }
 
@@ -46,6 +49,8 @@ namespace BackEnd.Models
         [ForeignKey("CourierID")]
         public Courier Courier { get; set; } = null!;
 
+        // 一对多导航属性
+        // 配送投诉
         public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }
 
         //8.13

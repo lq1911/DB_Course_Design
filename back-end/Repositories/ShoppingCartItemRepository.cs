@@ -1,9 +1,7 @@
-using BackEnd.Models;
 using BackEnd.Data;
+using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -17,29 +15,35 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<ShoppingCartItem>> GetAllAsync()
         {
-            return await _context.Set<ShoppingCartItem>().ToListAsync();
+            return await _context.ShoppingCartItems
+                                 .Include(sci => sci.Cart) // 关联购物车
+                                 .Include(sci => sci.Dish) // 关联菜品
+                                 .ToListAsync();
         }
 
         public async Task<ShoppingCartItem?> GetByIdAsync(int id)
         {
-            return await _context.Set<ShoppingCartItem>().FindAsync(id);
+            return await _context.ShoppingCartItems
+                                 .Include(sci => sci.Cart)
+                                 .Include(sci => sci.Dish)
+                                 .FirstOrDefaultAsync(sci => sci.ItemID == id);
         }
 
-        public async Task AddAsync(ShoppingCartItem shoppingcartitem)
+        public async Task AddAsync(ShoppingCartItem shoppingCartItem)
         {
-            _context.Set<ShoppingCartItem>().Add(shoppingcartitem);
+            await _context.ShoppingCartItems.AddAsync(shoppingCartItem);
             await SaveAsync();
         }
 
-        public async Task UpdateAsync(ShoppingCartItem shoppingcartitem)
+        public async Task UpdateAsync(ShoppingCartItem shoppingCartItem)
         {
-            _context.Set<ShoppingCartItem>().Update(shoppingcartitem);
+            _context.ShoppingCartItems.Update(shoppingCartItem);
             await SaveAsync();
         }
 
-        public async Task DeleteAsync(ShoppingCartItem shoppingcartitem)
+        public async Task DeleteAsync(ShoppingCartItem shoppingCartItem)
         {
-            _context.Set<ShoppingCartItem>().Remove(shoppingcartitem);
+            _context.ShoppingCartItems.Remove(shoppingCartItem);
             await SaveAsync();
         }
 

@@ -1,9 +1,7 @@
-using BackEnd.Models;
 using BackEnd.Data;
+using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -17,29 +15,35 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<FavoritesFolder>> GetAllAsync()
         {
-            return await _context.Set<FavoritesFolder>().ToListAsync();
+            return await _context.FavoritesFolders
+                                 .Include(ff => ff.Customer)      // 关联顾客
+                                 .Include(ff => ff.FavoriteItems) // 收藏夹中的项目
+                                 .ToListAsync();
         }
 
         public async Task<FavoritesFolder?> GetByIdAsync(int id)
         {
-            return await _context.Set<FavoritesFolder>().FindAsync(id);
+            return await _context.FavoritesFolders
+                                 .Include(ff => ff.Customer)
+                                 .Include(ff => ff.FavoriteItems)
+                                 .FirstOrDefaultAsync(ff => ff.FolderID == id);
         }
 
         public async Task AddAsync(FavoritesFolder favoritesfolder)
         {
-            _context.Set<FavoritesFolder>().Add(favoritesfolder);
+            _context.FavoritesFolders.Add(favoritesfolder);
             await SaveAsync();
         }
 
         public async Task UpdateAsync(FavoritesFolder favoritesfolder)
         {
-            _context.Set<FavoritesFolder>().Update(favoritesfolder);
+            _context.FavoritesFolders.Update(favoritesfolder);
             await SaveAsync();
         }
 
         public async Task DeleteAsync(FavoritesFolder favoritesfolder)
         {
-            _context.Set<FavoritesFolder>().Remove(favoritesfolder);
+            _context.FavoritesFolders.Remove(favoritesfolder);
             await SaveAsync();
         }
 

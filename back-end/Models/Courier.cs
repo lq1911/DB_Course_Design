@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace BackEnd.Models
 {
-    // ������
-    // ���룺UserID
-    // ���룺UserID
+    // 骑手类
+    // 主码：UserID
+    // 外码：UserID
 
     public class Courier
     {
@@ -28,7 +28,8 @@ namespace BackEnd.Models
 
         public int MonthlySalary { get; set; } = 0;
 
-       
+        // 一对多导航属性
+        // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
 
         // 新增属性：表示骑手当前是否在线

@@ -5,8 +5,8 @@ namespace BackEnd.Models
 {
     public class Evaluate_Complaint
     {
-        // 管理员与配送投诉之间的评估投诉关系
-        // 主码：AdminID，ComplaintID
+        // 绠＄悊鍛樹笌閰嶉�佹姇璇変箣闂寸殑璇勪及鎶曡瘔鍏崇郴
+        // 涓荤爜锛欰dminID锛孋omplaintID
 
         [Key, Column(Order = 0)]
         public int AdminID { get; set; }

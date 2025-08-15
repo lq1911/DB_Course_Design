@@ -29,13 +29,17 @@
       </div>
     </div>
     <div class="text-center text-xs text-gray-400 mt-8">
-      &copy; 2025 美食外卖平台 FoodExpress. 保留所有权利。
+      &copy; 2025 美食外卖平台 {{ name }}&trade;. 保留所有权利。
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import { getProjectName } from '@/stores/name'
+
+const name = getProjectName().projectName;
 
 //导入图标文件
 import twitter from '@/assets/Icons/Twitter.svg'

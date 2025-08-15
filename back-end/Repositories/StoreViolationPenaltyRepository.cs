@@ -1,9 +1,7 @@
-using BackEnd.Models;
 using BackEnd.Data;
+using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -17,29 +15,35 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<StoreViolationPenalty>> GetAllAsync()
         {
-            return await _context.Set<StoreViolationPenalty>().ToListAsync();
+            return await _context.StoreViolationPenalties
+                                 .Include(p => p.Store)       // 关联店铺
+                                 .Include(p => p.Supervise_s) // 关联管理员监督关系
+                                 .ToListAsync();
         }
 
         public async Task<StoreViolationPenalty?> GetByIdAsync(int id)
         {
-            return await _context.Set<StoreViolationPenalty>().FindAsync(id);
+            return await _context.StoreViolationPenalties
+                                 .Include(p => p.Store)
+                                 .Include(p => p.Supervise_s)
+                                 .FirstOrDefaultAsync(p => p.PenaltyID == id);
         }
 
-        public async Task AddAsync(StoreViolationPenalty storeviolationpenalty)
+        public async Task AddAsync(StoreViolationPenalty storeViolationPenalty)
         {
-            _context.Set<StoreViolationPenalty>().Add(storeviolationpenalty);
+            await _context.StoreViolationPenalties.AddAsync(storeViolationPenalty);
             await SaveAsync();
         }
 
-        public async Task UpdateAsync(StoreViolationPenalty storeviolationpenalty)
+        public async Task UpdateAsync(StoreViolationPenalty storeViolationPenalty)
         {
-            _context.Set<StoreViolationPenalty>().Update(storeviolationpenalty);
+            _context.StoreViolationPenalties.Update(storeViolationPenalty);
             await SaveAsync();
         }
 
-        public async Task DeleteAsync(StoreViolationPenalty storeviolationpenalty)
+        public async Task DeleteAsync(StoreViolationPenalty storeViolationPenalty)
         {
-            _context.Set<StoreViolationPenalty>().Remove(storeviolationpenalty);
+            _context.StoreViolationPenalties.Remove(storeViolationPenalty);
             await SaveAsync();
         }
 

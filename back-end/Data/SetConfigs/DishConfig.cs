@@ -16,28 +16,28 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(d => d.DishID).HasColumnName("DISHID").ValueGeneratedOnAdd();
 
             builder.Property(d => d.DishName).HasColumnName("DISHNAME").IsRequired().HasMaxLength(50);
-            
+
             builder.Property(d => d.Price).HasColumnName("PRICE").IsRequired().HasColumnType("decimal(10,2)");
-            
+
             builder.Property(d => d.Description).HasColumnName("DESCRIPTION").IsRequired().HasMaxLength(500);
 
             builder.Property(d => d.IsSoldOut)
                    .HasColumnName("ISSOLDOUT")
                    .IsRequired()
-                   .HasConversion<string>() // ½«Ã¶¾Ù´æ´¢Îª×Ö·û´®£¨Èç "IsSoldOut", "Available"£©£¬¸ü¾ß¿É¶ÁĞÔ
+                   .HasConversion<string>() // å°†æšä¸¾å­˜å‚¨ä¸ºå­—ç¬¦ä¸²ï¼ˆå¦‚ "IsSoldOut", "Available"ï¼‰ï¼Œæ›´å…·å¯è¯»æ€§
                    .HasMaxLength(20)
-                   .HasDefaultValue(DishIsSoldOut.IsSoldOut); // Ê¹ÓÃÇ¿ÀàĞÍÃ¶¾ÙÉèÖÃÄ¬ÈÏÖµ
+                   .HasDefaultValue(DishIsSoldOut.IsSoldOut); // ä½¿ç”¨å¼ºç±»å‹æšä¸¾è®¾ç½®é»˜è®¤å€¼
 
             // ---------------------------------------------------------------
-            // ¹ØÏµÅäÖÃ
+            // å…³ç³»é…ç½®
             // ---------------------------------------------------------------
 
-            // ÅäÖÃÓë Menu µÄ¶à¶Ô¶à¹ØÏµ (Í¨¹ı Menu_Dish ÖĞ¼ä±í)
-            // Ò»¸ö²ËÆ·¿ÉÒÔ³öÏÖÔÚ¶à¸ö Menu_Dish ¼ÇÂ¼ÖĞ
+            // é…ç½®ä¸ Menu çš„å¤šå¯¹å¤šå…³ç³» (é€šè¿‡ Menu_Dish ä¸­é—´è¡¨)
+            // ä¸€ä¸ªèœå“å¯ä»¥å‡ºç°åœ¨å¤šä¸ª Menu_Dish è®°å½•ä¸­
             builder.HasMany(d => d.MenuDishes)
-                   .WithOne(md => md.Dish) // Ã¿¸ö Menu_Dish ¼ÇÂ¼¶ÔÓ¦Ò»¸ö²ËÆ·
-                   .HasForeignKey(md => md.DishID) // Íâ¼üÔÚ Menu_Dish ±íÉÏ
-                   .OnDelete(DeleteBehavior.Cascade); // µ±²ËÆ·±»É¾³ıÊ±£¬ÆäÔÚËùÓĞ²Ëµ¥ÖĞµÄ¼ÇÂ¼Ò²Ó¦±»É¾³ı
+                   .WithOne(md => md.Dish) // æ¯ä¸ª Menu_Dish è®°å½•å¯¹åº”ä¸€ä¸ªèœå“
+                   .HasForeignKey(md => md.DishID) // å¤–é”®åœ¨ Menu_Dish è¡¨ä¸Š
+                   .OnDelete(DeleteBehavior.Cascade); // å½“èœå“è¢«åˆ é™¤æ—¶ï¼Œå…¶åœ¨æ‰€æœ‰èœå•ä¸­çš„è®°å½•ä¹Ÿåº”è¢«åˆ é™¤
         }
     }
 }

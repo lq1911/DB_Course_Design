@@ -101,6 +101,7 @@
 | 字段名          | 类型   | 来源 (前端变量)         | 示例值              |
 | --------------- | ------ | ----------------------- | ------------------- |
 | nickname        | string | `registerForm.nickname`  | `"新用户123"`        |
+| realname        | string | `registerForm.realName`  |  `role 不为 consumer 时必填`|
 | password        | string | `registerForm.password`  | `"mysecretpwd"`      |
 | confirmPassword | string | `registerForm.confirmPassword` | `"mysecretpwd"`  |
 | phone           | string | `registerForm.phone`     | `"13800138000"`      |
@@ -133,7 +134,8 @@
   | --------------------- | ------------ | -------- | -------------- |
   | storeInfo.name         | string       | 是       | 店铺名称       |
   | storeInfo.address      | string       | 是       | 店铺地址       |
-  | storeInfo.businessHours | string       | 是       | 营业时间       |
+  | storeInfo.openingTime | string | 是 | (V1.1 修改) 开店时间, 格式为 HH:mm |
+  | storeInfo.closingTime | string | 是 | (V1.1 修改) 关店时间, 格式为 HH:mm |
   | storeInfo.establishmentDate | string   | 是       | 店铺建立时间   |
   | storeInfo.businessLicense | File 或 null | 是       | 营业执照文件   |
   | storeInfo.category     | string       | 是       | 经营类别       |

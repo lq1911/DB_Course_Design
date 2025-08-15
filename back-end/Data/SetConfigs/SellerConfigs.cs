@@ -10,7 +10,7 @@ namespace BackEnd.Data.SetConfigs
         {
             builder.ToTable("SELLER");
 
-            builder.HasKey(s => s.UserID);  
+            builder.HasKey(s => s.UserID);
 
             builder.Property(s => s.UserID).HasColumnName("USERID").ValueGeneratedNever();
 
@@ -21,20 +21,20 @@ namespace BackEnd.Data.SetConfigs
             builder.Property(s => s.BanStatus).HasColumnName("BANSTATUS").IsRequired().HasMaxLength(10);
 
             // ---------------------------------------------------------------
-            // ¹ØÏµÅäÖÃ
+            // å…³ç³»é…ç½®
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: Seller Óë User (Ò»¶ÔÒ»¼Ì³Ğ¹ØÏµ)
+            // å…³ç³»ä¸€: Seller ä¸ User (ä¸€å¯¹ä¸€ç»§æ‰¿å…³ç³»)
             builder.HasOne(s => s.User)
                    .WithOne(u => u.Seller)
                    .HasForeignKey<Seller>(s => s.UserID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ± User ±»É¾³ıÊ±£¬Æä Seller Éí·İÒ²Ó¦¼¶ÁªÉ¾³ı
+                   .OnDelete(DeleteBehavior.Cascade); // å½“ User è¢«åˆ é™¤æ—¶ï¼Œå…¶ Seller èº«ä»½ä¹Ÿåº”çº§è”åˆ é™¤
 
-            // ¹ØÏµ¶ş: Seller Óë Store (Ò»¶ÔÒ»¿ÉÑ¡¹ØÏµ)
+            // å…³ç³»äºŒ: Seller ä¸ Store (ä¸€å¯¹ä¸€å¯é€‰å…³ç³»)
             builder.HasOne(s => s.Store)
                    .WithOne(st => st.Seller)
                    .HasForeignKey<Store>(st => st.SellerID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ± Seller ±»É¾³ıÊ±£¬ÆäÓµÓĞµÄ Store Ò²Ó¦¼¶ÁªÉ¾³ı
+                   .OnDelete(DeleteBehavior.Cascade); // å½“ Seller è¢«åˆ é™¤æ—¶ï¼Œå…¶æ‹¥æœ‰çš„ Store ä¹Ÿåº”çº§è”åˆ é™¤
         }
     }
 }

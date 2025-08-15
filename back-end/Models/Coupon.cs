@@ -6,9 +6,9 @@ namespace BackEnd.Models
 {
     public class Coupon
     {
-        // ÓÅ»İÈ¯Àà
-        // Ö÷Âë£ºCouponID
-        // ÍâÂë£ºCouponManagerID£¬CustomerID£¬OrderID
+        // ä¼˜æƒ åˆ¸ç±»
+        // ä¸»ç ï¼šCouponID
+        // å¤–ç ï¼šCouponManagerIDï¼ŒCustomerIDï¼ŒOrderID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
