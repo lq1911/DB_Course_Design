@@ -143,17 +143,37 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">营业时间</label>
-                <div class="flex items-center">
-                  <input
-                    v-model="shopInfo.businessHours"
+                <div class="flex items-center space-x-2">
+                  <!-- 开始时间 -->
+                  <el-time-select
+                    v-model="shopInfo.startTime"
                     :disabled="!isEditingHours"
-                    :class="{
-                      'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm': true,
-                      'bg-gray-100 cursor-not-allowed': !isEditingHours,
-                      'bg-white': isEditingHours
+                    placeholder="开始时间"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:30',
+                      end: '23:30'
                     }"
-                    placeholder="例：09:00-22:00"
+                    class="w-32"
                   />
+
+                  <span class="text-gray-600">-</span>
+
+                  <!-- 结束时间 -->
+                  <el-time-select
+                    v-model="shopInfo.endTime"
+                    :disabled="!isEditingHours"
+                    placeholder="结束时间"
+                    :picker-options="{
+                      start: '00:30',
+                      step: '00:30',
+                      end: '23:59',
+                      minTime: shopInfo.startTime
+                    }"
+                    class="w-32"
+                  />
+
+                  <!-- 编辑按钮 -->
                   <button
                     @click="toggleEdit('hours')"
                     class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors"
@@ -163,6 +183,7 @@
                   </button>
                 </div>
               </div>
+
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">店铺特色</label>
@@ -213,7 +234,8 @@ const defaultShopInfo = {
   name: '***',
   createTime: '***',
   address: '',
-  businessHours: '',
+  startTime: '',
+  endTime: '',
   feature: '',
   rating: 0,
   monthlySales: 0,
@@ -261,9 +283,27 @@ const saveField = async (field: string) => {
       case 'address':
         value = shopInfo.value.address;
         break;
-      case 'hours':
-        value = shopInfo.value.businessHours;
-        break;
+      case 'hours': {
+        const { startTime, endTime } = shopInfo.value;
+
+        if (!startTime || !endTime) {
+          ElMessage.warning('请选择开始与结束时间');
+          return;
+        }
+        if (startTime >= endTime) {
+          ElMessage.warning('结束时间必须晚于开始时间');
+          return;
+        }
+
+        // 并行更新两个独立字段
+        await Promise.all([
+          updateShopField('startTime', startTime),
+          updateShopField('endTime', endTime),
+        ]);
+
+        ElMessage.success('营业时间更新成功');
+        return; // 已经提示成功，这里直接返回，避免再走通用提示
+      }
       case 'feature':
         value = shopInfo.value.feature;
         break;
@@ -351,14 +391,15 @@ const fetchAllData = async () => {
     
     // 更新店铺信息
     if (shop.data) {
-      const { id, name, createTime, address, businessHours, feature } = shop.data;
+      const { id, name, createTime, address, startTime, endTime, feature } = shop.data;
       shopInfo.value = {
         ...shopInfo.value, // 保留现有值（包括可能已更新的rating等）
         id: id || defaultShopInfo.id,
         name: name || defaultShopInfo.name,
         createTime: createTime || defaultShopInfo.createTime,
         address: address || defaultShopInfo.address,
-        businessHours: businessHours || defaultShopInfo.businessHours,
+        startTime: startTime || defaultShopInfo.startTime,
+        endTime: endTime || defaultShopInfo.endTime,
         feature: feature || defaultShopInfo.feature
       };
     }
