@@ -9,7 +9,7 @@
     <div class="max-w-8xl mx-auto p-6">
       <div class="flex gap-6 ml-20">
         <!-- 左侧菜品列表 -->
-        <div class="w-[120vh] h-[95vh] bg-white rounded-2xl shadow-lg p-6 overflow-y-auto">
+        <div class="w-[125vh] h-[95vh] bg-white rounded-2xl shadow-lg p-6 overflow-y-auto">
           <div class="flex items-center justify-between mb-6 border-b">
             <div class="flex items-center gap-3">
               <h1 class="text-2xl font-bold text-gray-900">已选菜品</h1>
@@ -29,8 +29,9 @@
         </div>
 
         <!-- 右侧订单/支付区 -->
-        <div class="space-y-4 w-[40vh]">
-          <AddressSelector :selectedAddress="selectedAddress" @onAddressChange="selectedAddress = $event" />
+        <div class="space-y-4 w-[45vh]">
+          <AddressSelector :selectedAddress="selectedAddress" 
+          @onAddressChange="selectedAddress = $event" />
           <CouponSelector :selectedCoupon="selectedCoupon" :totalAmount="subtotal"
             @onCouponChange="selectedCoupon = $event" />
           <PaymentSelector v-model:selectedMethod="paymentMethod" />
