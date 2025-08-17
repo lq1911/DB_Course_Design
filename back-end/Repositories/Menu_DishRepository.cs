@@ -17,29 +17,35 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Menu_Dish>> GetAllAsync()
         {
-            return await _context.Set<Menu_Dish>().ToListAsync();
+            return await _context.Menu_Dishes
+                                 .Include(md => md.Menu)  // 关联菜单
+                                 .Include(md => md.Dish)  // 关联菜品
+                                 .ToListAsync();
         }
 
-        public async Task<Menu_Dish?> GetByIdAsync(int id)
+        public async Task<Menu_Dish?> GetByIdAsync(int menuId, int dishId)
         {
-            return await _context.Set<Menu_Dish>().FindAsync(id);
+            return await _context.Menu_Dishes
+                                 .Include(md => md.Menu)
+                                 .Include(md => md.Dish)
+                                 .FirstOrDefaultAsync(md => md.MenuID == menuId && md.DishID == dishId);
         }
 
-        public async Task AddAsync(Menu_Dish menu_dish)
+        public async Task AddAsync(Menu_Dish menuDish)
         {
-            _context.Set<Menu_Dish>().Add(menu_dish);
+            await _context.Menu_Dishes.AddAsync(menuDish);
             await SaveAsync();
         }
 
-        public async Task UpdateAsync(Menu_Dish menu_dish)
+        public async Task UpdateAsync(Menu_Dish menuDish)
         {
-            _context.Set<Menu_Dish>().Update(menu_dish);
+            _context.Menu_Dishes.Update(menuDish);
             await SaveAsync();
         }
 
-        public async Task DeleteAsync(Menu_Dish menu_dish)
+        public async Task DeleteAsync(Menu_Dish menuDish)
         {
-            _context.Set<Menu_Dish>().Remove(menu_dish);
+            _context.Menu_Dishes.Remove(menuDish);
             await SaveAsync();
         }
 

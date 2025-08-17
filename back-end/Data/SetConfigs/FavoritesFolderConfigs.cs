@@ -19,21 +19,21 @@ namespace BackEnd.Data.SetConfigs
             builder.Property(ff => ff.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
 
             // ---------------------------------------------------------------
-            // ��ϵ����
+            // 关系配置
             // ---------------------------------------------------------------
 
-            // ��ϵһ: FavoritesFolder -> Customer (���һ)
-            // Customer ������ FavoritesFolders �������ԣ�Ӧ��ȷָ��
+            // 关系一: FavoritesFolder -> Customer (多对一)
+            // Customer 类中有 FavoritesFolders 导航属性，应明确指定
             builder.HasOne(f => f.Customer)
-                   .WithMany(c => c.FavoritesFolders) // ��ȷָ�� Customer �˵ķ��򵼺�����
+                   .WithMany(c => c.FavoritesFolders) // 明确指定 Customer 端的反向导航属性
                    .HasForeignKey(f => f.CustomerID)
-                   .OnDelete(DeleteBehavior.Cascade); // ���˿ͱ�ɾ��ʱ���������ղؼ�ҲӦ������ɾ��
+                   .OnDelete(DeleteBehavior.Cascade); // 当顾客被删除时，其所有收藏夹也应被级联删除
 
-            // ��ϵ��: FavoritesFolder -> FavoriteItem (һ�Զ�)
+            // 关系二: FavoritesFolder -> FavoriteItem (一对多)
             builder.HasMany(f => f.FavoriteItems)
-                   .WithOne(fi => fi.Folder) // ��ȷָ�� FavoriteItem �˵ķ��򵼺�����
+                   .WithOne(fi => fi.Folder) // 明确指定 FavoriteItem 端的反向导航属性
                    .HasForeignKey(fi => fi.FolderID)
-                   .OnDelete(DeleteBehavior.Cascade); // ���ղؼб�ɾ��ʱ��������������ղ��Ӧ������ɾ��
+                   .OnDelete(DeleteBehavior.Cascade); // 当收藏夹被删除时，其包含的所有收藏项都应被级联删除
         }
     }
 }

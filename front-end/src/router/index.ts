@@ -8,6 +8,7 @@ import userRoutes from './userRoutes'
 import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
+import checkoutRoutes from './checkoutRoute'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -23,7 +24,8 @@ const routes: Array<RouteRecordRaw> = [
   ...userRoutes,
   ...courierRoutes,
   ...inStoreRoutes,
-  ...merchantRoutes
+  ...merchantRoutes,
+  ...checkoutRoutes
 ]
 
 const router = createRouter({

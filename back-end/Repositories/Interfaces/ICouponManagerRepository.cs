@@ -1,6 +1,4 @@
 using BackEnd.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories.Interfaces
 {
@@ -10,9 +8,9 @@ namespace BackEnd.Repositories.Interfaces
         Task<CouponManager?> GetByIdAsync(int id);
         Task AddAsync(CouponManager couponManager);
         Task UpdateAsync(CouponManager couponManager);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(CouponManager couponManager);
         Task SaveAsync();
-        
-        
+
+
     }
 }

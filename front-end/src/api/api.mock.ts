@@ -1,55 +1,131 @@
-// src/services/api.mock.ts
+// src/api/api.mock.ts
 
-// --- 模拟数据定义 ---
+// ===================================================================
+//  1. 精简后的接口定义 (Streamlined Interfaces)
+// ===================================================================
 
-const mockUserProfile = { name: '张明辉 (模拟)', id: 'RD20241201', registerDate: '2023-08-15', rating: 4.8, creditScore: 892 };
+/** 用户个人资料 (所有属性均在模板中使用) */
+export interface UserProfile {
+    name: string;
+    id: string;
+    registerDate: string;
+    rating: number;
+    creditScore: number;
+}
 
-const mockWorkStatus = { isOnline: true, onlineHours: 3, onlineMinutes: 45, todayOrders: 8, completedOrders: 7, punctualityRate: 99.1 };
+/** 
+ * 工作状态详情 
+ * @description 只保留了模板中用于判断和切换状态的 isOnline 属性。
+ * @removed onlineHours, onlineMinutes, todayOrders, completedOrders, punctualityRate (模板中未显示这些统计数据)
+ */
+export interface WorkStatus {
+    isOnline: boolean;
+}
 
-const mockIncomeData = { today: 128.50, thisWeek: 765.80, thisMonth: 3450.00, monthlyOrders: 98 };
+/** 
+ * 收入数据结构
+ * @description 模板中薪资只显示一个位置，因此只保留一个核心字段。我们保留 thisMonth 作为示例。
+ * @removed today, thisWeek, monthlyOrders (如果需要可以加回，但当前模板只适合显示一个值)
+ */
+export interface IncomeData {
+    thisMonth: number;
+}
 
-const mockOrders = [
-    { id: 'ORD-MOCK-001', restaurant: '模拟-肯德基', address: '模拟-人民广场1号', fee: '10.00', time: '10:30', status: 'pending', statusText: '待取餐' },
-    { id: 'ORD-MOCK-002', restaurant: '模拟-麦当劳', address: '模拟-南京路2号', fee: '8.50', time: '10:45', status: 'pending', statusText: '待取餐' },
-    { id: 'ORD-MOCK-003', restaurant: '模拟-星巴克', address: '模拟-淮海路3号', fee: '15.00', time: '09:50', status: 'delivering', statusText: '配送中' },
-    { id: 'ORD-MOCK-004', restaurant: '模拟-必胜客', address: '模拟-西藏中路4号', fee: '12.00', time: '09:30', status: 'completed', statusText: '已完成' },
+/** 
+ * 订单信息
+ * @description 移除了模板中未显示的 time 属性。
+ * @removed time
+ */
+export interface Order {
+    id: string;
+    status: 'pending' | 'delivering' | 'completed';
+    restaurant: string;
+    address: string;
+    fee: string;
+    statusText: string;
+}
+
+/** 新订单详情 (所有属性均在模板或逻辑中使用) */
+export interface NewOrder {
+    id: string; // 虽然不在模板中，但在 acceptOrder/rejectOrder 逻辑中必需
+    restaurantName: string;
+    restaurantAddress: string;
+    customerName: string;
+    customerAddress: string;
+    distance: string;
+    fee: number;
+    mapImageUrl: string;
+}
+
+/** 位置信息 (所有属性均在模板中使用) */
+export interface LocationInfo {
+    area: string;
+}
+
+
+// ===================================================================
+//  2. 精简后的模拟数据 (Streamlined Mock Data)
+// ===================================================================
+
+const mockUserProfile: UserProfile = {
+    name: '张明辉 (模拟)',
+    id: 'RD20241201',
+    registerDate: '2023-08-15',
+    rating: 4.8,
+    creditScore: 892
+};
+
+const mockWorkStatus: WorkStatus = {
+    isOnline: true
+};
+
+const mockIncomeData: IncomeData = {
+    thisMonth: 3450
+};
+
+const mockOrders: Order[] = [
+    { id: 'ORD-MOCK-001', restaurant: '模拟-肯德基', address: '模拟-人民广场1号', fee: '10.00', status: 'pending', statusText: '待取餐' },
+    { id: 'ORD-MOCK-002', restaurant: '模拟-麦当劳', address: '模拟-南京路2号', fee: '8.50', status: 'pending', statusText: '待取餐' },
+    { id: 'ORD-MOCK-003', restaurant: '模拟-星巴克', address: '模拟-淮海路3号', fee: '15.00', status: 'delivering', statusText: '配送中' },
+    { id: 'ORD-MOCK-004', restaurant: '模拟-必胜客', address: '模拟-西藏中路4号', fee: '12.00', status: 'completed', statusText: '已完成' },
 ];
 
-// 新增: 模拟的收入明细数据
-const mockEarnings = [
-    { id: 1, type: '配送费 (模拟)', date: '2024-12-01 14:30', amount: '8.50' },
-    { id: 2, type: '配送费 (模拟)', date: '2024-12-01 14:15', amount: '12.00' },
-    { id: 3, type: '高峰补贴 (模拟)', date: '2024-12-01 13:45', amount: '5.00' },
-    { id: 4, type: '配送费 (模拟)', date: '2024-12-01 13:30', amount: '15.50' }
-];
+const mockLocationInfo: LocationInfo = {
+    area: '人民广场商圈 (模拟)'
+};
 
-// 新增: 模拟的位置信息
-const mockLocationInfo = { area: '人民广场商圈 (模拟)' };
+const mockNewOrder: NewOrder = {
+    id: 'ORD-MOCK-NEW-001',
+    restaurantName: '肯德基 (模拟-南京路店)',
+    restaurantAddress: '模拟-上海市黄浦区南京东路 789 号',
+    customerName: '王女士',
+    customerAddress: '模拟-上海市黄浦区福州路 321 号 15 楼',
+    distance: '2.3km',
+    fee: 12.50,
+    mapImageUrl: 'https://readdy.ai/api/search-image?query=Simple%20delivery%20route%20map%20showing%20pickup%20and%20delivery%20locations%20with%20orange%20markers%2C%20clean%20interface%20design%2C%20mobile%20app%20style%20map%20view%2C%20clear%20navigation%20paths%2C%20professional%20delivery%20service%20aesthetic&width=280&height=160&seq=ordermap001&orientation=landscape'
+};
 
 
-/** 模拟API延迟的辅助函数 */
-function createMockResponse(data: any, delay = 300) {
-    return new Promise(resolve => {
+// ===================================================================
+//  3. 模拟 API 函数 (无需修改)
+// ===================================================================
+
+function createMockResponse<T>(data: T, delay = 300) {
+    return new Promise<{ data: T }>(resolve => {
         setTimeout(() => { resolve({ data: data }); }, delay);
     });
 }
 
-// --- 导出与真实API同名的模拟函数 ---
-
 export const fetchUserProfile = () => createMockResponse(mockUserProfile);
 export const fetchWorkStatus = () => createMockResponse(mockWorkStatus);
-export const fetchIncomeData = () => createMockResponse(mockIncomeData);
-export const fetchOrders = (status: string) => createMockResponse(mockOrders.filter(order => order.status === status));
-
-// 新增: 导出获取收益明细的函数
-export const fetchEarnings = () => createMockResponse(mockEarnings);
-// 新增: 导出获取位置信息的函数
+export const fetchIncomeData = () => createMockResponse(mockIncomeData.thisMonth);
+export const fetchOrders = (status: string) => createMockResponse(mockOrders.filter(o => o.status === status));
 export const fetchLocationInfo = () => createMockResponse(mockLocationInfo);
+export const fetchNewOrder = () => createMockResponse(mockNewOrder);
 
-
-export const toggleWorkStatusAPI = (status: boolean) => {
-    mockWorkStatus.isOnline = status;
-    console.log(`[Mock] 工作状态切换为: ${status}`);
+export const toggleWorkStatusAPI = (newStatus: boolean) => {
+    mockWorkStatus.isOnline = newStatus;
+    console.log(`[Mock] 工作状态切换为: ${newStatus ? '在线' : '离线'}`);
     return createMockResponse({ success: true });
 };
 
@@ -62,26 +138,3 @@ export const rejectOrderAPI = (orderId: string) => {
     console.log(`[Mock] 拒绝订单: ${orderId}`);
     return createMockResponse({ success: true });
 };
-
-export const updateUserProfile = (profileData: any) => {
-    console.log('[Mock] 收到来自表单的用户资料:', profileData);
-    // 更新内存中的原始模拟数据
-    Object.assign(mockUserProfile, profileData);
-    return createMockResponse({ success: true, message: '用户信息更新成功！' });
-};
-
-// 新增: 模拟的新订单详情数据
-const mockNewOrder = {
-    id: 'ORD-MOCK-NEW-001',
-    restaurantName: '肯德基 (模拟-南京路店)',
-    restaurantAddress: '模拟-上海市黄浦区南京东路 789 号',
-    customerName: '王女士',
-    customerAddress: '模拟-上海市黄浦区福州路 321 号 15 楼',
-    distance: '2.3km',
-    fee: 12.50,
-    mapImageUrl: 'https://readdy.ai/api/search-image?query=Simple%20delivery%20route%20map%20showing%20pickup%20and%20delivery%20locations%20with%20orange%20markers%2C%20clean%20interface%20design%2C%20mobile%20app%20style%20map%20view%2C%20clear%20navigation%20paths%2C%20professional%20delivery%20service%20aesthetic&width=280&height=160&seq=ordermap001&orientation=landscape'
-};
-
-
-// 新增: 导出获取新订单详情的函数
-export const fetchNewOrder = () => createMockResponse(mockNewOrder);

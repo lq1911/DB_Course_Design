@@ -30,39 +30,39 @@ namespace BackEnd.Data.SetConfigs
             builder.Property(fo => fo.StoreID).HasColumnName("STOREID").IsRequired();
 
             // ---------------------------------------------------------------
-            // ÅäÖÃ¹ØÏµ
+            // é…ç½®å…³ç³»
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: FoodOrder -> Customer (¶à¶ÔÒ»)
+            // å…³ç³»ä¸€: FoodOrder -> Customer (å¤šå¯¹ä¸€)
             builder.HasOne(e => e.Customer)
                    .WithMany(c => c.FoodOrders)
                    .HasForeignKey(e => e.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹É¾³ıÈÔÓĞ¶©µ¥µÄ¹Ë¿Í
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢åˆ é™¤ä»æœ‰è®¢å•çš„é¡¾å®¢
 
-            // ¹ØÏµ¶ş: FoodOrder -> ShoppingCart (Ò»¶ÔÒ»)
-            // Ò»¸ö¶©µ¥¶ÔÓ¦Ò»¸ö¹ºÎï³µ£¬Ò»¸ö¹ºÎï³µ½áËãºóÒ²Ö»Éú³ÉÒ»¸ö¶©µ¥
+            // å…³ç³»äºŒ: FoodOrder -> ShoppingCart (ä¸€å¯¹ä¸€)
+            // ä¸€ä¸ªè®¢å•å¯¹åº”ä¸€ä¸ªè´­ç‰©è½¦ï¼Œä¸€ä¸ªè´­ç‰©è½¦ç»“ç®—åä¹Ÿåªç”Ÿæˆä¸€ä¸ªè®¢å•
             builder.HasOne(e => e.Cart)
                    .WithOne(c => c.Order)
                    .HasForeignKey<FoodOrder>(e => e.CartID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹É¾³ıÒÑÉú³É¶©µ¥µÄ¹ºÎï³µ
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢åˆ é™¤å·²ç”Ÿæˆè®¢å•çš„è´­ç‰©è½¦
 
-            // ¹ØÏµÈı: FoodOrder -> Store (¶à¶ÔÒ»)
+            // å…³ç³»ä¸‰: FoodOrder -> Store (å¤šå¯¹ä¸€)
             builder.HasOne(e => e.Store)
                    .WithMany(s => s.FoodOrders)
                    .HasForeignKey(e => e.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹É¾³ıÈÔÓĞ¶©µ¥µÄÉÌµê
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢åˆ é™¤ä»æœ‰è®¢å•çš„å•†åº—
 
-            // ¹ØÏµËÄ: FoodOrder -> Coupon (Ò»¶Ô¶à)
+            // å…³ç³»å››: FoodOrder -> Coupon (ä¸€å¯¹å¤š)
             builder.HasMany(e => e.Coupons)
                    .WithOne(c => c.Order)
                    .HasForeignKey(c => c.OrderID)
-                   .OnDelete(DeleteBehavior.SetNull); // ¶©µ¥É¾³ıÊ±£¬¹ØÁªµÄÓÅ»İÈ¯ÉèÎªÎ´Ê¹ÓÃ£¬¶ø²»ÊÇÉ¾³ıÓÅ»İÈ¯±¾Éí
+                   .OnDelete(DeleteBehavior.SetNull); // è®¢å•åˆ é™¤æ—¶ï¼Œå…³è”çš„ä¼˜æƒ åˆ¸è®¾ä¸ºæœªä½¿ç”¨ï¼Œè€Œä¸æ˜¯åˆ é™¤ä¼˜æƒ åˆ¸æœ¬èº«
 
-            // ¹ØÏµÎå: FoodOrder -> AfterSaleApplication (Ò»¶Ô¶à)
+            // å…³ç³»äº”: FoodOrder -> AfterSaleApplication (ä¸€å¯¹å¤š)
             builder.HasMany(e => e.AfterSaleApplications)
                    .WithOne(a => a.Order)
                    .HasForeignKey(a => a.OrderID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ±¶©µ¥±»É¾³ıÊ±£¬ÆäËùÓĞÊÛºóÉêÇë¶¼Ó¦±»¼¶ÁªÉ¾³ı
+                   .OnDelete(DeleteBehavior.Cascade); // å½“è®¢å•è¢«åˆ é™¤æ—¶ï¼Œå…¶æ‰€æœ‰å”®åç”³è¯·éƒ½åº”è¢«çº§è”åˆ é™¤
         }
     }
 }
