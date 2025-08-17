@@ -9,54 +9,54 @@
 - Customer
     ```json
     {
-    "nickname": "Tom",
-    "password": "123456",
-    "confirmPassword": "123456",
-    "phone": "13812345678",
-    "email": "tom@example.com",
-    "gender": "male",
-    "birthday": "2000-01-01",
-    "verificationCode": "666666",
-    "role": "customer",
-    "isPublic": 1
+        "nickname": "Tom",
+        "password": "123456",
+        "confirmPassword": "123456",
+        "phone": "13812345678",
+        "email": "tom@example.com",
+        "gender": "male",
+        "birthday": "2000-01-01",
+        "verificationCode": "666666",
+        "role": "customer",
+        "isPublic": 1
     }
     ```
 - Rider
     ```json
     {
-    "nickname": "Jerry",
-    "password": "123456",
-    "confirmPassword": "123456",
-    "phone": "13912345678",
-    "email": "jerry@example.com",
-    "gender": "male",
-    "birthday": "1998-05-10",
-    "verificationCode": "888888",
-    "role": "rider",
-    "isPublic": 1,
-    "riderInfo": {
-        "vehicleType": "bike",
-        "name": "小李"
-    }
+        "nickname": "Jerry",
+        "password": "123456",
+        "confirmPassword": "123456",
+        "phone": "13912345678",
+        "email": "jerry@example.com",
+        "gender": "male",
+        "birthday": "1998-05-10",
+        "verificationCode": "888888",
+        "role": "rider",
+        "isPublic": 1,
+        "riderInfo": {
+            "vehicleType": "bike",
+            "name": "小李"
+        }
     }
     ```
 - Admin
     ```json
     {
-    "nickname": "Admin001",
-    "password": "admin123",
-    "confirmPassword": "admin123",
-    "phone": "13712345678",
-    "email": "admin@example.com",
-    "gender": "female",
-    "birthday": "1990-07-20",
-    "verificationCode": "999999",
-    "role": "admin",
-    "isPublic": 1,
-    "adminInfo": {
-        "managementObject": "平台运营",
-        "name": "小王"
-    }
+        "nickname": "Admin001",
+        "password": "admin123",
+        "confirmPassword": "admin123",
+        "phone": "13712345678",
+        "email": "admin@example.com",
+        "gender": "female",
+        "birthday": "1990-07-20",
+        "verificationCode": "999999",
+        "role": "admin",
+        "isPublic": 1,
+        "adminInfo": {
+            "managementObject": "平台运营",
+            "name": "小王"
+        }
     }
     ```
 - Merchant
@@ -87,17 +87,17 @@
 - 成功
     ```json
     {
-    "success": true,
-    "code": 201,
-    "message": "注册成功！"
+        "success": true,
+        "code": 201,
+        "message": "注册成功！"
     }
     ```
 - 失败
     ```json
     {
-    "success": false,
-    "code": 400,
-    "message": "错误信息"
+        "success": false,
+        "code": 400,
+        "message": "错误信息"
     }
     ```
 # 登录后端说明文档
