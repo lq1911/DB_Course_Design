@@ -33,10 +33,17 @@ namespace BackEnd.Models
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
 
         // 新增属性：表示骑手当前是否在线
-         [Required]
+        [Required]
         public bool IsOnline { get; set; } = false; // 默认为离线
 
-        // 新增属性：记录最近一次开工的时间
-        public DateTime? LastOnlineTime { get; set; } // 可为空，因为离线时没有开工时间
+      
+
+
+        //8.16
+         [Column(TypeName = "decimal(10,6)")]
+        public decimal? CourierLongitude { get; set; }
+
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? CourierLatitude { get; set; }
     }
 }

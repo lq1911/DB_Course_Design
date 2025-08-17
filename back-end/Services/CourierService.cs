@@ -1,11 +1,12 @@
-using BackEnd.DTOs.Courier; // 确保 using 了新的 DTO 路径
+using BackEnd.DTOs.Courier;
 using BackEnd.Models;
-using BackEnd.Models.Enums; // 引入枚举的命名空间
+using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
+using Microsoft.EntityFrameworkCore; // 引入它以使用 Include 和 ThenInclude
 using System;
 using System.Collections.Generic;
-using System.Linq; // 引入 LINQ 的命名空间
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackEnd.Services
@@ -28,7 +29,6 @@ namespace BackEnd.Services
 
         public async Task<CourierProfileDto?> GetProfileAsync(int courierId)
         {
-            // ... (这个方法的实现保持不变)
             var courier = await _courierRepository.GetByIdAsync(courierId);
             if (courier == null) return null;
             var user = await _userRepository.GetByIdAsync(courierId);
@@ -44,121 +44,204 @@ namespace BackEnd.Services
             return profileDto;
         }
 
-        // --- 这是 GetWorkStatusAsync 的最终实现 ---
         public async Task<WorkStatusDto?> GetWorkStatusAsync(int courierId)
         {
-            // 1. 查询骑手的基础状态信息
             var courier = await _courierRepository.GetByIdAsync(courierId);
-            if (courier == null)
-            {
-                return null; // 骑手不存在
-            }
-
-            // 2. 计算在线时长
-            int onlineHours = 0;
-            int onlineMinutes = 0;
-            if (courier.IsOnline && courier.LastOnlineTime.HasValue)
-            {
-                TimeSpan onlineDuration = DateTime.UtcNow - courier.LastOnlineTime.Value;
-                onlineHours = (int)onlineDuration.TotalHours;
-                onlineMinutes = onlineDuration.Minutes;
-            }
-
-            // 3. 查询今日的订单数据
-            // 定义今天的时间范围
-            var today = DateTime.UtcNow.Date;
-            var tomorrow = today.AddDays(1);
-
-            // 因为 GetAllAsync 返回 IEnumerable，我们会将所有任务加载到内存中再进行筛选。
-            // 注意：如果数据量巨大，这里是性能优化的关键点。
-            var allTasks = await _deliveryTaskRepository.GetAllAsync();
-            var todayTasks = allTasks.Where(t => t.CourierID == courierId && t.AcceptTime >= today && t.AcceptTime < tomorrow).ToList();
-
-            int todayOrders = todayTasks.Count;
-
-            // 筛选出其中已完成的任务
-            var completedTasks = todayTasks.Where(t => t.Status == DeliveryStatus.Completed).ToList();
-            int completedOrders = completedTasks.Count;
-
-            // 4. 计算准时率
-            double punctualityRate = 0.0;
-            if (completedOrders > 0)
-            {
-                // 筛选出准时的任务 (实际完成时间 <= 预计送达时间)
-                int punctualCount = completedTasks.Count(t => t.CompletionTime.HasValue && t.CompletionTime.Value <= t.EstimatedDeliveryTime);
-                punctualityRate = Math.Round((double)punctualCount / completedOrders * 100, 2);
-            }
-
-            // 5. 组装并返回 DTO
+            if (courier == null) return null;
             var statusDto = new WorkStatusDto
             {
-                IsOnline = courier.IsOnline,
-                OnlineHours = onlineHours,
-                OnlineMinutes = onlineMinutes,
-                TodayOrders = todayOrders,
-                CompletedOrders = completedOrders,
-                PunctualityRate = punctualityRate
+                IsOnline = courier.IsOnline
             };
-
             return statusDto;
         }
-        
 
-        // --- 这是 GetOrdersAsync 的最终实现 ---
+        public async Task<string> GetCurrentLocationAsync(int courierId)
+        {
+            var courier = await _courierRepository.GetByIdAsync(courierId);
+            if (courier == null || !courier.CourierLongitude.HasValue || !courier.CourierLatitude.HasValue)
+            {
+                return "位置信息未提供";
+            }
+            var simulatedArea = $"模拟位置 (经度: {courier.CourierLongitude.Value:F6}, 纬度: {courier.CourierLatitude.Value:F6})";
+            return await Task.FromResult(simulatedArea);
+        }
+
+        public async Task<bool> ToggleWorkStatusAsync(int courierId, bool isOnline)
+        {
+            var courier = await _courierRepository.GetByIdAsync(courierId);
+            if (courier == null) return false;
+            courier.IsOnline = isOnline;
+            await _courierRepository.UpdateAsync(courier);
+            await _courierRepository.SaveAsync();
+            return true;
+        }
+
+        // --- 这是 GetOrdersAsync 的修正后版本 ---
         public async Task<IEnumerable<OrderListItemDto>> GetOrdersAsync(int courierId, string status)
         {
-            // 1. 将前端传来的 status 字符串映射到我们定义的 DeliveryStatus 枚举
-            //    这样做更安全、更健壮，可以避免直接比较字符串。
             if (!Enum.TryParse<DeliveryStatus>(status, true, out var targetStatus))
             {
-                // 如果前端传来一个无效的状态值 (比如 "abc")，返回一个空列表
                 return new List<OrderListItemDto>();
             }
 
-            // 2. 构建查询
-            //    由于 IDeliveryTaskRepository 的 GetAllAsync 返回 IEnumerable，
-            //    我们将先加载所有任务到内存，然后进行筛选。
-            //    注意：为了提高性能，可以让仓储层支持 IQueryable，这样就可以先筛选再执行SQL。
-            var allTasks = await _deliveryTaskRepository.GetAllAsync();
-            var filteredTasks = allTasks
+            // 使用 GetQueryable() 进行高效的数据库端筛选和关联查询
+            var tasksQuery = _deliveryTaskRepository.GetQueryable()
                 .Where(t => t.CourierID == courierId && t.Status == targetStatus)
-                .OrderByDescending(t => t.PublishTime) // 按发布时间降序排序，让最新的订单在前面
-                .ToList();
+                .Include(t => t.Store)      // 加载商家信息
+                .Include(t => t.Customer);  // 加载顾客信息
 
-            // 3. 将查询到的 DeliveryTask 实体列表，映射到 DTO 列表
-            //    使用 Select (LINQ) 可以非常方便地进行批量转换。
-            var orderDtos = filteredTasks.Select(task => new OrderListItemDto
+            var tasks = await tasksQuery
+                .OrderByDescending(t => t.PublishTime)
+                .ToListAsync();
+
+            var orderDtos = tasks.Select(task => new OrderListItemDto
             {
                 Id = task.TaskID.ToString(),
-                // 如果 Store 导航属性没有被加载，这里会是 null。
-                // 需要确保仓储层加载了关联数据，或者在这里手动查询。
-                Restaurant = task.Store?.StoreName ?? "未知餐厅", 
-                Address = task.Store?.StoreAddress ?? "未知地址",
-                Fee = task.DeliveryFee.ToString("F2"), // 格式化为两位小数的字符串
-                Time = task.PublishTime.ToString("yyyy-MM-dd HH:mm:ss"), // 格式化时间
-                Status = task.Status.ToString().ToLower(), // 将枚举转为小写字符串，如 "delivering"
-                StatusText = GetStatusText(task.Status) // 使用辅助方法获取中文描述
+                Status = task.Status.ToString().ToLower(),
+                Restaurant = task.Store?.StoreName ?? "未知商家",
+                Address = task.Customer?.DefaultAddress ?? "未知地址", // <-- 修正：使用顾客的默认地址
+                Fee = task.DeliveryFee.ToString("F2"),
+                StatusText = GetStatusText(task.Status)
+                // Time 字段已根据新需求移除
             }).ToList();
 
             return orderDtos;
         }
 
-        // 辅助方法：将枚举状态转换为中文描述
+        // 私有辅助方法，保持不变
         private string GetStatusText(DeliveryStatus status)
         {
             switch (status)
             {
-                case DeliveryStatus.Pending:
-                    return "待处理";
-                case DeliveryStatus.Delivering:
-                    return "配送中";
-                case DeliveryStatus.Completed:
-                    return "已完成";
-                case DeliveryStatus.Cancelled:
-                    return "已取消";
-                default:
-                    return "未知状态";
+                case DeliveryStatus.Pending: return "待处理";
+                case DeliveryStatus.Delivering: return "配送中";
+                case DeliveryStatus.Completed: return "已完成";
+                case DeliveryStatus.Cancelled: return "已取消";
+                default: return "未知状态";
             }
+        }
+
+        // --- 这是 GetNewOrderDetailsAsync 的最终实现 ---
+        public async Task<NewOrderDetailsDto?> GetNewOrderDetailsAsync(int notificationId)
+        {
+            // 1. notificationId 通常就是订单任务的ID，我们用它来查询
+            var taskId = notificationId;
+
+            // 2. 构建一个复杂的查询，一次性加载所有需要的数据
+            var task = await _deliveryTaskRepository.GetQueryable()
+                // 加载关联的商家信息
+                .Include(t => t.Store)
+                // 加载关联的顾客信息
+                .Include(t => t.Customer)
+                    // 再加载顾客关联的用户信息 (用于获取姓名)
+                    .ThenInclude(c => c.User)
+                // 根据ID筛选出唯一的任务
+                .FirstOrDefaultAsync(t => t.TaskID == taskId);
+
+            // 3. 如果找不到任务，返回 null
+            if (task == null)
+            {
+                return null;
+            }
+
+            // 4. 将查询到的实体数据，映射到 DTO
+            var orderDetailsDto = new NewOrderDetailsDto
+            {
+                Id = task.TaskID.ToString(),
+                RestaurantName = task.Store?.StoreName ?? "未知商家",
+                RestaurantAddress = task.Store?.StoreAddress ?? "未知商家地址",
+                // 优先使用真实姓名，如果没有则用用户名
+                CustomerName = task.Customer?.User?.FullName ?? task.Customer?.User?.Username ?? "未知顾客",
+                CustomerAddress = task.Customer?.DefaultAddress ?? "未知顾客地址",
+                Fee = task.DeliveryFee, // 直接返回 decimal 类型
+
+                // --- 模拟数据部分 ---
+                Distance = "约 2.5 公里", // 提供一个固定的模拟距离
+                MapImageUrl = "https://example.com/static-map.png" // 提供一个固定的模拟地图图片URL
+            };
+
+            return orderDetailsDto;
+        }
+
+
+        public async Task<bool> AcceptOrderAsync(int courierId, int orderId)
+        {
+            // 1. 根据 orderId 从数据库中查找订单任务
+            var task = await _deliveryTaskRepository.GetByIdAsync(orderId);
+
+            // 2. 验证订单是否存在，以及状态是否为“待处理”
+            //    只有“待处理”状态的订单才能被接受。
+            if (task == null || task.Status != DeliveryStatus.Pending)
+            {
+                // 如果订单不存在，或者已经被其他骑手接受/处理，则操作失败
+                return false;
+            }
+
+            // 3. 更新订单信息
+            task.Status = DeliveryStatus.Delivering; // 将状态更新为“配送中”
+            task.CourierID = courierId;              // 将当前骑手ID分配给这个任务
+            task.AcceptTime = DateTime.UtcNow;       // 记录接单时间
+
+            // 4. 调用仓储层持久化更改
+            await _deliveryTaskRepository.UpdateAsync(task);
+            await _deliveryTaskRepository.SaveAsync();
+
+            // 5. 返回 true 表示操作成功
+            return true;
+        }
+
+
+
+        public async Task<bool> RejectOrderAsync(int orderId)
+        {
+            // 1. 根据 orderId 从数据库中查找订单任务
+            var task = await _deliveryTaskRepository.GetByIdAsync(orderId);
+
+            // 2. 验证订单是否存在，以及状态是否为“待处理”
+            //    只有“待处理”状态的订单才能被拒绝。
+            if (task == null || task.Status != DeliveryStatus.Pending)
+            {
+                // 如果订单不存在，或者已经被处理，则操作失败
+                return false;
+            }
+
+            // 3. 更新订单信息
+            // 拒绝一个订单，通常意味着它应该被系统“取消”或标记为某种失败状态。
+            // 我们这里将其状态更新为“已取消”。
+            // 具体的业务逻辑（是取消还是放回订单池）需要根据产品需求确定。
+            // 假设拒绝等于取消：
+            task.Status = DeliveryStatus.Cancelled;
+
+            /*
+            // 备选逻辑：如果拒绝是让订单重新被分配
+            task.CourierID = 0; // 或者一个表示“未分配”的特殊ID
+            task.Status = DeliveryStatus.Pending; // 状态保持Pending，但可能会有一个“被拒绝次数”的计数器
+            */
+
+            // 4. 调用仓储层持久化更改
+            await _deliveryTaskRepository.UpdateAsync(task);
+            await _deliveryTaskRepository.SaveAsync();
+
+            // 5. 返回 true 表示操作成功
+            return true;
+        }
+
+        private readonly Random _random = new Random();
+
+        public async Task<decimal> GetMonthlyIncomeAsync(int courierId)
+        {
+            // 1. 核心模拟逻辑：生成一个 4000 到 9000 之间的随机收入
+
+            // _random.NextDouble() 会生成一个 0.0 到 1.0 之间的随机双精度浮点数
+            // (9000 - 4000) = 5000 是范围的跨度
+            // 乘以跨度再加上基数 4000，就能得到 4000.0 到 9000.0 之间的随机数
+            double randomIncome = 4000 + _random.NextDouble() * 5000;
+
+            // 2. 将结果转换为 decimal 类型，并保留两位小数
+            decimal monthlyIncome = Math.Round((decimal)randomIncome, 2);
+
+            // 3. 使用 Task.FromResult 包装结果以满足异步方法的返回类型
+            return await Task.FromResult(monthlyIncome);
         }
     }
 }

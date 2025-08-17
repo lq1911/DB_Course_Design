@@ -12,5 +12,6 @@ namespace BackEnd.Repositories.Interfaces
         Task UpdateAsync(DeliveryTask task);
         Task DeleteAsync(DeliveryTask task);
         Task SaveAsync();
+        IQueryable<DeliveryTask> GetQueryable();
     }
 }
