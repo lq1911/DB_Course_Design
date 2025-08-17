@@ -7,12 +7,6 @@
           <i class="fas fa-map-pin"></i>
           收货地址
         </div>
-        <button
-          class="text-[#F9771C] text-sm flex items-center gap-1 hover:bg-[#F9771C]/10 px-2 py-1 rounded"
-          @click="openForm()"
-        >
-          <i class="fas fa-plus text-xs"></i> 新增
-        </button>
       </div>
       <div class="p-4">
         <div v-if="selectedAddress" class="flex items-start justify-between">
@@ -20,12 +14,6 @@
             <div class="flex items-center gap-2 mb-1">
               <span class="font-semibold text-gray-900">{{ selectedAddress.name }}</span>
               <span class="text-sm text-gray-600">{{ selectedAddress.phone }}</span>
-              <span
-                v-if="selectedAddress.label"
-                class="px-2 py-0.5 bg-[#F9771C]/10 text-[#F9771C] text-xs rounded-full"
-              >
-                {{ selectedAddress.label }}
-              </span>
             </div>
             <p class="text-sm text-gray-600 leading-relaxed">{{ selectedAddress.address }}</p>
           </div>
@@ -34,16 +22,6 @@
             @click="openForm(selectedAddress)"
           >
             <i class="fas fa-edit"></i>
-          </button>
-        </div>
-
-        <div v-else class="text-center py-4">
-          <p class="text-gray-500 mb-2">还没有收货地址</p>
-          <button
-            class="bg-[#F9771C] text-white px-4 py-2 rounded hover:bg-[#F9771C]/90"
-            @click="openForm()"
-          >
-            添加收货地址
           </button>
         </div>
       </div>
@@ -82,12 +60,6 @@
                 <div class="flex items-center gap-2 mb-1">
                   <span class="font-semibold">{{ addr.name }}</span>
                   <span class="text-sm text-gray-600">{{ addr.phone }}</span>
-                  <span
-                    v-if="addr.label"
-                    class="px-2 py-0.5 bg-[#F9771C]/10 text-[#F9771C] text-xs rounded-full"
-                  >
-                    {{ addr.label }}
-                  </span>
                 </div>
                 <p class="text-sm text-gray-600">{{ addr.address }}</p>
               </div>
@@ -135,16 +107,6 @@
                 />
               </div>
 
-              <div>
-                <label class="block text-sm text-gray-700 mb-1">地址标签</label>
-                <select v-model="formData.label" class="w-full border rounded px-2 py-1">
-                  <option value="家">🏠 家</option>
-                  <option value="公司">🏢 公司</option>
-                  <option value="学校">🎓 学校</option>
-                  <option value="其他">📍 其他</option>
-                </select>
-              </div>
-
               <div class="flex gap-3 pt-2">
                 <button
                   type="button"
@@ -176,7 +138,6 @@ interface Address {
   name: string;
   phone: string;
   address: string;
-  label: string;
   is_default?: boolean;
 }
 
@@ -237,14 +198,3 @@ function selectExisting(addr: Address) {
   closeForm();
 }
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
