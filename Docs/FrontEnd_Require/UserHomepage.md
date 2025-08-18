@@ -109,7 +109,6 @@
 | User.Name | 用户昵称 |
 | User.PhoneNumber | 用户号码 |
 | User.Avatar | 用户头像 |
-| User.DefaulAddress | 用户地址 |
 
 **5. 优惠券接口**
 

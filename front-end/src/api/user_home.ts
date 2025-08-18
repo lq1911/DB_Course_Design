@@ -31,7 +31,7 @@ export interface UserInfo {
 
 export interface CouponInfo {
     couponID: number
-    CouponState: number
+    couponState: number
     orderID: number
     couponManagerID: number
     minimumSpend: number
