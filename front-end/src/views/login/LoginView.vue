@@ -676,44 +676,42 @@ const handleLogin = async () => {
 
 // 处理注册
 const handleRegister = async () => {
-    // 非空验证逻辑
-    if (!validateRegisterForm()) {
-        return;
-    }
+    // ... 省略验证代码，但您可以暂时移除对 realName 和角色信息的验证 ...
     isLoading.value = true;
 
-    // 1. 准备要发送到后端的数据
+    // 1. 【核心变化】只准备基础账号信息
+    // 注意看，我们从 registerForm 中剔除了 realName
+    const { realName, ...baseRegisterForm } = registerForm; 
+
     const registrationData = {
-        // 基础信息
-        ...registerForm,
-        // 角色
+        ...baseRegisterForm,
         role: selectedRole.value,
-        // 根据角色包含的特定信息
-        riderInfo: selectedRole.value === 'rider' ? riderInfo : undefined,
-        adminInfo: selectedRole.value === 'admin' ? adminInfo : undefined,
-        storeInfo: selectedRole.value === 'merchant' ? storeInfo : undefined,
     };
 
     try {
-        // 2. 发送 API 请求
-        const response = await api.register(registrationData);
+        // 2. 第一步：只发送基础信息进行注册
+        const registerResponse = await api.register(registrationData);
+        alert(registerResponse.data.message || '账号创建成功！现在请登录以完善资料。');
 
-        // 3. 处理成功响应
-        alert(response.data.message || '注册成功！'); // 显示后端返回的成功消息
-        activeTab.value = 'login'; // 注册成功后可以自动切换到登录 Tab
+        // 3. 注册成功，自动切换到登录 Tab，让用户登录
+        activeTab.value = 'login';
+        // 自动填充刚注册的账号，提升体验
+        loginForm.account = registerForm.phone || registerForm.email;
+        loginForm.password = ''; // 清空密码框让用户输入
+
+        // 【重要】到此，账号创建完成。
+        // 真实姓名、店铺信息等，应该在用户【登录后】再提交。
+        // 你可以在登录后跳转的页面（比如用户中心）提供一个表单，
+        // 让用户填写 realName, storeInfo 等，然后调用 api.updateUserProfile() 等新接口。
 
     } catch (error) {
-        // 4. 处理错误响应  
         if (axios.isAxiosError(error)) {
             alert(error.response?.data?.error || '注册失败，服务器返回错误。');
         } else {
-            // 如果是其他类型的错误（比如网络中断，或者代码中的其他 throw）
             console.error('An unexpected error occurred:', error);
             alert('发生未知错误，请稍后再试。');
         }
-
     } finally {
-        // 5. 无论成功还是失败，都结束加载状态
         isLoading.value = false;
     }
 };
