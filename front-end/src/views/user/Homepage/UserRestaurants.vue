@@ -44,9 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import TopNav from '@/components/user/HomePage/TopNav.vue';
-import SieveStore from '@/components/user/HomePage/SieveStore.vue';
-import Footer from '@/components/user/Footer.vue';
+import SieveStore from '@/components/user/HomePage/Stores/SieveStore.vue';
 
 // 所有商家
 const allRestaurants = [
