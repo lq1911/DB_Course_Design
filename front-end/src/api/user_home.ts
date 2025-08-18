@@ -29,16 +29,6 @@ export interface UserInfo {
     image: string
 }
 
-export interface CouponInfo {
-    couponID: number
-    couponState: number
-    orderID: number
-    couponManagerID: number
-    minimumSpend: number
-    discountAmount: number
-    validTo: string
-}
-
 export async function getRecomStore() {
     return getData<RecomStore[]>(`??`);
 }
@@ -53,8 +43,4 @@ export async function getOrderInfo(id: number) {
 
 export async function getUserInfo(id: number) {
     return getData<UserInfo>(`??`);
-}
-
-export async function getCouponInfo(id: number) {
-    return getData<CouponInfo[]>(`??`);
 }
