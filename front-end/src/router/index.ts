@@ -9,6 +9,7 @@ import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
 import checkoutRoutes from './checkoutRoute'
+import managerRoutes from './managerRoute'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -21,17 +22,12 @@ const routes: Array<RouteRecordRaw> = [
     component: LoginView,
     meta: { title: '登录' }
   },
-  {
-    path: '/manager',
-    name: 'Manager',
-    component: () => import('@/views/manager/ManagerView.vue'),
-    meta: { title: '管理中心' }
-  },
   ...userRoutes,
   ...courierRoutes,
   ...inStoreRoutes,
   ...merchantRoutes,
-  ...checkoutRoutes
+  ...checkoutRoutes,
+  ...managerRoutes
 ]
 
 const router = createRouter({
