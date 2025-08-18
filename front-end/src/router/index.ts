@@ -1,5 +1,5 @@
 // src/router/index.ts
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
 
@@ -19,7 +19,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { title: '登录'}
+    meta: { title: '登录' }
+  },
+  {
+    path: '/manager',
+    name: 'Manager',
+    component: () => import('@/views/manager/ManagerView.vue'),
+    meta: { title: '管理中心' }
   },
   ...userRoutes,
   ...courierRoutes,
@@ -29,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL), 
+  history: createWebHistory(process.env.BASE_URL),
   routes,
 })
 

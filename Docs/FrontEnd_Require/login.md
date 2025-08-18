@@ -1,160 +1,181 @@
-# 🚪 登录/注册页 前端说明文档
+# 🚪 登录/注册页 前端说明文档 (V2)
 
 ## 📄 一. 页面描述
 
 ### 功能
-提供系统统一的登录和多角色注册入口。
+提供系统统一的登录和多角色注册入口。注册流程现在分为两步：  
+首先创建基础账户，然后在登录后完善个人资料。  
 
 ### 路径
-`/login` (由路由配置决定)
+/login (由路由配置决定)
+
 
 ### 文件
-`src/views/login/LoginView.vue`
+src/views/login/LoginView.vue
 
 ---
 
 ## 🎯 二. 核心功能点
 
-- 🔄 **表单切换**: 支持在“登录”和“注册”两个表单之间切换。
-- 👥 **角色系统**: 支持“管理员”、“商家”、“骑手”、“消费者”四种角色的登录和注册。
-- 📝 **动态表单**: 注册表单会根据所选角色动态增减专属信息字段。
-- ⏳ **异步处理**: 登录和注册期间，提交按钮会显示加载状态并被禁用。
-- 💬 **响应处理**: 操作成功或失败时，会通过 **alert** 弹出后端返回的信息。
-- 🗝️ **Token 存储**: 登录成功后，会将后端返回的 **token** 存入 `localStorage`。
-- 📜 **协议弹窗**: 注册时，用户协议和隐私政策通过弹窗展示。
+- 🔄 **表单切换**: 支持在“登录”和“注册”两个表单之间切换。  
+- 👥 **角色系统**: 支持“管理员”、“商家”、“骑手”、“消费者”四种角色的登录和注册。  
+- 📝 **动态表单**: 注册表单只包含所有角色通用的基础字段。角色专属信息（如店铺名称、配送工具）将在用户首次登录后引导其在个人资料页填写。  
+- ⏳ **异步处理**: 登录和注册期间，提交按钮会显示加载状态并被禁用。  
+- 💬 **响应处理**: 操作成功或失败时，会通过 alert 弹出后端返回的信息。  
+- 🗝️ **Token 存储与管理**:  
+  - 存储: 登录成功后，将后端返回的 token 存入 localStorage。  
+  - 自动附加: Axios 拦截器会在所有后续 API 请求（除登录/注册外）自动附带 `Authorization: Bearer <token>`。  
+- 📜 **协议弹窗**: 注册时，用户协议和隐私政策通过弹窗展示。  
 
 ---
 
 ## 🔌 三. 调用接口
 
-所有接口通过 `src/services/api.ts` 模块发起，该模块配置的基础路径为 `/api`。
+所有接口通过 `src/services/api.ts` 模块发起。
 
 ### 🌐 接口调用说明
+| 配置项 | 说明 |
+|--------|------|
+| 请求基础路径 | `http://localhost:3000/api` |
+| 认证机制 | api.ts 中已配置请求拦截器，登录后自动携带 Token |
 
-所有接口请求均通过 `src/services/api.ts` 文件中封装的函数发起。
+### 1. 🏫 用户登录接口 (公开)
 
-- **请求基础路径** (baseURL): `http://localhost:3000/api`
-- **全局请求头** (Headers): `Content-Type: application/json`
+| 配置项 | 说明 |
+|--------|------|
+| 调用方法 | `api.login(data)` |
+| 请求路径 | `POST /login` |
+| 接口说明 | 接收用户凭证，验证成功后返回身份令牌和用户信息 |
 
----
+#### 请求参数
+| 字段名 | 类型 | 来源 | 示例值 |
+|--------|------|------|---------|
+| account | string | loginForm.account | "user@example.com" |
+| password | string | loginForm.password | "123456" |
+| role | string | selectedRole.value | "consumer" |
 
-### 1. 🏫 用户登录接口
+#### 响应数据
+##### 成功响应 (HTTP 200)
+```json
+{
+  "token": "a.jwt.token.string",
+  "user": { "...": "..." },
+  "message": "登录成功！"
+}
+```
 
-#### 🔐 前端调用:
-`api.login(data)`
+##### 失败响应 (HTTP 4xx/5xx)
+```json
+{
+  "error": "账号或密码错误"
+}
+```
+2. 📝 用户基础注册接口 (公开)
+## 注册接口
 
-#### 🌍 请求路径:
-`POST /login`
+### 基本信息
+- **调用方法**: `api.register(data)`
+- **请求路径**: `POST /register`
+- **接口说明**: 创建新用户账户的基础信息注册接口
 
-#### 📝 接口说明:
-接收用户凭证，验证成功后返回身份令牌 (Token) 和用户信息。
+### 请求参数
+| 字段名 | 类型 | 来源 | 示例值 | 说明 |
+|--------|------|------|---------|------|
+| nickname | string | registerForm.nickname | "新用户123" | 用户昵称 |
+| password | string | registerForm.password | "mysecretpwd" | 密码 |
+| phone | string | registerForm.phone | "13800138000" | 手机号 |
+| email | string | registerForm.email | "new@example.com" | 邮箱 |
+| gender | string | registerForm.gender | "female" | 性别 |
+| birthday | string | registerForm.birthday | "2000-01-01" | 生日 |
+| verificationCode | string | registerForm.verificationCode | "123456" | 验证码 |
+| role | string | selectedRole.value | "merchant" | 用户角色 |
 
-#### 📤 前端发送的请求体 (Request Body)
+### 响应数据
+#### 成功响应 (HTTP 201)
+```json
+{
+  "code": 201,
+  "message": "注册成功！请登录后完善您的个人资料。"
+}
+```
 
-前端会发送一个符合 `UserData` 接口的对象，包含以下字段：
+#### 失败响应 (HTTP 4xx/5xx)
+```json
+{
+  "code": 409,
+  "error": "该手机号已被注册。"
+}
+```
+3. 👤 用户资料更新接口 (需要认证)
 
-| 字段名      | 类型   | 来源 (前端变量)       | 示例值           |
-| ----------- | ------ | --------------------- | ---------------- |
-| account     | string | `loginForm.account`    | `"user@example.com"` |
-| password    | string | `loginForm.password`   | `"123456"`       |
-| role        | string | `selectedRole.value`   | `"consumer"`     |
+> 以下接口用于用户在登录后完善个人信息。所有请求都会自动携带 Token。
 
-#### 📥 前端期望的返回体 (Response Body)
+### 3.1 更新通用资料
 
-- **登录成功 (HTTP 状态码 200)**:
-  
-  前端期望接收一个 JSON 对象，至少包含以下字段：
+| 配置项 | 说明 |
+|--------|------|
+| 调用方法 | `api.updateUserProfile(profileData)` |
+| 请求路径 | `PUT /user/profile` |
 
-  | 字段名     | 类型   | 说明                                 |
-  | ---------- | ------ | ------------------------------------ |
-  | token      | string | 必需。用于后续请求身份验证的 JWT。   |
-  | user       | object | 必需。包含登录用户信息的对象。       |
-  | message    | string | 可选。成功的提示信息，如“登录成功！” |
+#### 请求参数
+| 字段名 | 类型 | 示例值 | 说明 |
+|--------|------|---------|------|
+| realName | string | "张三" | 用户真实姓名 |
 
-- **登录失败 (HTTP 状态码 4xx 或 5xx)**:
+### 3.2 更新骑手专属资料
 
-  前端期望接收一个 JSON 对象，包含以下字段：
+| 配置项 | 说明 |
+|--------|------|
+| 调用方法 | `api.updateRiderInfo(riderData)` |
+| 请求路径 | `PUT /user/profile/rider` |
 
-  | 字段名     | 类型   | 说明                               |
-  | ---------- | ------ | ---------------------------------- |
-  | error      | string | 必需。描述失败原因的字符串，如“账号或密码错误”。 |
+#### 请求参数
+| 字段名 | 类型 | 示例值 | 说明 |
+|--------|------|---------|------|
+| vehicleType | string | "电动车" | 配送车辆类型 |
 
----
+### 3.3 更新管理员专属资料
 
-### 2. 📝 用户注册接口
+| 配置项 | 说明 |
+|--------|------|
+| 调用方法 | `api.updateAdminInfo(adminData)` |
+| 请求路径 | `PUT /user/profile/admin` |
 
-#### 🔑 前端调用:
-`api.register(data)`
+#### 请求参数
+| 字段名 | 类型 | 示例值 | 说明 |
+|--------|------|---------|------|
+| managementObject | string | "商家审核" | 管理对象 |
+| handledItems | string | "处理新商家入驻" | 处理事项 |
 
-#### 🌍 请求路径:
-`POST /register`
+### 3.4 更新商家专属资料
 
-#### 📝 接口说明:
-接收完整的用户注册信息（包含基础信息和角色特定信息），创建新用户。
+| 配置项 | 说明 |
+|--------|------|
+| 调用方法 | `api.updateStoreInfo(storeData)` |
+| 请求路径 | `PUT /user/profile/merchant` |
 
-#### 📤 前端发送的请求体 (Request Body)
+#### 请求参数
+| 字段名 | 类型 | 示例值 | 说明 |
+|--------|------|---------|------|
+| name | string | "我的美味小店" | 店铺名称 |
+| address | string | "XX市XX区XX街道123号" | 店铺地址 |
+| businessHours | string | "09:00-21:00" | 营业时间 |
+| establishmentDate | string | "2023-10-26" | 成立日期 |
+| businessLicense | File/null | (文件对象) | 营业执照 |
+| category | string | "中式快餐" | 店铺类别 |
 
-前端会发送一个符合 `RegistrationData` 接口的对象，其结构根据用户选择的角色动态变化。
+### 通用响应格式
 
-##### 通用字段 (所有角色都会发送):
+#### 成功响应 (HTTP 200)
+```json
+{
+  "message": "资料更新成功！"
+}
+```
 
-| 字段名          | 类型   | 来源 (前端变量)         | 示例值              |
-| --------------- | ------ | ----------------------- | ------------------- |
-| nickname        | string | `registerForm.nickname`  | `"新用户123"`        |
-| realname        | string | `registerForm.realName`  |  `role 不为 consumer 时必填`|
-| password        | string | `registerForm.password`  | `"mysecretpwd"`      |
-| confirmPassword | string | `registerForm.confirmPassword` | `"mysecretpwd"`  |
-| phone           | string | `registerForm.phone`     | `"13800138000"`      |
-| email           | string | `registerForm.email`     | `"new@example.com"`  |
-| gender          | string | `registerForm.gender`    | `"female"`           |
-| birthday        | string | `registerForm.birthday`  | `"2000-01-01"`       |
-| verificationCode| string | `registerForm.verificationCode` | `"123456"`    |
-| role            | string | `selectedRole.value`     | `"merchant"`         |
-| avatarUrl       | string | `registerForm.avatarUrl` | `""`                 |
-| isPublic        | number | `registerForm.isPublic`  | `0`                  |
-
-##### 角色特定字段 (根据 `role` 字段选择性包含)
-
-- 当 `role` 为 `'rider'` 时，请求体中会额外包含 `riderInfo` 对象：
-
-  | 字段名              | 类型   | 是否必填 | 说明     |
-  | ------------------- | ------ | -------- | -------- |
-  | riderInfo.vehicleType | string | 是       | 配送车型 |
-
-- 当 `role` 为 `'admin'` 时，请求体中会额外包含 `adminInfo` 对象：
-
-  | 字段名               | 类型   | 是否必填 | 说明           |
-  | -------------------- | ------ | -------- | -------------- |
-  | adminInfo.managementObject | string | 是       | 管理对象       |
-  | adminInfo.handledItems   | string | 是       | 处理事项说明   |
-
-- 当 `role` 为 `'merchant'` 时，请求体中会额外包含 `storeInfo` 对象：
-
-  | 字段名                | 类型         | 是否必填 | 说明           |
-  | --------------------- | ------------ | -------- | -------------- |
-  | storeInfo.name         | string       | 是       | 店铺名称       |
-  | storeInfo.address      | string       | 是       | 店铺地址       |
-  | storeInfo.openingTime | string | 是 | (V1.1 修改) 开店时间, 格式为 HH:mm |
-  | storeInfo.closingTime | string | 是 | (V1.1 修改) 关店时间, 格式为 HH:mm |
-  | storeInfo.establishmentDate | string   | 是       | 店铺建立时间   |
-  | storeInfo.businessLicense | File 或 null | 是       | 营业执照文件   |
-  | storeInfo.category     | string       | 是       | 经营类别       |
-
----
-
-## 返回参数说明
-
-### ⇒ 注册成功
-
-| 字段名    | 类型   | 说明                           |
-| --------- | ------ | ------------------------------ |
-| code      | int    | 状态码，201 表示成功。          |
-| message   | string | 返回的提示信息，如“注册成功！” |
-
-### ⇒ 注册失败
-
-| 字段名    | 类型   | 说明                                         |
-| --------- | ------ | -------------------------------------------- |
-| code      | int    | 状态码，如 400、409 等。                     |
-| error     | string | 描述失败原因的字符串，如“该手机号已被注册”。 |
-
+#### 失败响应 (HTTP 4xx/5xx)
+```json
+{
+  "error": "更新失败，请稍后再试。"
+}
+```
