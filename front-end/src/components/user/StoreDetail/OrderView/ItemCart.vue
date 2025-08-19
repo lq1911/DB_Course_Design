@@ -97,7 +97,7 @@
 <script setup lang="ts">
 import { ref, computed, defineProps, defineEmits } from 'vue'
 
-import type { MenuItem } from '@/api/store_info'
+import type { MenuItem } from '@/api/user_store_info'
 
 const props = defineProps<{
   cart: Record<number, number>;
@@ -136,5 +136,5 @@ const totalItems = computed(() => {
 });
 
 // 测试代码
-import { menuItems } from '@/api/store_info';
+import { menuItems } from '@/api/user_store_info';
 </script>
