@@ -21,6 +21,8 @@ export interface OrderInfo {
     storeID: number
     storeImage: string
     storeName: string
+    dishImage: string[]
+    totalAmount: number
 }
 
 export interface UserInfo {
@@ -29,32 +31,32 @@ export interface UserInfo {
     image: string
 }
 
-export interface CouponInfo {
-    couponID: number
-    CouponState: number
-    orderID: number
-    couponManagerID: number
-    minimumSpend: number
-    discountAmount: number
-    validTo: string
-}
-
 export async function getRecomStore() {
-    return getData<RecomStore[]>(`??`);
+    return getData<RecomStore[]>(`/api/user/home/recommend`);
 }
 
-export async function getSearchStore() {
-    return getData<SearchStore[]>(`??`);
+export async function getSearchStore(UserID: number, Address: string, Keyword: string) {
+    return getData<SearchStore[]>(`/api/user/home/search`, {
+        params: {
+            userId: UserID,
+            address: Address,
+            keyword: Keyword
+        }
+    });
 }
 
-export async function getOrderInfo(id: number) {
-    return getData<OrderInfo[]>(`??`);
+export async function getOrderInfo(UserId: number) {
+    return getData<OrderInfo[]>(`/api/user/home/orders`, {
+        params: {
+            userId: UserId
+        }
+    });
 }
 
-export async function getUserInfo(id: number) {
-    return getData<UserInfo>(`??`);
-}
-
-export async function getCouponInfo(id: number) {
-    return getData<CouponInfo[]>(`??`);
+export async function getUserInfo(UserId: number) {
+    return getData<UserInfo>(`/api/user/home/userinfo`, {
+        params: {
+            userId: UserId
+        }
+    });
 }

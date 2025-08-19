@@ -1,68 +1,50 @@
 <template>
-  <transition
-    name="fade-scale"
-    appear
-  >
-    <div v-if="visible" class="relative group">
-      <div class="overflow-hidden bg-white shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 rounded-lg">
-        <!-- 图片 -->
-        <div class="aspect-square overflow-hidden bg-gray-50">
-          <img
-            :src="item.image_url || 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=300&fit=crop'"
-            :alt="item.name"
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+  <div v-if="visible">
+    <div class="overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
+      <!-- 图片 -->
+      <div class="">
+        <img
+          :src="item.image_url || 'https://readdy.ai/api/search-image?query=delicious%20chinese%20mala%20tang%20hot%20pot%20with%20various%20ingredients%20including%20beef%20slices%20tofu%20vegetables%20and%20noodles%20in%20spicy%20red%20broth%2C%20appetizing%20food%20photography%20with%20clean%20white%20background&width=300&height=240&seq=food001&orientation=landscape'"
+          class="w-full h-full object-cover" />
+      </div>
+
+      <!-- 内容 -->
+      <div class="p-4">
+        <!-- 名称 -->
+        <div class="text-left mb-2">
+          <h3 class="font-semibold text-gray-900 text-lg">
+            {{ item.name }}
+          </h3>
         </div>
 
-        <!-- 内容 -->
-        <div class="p-4">
-          <!-- 名称 & 删除按钮 -->
-          <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">
-              {{ item.name }}
-            </h3>
-            <button
-              class="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 -mt-1 -mr-1"
-              @click="handleRemove"
-            >
-              <i class="fas fa-times text-xs"></i>
-            </button>
-          </div>
+        <!-- 价格-->
+        <div class="flex items-center justify-between">
+          <span class="text-[#F9771C] font-bold text-xl">
+            ¥{{ item.price.toFixed(2) }}
+          </span>
 
-          <!-- 价格 & 小计 -->
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-[#F9771C] font-bold text-lg">
-              ¥{{ item.price.toFixed(2) }}
-            </span>
-            <span class="text-xs text-gray-500">
-              小计: ¥{{ (item.price * item.quantity).toFixed(2) }}
-            </span>
-          </div>
-
-          <!-- 数量调整器 -->
-          <div class="flex items-center justify-center bg-gray-50 rounded-full p-1">
+          <div class="flex items-center space-x-2">
+            <!-- 数量调整器 -->
             <button
-              class="h-8 w-8 rounded-full hover:bg-white"
-              @click="handleQuantity(item.quantity - 1)"
-            >
+              class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-300 cursor-pointer"
+              @click="handleQuantity(item.quantity - 1)">
               <i class="fas fa-minus text-xs"></i>
             </button>
 
-            <span class="mx-3 font-semibold text-gray-900 min-w-[20px] text-center">
+            <span class="w-8 text-center">
               {{ item.quantity }}
             </span>
 
             <button
-              class="h-8 w-8 rounded-full hover:bg-white"
-              @click="handleQuantity(item.quantity + 1)"
-            >
+              class="w-8 h-8 rounded-full bg-[#F9771C] text-white flex items-center justify-center hover:bg-orange-600 cursor-pointer"
+              @click="handleQuantity(item.quantity + 1)">
               <i class="fas fa-plus text-xs"></i>
             </button>
           </div>
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -87,26 +69,6 @@ const handleQuantity = (newQuantity: number) => {
 
 const handleRemove = () => {
   visible.value = false
-  setTimeout(() => {
-    emit('remove', props.item.id)
-  }, 300) // 动画时间需和 transition duration 一致
+  emit('remove', props.item.id)
 }
 </script>
-
-<style scoped>
-/* 简单 fade + scale 动画 */
-.fade-scale-enter-active,
-.fade-scale-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-scale-enter-from,
-.fade-scale-leave-to {
-  opacity: 0;
-  transform: scale(0.95);
-}
-.fade-scale-enter-to,
-.fade-scale-leave-from {
-  opacity: 1;
-  transform: scale(1);
-}
-</style>

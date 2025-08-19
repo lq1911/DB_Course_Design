@@ -1,5 +1,5 @@
 // src/router/index.ts
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
 
@@ -9,6 +9,7 @@ import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
 import checkoutRoutes from './checkoutRoute'
+import managerRoutes from './managerRoute'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,17 +20,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { title: '登录'}
+    meta: { title: '登录' }
   },
   ...userRoutes,
   ...courierRoutes,
   ...inStoreRoutes,
   ...merchantRoutes,
-  ...checkoutRoutes
+  ...checkoutRoutes,
+  ...managerRoutes
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL), 
+  history: createWebHistory(process.env.BASE_URL),
   routes,
 })
 

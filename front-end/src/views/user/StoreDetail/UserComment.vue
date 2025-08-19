@@ -9,8 +9,8 @@
 import { useRoute } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 
-import type { StoreInfo, CommentList, CommentStatus } from '@/api/store_info'
-import { getStoreInfo, getCommentStatus, getCommentList } from '@/api/store_info'
+import type { StoreInfo, CommentList, CommentStatus } from '@/api/user_store_info'
+import { getStoreInfo, getCommentStatus, getCommentList } from '@/api/user_store_info'
 
 import StorePoints from '@/components/user/StoreDetail/CommentView/StorePoints.vue'
 import DetailComments from '@/components/user/StoreDetail/CommentView/DetailComments.vue'

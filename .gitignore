@@ -1,7 +1,13 @@
+# 编辑器相关
+.vs/
+.vscode
 .DS_Store
+*.sln
+
+# 前端信息
+package-lock.json
+
+# 后端信息
 back-end/obj/
 back-end/bin/
-.vs/
 backend/.vs/
-*.sln
-.vscode

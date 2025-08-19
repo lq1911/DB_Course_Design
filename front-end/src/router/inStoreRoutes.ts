@@ -7,6 +7,10 @@ import StoreLayout from '@/views/user/StoreDetail/StoreLayout.vue'
 const inStoreRoutes: Array<RouteRecordRaw> = [
     {
         path: '/store/:id',
+        redirect: '/store/:id/order'
+    },
+    {
+        path: '/store/:id',
         component: StoreLayout,
         children: [
             {

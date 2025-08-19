@@ -2,7 +2,7 @@
     <div class="relative bg-gradient-to-r from-orange-50 to-orange-100 shadow-sm overflow-hidden">
         <!--返回按钮-->
         <button @click="goBack"
-            class="absolute left-4 top-4 flex items-center bg-white shadow-lg px-4 py-2 rounded-2xl z-10 hover:bg-gray-100">
+            class="fixed left-6 top-6 flex items-center bg-white shadow-lg px-3 py-2 rounded-xl z-10 hover:bg-gray-100">
             <i class="fas fa-arrow-left mr-2"></i>
             返回
         </button>
@@ -81,7 +81,7 @@
 import { computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { StoreInfo } from '@/api/store_info'
+import type { StoreInfo } from '@/api/user_store_info'
 
 const route = useRoute();
 const router = useRouter();
@@ -101,8 +101,8 @@ const tabs = computed( () => [
 ]);
 
 //测试使用，最后删除
-import { storeInfo } from '@/api/store_info'
-import { deliveryTask } from '@/api/store_info'
+import { storeInfo } from '@/api/user_store_info'
+import { deliveryTask } from '@/api/user_store_info'
 
 function goBack() {
     router.push(`/home`);
