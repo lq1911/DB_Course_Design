@@ -6,9 +6,9 @@ namespace BackEnd.Models
 {
     public class Seller
     {
-        // ÉÌ¼ÒÀà
-        // Ö÷Âë£ºUserID
-        // ÍâÂë£ºUserID
+        // å•†å®¶ç±»
+        // ä¸»ç ï¼šUserID
+        // å¤–ç ï¼šUserID
 
         [Key, ForeignKey("User")]
         public int UserID { get; set; }
@@ -22,7 +22,7 @@ namespace BackEnd.Models
         [Required]
         public SellerState BanStatus { get; set; } = SellerState.Normal;
 
-        // ÉÌ¼ÒºÍµêÆÌÒ»¶ÔÒ»
+        // å•†å®¶å’Œåº—é“ºä¸€å¯¹ä¸€
         public Store? Store { get; set; }
     }
 }

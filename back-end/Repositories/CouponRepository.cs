@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -20,9 +18,9 @@ namespace BackEnd.Repositories
         {
             // 预加载所有关联的实体数据
             return await _context.Coupons
-                                 .Include(c => c.Store)
+                                 .Include(c => c.CouponManager)
                                  .Include(c => c.Order)
-                                 .Include(c => c.Seller)
+                                 .Include(c => c.Customer)
                                  .ToListAsync();
         }
 
@@ -30,9 +28,9 @@ namespace BackEnd.Repositories
         {
             // 对于单个查询，同样建议预加载关联数据
             return await _context.Coupons
-                                 .Include(c => c.Store)
+                                 .Include(c => c.CouponManager)
                                  .Include(c => c.Order)
-                                 .Include(c => c.Seller)
+                                 .Include(c => c.Customer)
                                  .FirstOrDefaultAsync(c => c.CouponID == id);
         }
 

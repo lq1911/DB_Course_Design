@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class StoreViolationPenalty
     {
-        // Î¥¹æµêÆÌ´¦·£Àà
-        // Ö÷Âë£ºPenaltyID
-        // ÍâÂë£ºStoreID£¬SellerID
+        // è¿è§„åº—é“ºå¤„ç½šç±»
+        // ä¸»ç ï¼šPenaltyID
+        // å¤–ç ï¼šStoreIDï¼ŒSellerID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -31,8 +31,8 @@ namespace BackEnd.Models
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
 
-        // ¶à¶Ô¶à¹ØÏµ
-        // ¿ÉÒÔÓÉ¶à¸ö¹ÜÀíÔ±¸ºÔğ
+        // å¤šå¯¹å¤šå…³ç³»
+        // å¯ä»¥ç”±å¤šä¸ªç®¡ç†å‘˜è´Ÿè´£
         public ICollection<Supervise_> Supervise_s { get; set; } = new List<Supervise_>();
     }
 }

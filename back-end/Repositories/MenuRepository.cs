@@ -1,9 +1,7 @@
-using BackEnd.Models;
 using BackEnd.Data;
+using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -17,29 +15,37 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<Menu>> GetAllAsync()
         {
-            return await _context.Set<Menu>().ToListAsync();
+            return await _context.Menus
+                                 .Include(m => m.Store)                  // 关联商店
+                                 .Include(m => m.MenuDishes)             // 中间表
+                                     .ThenInclude(md => md.Dish)         // 菜品
+                                 .ToListAsync();
         }
 
         public async Task<Menu?> GetByIdAsync(int id)
         {
-            return await _context.Set<Menu>().FindAsync(id);
+            return await _context.Menus
+                                 .Include(m => m.Store)
+                                 .Include(m => m.MenuDishes)
+                                     .ThenInclude(md => md.Dish)
+                                 .FirstOrDefaultAsync(m => m.MenuID == id);
         }
 
         public async Task AddAsync(Menu menu)
         {
-            _context.Set<Menu>().Add(menu);
+            await _context.Menus.AddAsync(menu);
             await SaveAsync();
         }
 
         public async Task UpdateAsync(Menu menu)
         {
-            _context.Set<Menu>().Update(menu);
+            _context.Menus.Update(menu);
             await SaveAsync();
         }
 
         public async Task DeleteAsync(Menu menu)
         {
-            _context.Set<Menu>().Remove(menu);
+            _context.Menus.Remove(menu);
             await SaveAsync();
         }
 

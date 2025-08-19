@@ -5,8 +5,8 @@ namespace BackEnd.Models
 {
     public class Review_Comment
     {
-        // ¹ÜÀíÔ±ÓëÆÀÂÛÖ®¼äµÄÉóºËÆÀÂÛ¹ØÏµ
-        // Ö÷Âë£ºAdminID£¬CommentID
+        // ç®¡ç†å‘˜ä¸è¯„è®ºä¹‹é—´çš„å®¡æ ¸è¯„è®ºå…³ç³»
+        // ä¸»ç ï¼šAdminIDï¼ŒCommentID
 
         [Key, Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

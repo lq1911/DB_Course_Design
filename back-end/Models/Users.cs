@@ -6,8 +6,8 @@ namespace BackEnd.Models
 {
     public class User
     {
-        // �û���
-        // ���룺UserID
+        // 用户类
+        // 主码：UserID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -44,11 +44,11 @@ namespace BackEnd.Models
 
         public ProfilePrivacyLevel IsProfilePublic { get; set; } = ProfilePrivacyLevel.Private;
 
-        // �û��Ľ�ɫ����
+        // 用户的角色名称
         [Required]
         public UserIdentity Role { get; set; } = UserIdentity.Customer;
 
-        // �û�������
+        // 用户的身份
         public Customer? Customer { get; set; }
         public Courier? Courier { get; set; }
         public Administrator? Administrator { get; set; }

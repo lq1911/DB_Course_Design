@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -19,7 +17,7 @@ namespace BackEnd.Repositories
         public async Task<IEnumerable<Evaluate_AfterSale>> GetAllAsync()
         {
             // 预加载关联的 Admin 和 Application 数据
-            return await _context.Evaluate_After_Sale
+            return await _context.Evaluate_AfterSales
                                  .Include(eas => eas.Admin)
                                  .Include(eas => eas.Application)
                                  .ToListAsync();
@@ -27,25 +25,28 @@ namespace BackEnd.Repositories
 
         public async Task<Evaluate_AfterSale?> GetByIdAsync(int adminId, int applicationId)
         {
-            // 对于复合主键，使用 FindAsync 并按顺序传入主键值
-            return await _context.Evaluate_After_Sale.FindAsync(adminId, applicationId);
+            return await _context.Evaluate_AfterSales
+                                 .Include(eas => eas.Admin)
+                                 .Include(eas => eas.Application)
+                                 .FirstOrDefaultAsync(eas => eas.AdminID == adminId && eas.ApplicationID == applicationId);
         }
 
         public async Task AddAsync(Evaluate_AfterSale evaluateAfterSale)
         {
-            await _context.Evaluate_After_Sale.AddAsync(evaluateAfterSale);
+            await _context.Evaluate_AfterSales.AddAsync(evaluateAfterSale);
+            await SaveAsync();
         }
 
         public async Task UpdateAsync(Evaluate_AfterSale evaluateAfterSale)
         {
-            _context.Evaluate_After_Sale.Update(evaluateAfterSale);
+            _context.Evaluate_AfterSales.Update(evaluateAfterSale);
             await SaveAsync();
         }
 
-        public Task DeleteAsync(Evaluate_AfterSale evaluateAfterSale)
+        public async Task DeleteAsync(Evaluate_AfterSale evaluateAfterSale)
         {
-            _context.Evaluate_After_Sale.Remove(evaluateAfterSale);
-            return Task.CompletedTask;
+            _context.Evaluate_AfterSales.Remove(evaluateAfterSale);
+            await SaveAsync();
         }
 
         public async Task SaveAsync()

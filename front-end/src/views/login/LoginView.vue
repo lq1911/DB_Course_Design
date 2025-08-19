@@ -136,6 +136,12 @@
                                     <input type="text" v-model="registerForm.nickname" placeholder="请输入昵称"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
                                 </div>
+                                <!-- 新增：真实姓名输入框 (仅当非消费者时显示) -->
+                                <div v-if="selectedRole !== 'consumer'">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">真实姓名</label>
+                                    <input type="text" v-model="registerForm.realName" placeholder="请输入真实姓名"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
+                                </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">性别</label>
                                     <select v-model="registerForm.gender"
@@ -243,11 +249,18 @@
                                         <input type="text" v-model="storeInfo.name" placeholder="请输入店铺名称" maxlength="50"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
                                     </div>
-                                    <div class="mt-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">营业时间</label>
-                                        <input type="text" v-model="storeInfo.businessHours"
-                                            placeholder="请输入营业时间，例如：周一至周五 9:00-22:00"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
+                                    <!-- 修改：将营业时间拆分为开店和关店时间 -->
+                                    <div class="grid grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">开店时间</label>
+                                            <input type="time" v-model="storeInfo.openingTime"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">关店时间</label>
+                                            <input type="time" v-model="storeInfo.closingTime"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
+                                        </div>
                                     </div>
                                     <div class="mt-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">店铺建立时间</label>
@@ -295,58 +308,58 @@
 
 
                             </div>
-                                                    <!-- 协议 -->
-                        <div class="flex items-center">
-                            <input type="checkbox" v-model="agreeTerms"
-                                class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
-                            <span class="ml-2 text-sm text-gray-600">
-                                我已阅读并同意
-                                <span @click="showModal('agreement')"
-                                    class="text-orange-600 hover:text-orange-500 cursor-pointer underline">用户协议</span>
-                                和
-                                <span @click="showModal('privacy')"
-                                    class="text-orange-600 hover:text-orange-500 cursor-pointer underline">隐私政策</span>
-                            </span>
-                        </div>
-
-                        <!-- 协议弹窗内容 -->
-                        <div v-if="isModalVisible"
-                            class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-                            <!-- 点击背景遮罩可以关闭弹窗 -->
-                            <div @click.self="closeModal" class="absolute inset-0"></div>
-
-                            <!-- 弹窗内容区域 -->
-                            <div
-                                class="relative w-full max-w-2xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
-
-                                <!-- 弹窗头部 -->
-                                <div class="flex justify-between items-center p-4 border-b">
-                                    <h2 class="text-xl font-semibold text-gray-800">{{ modalTitle }}</h2>
-                                    <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
-                                        <i class="fas fa-times text-2xl"></i>
-                                    </button>
-                                </div>
-
-                                <!-- 弹窗正文 (可滚动) -->
-                                <div class="p-6 overflow-y-auto" v-html="modalContent">
-                                </div>
-
-                                <!-- 弹窗底部 -->
-                                <div class="flex justify-end p-4 bg-gray-50 border-t rounded-b-lg">
-                                    <button @click="closeModal"
-                                        class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-200">
-                                        我已阅读并关闭
-                                    </button>
-                                </div>
-
+                            <!-- 协议 -->
+                            <div class="flex items-center">
+                                <input type="checkbox" v-model="agreeTerms"
+                                    class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
+                                <span class="ml-2 text-sm text-gray-600">
+                                    我已阅读并同意
+                                    <span @click="showModal('agreement')"
+                                        class="text-orange-600 hover:text-orange-500 cursor-pointer underline">用户协议</span>
+                                    和
+                                    <span @click="showModal('privacy')"
+                                        class="text-orange-600 hover:text-orange-500 cursor-pointer underline">隐私政策</span>
+                                </span>
                             </div>
-                        </div>
 
-                        <button type="submit" :disabled="isLoading || !agreeTerms"
-                            class="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap rounded-lg">
-                            <i v-if="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
-                            {{ isLoading ? '注册中...' : '注册账号' }}
-                        </button>
+                            <!-- 协议弹窗内容 -->
+                            <div v-if="isModalVisible"
+                                class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+                                <!-- 点击背景遮罩可以关闭弹窗 -->
+                                <div @click.self="closeModal" class="absolute inset-0"></div>
+
+                                <!-- 弹窗内容区域 -->
+                                <div
+                                    class="relative w-full max-w-2xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
+
+                                    <!-- 弹窗头部 -->
+                                    <div class="flex justify-between items-center p-4 border-b">
+                                        <h2 class="text-xl font-semibold text-gray-800">{{ modalTitle }}</h2>
+                                        <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
+                                            <i class="fas fa-times text-2xl"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- 弹窗正文 (可滚动) -->
+                                    <div class="p-6 overflow-y-auto" v-html="modalContent">
+                                    </div>
+
+                                    <!-- 弹窗底部 -->
+                                    <div class="flex justify-end p-4 bg-gray-50 border-t rounded-b-lg">
+                                        <button @click="closeModal"
+                                            class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-200">
+                                            我已阅读并关闭
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <button type="submit" :disabled="isLoading || !agreeTerms"
+                                class="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap rounded-lg">
+                                <i v-if="isLoading" class="fas fa-spinner fa-spin mr-2"></i>
+                                {{ isLoading ? '注册中...' : '注册账号' }}
+                            </button>
                         </form>
 
 
@@ -403,15 +416,15 @@ const modalTitle = ref('');//弹窗的标题
 const modalContent = ref('');//弹窗的内容 
 // 角色选项
 const roles = [
-{ value: 'admin', label: '管理员', icon: 'fas fa-user-shield' },
-{ value: 'merchant', label: '商家', icon: 'fas fa-store' },
-{ value: 'rider', label: '骑手', icon: 'fas fa-motorcycle' },
-{ value: 'consumer', label: '消费者', icon: 'fas fa-user' }
+    { value: 'admin', label: '管理员', icon: 'fas fa-user-shield' },
+    { value: 'merchant', label: '商家', icon: 'fas fa-store' },
+    { value: 'rider', label: '骑手', icon: 'fas fa-motorcycle' },
+    { value: 'consumer', label: '消费者', icon: 'fas fa-user' }
 ];
 // 经营类别
 const categories = [
-'中式快餐', '西式快餐', '日韩料理', '甜品饮品',
-'火锅烧烤', '地方小吃', '健康轻食', '咖啡茶饮'
+    '中式快餐', '西式快餐', '日韩料理', '甜品饮品',
+    '火锅烧烤', '地方小吃', '健康轻食', '咖啡茶饮'
 ];
 // 登录表单
 const loginForm = reactive({
@@ -421,6 +434,7 @@ const loginForm = reactive({
 // 注册表单
 const registerForm = reactive({
     nickname: '', // 限制15字符
+    realName: '', // 限制10字符
     password: '', // 限制10字符
     confirmPassword: '',
     phone: '', // 限制11位数字
@@ -444,6 +458,8 @@ const adminInfo = reactive({
 const storeInfo = reactive({
     name: '', // 50字符
     address: '', // 100字符
+    openingTime: '', // <-- 新增
+    closingTime: '', // <-- 新增
     businessHours: '', // 营业时间
     establishmentDate: '', // 店铺建立时间
     businessLicense: null,
@@ -712,6 +728,10 @@ const validateRegisterForm = () => {
         alert('请输入昵称(不超过15个字符)');
         return false;
     }
+    if (selectedRole.value !== 'consumer' && !registerForm.realName) {
+        alert('请输入您的真实姓名');
+        return false;
+    }
     if (!registerForm.phone || !/^\d{11}$/.test(registerForm.phone)) {
         alert('请输入正确的11位手机号码');
         return false;
@@ -745,6 +765,19 @@ const validateRegisterForm = () => {
         }
         if (!storeInfo.businessHours) {
             alert('请输入营业时间');
+            return false;
+        }
+        if (!storeInfo.openingTime) {
+            alert('请选择开店时间');
+            return false;
+        }
+        if (!storeInfo.closingTime) {
+            alert('请选择关店时间');
+            return false;
+        }
+
+        if (!storeInfo.establishmentDate) {
+            alert('请设置店铺建立时间');
             return false;
         }
         if (!storeInfo.establishmentDate) {

@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class AfterSaleApplication
     {
-        // ÊÛºóÉêÇëÀà
-        // Ö÷Âë£ºApplicationID
-        // ÍâÂë£ºCustomerID£¬OrderID£¬SellerID
+        // å”®åç”³è¯·ç±»
+        // ä¸»ç ï¼šApplicationID
+        // å¤–ç ï¼šCustomerIDï¼ŒOrderIDï¼ŒSellerID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,8 +25,8 @@ namespace BackEnd.Models
         [ForeignKey("OrderID")]
         public FoodOrder Order { get; set; } = null!;
 
-        // ¶à¶Ô¶à¹ØÏµ
-        // ¿ÉÒÔÓÉ¶à¸ö¹ÜÀíÔ±¸ºÔğ
+        // å¤šå¯¹å¤šå…³ç³»
+        // å¯ä»¥ç”±å¤šä¸ªç®¡ç†å‘˜è´Ÿè´£
         public ICollection<Evaluate_AfterSale> EvaluateAfterSales { get; set; } = new List<Evaluate_AfterSale>();
     }
 }

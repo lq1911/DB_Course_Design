@@ -1,6 +1,4 @@
 using BackEnd.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories.Interfaces
 {

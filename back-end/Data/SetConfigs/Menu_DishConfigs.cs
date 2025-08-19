@@ -17,20 +17,20 @@ namespace BackEnd.Data.SetConfigs
             builder.Property(md => md.DishID).HasColumnName("DISHID");
 
             // ---------------------------------------------------------------
-            // ÅäÖÃ¹ØÏµ
+            // é…ç½®å…³ç³»
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: Menu_Dish -> Menu (¶à¶ÔÒ»)
+            // å…³ç³»ä¸€: Menu_Dish -> Menu (å¤šå¯¹ä¸€)
             builder.HasOne(md => md.Menu)
-                   .WithMany(m => m.MenuDishes) 
+                   .WithMany(m => m.MenuDishes)
                    .HasForeignKey(md => md.MenuID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹Í¨¹ıÖĞ¼ä±íÉ¾³ıÖ÷±í¼ÇÂ¼
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢é€šè¿‡ä¸­é—´è¡¨åˆ é™¤ä¸»è¡¨è®°å½•
 
-            // ¹ØÏµ¶ş: Menu_Dish -> Dish (¶à¶ÔÒ»)
+            // å…³ç³»äºŒ: Menu_Dish -> Dish (å¤šå¯¹ä¸€)
             builder.HasOne(md => md.Dish)
-                   .WithMany(d => d.MenuDishes) 
+                   .WithMany(d => d.MenuDishes)
                    .HasForeignKey(md => md.DishID)
-                   .OnDelete(DeleteBehavior.Restrict); // ½ûÖ¹Í¨¹ıÖĞ¼ä±íÉ¾³ıÖ÷±í¼ÇÂ¼
+                   .OnDelete(DeleteBehavior.Restrict); // ç¦æ­¢é€šè¿‡ä¸­é—´è¡¨åˆ é™¤ä¸»è¡¨è®°å½•
         }
     }
 }

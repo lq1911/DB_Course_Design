@@ -18,14 +18,58 @@
       <div>
         <h3 class="text-lg font-semibold mb-4">关注我们</h3>
         <div class="flex space-x-4 justify-center">
-          <a href="#" class="hover:text-orange-500">微博</a>
-          <a href="#" class="hover:text-orange-500">微信公众号</a>
-          <a href="#" class="hover:text-orange-500">抖音</a>
+          <a v-for="(icon, index) in icons" :href="icon.url"
+            class="flex flex-col items-center hover:text-orange-500" 
+            @mouseenter="hoverIndex = index"
+            @mouseleave="hoverIndex = -1">
+            <img :src="hoverIndex === index ? icon.hoverSrc : icon.normalSrc" class="w-6 h-6 mb-1" />
+            <span>{{ icon.name }}</span>
+          </a>
         </div>
       </div>
     </div>
     <div class="text-center text-xs text-gray-400 mt-8">
-      &copy; 2025 美食外卖平台 FoodExpress. 保留所有权利。
+      &copy; 2025 美食外卖平台 {{ name }}&trade;. 保留所有权利。
     </div>
   </footer>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+import { getProjectName } from '@/stores/name'
+
+const name = getProjectName().projectName;
+
+//导入图标文件
+import twitter from '@/assets/Icons/Twitter.svg'
+import twitterHover from '@/assets/Icons/Twitter-hover.svg'
+import weibo from '@/assets/Icons/Weibo.svg'
+import weiboHover from '@/assets/Icons/Weibo-hover.svg'
+import youtube from '@/assets/Icons/Youtube.svg'
+import youtubeHover from '@/assets/Icons/Youtube-hover.svg'
+
+const icons = [
+  {
+    name: '推特',
+    normalSrc: twitter,
+    hoverSrc: twitterHover,
+    url: 'https://x.com/home',
+  },
+  {
+    name: '微博',
+    normalSrc: weibo,
+    hoverSrc: weiboHover,
+    url: 'https://weibo.com/',
+  },
+  {
+    name: '油管',
+    normalSrc: youtube,
+    hoverSrc: youtubeHover,
+    url: 'https://www.youtube.com/',
+  },
+]
+
+// 存储当前 hover 的索引，初始 -1 表示无 hover
+const hoverIndex = ref(-1)
+</script>

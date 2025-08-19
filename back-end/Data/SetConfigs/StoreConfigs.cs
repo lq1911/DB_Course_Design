@@ -10,7 +10,7 @@ namespace BackEnd.Data.SetConfigs
         {
             builder.ToTable("STORE");
 
-            // --- Ö÷¼üºÍ»ù´¡ÊôĞÔÅäÖÃ ---
+            // --- ä¸»é”®å’ŒåŸºç¡€å±æ€§é…ç½® ---
             builder.HasKey(s => s.StoreID);
             builder.Property(s => s.StoreID).HasColumnName("STOREID").ValueGeneratedOnAdd();
 
@@ -32,64 +32,64 @@ namespace BackEnd.Data.SetConfigs
 
             builder.Property(s => s.StoreState).HasColumnName("STORESTATE").IsRequired().HasConversion<string>().HasMaxLength(20);
 
-            // ºöÂÔ²»Ó³Éäµ½Êı¾İ¿âµÄÊôĞÔ
+            // å¿½ç•¥ä¸æ˜ å°„åˆ°æ•°æ®åº“çš„å±æ€§
             builder.Ignore(s => s.IsOpen);
             builder.Ignore(s => s.BusinessHoursDisplay);
 
-            // --- Íâ¼üÊôĞÔÉùÃ÷ ---
+            // --- å¤–é”®å±æ€§å£°æ˜ ---
             builder.Property(s => s.SellerID).HasColumnName("SELLERID").IsRequired();
 
             // ---------------------------------------------------------------
-            // ¹ØÏµÅäÖÃ
+            // å…³ç³»é…ç½®
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: Store -> Seller (Ò»¶ÔÒ»)
+            // å…³ç³»ä¸€: Store -> Seller (ä¸€å¯¹ä¸€)
             builder.HasOne(s => s.Seller)
                    .WithOne(seller => seller.Store)
                    .HasForeignKey<Store>(s => s.SellerID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ±ÉÌ¼Ò±»É¾³ıÊ±£¬ÆäÓµÓĞµÄµêÆÌÒ²Ó¦±»¼¶ÁªÉ¾³ı£¬ÒÔ±£Ö¤Êı¾İÒ»ÖÂĞÔ¡£
+                   .OnDelete(DeleteBehavior.Cascade); // å½“å•†å®¶è¢«åˆ é™¤æ—¶ï¼Œå…¶æ‹¥æœ‰çš„åº—é“ºä¹Ÿåº”è¢«çº§è”åˆ é™¤ï¼Œä»¥ä¿è¯æ•°æ®ä¸€è‡´æ€§ã€‚
 
-            // ¹ØÏµ¶ş: Store -> FoodOrder (Ò»¶Ô¶à)
+            // å…³ç³»äºŒ: Store -> FoodOrder (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.FoodOrders)
                    .WithOne(fo => fo.Store)
                    .HasForeignKey(fo => fo.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict); // ²»ÔÊĞíÉ¾³ıÒ»¸ö»¹ÓĞÀúÊ·¶©µ¥µÄµêÆÌ£¬ÒÔ±£»¤½»Ò×¼ÇÂ¼¡£
+                   .OnDelete(DeleteBehavior.Restrict); // ä¸å…è®¸åˆ é™¤ä¸€ä¸ªè¿˜æœ‰å†å²è®¢å•çš„åº—é“ºï¼Œä»¥ä¿æŠ¤äº¤æ˜“è®°å½•ã€‚
 
-            // ¹ØÏµÈı: Store -> CouponManager (Ò»¶Ô¶à)
+            // å…³ç³»ä¸‰: Store -> CouponManager (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.CouponManagers)
                    .WithOne(cm => cm.Store)
                    .HasForeignKey(cm => cm.StoreID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ±µêÆÌ±»É¾³ıÊ±£¬ÆäÅäÖÃµÄÓÅ»İÈ¯ĞÅÏ¢Ò²Ó¦±»¼¶ÁªÉ¾³ı¡£
+                   .OnDelete(DeleteBehavior.Cascade); // å½“åº—é“ºè¢«åˆ é™¤æ—¶ï¼Œå…¶é…ç½®çš„ä¼˜æƒ åˆ¸ä¿¡æ¯ä¹Ÿåº”è¢«çº§è”åˆ é™¤ã€‚
 
-            // ¹ØÏµËÄ: Store -> Menu (Ò»¶Ô¶à)
+            // å…³ç³»å››: Store -> Menu (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.Menus)
                    .WithOne(m => m.Store)
                    .HasForeignKey(m => m.StoreID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ±µêÆÌ±»É¾³ıÊ±£¬ÆäËùÓĞ²Ëµ¥Ò²Ó¦±»¼¶ÁªÉ¾³ı£¬ÒòÎª²Ëµ¥ÊÇµêÆÌµÄ¸½ÊôÎï¡£
+                   .OnDelete(DeleteBehavior.Cascade); // å½“åº—é“ºè¢«åˆ é™¤æ—¶ï¼Œå…¶æ‰€æœ‰èœå•ä¹Ÿåº”è¢«çº§è”åˆ é™¤ï¼Œå› ä¸ºèœå•æ˜¯åº—é“ºçš„é™„å±ç‰©ã€‚
 
-            // ¹ØÏµÎå: Store -> FavoriteItem (Ò»¶Ô¶à)
+            // å…³ç³»äº”: Store -> FavoriteItem (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.FavoriteItems)
                    .WithOne(fi => fi.Store)
                    .HasForeignKey(fi => fi.StoreID)
-                   .OnDelete(DeleteBehavior.Cascade); // µ±µêÆÌ±»É¾³ıÊ±£¬ÓÃ»§ÊÕ²Ø¼ĞÖĞ¹ØÓÚ´ËµêÆÌµÄ¼ÇÂ¼Ò²Ó¦±»ÒÆ³ı¡£
+                   .OnDelete(DeleteBehavior.Cascade); // å½“åº—é“ºè¢«åˆ é™¤æ—¶ï¼Œç”¨æˆ·æ”¶è—å¤¹ä¸­å…³äºæ­¤åº—é“ºçš„è®°å½•ä¹Ÿåº”è¢«ç§»é™¤ã€‚
 
-            // ¹ØÏµÁù: Store -> StoreViolationPenalty (Ò»¶Ô¶à)
+            // å…³ç³»å…­: Store -> StoreViolationPenalty (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.StoreViolationPenalties)
                    .WithOne(svp => svp.Store)
                    .HasForeignKey(svp => svp.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict); // ²»ÔÊĞíÉ¾³ıÒ»¸öÓĞÎ¥¹æ´¦·£¼ÇÂ¼µÄµêÆÌ£¬ÒÔ±£ÁôÖØÒªµÄ¹ÜÀíÀúÊ·¡£
+                   .OnDelete(DeleteBehavior.Restrict); // ä¸å…è®¸åˆ é™¤ä¸€ä¸ªæœ‰è¿è§„å¤„ç½šè®°å½•çš„åº—é“ºï¼Œä»¥ä¿ç•™é‡è¦çš„ç®¡ç†å†å²ã€‚
 
-            // ¹ØÏµÆß: Store -> Comment (Ò»¶Ô¶à)
+            // å…³ç³»ä¸ƒ: Store -> Comment (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.Comments)
                    .WithOne(c => c.Store)
                    .HasForeignKey(c => c.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict); // ²»ÔÊĞíÉ¾³ıÒ»¸öÓĞÓÃ»§ÆÀÂÛµÄµêÆÌ£¬ÒÔ±£»¤ÓÃ»§Éú³ÉµÄÄÚÈİ¡£
+                   .OnDelete(DeleteBehavior.Restrict); // ä¸å…è®¸åˆ é™¤ä¸€ä¸ªæœ‰ç”¨æˆ·è¯„è®ºçš„åº—é“ºï¼Œä»¥ä¿æŠ¤ç”¨æˆ·ç”Ÿæˆçš„å†…å®¹ã€‚
 
-            // ¹ØÏµ°Ë: Store -> DeliveryTask (Ò»¶Ô¶à)
+            // å…³ç³»å…«: Store -> DeliveryTask (ä¸€å¯¹å¤š)
             builder.HasMany(s => s.DeliveryTasks)
                    .WithOne(dt => dt.Store)
                    .HasForeignKey(dt => dt.StoreID)
-                   .OnDelete(DeleteBehavior.SetNull); // Èç¹ûµêÆÌ±»É¾³ı£¬Ïà¹ØµÄÅäËÍÈÎÎñ¼ÇÂ¼±¾Éí²»É¾³ı£¬½ö½«ÆäÓëµêÆÌµÄ¹ØÁªÉèÎªNULL¡£
+                   .OnDelete(DeleteBehavior.SetNull); // å¦‚æœåº—é“ºè¢«åˆ é™¤ï¼Œç›¸å…³çš„é…é€ä»»åŠ¡è®°å½•æœ¬èº«ä¸åˆ é™¤ï¼Œä»…å°†å…¶ä¸åº—é“ºçš„å…³è”è®¾ä¸ºNULLã€‚
         }
     }
 }

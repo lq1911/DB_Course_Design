@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace BackEnd.Models
 {
-    // ÆïÊÖÀà
-    // Ö÷Âë£ºUserID
-    // ÍâÂë£ºUserID
+    // éª‘æ‰‹ç±»
+    // ä¸»ç ï¼šUserID
+    // å¤–ç ï¼šUserID
 
     public class Courier
     {
@@ -28,8 +28,8 @@ namespace BackEnd.Models
 
         public int MonthlySalary { get; set; } = 0;
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ÅäËÍÈÎÎñ
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
+        // é…é€ä»»åŠ¡
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
     }
 }

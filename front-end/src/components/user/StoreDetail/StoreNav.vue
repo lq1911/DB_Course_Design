@@ -24,10 +24,6 @@
             <div class="flex items-center space-x-8">
                 <div class="relative">
                     <img :src="storeInfo.image" alt="商家头像" class="w-28 h-28 rounded-2xl object-cover shadow-lg" />
-                    <div
-                        class="absolute -bottom-2 -right-2 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        <i class="fas fa-check-circle mr-1"></i>认证商家
-                    </div>
                 </div>
                 <div class="flex-1">
                     <div class="flex items-center space-x-4 mb-3">
@@ -66,7 +62,7 @@
         <div class="bg-white border-b">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex space-x-8">
-                    <button v-for="tab in tabs"
+                    <button v-for="tab in tabs" :key="tab.label"
                     @click="goToPage(tab.path)" 
                     :class="{
                         'border-b-2 border-[#F9771C] text-[#F9771C]': route.path === tab.path,
@@ -82,38 +78,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import router from "@/router";
-import { StoreInfo, getStoreInfo, DeliveryTask, getDeliveryTask } from '@/api/store_info'
+import { computed, defineProps } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const tabs = [
-    { path: "/store", label: "点单" },
-    { path: "/store/comment", label: "评价" },
-    { path: "/store/info", label: "商家" },
-];
+import type { StoreInfo } from '@/api/store_info'
 
-//实际使用代码
-// const storeInfo = ref<StoreInfo | null>(null)
-// const deliveryTask = ref<DeliveryTask | null>(null)
+const route = useRoute();
+const router = useRouter();
 
-// onMounted(async () => {
-//     storeInfo.value = await getStoreInfo()
-//     deliveryTask.value = await getDeliveryTask()
-// })
+// 从父组件获得信息
+const props = defineProps<{
+    storeInfo: StoreInfo | null;
+    storeID: string;
+}>()
 
-//测试使用
+const storeID = computed(() => route.params.id as string);
+
+const tabs = computed( () => [
+    { path: `/store/${props.storeID}/order`, label: "点餐" },
+    { path: `/store/${props.storeID}/comment`, label: "评价" },
+    { path: `/store/${props.storeID}/info`, label: "商家" },
+]);
+
+//测试使用，最后删除
 import { storeInfo } from '@/api/store_info'
 import { deliveryTask } from '@/api/store_info'
 
-const route = useRoute()
-
 function goBack() {
-    router.back()
+    router.push(`/home`);
 }
 
 function goToPage(path: string) {
-    router.push(path)
+    router.push(path);
 }
 
 </script>

@@ -4,9 +4,9 @@ namespace BackEnd.Models
 {
     public class FavoriteItem
     {
-        // ÊÕ²Ø¼ĞÏîÀà
-        // Ö÷Âë£ºItemID
-        // ÍâÂë£ºStoreID£¬FolderID
+        // æ”¶è—å¤¹é¡¹ç±»
+        // ä¸»ç ï¼šItemID
+        // å¤–ç ï¼šStoreIDï¼ŒFolderID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
