@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class Menu
     {
-        // ²Ëµ¥Àà
-        // Ö÷Âë£ºMenuID
-        // ÍâÂë£ºStoreID
+        // èœå•ç±»
+        // ä¸»ç ï¼šMenuID
+        // å¤–ç ï¼šStoreID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,11 +25,11 @@ namespace BackEnd.Models
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
 
-        // ¶à¶Ô¶à¹ØÏµ
-        // Ò»¸ö²Ëµ¥°üº¬¶à¸ö²ËÆ·
+        // å¤šå¯¹å¤šå…³ç³»
+        // ä¸€ä¸ªèœå•åŒ…å«å¤šä¸ªèœå“
         public ICollection<Menu_Dish> MenuDishes { get; set; } = new List<Menu_Dish>();
 
-        // ±ã½İÊôĞÔ£ºÖ±½Ó»ñÈ¡²ËÆ·ÁĞ±í
+        // ä¾¿æ·å±æ€§ï¼šç›´æ¥è·å–èœå“åˆ—è¡¨
         [NotMapped]
         public IEnumerable<Dish> Dishes => MenuDishes.Select(md => md.Dish);
     }
