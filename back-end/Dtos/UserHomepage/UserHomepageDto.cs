@@ -67,8 +67,16 @@ namespace BackEnd.Dtos.UserHomepage
         [MaxLength(255)]
         public string? Avatar { get; set; }
     }
-
-    public class UserOrderHistoryGetDto
+    // 订单中的单个菜品DTO
+    public class DishDto
+    {
+        public int DishID { get; set; }
+        public string DishName { get; set; } = null!;
+        public decimal Price { get; set; }
+        
+        //public string? DishImage { get; set; }
+    }
+    public class HistoryOrderDto
     {
         [Required]
         public int StoreID { get; set; }
@@ -88,8 +96,21 @@ namespace BackEnd.Dtos.UserHomepage
 
         [Required]
         public string? StoreImage { get; set; } // Address of Image
+        public List<DishDto> OrderedDishes { get; set; } = new List<DishDto>();
 
         // public TYPE OrderedFood { get; set; }
+    }
+    //获得历史订单DTO
+    public class HistoryOrderGetDto
+    {
+        public List<HistoryOrderDto> Orders { get; set; } = new List<HistoryOrderDto>();
+    }
+    // 用户信息响应DTO
+    public class UserInfoResponse
+    {
+        public string Username { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Avatar { get; set; }
     }
 
     public class CouponDto

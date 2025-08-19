@@ -5,31 +5,24 @@ using System.Threading.Tasks;
 using BackEnd.Dtos.UserHomepage;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
-
+using BackEnd.Data;
+using Microsoft.EntityFrameworkCore;
 namespace BackEnd.Services
 {
     public class UserHomepageService : IUserHomepageService
     {
-        private readonly IStoreRepository _storeRepository;
-        private readonly IDishRepository _dishRepository;
-        private readonly IMenuRepository _menuRepository;
-        private readonly IMenu_DishRepository _menuDishRepository;
+        private readonly AppDbContext _context;
 
-        public UserHomepageService(
-            IStoreRepository storeRepository,
-            IDishRepository dishRepository,
-            IMenuRepository menuRepository,
-            IMenu_DishRepository menuDishRepository)
+        public UserHomepageService(AppDbContext context)
         {
-            _storeRepository = storeRepository;
-            _dishRepository = dishRepository;
-            _menuRepository = menuRepository;
-            _menuDishRepository = menuDishRepository;
+            _context = context;
         }
 
         public async Task<IEnumerable<HomeRecmDto>> GetRecommendedStoresAsync()
         {
-            var stores = await _storeRepository.GetAllAsync();
+            var stores = await _context.Stores
+            .AsNoTracking()
+            .ToListAsync();
 
             // 按评分排序，取前10个，然后随机选4个
             var topStores = stores
@@ -56,7 +49,9 @@ namespace BackEnd.Services
             SearchAsync(HomeSearchDto searchDto)
         {
             // 店铺搜索
-            var stores = await _storeRepository.GetAllAsync();
+            var stores = await _context.Stores
+            .AsNoTracking()
+            .ToListAsync();
             var storeResults = stores
                 .Where(s => s.StoreName.Contains(searchDto.SearchName))
                 .Select(s => new HomeSearchGetDto
@@ -69,9 +64,16 @@ namespace BackEnd.Services
                 .ToList();
 
             // 菜品搜索
-            var dishes = await _dishRepository.GetAllAsync();
-            var menus = await _menuRepository.GetAllAsync();
-            var menuDishes = await _menuDishRepository.GetAllAsync();
+            var dishes = await _context.Dishes
+            .AsNoTracking()
+            .ToListAsync();
+
+            var menus = await _context.Menus
+            .AsNoTracking()
+            .ToListAsync();
+            var menuDishes = await _context.Menu_Dishes
+            .AsNoTracking()
+            .ToListAsync();
 
             var dishResults = dishes
                 .Where(d => d.DishName.Contains(searchDto.SearchName))
@@ -98,5 +100,70 @@ namespace BackEnd.Services
 
             return (storeResults, dishResults);
         }
+        public async Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId)
+        {
+            // 查询用户的所有订单，包含相关数据
+            var orders = await _context.FoodOrders
+                .Where(o => o.CustomerID == userId)
+                .Include(o => o.Store)  // 包含商家信息
+                .Include(o => o.Cart)   // 包含购物车
+                   .ThenInclude(cart => cart.ShoppingCartItems)
+                   .ThenInclude(item => item.Dish)
+                .OrderByDescending(o => o.PaymentTime)  // 按支付时间倒序排序
+                .ToListAsync();
+
+            // 转换为DTO
+            var result = new HistoryOrderGetDto();
+
+            foreach (var order in orders)
+            {
+                var orderDto = new HistoryOrderDto
+                {
+                    OrderID = order.OrderID,
+                    PaymentTime = order.PaymentTime,
+                    CartID = order.CartID,
+                    StoreID = order.StoreID,
+                    StoreName = order.Store?.StoreName ?? "未知商家",
+                    //StoreImage = order.Store?.ImageUrl
+                };
+
+                // 添加订单中的菜品
+                if (order.Cart?.ShoppingCartItems != null)
+                {
+                    foreach (var cartItem in order.Cart.ShoppingCartItems)
+                    {
+                        orderDto.OrderedDishes.Add(new DishDto
+                        {
+                            DishID = cartItem.DishID,
+                            DishName = cartItem.Dish?.DishName ?? "未知菜品",
+                            Price = cartItem.Dish?.Price ?? 0,
+
+                            //DishImage = cartItem.Dish?.ImageUrl
+                        });
+                    }
+                }
+
+                result.Orders.Add(orderDto);
+            }
+
+            return result;
+        }
+        public async Task<UserInfoResponse> GetUserInfoAsync(int userId)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.UserID == userId);
+            
+            if (user == null)
+                return null;
+
+            return new UserInfoResponse
+            {
+                Username = user.Username,
+                PhoneNumber = user.PhoneNumber,
+                Avatar = user.Avatar
+            };
+        }
+        
     }
 }

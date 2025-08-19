@@ -6,8 +6,8 @@ namespace BackEnd.Models
 {
     public class User
     {
-        // ÓÃ»§Àà
-        // Ö÷Âë£ºUserID
+        // ï¿½Ã»ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ë£ºUserID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,7 +22,7 @@ namespace BackEnd.Models
         public string Password { get; set; } = null!;
 
         [Required]
-        public long PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [Required]
         [MaxLength(30)]
@@ -44,11 +44,11 @@ namespace BackEnd.Models
 
         public ProfilePrivacyLevel IsProfilePublic { get; set; } = ProfilePrivacyLevel.Private;
 
-        // ÓÃ»§µÄ½ÇÉ«Ãû³Æ
+        // ï¿½Ã»ï¿½ï¿½Ä½ï¿½É«ï¿½ï¿½ï¿½ï¿½
         [Required]
         public UserIdentity Role { get; set; } = UserIdentity.Customer;
 
-        // ÓÃ»§µÄÉí·Ý
+        // ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         public Customer? Customer { get; set; }
         public Courier? Courier { get; set; }
         public Administrator? Administrator { get; set; }
