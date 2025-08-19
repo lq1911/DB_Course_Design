@@ -51,16 +51,25 @@
                             <div class="text-right">
                                 <p class="font-bold text-lg">¥{{ order.totalAmount }}</p>
                                 <div class="flex space-x-2 mt-2">
+                                    <!--已完成-->
                                     <button v-if="order.status === 'completed'"
-                                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-sm transition-colors cursor-pointer !rounded-button whitespace-nowrap">
-                                        再来一单
-                                    </button>
-                                    <button v-if="order.status === 'completed'"
-                                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+                                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
                                         评价
                                     </button>
+                                    
+                                    <!--配送中-->
                                     <button v-if="order.status === 'delivering'"
-                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+                                        class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors cursor-pointer"
+                                        title="联系商家">
+                                        <i class="fas fa-store"></i>
+                                    </button>
+                                    <button v-if="order.status === 'delivering'"
+                                        class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors cursor-pointer"
+                                        title="联系骑手">
+                                        <i class="fas fa-motorcycle"></i>
+                                    </button>
+                                    <button v-if="order.status === 'delivering'"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
                                         查看物流
                                     </button>
                                 </div>
@@ -81,10 +90,10 @@ const activeOrderStatus = ref("all");
 // 订单状态
 const orderStatuses = [
     { key: "all", label: "全部订单" },
-    { key: "pending", label: "待付款" },
     { key: "delivering", label: "配送中" },
     { key: "completed", label: "已完成" },
 ];
+
 // 订单数据
 const orders = [
     {
@@ -120,17 +129,6 @@ const orders = [
         image:
             "https://readdy.ai/api/search-image?query=japanese%20ramen%20restaurant%20logo%20and%20noodle%20bowls%20on%20clean%20white%20background%20commercial%20style&width=64&height=64&seq=order003&orientation=squarish",
     },
-    {
-        orderNumber: "DD202501170004",
-        restaurantName: "必胜客",
-        orderTime: "2025-01-14 20:15",
-        status: "pending",
-        items: "玛格丽特披萨 x1, 意面 x1",
-        itemCount: 2,
-        totalAmount: "89.00",
-        image:
-            "https://readdy.ai/api/search-image?query=pizza%20restaurant%20logo%20and%20italian%20food%20display%20on%20clean%20white%20background%20commercial%20style&width=64&height=64&seq=order004&orientation=squarish",
-    },
 ];
 
 // 计算属性
@@ -143,7 +141,6 @@ const filteredOrders = computed(() => {
 
 const getOrderStatusText = (status: string) => {
     const statusMap: { [key: string]: string } = {
-        pending: "待付款",
         delivering: "配送中",
         completed: "已完成",
         cancelled: "已取消",
