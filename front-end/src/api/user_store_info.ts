@@ -28,7 +28,7 @@ export interface Comment {
   date: string;
   content: string;
   avatar: string;
-  images: Array<string>
+  images: string[]
 }
 
 // 店铺的评论数组
@@ -38,9 +38,10 @@ export interface CommentList {
 
 // 综合评价
 export interface CommentStatus {
-  Status: number[];
+  status: number[];
 }
 
+// 菜品信息
 export interface MenuItem {
   id: number;
   categoryId: number;
@@ -51,24 +52,45 @@ export interface MenuItem {
   isSoldOut: number;
 }
 
-export async function getStoreInfo(id: string): Promise<StoreInfo> {
-  return getData<StoreInfo>(id);
+export async function getStoreInfo(StoreId: string): Promise<StoreInfo> {
+  return getData<StoreInfo>(`/api/user/storeInfo`, {
+    params: {
+      storeId: StoreId
+    }
+  });
 }
 
-export async function getDeliveryTask(id: string): Promise<DeliveryTask> {
-  return getData<DeliveryTask>(id);
+export async function getDeliveryTasks(UserId: number) {
+    return getData<DeliveryTask[]>("/api/user/deliveryTasks", {
+        params: {
+            userId: UserId
+        }
+    });
 }
 
-export async function getCommentList(id: string): Promise<CommentList> {
-  return getData<CommentList>(id);
+export async function getCommentList(StoreId: string) {
+    return getData<CommentList>("/api/user/store/commentList", {
+        params: {
+            storeId: StoreId
+        }
+    });
 }
 
-export async function getCommentStatus(id: string): Promise<CommentStatus> {
-  return getData<CommentStatus>(id);
+export async function getCommentStatus(StoreId: string): Promise<CommentStatus> {
+  return getData<CommentStatus>("/api/user/store/commentStatus", {
+        params: {
+            storeId: StoreId
+        }
+    });
 }
 
-export async function getMenuItem(id: string): Promise<MenuItem> {
-  return getData<MenuItem>(id);
+export async function getMenuItem(UserId: number, StoreId: number) {
+    return getData<MenuItem[]>("/api/store/dish", {
+        params: {
+            userId: UserId,
+            storeId: StoreId
+        }
+    });
 }
 
 // 以下均为测试代码，完成后删除
