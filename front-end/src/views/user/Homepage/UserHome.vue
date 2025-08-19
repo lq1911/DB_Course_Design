@@ -1,5 +1,5 @@
 <template>
-    <main class="pt-8 min-h-screen space-y-12">
+    <main class="pt-20 min-h-screen space-y-12">
         <HeroBanner />
         <FoodCategory />
         <Discount />

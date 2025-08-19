@@ -1,6 +1,4 @@
 <template>
-    <TopNav />
-
     <main class="pt-20 min-h-screen">
         <div class="max-w-screen-xl mx-auto px-6 py-8">
             <h1 class="text-3xl font-bold text-gray-800 mb-8 text-left">我的订单</h1>
@@ -73,14 +71,10 @@
             </div>
         </div>
     </main>
-
-    <Footer />
 </template>
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import TopNav from '@/components/user/HomePage/TopNav.vue';
-import Footer from '@/components/user/Footer.vue';
 
 const activeOrderStatus = ref("all");
 

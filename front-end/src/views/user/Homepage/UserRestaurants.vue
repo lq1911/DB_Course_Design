@@ -1,6 +1,4 @@
 <template>
-  <TopNav />
-
   <main class="pt-20 min-h-screen max-w-screen-xl mx-auto px-6 flex gap-8">
     <SieveStore class="w-64" />
     <!-- 商家列表 -->
@@ -39,12 +37,10 @@
       </div>
     </section>
   </main>
-
-  <Footer />
 </template>
 
 <script lang="ts" setup>
-import SieveStore from '@/components/user/HomePage/Stores/SieveStore.vue';
+import SieveStore from '@/components/user/HomePage/Home/SieveStore.vue';
 
 // 所有商家
 const allRestaurants = [
