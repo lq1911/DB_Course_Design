@@ -1,8 +1,11 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios';
 
-export async function getData<T>(url: string): Promise<T> {
+export async function getData<T>(url: string): Promise<T>;
+export async function getData<T>(url: string, config: AxiosRequestConfig): Promise<T>;
+
+export async function getData<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-        const response = await axios.get(url);
+        const response = await axios.get<T>(url, config);
         return response.data;
     } catch (error: unknown) {
         let message = "message字段不存在!";
