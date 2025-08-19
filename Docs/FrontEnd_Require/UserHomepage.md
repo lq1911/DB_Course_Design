@@ -45,7 +45,7 @@
 | name | string | 店铺名字 |
 | monthlySales | number | 店铺月销售量 |
 
-- 接口地址: `GET /api/user/recommend`
+- 接口地址: `GET /api/user/home/recommend`
 
 **2. 搜索接口**
 
@@ -70,7 +70,7 @@
 | monthlySales | number | 店铺月销售量 |
 | storeAddress | string | 店铺地址 |
 
-- 接口地址: `GET /api/user/search`
+- 接口地址: `GET /api/user/home/search`
 
 **3. 订单接口**
 
@@ -94,7 +94,7 @@
 | storeName    | string      | 店铺名称                                       |
 | dishImage    | string[]    | 已购商品图片列表，每个元素为商品图片 URL       |
 
-- 接口地址: `GET /api/user/orders`
+- 接口地址: `GET /api/user/home/orders`
 
 **4. 用户信息接口**
 
@@ -114,7 +114,7 @@
 | phoneNumber  | number      | 用户电话号码   |
 | image        | string      | 用户头像 URL   |
 
-- 接口地址: `GET /api/user/userInfo`
+- 接口地址: `GET /api/user/home/userInfo`
 
 **5. 优惠券接口**
 
@@ -138,7 +138,7 @@
 | discountAmount  | number      | 优惠金额                      |
 | validTo         | string      | 优惠券有效期截止日期 |
 
-- 接口地址: `GET /api/user/couponInfo`
+- 接口地址: `GET /api/user/home/couponInfo`
 
 ---
 

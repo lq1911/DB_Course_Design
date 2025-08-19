@@ -53,7 +53,7 @@ export interface MenuItem {
 }
 
 export async function getStoreInfo(StoreId: string): Promise<StoreInfo> {
-  return getData<StoreInfo>(`/api/user/storeInfo`, {
+  return getData<StoreInfo>(`/api/user/store/storeInfo`, {
     params: {
       storeId: StoreId
     }

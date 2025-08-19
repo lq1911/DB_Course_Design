@@ -44,7 +44,7 @@
 | description   | string      | 店铺描述                        |
 | createTime    | string      | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
 
-- 接口地址: `GET /api/user/storeInfo`
+- 接口地址: `GET /api/user/store/storeInfo`
 
 **2. 菜单接口**
 

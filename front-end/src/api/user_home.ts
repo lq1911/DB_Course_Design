@@ -31,11 +31,11 @@ export interface UserInfo {
 }
 
 export async function getRecomStore() {
-    return getData<RecomStore[]>(`/api/user/recommend`);
+    return getData<RecomStore[]>(`/api/user/home/recommend`);
 }
 
 export async function getSearchStore(UserID: number, Address: string, Keyword: string) {
-    return getData<SearchStore[]>(`/api/user/search`, {
+    return getData<SearchStore[]>(`/api/user/home/search`, {
         params: {
             userId: UserID,
             address: Address,
@@ -45,7 +45,7 @@ export async function getSearchStore(UserID: number, Address: string, Keyword: s
 }
 
 export async function getOrderInfo(UserId: number) {
-    return getData<OrderInfo[]>(`/api/user/orders`, {
+    return getData<OrderInfo[]>(`/api/user/home/orders`, {
         params: {
             userId: UserId
         }
@@ -53,7 +53,7 @@ export async function getOrderInfo(UserId: number) {
 }
 
 export async function getUserInfo(UserId: number) {
-    return getData<UserInfo>(`/api/user/userinfo`, {
+    return getData<UserInfo>(`/api/user/home/userinfo`, {
         params: {
             userId: UserId
         }
