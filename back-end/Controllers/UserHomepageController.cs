@@ -20,7 +20,7 @@ namespace BackEnd.Controllers
 
         /// <summary>
         /// 获取推荐商家
-        /// GET: /api/user/recommend
+        /// GET: /api/user/home/recommend
         /// </summary>
         [HttpGet("recommend")]
         public async Task<IActionResult> GetRecommendedStores()
@@ -31,9 +31,9 @@ namespace BackEnd.Controllers
 
         /// <summary>
         /// 搜索商家和菜品
-        /// POST: /api/user/search
+        /// GET: /api/user/home/search
         /// </summary>
-        [HttpPost("search")]
+        [HttpGet("search")]
         public async Task<IActionResult> Search([FromBody] HomeSearchDto searchDto)
         {
             if (!ModelState.IsValid)
@@ -51,7 +51,8 @@ namespace BackEnd.Controllers
         }
         // 输入：用户id
         // 输出：用户的历史订单
-        [HttpPost("historyorder")]
+        // GET: /api/user/home/orders`
+        [HttpGet("orders")]
         public async Task<IActionResult> GetOrderHistory([FromQuery] UserIdDto userIdDto)
         {
             if (!ModelState.IsValid)
@@ -65,9 +66,9 @@ namespace BackEnd.Controllers
         // 新增的用户信息接口
         /// <summary>
         /// 获取用户信息
-        /// POST: /api/user/home/info
+        /// GET: /api/user/home/userInfo
         /// </summary>
-        [HttpPost("info")]
+        [HttpPost("userInfo")]
         public async Task<IActionResult> GetUserInfo([FromBody] UserIdDto userIdDto)
         {
             if (!ModelState.IsValid)
@@ -82,15 +83,36 @@ namespace BackEnd.Controllers
                 return NotFound(new { code = 404, message = "User not found" });
             }
 
-            return Ok(new 
+            return Ok(new
             {
                 code = 200,
                 message = "success",
-                data = new 
+                data = new
                 {
                     User = userInfo
                 }
             });
+        }
+        
+        [HttpGet("couponInfo")]
+        public async Task<IActionResult> GetUserCoupons([FromQuery] UserIdDto userIdDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var coupons = await _userHomepageService.GetUserCouponsAsync(userIdDto);
+
+            if (coupons == null)
+            {
+                return NotFound(new
+                {
+                    code = 404,
+                    message = "There's No Coupon For User.",
+                });
+            }
+            return Ok(coupons);
         }
 
     }

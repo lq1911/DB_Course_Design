@@ -15,6 +15,9 @@ namespace BackEnd.Services.Interfaces
         Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId);
         Task<UserInfoResponse> GetUserInfoAsync(int userId);
 
+        // 获取指定用户的优惠券信息
+        Task<IEnumerable<CouponDto>> GetUserCouponsAsync(UserIdDto userIdDto);
+
     }
     
 }

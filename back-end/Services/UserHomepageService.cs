@@ -75,28 +75,20 @@ namespace BackEnd.Services
             .AsNoTracking()
             .ToListAsync();
 
-            var dishResults = dishes
+            var dishResults = await _context.Dishes
+                .AsNoTracking()
                 .Where(d => d.DishName.Contains(searchDto.SearchName))
-                .Join(menuDishes,
-                      dish => dish.DishID,
-                      md => md.DishID,
-                      (dish, md) => new { dish, md })
-                .Join(menus,
-                      dm => dm.md.MenuID,
-                      menu => menu.MenuID,
-                      (dm, menu) => new { dm.dish, menu })
-                .Join(stores,
-                      dmMenu => dmMenu.menu.StoreID,
-                      store => store.StoreID,
-                      (dmMenu, store) => new HomeSearchGetDto
-                      {
-                          AverageRating = store.AverageRating,
-                          StoreName = store.StoreName,
-                          MonthlySales = store.MonthlySales,
-                          StoreAddress = store.StoreAddress
-                      })
-                .Distinct()
-                .ToList();
+                .SelectMany(d => d.MenuDishes)          // Dish → Menu_Dish
+                .Select(md => md.Menu.Store)            // Menu_Dish → Menu → Store
+                .Distinct()                             // 避免重复
+                .Select(store => new HomeSearchGetDto
+                {
+                    AverageRating = store.AverageRating,
+                    StoreName = store.StoreName,
+                    MonthlySales = store.MonthlySales,
+                    StoreAddress = store.StoreAddress
+                })
+                .ToListAsync();
 
             return (storeResults, dishResults);
         }
@@ -153,7 +145,7 @@ namespace BackEnd.Services
             var user = await _context.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UserID == userId);
-            
+
             if (user == null)
                 return null;
 
@@ -164,6 +156,30 @@ namespace BackEnd.Services
                 Avatar = user.Avatar
             };
         }
-        
+
+
+        // 查询用户优惠券（带 CouponManager 信息）
+        public async Task<IEnumerable<CouponDto>> GetUserCouponsAsync(UserIdDto userIdDto)
+        {
+            var coupons = await _context.Coupons
+                .AsNoTracking()
+                .Where(c => c.Customer.UserID == userIdDto.UserId)   // 过滤用户
+                .Include(c => c.CouponManager)                       // 关联 CouponManager
+                .Select(c => new CouponDto
+                {
+                    CouponID = c.CouponID,
+                    CouponState = c.CouponState,
+                    OrderID = c.OrderID,
+                    CouponManagerID = c.CouponManagerID,
+
+                    MinimumSpend = c.CouponManager.MinimumSpend,
+                    DiscountAmount = c.CouponManager.DiscountAmount,
+                    ValidTo = c.CouponManager.ValidTo
+                })
+                .ToListAsync();
+
+            return coupons;
+        }
     }
+
 }
