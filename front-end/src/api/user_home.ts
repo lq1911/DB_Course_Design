@@ -22,6 +22,7 @@ export interface OrderInfo {
     storeImage: string
     storeName: string
     dishImage: string[]
+    totalAmount: number
 }
 
 export interface UserInfo {
