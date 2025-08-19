@@ -83,14 +83,14 @@ export interface Dish {
   dishName: string;       // Dish.DishName
   price: number;          // Dish.Price (decimal)
   description: string;    // Dish.Description
-  isSoldOut: number;      // Dish.IsSoldOut (0/1)
+  isSoldOut: number;      // Dish.IsSoldOut (0=售罄, 2=在售)
 }
 
 export interface NewDishData {
   dishName: string;
   price: string | number;
   description: string;
-  isSoldOut?: number; // 默认 0
+  isSoldOut?: number; // 默认 2 (在售)
 }
 
 // 聊天消息类型
@@ -219,7 +219,7 @@ export const createDish = async (dishData: NewDishData) => {
       DishName: dishData.dishName,
       Price: Number(dishData.price),
       Description: dishData.description,
-      IsSoldOut: dishData.isSoldOut ?? 0,
+      IsSoldOut: dishData.isSoldOut ?? 2,
     };
     const response = await api.post('/dishes', payload);
     const d = response.data;
@@ -266,7 +266,7 @@ export const updateDish = async (dishId: number, dishData: {
   }
 };
 
-// 切换菜品售罄状态（0/1）
+// 切换菜品售罄状态（0=售罄, 2=在售）
 export const toggleDishSoldOut = async (dishId: number, isSoldOut: number) => {
   try {
     const response = await api.patch(`/dishes/${dishId}/soldout`, { IsSoldOut: isSoldOut });
@@ -340,8 +340,6 @@ export interface DeliveryTask {
   taskId: number;                 // DeliveryTask.TaskID
   estimatedArrivalTime: string;   // EstimatedArrivalTime
   estimatedDeliveryTime: string;  // EstimatedDeliveryTime
-  courierLongitude?: number | null; // CourierLongitude
-  courierLatitude?: number | null;  // CourierLatitude
   customerId: number;             // CustomerID
   storeId: number;                // StoreID
 }
@@ -397,8 +395,6 @@ export const publishDeliveryTaskForOrder = async (
           taskId: dt.TaskID ?? dt.taskId,
           estimatedArrivalTime: dt.EstimatedArrivalTime ?? dt.estimatedArrivalTime,
           estimatedDeliveryTime: dt.EstimatedDeliveryTime ?? dt.estimatedDeliveryTime,
-          courierLongitude: dt.CourierLongitude ?? dt.courierLongitude ?? null,
-          courierLatitude: dt.CourierLatitude ?? dt.courierLatitude ?? null,
           customerId: dt.CustomerID ?? dt.customerId,
           storeId: dt.StoreID ?? dt.storeId,
         }
@@ -431,8 +427,6 @@ export const getOrderDeliveryInfo = async (orderId: number) => {
         taskId: (data.DeliveryTask || data.deliveryTask).TaskID ?? (data.DeliveryTask || data.deliveryTask).taskId,
         estimatedArrivalTime: (data.DeliveryTask || data.deliveryTask).EstimatedArrivalTime ?? (data.DeliveryTask || data.deliveryTask).estimatedArrivalTime,
         estimatedDeliveryTime: (data.DeliveryTask || data.deliveryTask).EstimatedDeliveryTime ?? (data.DeliveryTask || data.deliveryTask).estimatedDeliveryTime,
-        courierLongitude: (data.DeliveryTask || data.deliveryTask).CourierLongitude ?? (data.DeliveryTask || data.deliveryTask).courierLongitude ?? null,
-        courierLatitude: (data.DeliveryTask || data.deliveryTask).CourierLatitude ?? (data.DeliveryTask || data.deliveryTask).courierLatitude ?? null,
         customerId: (data.DeliveryTask || data.deliveryTask).CustomerID ?? (data.DeliveryTask || data.deliveryTask).customerId,
         storeId: (data.DeliveryTask || data.deliveryTask).StoreID ?? (data.DeliveryTask || data.deliveryTask).storeId,
       }
