@@ -71,10 +71,10 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { StoreInfo } from '@/api/store_info'
+import type { StoreInfo } from '@/api/user_store_info'
 
 // 测试使用代码，完成后删除
-import { storeInfo } from '@/api/store_info'
+import { storeInfo } from '@/api/user_store_info'
 
 const props = defineProps<{
     storeInfo: StoreInfo | null

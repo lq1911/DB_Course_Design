@@ -10,6 +10,10 @@ export interface CouponInfo {
     validTo: string
 }
 
-export async function getCouponInfo(id: number) {
-    return getData<CouponInfo[]>(`??`);
+export async function getCouponInfo(UserId: number) {
+    return getData<CouponInfo[]>("/api/user/coupons", {
+        params: {
+            userId: UserId
+        }
+    });
 }

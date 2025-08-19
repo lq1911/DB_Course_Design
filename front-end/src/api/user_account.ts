@@ -6,6 +6,10 @@ export interface AccountInfo{
     image: string;
 }
 
-export async function getCouponInfo(id: number) {
-    return getData<AccountInfo>(`??`);
+export async function getAccountInfo(UserId: number) {
+    return getData<AccountInfo>("/api/user/profile/userProfile", {
+        params: {
+            userId: UserId
+        }
+    });
 }

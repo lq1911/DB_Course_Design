@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 
-import type { MenuItem } from '@/api/store_info'
+import type { MenuItem } from '@/api/user_store_info'
 
 const props = defineProps<{
     categories: Array<{ id: number, name: string }>;
@@ -60,5 +60,5 @@ const emit = defineEmits<{
 }>();
 
 // 测试代码
-import { menuItems } from '@/api/store_info';
+import { menuItems } from '@/api/user_store_info';
 </script>

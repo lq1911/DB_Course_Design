@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref, defineProps } from 'vue'
 
-import type { CommentList } from '@/api/store_info'
+import type { CommentList } from '@/api/user_store_info'
 
 const props = defineProps<{
   commentList: CommentList | null;
@@ -55,6 +55,6 @@ function closePcomment() {
 }
 
 // 测试代码
-import { commentList } from '@/api/store_info'
+import { commentList } from '@/api/user_store_info'
 
 </script>

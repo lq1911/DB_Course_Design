@@ -10,8 +10,8 @@
 import { useRoute } from 'vue-router'
 import { computed, ref, onMounted, watch } from 'vue'
 
-import type { StoreInfo } from '@/api/store_info'
-import { getStoreInfo } from '@/api/store_info'
+import type { StoreInfo } from '@/api/user_store_info'
+import { getStoreInfo } from '@/api/user_store_info'
 
 import Footer from '@/components/user/Footer.vue'
 import StoreNav from '@/components/user/StoreDetail/StoreNav.vue';
