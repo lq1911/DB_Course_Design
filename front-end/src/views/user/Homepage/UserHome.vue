@@ -1,20 +1,16 @@
 <template>
-    <main class="pt-8 min-h-screen space-y-12">
-        <TopNav />
+    <main class="pt-20 min-h-screen space-y-12">
         <HeroBanner />
         <FoodCategory />
         <Discount />
         <PopularStore />
-        <Footer />
     </main>
 </template>
 
 <script lang="ts" setup>
-import TopNav from '@/components/user/HomePage/TopNav.vue';
-import HeroBanner from '@/components/user/HomePage/HeroBanner.vue';
-import FoodCategory from '@/components/user/HomePage/FoodCategory.vue';
-import Discount from '@/components/user/HomePage/Discount.vue';
-import PopularStore from '@/components/user/HomePage/PopularStore.vue';
-import Footer from '@/components/user/Footer.vue';
+import HeroBanner from '@/components/user/HomePage/Home/HeroBanner.vue';
+import FoodCategory from '@/components/user/HomePage/Home/FoodCategory.vue';
+import Discount from '@/components/user/HomePage/Home/Discount.vue';
+import PopularStore from '@/components/user/HomePage/Home/PopularStore.vue';
 
 </script>

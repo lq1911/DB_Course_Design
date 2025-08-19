@@ -26,8 +26,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { CommentStatus } from '@/api/store_info'
-import type { StoreInfo } from '@/api/store_info'
+import type { CommentStatus } from '@/api/user_store_info'
+import type { StoreInfo } from '@/api/user_store_info'
 
 const props = defineProps<{
     commentStatus: CommentStatus | null;
@@ -35,6 +35,6 @@ const props = defineProps<{
 }>();
 
 // 测试使用代码，完成后删除
-import { storeInfo } from '@/api/store_info'
-import { commentStatus } from '@/api/store_info'
+import { storeInfo } from '@/api/user_store_info'
+import { commentStatus } from '@/api/user_store_info'
 </script>

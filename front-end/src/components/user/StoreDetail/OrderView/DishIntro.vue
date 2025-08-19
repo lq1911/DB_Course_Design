@@ -14,12 +14,12 @@
                             </div>
                             <div v-if="!isItemSoldOut(item.isSoldOut)" class="flex items-center space-x-2">
                                 <button @click="emit('decrease', item.id)" :disabled="!getItemQuantity(item.id)"
-                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-300 disabled:opacity-50 cursor-pointer !rounded-button whitespace-nowrap">
+                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-300 disabled:opacity-50 cursor-pointer">
                                     <i class="fas fa-minus text-xs"></i>
                                 </button>
                                 <span class="w-8 text-center">{{ getItemQuantity(item.id) || 0 }}</span>
                                 <button @click="emit('increase', item.id)"
-                                    class="w-8 h-8 rounded-full bg-[#F9771C] text-white flex items-center justify-center hover:bg-orange-600 cursor-pointer !rounded-button whitespace-nowrap">
+                                    class="w-8 h-8 rounded-full bg-[#F9771C] text-white flex items-center justify-center hover:bg-orange-600 cursor-pointer">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
 
-import type { MenuItem } from '@/api/store_info'
+import type { MenuItem } from '@/api/user_store_info'
 
 const props = defineProps<{
     categories: Array<{ id: number, name: string }>;
@@ -60,5 +60,5 @@ const emit = defineEmits<{
 }>();
 
 // 测试代码
-import { menuItems } from '@/api/store_info';
+import { menuItems } from '@/api/user_store_info';
 </script>
