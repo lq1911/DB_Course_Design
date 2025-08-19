@@ -6,8 +6,8 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { StoreInfo } from '@/api/store_info'
-import { getStoreInfo } from '@/api/store_info'
+import type { StoreInfo } from '@/api/user_store_info'
+import { getStoreInfo } from '@/api/user_store_info'
 
 import StoreIntro from '@/components/user/StoreDetail/InfoView/StoreInfo.vue'
 

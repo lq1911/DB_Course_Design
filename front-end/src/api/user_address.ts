@@ -6,6 +6,10 @@ export interface Address{
     address: string;
 }
 
-export async function getAddress<Address>(id: number) {
-    return getData<Address>('??');
+export async function getAddress(UserId: number) {
+    return getData<Address[]>("/api/user/profile/address", {
+        params: {
+            userId: UserId
+        }
+    });
 }

@@ -24,8 +24,8 @@
 import { useRoute } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 
-import type { StoreInfo, MenuItem } from '@/api/store_info'
-import { getStoreInfo, getMenuItem } from '@/api/store_info'
+import type { StoreInfo, MenuItem } from '@/api/user_store_info'
+import { getStoreInfo, getMenuItem } from '@/api/user_store_info'
 
 import MenuList from '@/components/user/StoreDetail/OrderView/MenuList.vue'
 import DishIntro from '@/components/user/StoreDetail/OrderView/DishIntro.vue';
