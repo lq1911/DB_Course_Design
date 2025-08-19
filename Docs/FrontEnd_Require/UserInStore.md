@@ -28,21 +28,23 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| StoreId | int | 是 | 店铺编号 |
+| storeId | int | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Store.StoreID | 店铺编号 |
-| Store.StoreName | 店铺名 |
-| Store.StoreImage | 店铺头像 |
-| Store.StoreAddress | 店铺地址 |
-| Store.OpenTime | 上班时间 |
-| Store.CloseTime | 下班时间 |
-| Store.AverageRating | 店铺评分 |
-| Store.MonthlySales | 店铺月销量 |
-| Store.Features | 店铺特色 |
+| 字段名        | 类型        | 说明                           |
+| ------------- | ----------- | ------------------------------ |
+| id            | string      | 店铺编号                        |
+| name          | string      | 店铺名称                        |
+| image         | string      | 店铺封面图片 URL                 |
+| address       | string      | 店铺地址                        |
+| businessHours | string      | 营业时间                        |
+| rating        | number      | 店铺评分                        |
+| monthlySales  | number      | 店铺月销售量                     |
+| description   | string      | 店铺描述                        |
+| createTime    | string      | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
+
+- 接口地址: `GET /api/user/storeInfo`
 
 **2. 菜单接口**
 
@@ -52,24 +54,22 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-| StoreId | int | 是 | 店铺编号 |
+| userId | int | 是 | 消费者编号 |
+| storeId | string | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Menu.MenuID | 菜单编号 |
+| 字段名       | 类型        | 说明                          |
+| ------------ | ----------- | ----------------------------- |
+| id           | number      | 菜品编号                       |
+| categoryId   | number      | 菜品分类编号                   |
+| name         | string      | 菜品名称                       |
+| description  | string      | 菜品描述                       |
+| price        | number      | 菜品价格                       |
+| image        | string      | 菜品图片 URL                    |
+| isSoldOut    | number      | 是否售罄（0=在售, 1=售罄）    |
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Dish.DishID | 菜品编号 |
-| StoreCatory | 所属菜单分类 |
-| Dish.DishName | 菜品名称 |
-| Dish.Discripstion | 菜品描述 |
-| Dish.Price | 菜品价格 |
-| Dish.Image | 菜品图片 |
-| Dish.IsSoldOut | 是否售罄 |
+- 接口地址: `GET /api/user/store/dish`
 
 **3. 评价接口**
 
@@ -79,24 +79,27 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| StoreId | int | 是 | 店铺编号 |
+| storeId | string | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| CommentList | 评论数组Array<Comment> |
+| 字段名    | 类型        | 说明               |
+| --------- | ----------- | ------------------ |
+| comments  | Comment[]   | 评论列表，每个元素为 Comment 类型 |
 
 > 以下为上面评论数组中`Comment`对象的具体属性
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Comment.CommentID | 评价ID |
-| Custommer.CustommerName | 用户姓名 |
-| Comment.Rating | 评价分数 |
-| Comment.PostedAt | 评价时间 |
-| Comment.Content | 评价内容 |
-| Custommer.Avator | 用户头像 |
+| 字段名   | 类型        | 说明                          |
+| -------- | ----------- | ----------------------------- |
+| id       | number      | 评论编号                      |
+| username | string      | 评论用户昵称                  |
+| rating   | number      | 评分（如 1-5）                |
+| date     | string      | 评论日期  |
+| content  | string      | 评论内容                      |
+| avatar   | string      | 用户头像 URL                  |
+| images   | string[]    | 评论附带图片列表              |
+
+- 接口地址: `GET /api/user/store/commentList`
 
 **4. 评价状态接口**
 
@@ -106,13 +109,15 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| StoreId | int | 是 | 店铺编号 |
+| storeId | string | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| CommentStatus | 返回<number>数组，分别为和1~5分的评论的数量，分数和数组下标对应 |
+| 字段名   | 类型        | 说明                          |
+| -------- | ----------- | ----------------------------- |
+| status   | number[]    | 各类评论数量状态数组，例如 [好评数, 中评数, 差评数] |
+
+- 接口地址: `GET /api/user/store/commentStatus`
 
 ---
 
