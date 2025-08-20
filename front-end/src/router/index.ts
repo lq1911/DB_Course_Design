@@ -32,38 +32,9 @@ const routes: Array<RouteRecordRaw> = [
       title: '登录'
     }
   },
-  {
-    path: '/home',
-    name: 'Home',
-    component: UserHomeView,
-    meta: {
-      title: '首页'
-    }
-  },
-  {
-    path: '/recommend',
-    name: 'Recommend',
-    component: UserRecommendView,
-    meta: {
-      title: '推荐'
-    }
-  },
-  {
-    path: '/restaurants',
-    name: 'Restaurant',
-    component: UserRestaurantsView,
-    meta: {
-      title: '商家'
-    }
-  },
-  {
-    path: '/orders',
-    name: 'Order',
-    component: UserOrderView,
-    meta: {
-      title: '订单'
-    }
-  },
+  ...userRoutes,
+  ...courierRoutes,
+  
   // -----商家页面start----- 
   {
     path: '/MerchantHome',
