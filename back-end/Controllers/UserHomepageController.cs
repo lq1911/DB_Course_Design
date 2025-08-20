@@ -26,6 +26,14 @@ namespace BackEnd.Controllers
         public async Task<IActionResult> GetRecommendedStores()
         {
             var result = await _userHomepageService.GetRecommendedStoresAsync();
+            if (result == null)
+            {
+                return NotFound(new
+                {
+                    code = 404,
+                    message = "There's No Recommend Store For User.",
+                });
+            }
             return Ok(result);
         }
 
@@ -38,16 +46,34 @@ namespace BackEnd.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new
+                {
+                    code = 400,
+                    message = "Invalid request",
+                });
             }
 
             var (stores, dishes) = await _userHomepageService.SearchAsync(searchDto);
 
-            return Ok(new
+            if (stores == null && dishes == null)
             {
-                Stores = stores,
-                Dishes = dishes
-            });
+                return NotFound(new
+                {
+                    code = 404,
+                    message = "There's No Search results.",
+                });
+            }
+
+            return Ok(new
+                {
+                    code = 200,
+                    message = "Search results retrieved successfully",
+                    data = new
+                    {
+                        Stores = stores,
+                        Dishes = dishes
+                    }
+                });
         }
         // 输入：用户id
         // 输出：用户的历史订单
@@ -61,6 +87,16 @@ namespace BackEnd.Controllers
             }
 
             var orderHistory = await _userHomepageService.GetOrderHistoryAsync(userIdDto.UserId);
+
+            if (orderHistory == null)
+            {
+                return NotFound(new
+                {
+                    code = 404,
+                    message = "There's No OrderHistory For User.",
+                });
+            }
+
             return Ok(orderHistory);
         }
         // 新增的用户信息接口
@@ -99,12 +135,16 @@ namespace BackEnd.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new
+                {
+                    code = 400,
+                    message = "Invalid request",
+                });
             }
 
             var coupons = await _userHomepageService.GetUserCouponsAsync(userIdDto);
 
-            if (coupons == null)
+            if (coupons == null || !coupons.Any())
             {
                 return NotFound(new
                 {
@@ -112,7 +152,12 @@ namespace BackEnd.Controllers
                     message = "There's No Coupon For User.",
                 });
             }
-            return Ok(coupons);
+            return Ok(new
+            {
+                code = 200,
+                massage = "Coupons retrieved successfully",
+                data = coupons
+            });
         }
 
     }
