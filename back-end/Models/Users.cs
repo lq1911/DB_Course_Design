@@ -6,8 +6,8 @@ namespace BackEnd.Models
 {
     public class User
     {
-        // ÓÃ»§Àà
-        // Ö÷Âë£ºUserID
+        // ç”¨æˆ·ç±»
+        // ä¸»ç ï¼šUserID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -44,11 +44,11 @@ namespace BackEnd.Models
 
         public ProfilePrivacyLevel IsProfilePublic { get; set; } = ProfilePrivacyLevel.Private;
 
-        // ÓÃ»§µÄ½ÇÉ«Ãû³Æ
+        // ç”¨æˆ·çš„è§’è‰²åç§°
         [Required]
         public UserIdentity Role { get; set; } = UserIdentity.Customer;
 
-        // ÓÃ»§µÄÉí·İ
+        // ç”¨æˆ·çš„èº«ä»½
         public Customer? Customer { get; set; }
         public Courier? Courier { get; set; }
         public Administrator? Administrator { get; set; }

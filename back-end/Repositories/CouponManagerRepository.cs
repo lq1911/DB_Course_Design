@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -19,8 +17,8 @@ namespace BackEnd.Repositories
         public async Task<IEnumerable<CouponManager>> GetAllAsync()
         {
             return await _context.CouponManagers
-                .Include(cm => cm.Store)     // ¼ÓÔØ¹ØÁªµÄµêÆÌ
-                .Include(cm => cm.Coupons)    // ¼ÓÔØ¹ØÁªµÄÓÅ»İÈ¯¼¯ºÏ
+                .Include(cm => cm.Store)     // åŠ è½½å…³è”çš„åº—é“º
+                .Include(cm => cm.Coupons)   // åŠ è½½å…³è”çš„ä¼˜æƒ åˆ¸é›†åˆ
                 .ToListAsync();
         }
 
@@ -35,22 +33,19 @@ namespace BackEnd.Repositories
         public async Task AddAsync(CouponManager couponManager)
         {
             await _context.CouponManagers.AddAsync(couponManager);
+            await SaveAsync();
         }
 
         public async Task UpdateAsync(CouponManager couponManager)
         {
-            _context.Entry(couponManager).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            _context.CouponManagers.Update(couponManager);
+            await SaveAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(CouponManager couponManager)
         {
-            var couponManager = await _context.CouponManagers.FindAsync(id);
-            if (couponManager != null)
-            {
-                _context.CouponManagers.Remove(couponManager);
-                await _context.SaveChangesAsync();
-            }
+            _context.CouponManagers.Remove(couponManager);
+            await SaveAsync();
         }
 
         public async Task SaveAsync()
@@ -58,6 +53,6 @@ namespace BackEnd.Repositories
             await _context.SaveChangesAsync();
         }
 
-        
+
     }
 }

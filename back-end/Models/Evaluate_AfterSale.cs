@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models
 {
-    // ¹ÜÀíÔ±ÓëÊÛºóÉêÇëÖ®¼äµÄÆÀ¹ÀÊÛºó¹ØÏµ
-    // Ö÷Âë£ºAdminID£¬Application
+    // ç®¡ç†å‘˜ä¸å”®åç”³è¯·ä¹‹é—´çš„è¯„ä¼°å”®åå…³ç³»
+    // ä¸»ç ï¼šAdminIDï¼ŒApplication
 
     public class Evaluate_AfterSale
     {

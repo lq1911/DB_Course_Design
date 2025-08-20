@@ -21,21 +21,21 @@ namespace BackEnd.Data.SetConfigs
             builder.Property(sc => sc.OrderID).HasColumnName("ORDERID");
 
             // ---------------------------------------------------------------
-            // ¹ØÏµÅäÖÃ
+            // å…³ç³»é…ç½®
             // ---------------------------------------------------------------
 
-            // ¹ØÏµÒ»: ShoppingCart Óë FoodOrder (Ò»¶ÔÒ»£¬¿ÉÑ¡¹ØÏµ)
+            // å…³ç³»ä¸€: ShoppingCart ä¸ FoodOrder (ä¸€å¯¹ä¸€ï¼Œå¯é€‰å…³ç³»)
             builder.HasOne(sc => sc.Order)
                    .WithOne(o => o.Cart)
                    .HasForeignKey<ShoppingCart>(sc => sc.OrderID)
-                   .OnDelete(DeleteBehavior.SetNull); // Èç¹û¶©µ¥±»É¾³ı£¬½ö½«¹ºÎï³µµÄ OrderID ÉèÎª NULL£¬²»É¾³ı¹ºÎï³µ±¾Éí¡£
+                   .OnDelete(DeleteBehavior.SetNull); // å¦‚æœè®¢å•è¢«åˆ é™¤ï¼Œä»…å°†è´­ç‰©è½¦çš„ OrderID è®¾ä¸º NULLï¼Œä¸åˆ é™¤è´­ç‰©è½¦æœ¬èº«ã€‚
 
-            // ¹ØÏµ¶ş: ShoppingCart Óë ShoppingCartItem (Ò»¶Ô¶à)
-            // Ò»¸ö¹ºÎï³µ°üº¬¶à¸ö¹ºÎï³µÏî¡£
-            builder.HasMany(cart => cart.ShoppingCartItems) // Ò»¸ö¹ºÎï³µÓĞ¶à¸ö ShoppingCartItems
+            // å…³ç³»äºŒ: ShoppingCart ä¸ ShoppingCartItem (ä¸€å¯¹å¤š)
+            // ä¸€ä¸ªè´­ç‰©è½¦åŒ…å«å¤šä¸ªè´­ç‰©è½¦é¡¹ã€‚
+            builder.HasMany(cart => cart.ShoppingCartItems) // ä¸€ä¸ªè´­ç‰©è½¦æœ‰å¤šä¸ª ShoppingCartItems
                    .WithOne(sci => sci.Cart)
                    .HasForeignKey(sci => sci.Cart)
-                   .OnDelete(DeleteBehavior.Cascade); // µ±¹ºÎï³µ±»É¾³ıÊ±£¬Æä°üº¬µÄËùÓĞÏîÒ²Ó¦±»¼¶ÁªÉ¾³ı£¬ÒÔ±£³ÖÊı¾İ¸É¾»¡£
+                   .OnDelete(DeleteBehavior.Cascade); // å½“è´­ç‰©è½¦è¢«åˆ é™¤æ—¶ï¼Œå…¶åŒ…å«çš„æ‰€æœ‰é¡¹ä¹Ÿåº”è¢«çº§è”åˆ é™¤ï¼Œä»¥ä¿æŒæ•°æ®å¹²å‡€ã€‚
         }
     }
 }

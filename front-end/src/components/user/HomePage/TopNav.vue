@@ -38,9 +38,9 @@ const route = useRoute();
 
 // 导航菜单
 const navItems = [
-    { path: "/home", label: "首页" },
-    { path: "/restaurants", label: "商家" },
-    { path: "/orders", label: "订单" },
+    { path: "/home/intro", label: "首页" },
+    { path: "/home/restaurants", label: "商家" },
+    { path: "/home/orders", label: "订单" },
 ];
 
 

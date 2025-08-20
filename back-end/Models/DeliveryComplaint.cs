@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class DeliveryComplaint
     {
-        // ÅäËÍÍ¶ËßÀà
-        // Ö÷Âë£ºComplaintID
-        // ÍâÂë£ºCourierID£¬CustomerID£¬DeliveryTaskID
+        // é…é€æŠ•è¯‰ç±»
+        // ä¸»ç ï¼šComplaintID
+        // å¤–ç ï¼šCourierIDï¼ŒCustomerIDï¼ŒDeliveryTaskID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -35,8 +35,8 @@ namespace BackEnd.Models
         [ForeignKey("DeliveryTaskID")]
         public DeliveryTask DeliveryTask { get; set; } = null!;
 
-        // ¶à¶Ô¶à¹ØÏµ
-        // ¿ÉÒÔÓÉ¶à¸ö¹ÜÀíÔ±¸ºÔğ
+        // å¤šå¯¹å¤šå…³ç³»
+        // å¯ä»¥ç”±å¤šä¸ªç®¡ç†å‘˜è´Ÿè´£
         public ICollection<Evaluate_Complaint> EvaluateComplaints { get; set; } = new List<Evaluate_Complaint>();
     }
 }

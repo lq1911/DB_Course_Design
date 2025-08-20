@@ -1,6 +1,6 @@
 <template>
     <button @click="showUserPanel = !showUserPanel"
-        class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors cursor-pointer !rounded-button">
+        class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white hover:bg-orange-600 transition-colors cursor-pointer">
         <i class="fas fa-user"></i>
     </button>
 
@@ -23,17 +23,7 @@
             </div>
             <div>
               <h3 class="font-bold text-lg">{{ userInfo.name }}</h3>
-              <p class="text-gray-600 text-sm">{{ userInfo.phone }}</p>
-            </div>
-          </div>
-          <!-- 优惠券信息 -->
-          <div class="bg-orange-50 rounded-lg p-4 mb-6">
-            <div class="flex items-center justify-between">
-              <span class="text-orange-600 font-medium">我的优惠券</span>
-              <span
-                class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs"
-                >{{ userInfo.coupons }}</span
-              >
+              <p class="text-gray-600 text-sm">{{ userInfo.phoneNumber }}</p>
             </div>
           </div>
           <!-- 功能菜单 -->
@@ -41,8 +31,9 @@
             <button
               v-for="(menu, index) in userMenus"
               :key="index"
-              class="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer !rounded-button"
-            >
+              class="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+              @click="menu.action"
+              >
               <div class="flex items-center space-x-3">
                 <i :class="menu.icon" class="text-gray-600"></i>
                 <span>{{ menu.label }}</span>
@@ -52,10 +43,16 @@
           </div>
           <!-- 退出登录 -->
           <button
-            class="w-full mt-8 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+            class="w-full mt-8 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap"
+            @click="showExitForm=true"
           >
             退出登录
           </button>
+
+          <AddrSetting v-model:showAddressForm="showAddressForm" />
+          <CouponSetting v-model:showCouponForm="showCouponForm" />
+          <AccountSetting v-model:showAccountForm="showAccountForm" />
+          <ExitAccount v-model:showExitForm="showExitForm" />
         </div>
       </div>
     </div>
@@ -63,28 +60,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
+
+import type { UserInfo } from "@/api/user_home";
+import { getUserInfo } from "@/api/user_home";
+
+import AddrSetting from "./PersonalTransition/AddrSetting.vue";
+import CouponSetting from "./PersonalTransition/CouponSetting.vue";
+import AccountSetting from "./PersonalTransition/AccountSetting.vue";
+import ExitAccount from "./PersonalTransition/ExitAccount.vue";
 
 const showUserPanel = ref(false);
+const showAddressForm = ref(false);
+const showCouponForm = ref(false);
+const showAccountForm = ref(false);
+const showExitForm = ref(false);
 
-// 用户信息
-const userInfo = {
-  name: "张小明",
-  phone: "138****5678",
-  coupons: 5,
-};
 // 用户菜单
 const userMenus = [
-  { icon: "fas fa-map-marker-alt", label: "收货地址管理" },
-  { icon: "fas fa-ticket-alt", label: "我的优惠券" },
-  { icon: "fas fa-cog", label: "账户设置" },
+  { icon: "fas fa-map-marker-alt", label: "默认地址管理", action: ()=>openForm(showAddressForm) },
+  { icon: "fas fa-ticket-alt", label: "我的优惠券", action: ()=>openForm(showCouponForm) },
+  { icon: "fas fa-cog", label: "账户设置", action: ()=>openForm(showAccountForm) }
 ];
 
-</script>
-
-<style scoped>
-.\!rounded-button {
-  border-radius: 8px;
+function openForm(f: { value: Boolean }) {
+  f.value = true;
 }
 
-</style>
+// 用户信息, 测试用
+const userInfo = reactive({
+  name: "张小明",
+  phoneNumber: 1234556,
+  image: '',
+  defaultAddress: "同济大学"
+});
+</script>

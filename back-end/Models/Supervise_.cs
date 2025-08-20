@@ -5,8 +5,8 @@ namespace BackEnd.Models
 {
     public class Supervise_
     {
-        // ¹ÜÀíÔ±ÓëÎ¥¹æµêÆÌ´¦·£Ö®¼äµÄ¼à¶½¹ØÏµ
-        // Ö÷Âë£ºAdminID£¬PenaltyID
+        // ç®¡ç†å‘˜ä¸è¿è§„åº—é“ºå¤„ç½šä¹‹é—´çš„ç›‘ç£å…³ç³»
+        // ä¸»ç ï¼šAdminIDï¼ŒPenaltyID
 
         [Key, Column(Order = 0)]
         public int AdminID { get; set; }

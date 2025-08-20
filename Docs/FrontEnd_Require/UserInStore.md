@@ -20,7 +20,33 @@
 
 ### 调用接口
 
-**1. 菜单接口**
+**1. 商家接口**
+
+- 用来获得商家的详细信息
+
+- 输入表单说明
+
+| 字段名   | 类型   | 是否必填 | 说明 |
+| -------- | ------ | -------- | ----- |
+| storeId | int | 是 | 店铺编号 |
+
+- 获得信息说明
+
+| 字段名        | 类型        | 说明                           |
+| ------------- | ----------- | ------------------------------ |
+| id            | string      | 店铺编号                        |
+| name          | string      | 店铺名称                        |
+| image         | string      | 店铺封面图片 URL                 |
+| address       | string      | 店铺地址                        |
+| businessHours | string      | 营业时间                        |
+| rating        | number      | 店铺评分                        |
+| monthlySales  | number      | 店铺月销售量                     |
+| description   | string      | 店铺描述                        |
+| createTime    | string      | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
+
+- 接口地址: `GET /api/user/store/storeInfo`
+
+**2. 菜单接口**
 
 - 用来获得商家的菜单信息
 
@@ -28,37 +54,22 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-| StoreId | int | 是 | 店铺编号 |
+| userId | int | 是 | 消费者编号 |
+| storeId | string | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Menu.MenuID | 菜单编号 |
+| 字段名       | 类型        | 说明                          |
+| ------------ | ----------- | ----------------------------- |
+| id           | number      | 菜品编号                       |
+| categoryId   | number      | 菜品分类编号                   |
+| name         | string      | 菜品名称                       |
+| description  | string      | 菜品描述                       |
+| price        | number      | 菜品价格                       |
+| image        | string      | 菜品图片 URL                    |
+| isSoldOut    | number      | 是否售罄（0=在售, 1=售罄）    |
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Dish.DishID | 菜品编号 |
-| Dish.DishName | 菜品名称 |
-| Dish.Price | 菜品价格 |
-| Dish.Discripstion | 菜品描述 |
-| Dish.IsSoldOut | 是否售罄 |
-
-**2. 购物车接口**
-
-- 用来修改用户的购物车
-
-- 输入表单说明
-
-| 字段名   | 类型   | 是否必填 | 说明 |
-| -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-| StoreId | int | 是 | 店铺编号 |
-| Dish.DishId | int | 是 | 菜品编号 |
-| ShoppingCartItem.Quantity | int | 是 | 菜品数量 |
-| ShoppingCartItem.TotalPrice | int | 是 | 总价格 |
-| ShoppingCart.LastUpdateTime | int | 是 | 最后修改时间 |
+- 接口地址: `GET /api/user/store/dish`
 
 **3. 评价接口**
 
@@ -68,39 +79,45 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-| StoreId | int | 是 | 店铺编号 |
+| storeId | string | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Comment.CommentID | 评价ID |
-| Comment.Content | 评价内容 |
-| Comment.Likes | 喜欢 |
-| Comment.Replies | 回复信息 |
-| Comment.CommenterID | 评价者ID |
+| 字段名    | 类型        | 说明               |
+| --------- | ----------- | ------------------ |
+| comments  | Comment[]   | 评论列表，每个元素为 Comment 类型 |
 
-**4. 商家接口**
+> 以下为上面评论数组中`Comment`对象的具体属性
 
-- 用来获得商家的详细信息
+| 字段名   | 类型        | 说明                          |
+| -------- | ----------- | ----------------------------- |
+| id       | number      | 评论编号                      |
+| username | string      | 评论用户昵称                  |
+| rating   | number      | 评分（如 1-5）                |
+| date     | string      | 评论日期  |
+| content  | string      | 评论内容                      |
+| avatar   | string      | 用户头像 URL                  |
+| images   | string[]    | 评论附带图片列表              |
+
+- 接口地址: `GET /api/user/store/commentList`
+
+**4. 评价状态接口**
+
+- 用来获得商家的评价状态信息
 
 - 输入表单说明
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| StoreId | int | 是 | 店铺编号 |
+| storeId | string | 是 | 店铺编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Store.StoreName | 店铺名 |
-| Store.StoreAddress | 店铺地址 |
-| Store.BusinessHours | 工作时间 |
-| Store.AverageRating | 店铺评分 |
-| Store.MonthlySales | 店铺月销量 |
-| Store.Features | 店铺特色 |
+| 字段名   | 类型        | 说明                          |
+| -------- | ----------- | ----------------------------- |
+| status   | number[]    | 各类评论数量状态数组，例如 [好评数, 中评数, 差评数] |
+
+- 接口地址: `GET /api/user/store/commentStatus`
 
 ---
 

@@ -6,9 +6,9 @@ namespace BackEnd.Models
 {
     public class Customer
     {
-        // Ïû·ÑÕßÀà
-        // Ö÷Âë£ºUserID
-        // ÍâÂë£ºUSerID
+        // æ¶ˆè´¹è€…ç±»
+        // ä¸»ç ï¼šUserID
+        // å¤–ç ï¼šUSerID
 
         [Key, ForeignKey("User")]
         public int UserID { get; set; }
@@ -21,20 +21,20 @@ namespace BackEnd.Models
 
         public MembershipStatus IsMember { get; set; } = MembershipStatus.NotMember;
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ÅäËÍÈÎÎñ
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
+        // é…é€ä»»åŠ¡
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
 
-        // ³ö²Í¶©µ¥
+        // å‡ºé¤è®¢å•
         public ICollection<FoodOrder>? FoodOrders { get; set; }
 
-        // ÓÅ»İÈ¯
+        // ä¼˜æƒ åˆ¸
         public ICollection<Coupon>? Coupons { get; set; }
 
-        // ÊÕ²Ø¼Ğ
+        // æ”¶è—å¤¹
         public ICollection<FavoritesFolder>? FavoritesFolders { get; set; }
 
-        // ÆÀÂÛ
+        // è¯„è®º
         public ICollection<Comment>? Comments { get; set; }
     }
 }

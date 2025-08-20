@@ -5,8 +5,8 @@ namespace BackEnd.Models
 {
     public class Menu_Dish
     {
-        // 菜单与菜品之间的包含关系
-        // 主码：MenuID，DishID
+        // 鑿滃崟涓庤彍鍝佷箣闂寸殑鍖呭惈鍏崇郴
+        // 涓荤爜锛歁enuID锛孌ishID
 
         [Key, Column(Order = 0)]
         public int MenuID { get; set; }

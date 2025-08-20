@@ -2,8 +2,6 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackEnd.Repositories
 {
@@ -18,7 +16,6 @@ namespace BackEnd.Repositories
 
         public async Task<IEnumerable<FavoriteItem>> GetAllAsync()
         {
-            // 修正：使用 AppDbContext 中定义的正确属性名 "FavoriteItems"
             return await _context.FavoriteItems
                                  .Include(fi => fi.Store)
                                  .Include(fi => fi.Folder)
@@ -27,7 +24,6 @@ namespace BackEnd.Repositories
 
         public async Task<FavoriteItem?> GetByIdAsync(int id)
         {
-            // 修正：使用 AppDbContext 中定义的正确属性名 "FavoriteItems"
             return await _context.FavoriteItems
                                  .Include(fi => fi.Store)
                                  .Include(fi => fi.Folder)
@@ -36,22 +32,20 @@ namespace BackEnd.Repositories
 
         public async Task AddAsync(FavoriteItem item)
         {
-            // 修正：使用 AppDbContext 中定义的正确属性名 "FavoriteItems"
             await _context.FavoriteItems.AddAsync(item);
+            await SaveAsync();
         }
 
         public async Task UpdateAsync(FavoriteItem item)
         {
-            // 修正：使用 AppDbContext 中定义的正确属性名 "FavoriteItems"
             _context.FavoriteItems.Update(item);
             await SaveAsync();
         }
 
-        public Task DeleteAsync(FavoriteItem item)
+        public async Task DeleteAsync(FavoriteItem item)
         {
-            // 修正：使用 AppDbContext 中定义的正确属性名 "FavoriteItems"
             _context.FavoriteItems.Remove(item);
-            return Task.CompletedTask;
+            await SaveAsync();
         }
 
         public async Task SaveAsync()

@@ -5,9 +5,9 @@ namespace BackEnd.Models
 {
     public class FoodOrder
     {
-        // ³ö²Í¶©µ¥Àà
-        // Ö÷Âë£ºOrderID
-        // ÍâÂë£ºCustomerID£¬CartID£¬StoreID£¬SellerID
+        // å‡ºé¤è®¢å•ç±»
+        // ä¸»ç ï¼šOrderID
+        // å¤–ç ï¼šCustomerIDï¼ŒCartIDï¼ŒStoreIDï¼ŒSellerID
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,15 +19,15 @@ namespace BackEnd.Models
         [StringLength(255)]
         public string? Remarks { get; set; }
 
-        // ¶©µ¥ÆÀ·ÖÏà¹Ø×Ö¶Î
-        [Range(1, 5)]  // ÏŞÖÆÆÀ·Ö·¶Î§Îª1-5
-        [Column(TypeName = "decimal(2,1)")] 
-        public decimal? Rating { get; set; } 
+        // è®¢å•è¯„åˆ†ç›¸å…³å­—æ®µ
+        [Range(1, 5)]  // é™åˆ¶è¯„åˆ†èŒƒå›´ä¸º1-5
+        [Column(TypeName = "decimal(2,1)")]
+        public decimal? Rating { get; set; }
 
         [StringLength(500)]
-        public string? RatingComment { get; set; }  // ÆÀ¼ÛÄÚÈİ
+        public string? RatingComment { get; set; }  // è¯„ä»·å†…å®¹
 
-        public DateTime? RatingTime { get; set; }  // ÆÀ¼ÛÊ±¼ä
+        public DateTime? RatingTime { get; set; }  // è¯„ä»·æ—¶é—´
 
         [Required]
         public int CustomerID { get; set; }
@@ -44,11 +44,11 @@ namespace BackEnd.Models
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
 
-        // Ò»¶Ô¶àµ¼º½ÊôĞÔ
-        // ÓÅ»İÈ¯
+        // ä¸€å¯¹å¤šå¯¼èˆªå±æ€§
+        // ä¼˜æƒ åˆ¸
         public ICollection<Coupon>? Coupons { get; set; }
 
-        // ÊÛºóÉêÇë
+        // å”®åç”³è¯·
         public ICollection<AfterSaleApplication>? AfterSaleApplications { get; set; }
     }
 }
