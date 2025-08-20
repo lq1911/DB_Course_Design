@@ -1,6 +1,4 @@
 // src/router/index.ts
-
-
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
@@ -18,65 +16,71 @@ import MerchantProfileView from '@/views/merchant/MerchantProfileView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    // redirect: '/login'
-    // redirect: '/home'
-     redirect: '/MerchantHome'
-    // redirect: '/MerchantOrders'
-    // redirect: '/MerchantCoupons'
+    redirect: '/MerchantHome'
   },
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: {
-      title: '登录'
-    }
+    meta: { title: '登录' }
   },
-  ...userRoutes,
-  ...courierRoutes,
+  // 用户路由
+  {
+    path: '/home',
+    name: 'Home',
+    component: UserHomeView,
+    meta: { title: '首页' }
+  },
+  {
+    path: '/recommend',
+    name: 'Recommend',
+    component: UserRecommendView,
+    meta: { title: '推荐' }
+  },
+  {
+    path: '/restaurants',
+    name: 'Restaurant',
+    component: UserRestaurantsView,
+    meta: { title: '商家' }
+  },
+  {
+    path: '/orders',
+    name: 'Order',
+    component: UserOrderView,
+    meta: { title: '订单' }
+  },
   
-  // -----商家页面start----- 
+  // 商家页面
   {
     path: '/MerchantHome',
     name: 'MerchantHome',
     component: MerchantHomeView,
-    meta: {
-      title: '商家主页'
-    }
+    meta: { title: '商家主页' }
   },
   {
     path: '/MerchantOrders',
     name: 'MerchantOrders',
     component: MerchantOrdersView,
-    meta: {
-      title: '商家订单页'
-    }
+    meta: { title: '商家订单页' }
   },
   {
     path: '/MerchantCoupons',
     name: 'MerchantCoupons',
     component: MerchantCouponsView,
-    meta: {
-      title: '商家配券页'
-    }
+    meta: { title: '商家配券页' }
   },
   {
     path: '/MerchantAftersale',
     name: 'MerchantAftersale',
     component: MerchantAftersaleView,
-    meta: {
-      title: '商家售后页'
-    }
+    meta: { title: '商家售后页' }
   },
   {
     path: '/MerchantProfile',
     name: 'MerchantProfile',
     component: MerchantProfileView,
-    meta: {
-      title: '商家个人页'
-    }
+    meta: { title: '商家个人页' }
   }
-  // -----商家页面end-----
 ]
 
 const router = createRouter({
@@ -87,7 +91,6 @@ const router = createRouter({
 router.afterEach((to) => {
   const name = getProjectName().projectName;
   const title = to.meta.title as string;
-
   document.title = (`${name} - ${title}`);
 });
 
