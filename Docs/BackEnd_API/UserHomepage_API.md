@@ -13,10 +13,12 @@
   "code": 200,
   "message": "",
   "data": {
-    "StoreID": ,
-    "StoreName": "",
-    "AverageRating": ,
-    "MonthlySales": ,
+    [
+      "StoreID": ,
+      "StoreName": "",
+      "AverageRating": ,
+      "MonthlySales": ,
+    ]
   }
 }
 - 没有推荐商家(调试时用)
