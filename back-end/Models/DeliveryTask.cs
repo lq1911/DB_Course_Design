@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -51,5 +52,20 @@ namespace BackEnd.Models
         // 一对多导航属性
         // 配送投诉
         public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }
+
+        //8.13
+        // 1. 任务的当前状态
+        [Required]
+        public DeliveryStatus Status { get; set; } = DeliveryStatus.Delivering; // 默认为配送中
+
+        // 2. 任务实际完成的时间
+        public DateTime? CompletionTime { get; set; } // 可为空，因为未完成时没有完成时间
+
+            // --- 新增的属性 --- 8.14
+        [Required]
+        [Column(TypeName = "decimal(5,2)")] // 假设配送费最多为 999.99
+        public decimal DeliveryFee { get; set; } = 0.00m; // 配送费
+
     }
-}
+
+}   
