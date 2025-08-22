@@ -7,7 +7,7 @@ export interface Address{
 }
 
 export async function getAddress(UserId: number) {
-    return getData<Address[]>("/api/user/profile/address", {
+    return getData<Address>("/api/user/profile/address", {
         params: {
             userId: UserId
         }

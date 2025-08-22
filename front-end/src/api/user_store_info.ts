@@ -41,17 +41,6 @@ export interface CommentStatus {
   status: number[];
 }
 
-// 菜品信息
-export interface MenuItem {
-  id: number;
-  categoryId: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  isSoldOut: number;
-}
-
 export async function getStoreInfo(StoreId: string): Promise<StoreInfo> {
   return getData<StoreInfo>(`/api/user/store/storeInfo`, {
     params: {
@@ -60,106 +49,32 @@ export async function getStoreInfo(StoreId: string): Promise<StoreInfo> {
   });
 }
 
-export async function getDeliveryTasks(UserId: number) {
-    return getData<DeliveryTask[]>("/api/user/deliveryTasks", {
-        params: {
-            userId: UserId
-        }
-    });
+export function getDeliveryTasks() {
+  const deliveryTime = Math.floor(Math.random() * 51) + 20; // 20 ~ 70 分钟
+  const deliveryFee = parseFloat((deliveryTime * 0.5 + 5).toFixed(2)); // 时间越长费越高，基础5元
+
+  return {
+    id: Math.floor(Math.random() * 10000),
+    deliveryTime,
+    deliveryFee,
+  };
 }
 
 export async function getCommentList(StoreId: string) {
-    return getData<CommentList>("/api/user/store/commentList", {
-        params: {
-            storeId: StoreId
-        }
-    });
+  return getData<CommentList>("/api/user/store/commentList", {
+    params: {
+      storeId: StoreId
+    }
+  });
 }
 
 export async function getCommentStatus(StoreId: string): Promise<CommentStatus> {
   return getData<CommentStatus>("/api/user/store/commentStatus", {
-        params: {
-            storeId: StoreId
-        }
-    });
+    params: {
+      storeId: StoreId
+    }
+  });
 }
-
-export async function getMenuItem(UserId: number, StoreId: number) {
-    return getData<MenuItem[]>("/api/store/dish", {
-        params: {
-            userId: UserId,
-            storeId: StoreId
-        }
-    });
-}
-
-// 以下均为测试代码，完成后删除
-export const storeInfo = {
-  name: "川香麻辣烫",
-  rating: 4.8,
-  monthlySales: 1256,
-  deliveryFee: 3,
-  deliveryTime: "30-45分钟",
-  description:
-    "正宗川味麻辣烫，精选优质食材，汤底浓郁香醇，让您品味地道川菜风情",
-  image:
-    "https://readdy.ai/api/search-image?query=modern%20chinese%20restaurant%20storefront%20with%20warm%20lighting%20and%20traditional%20elements%2C%20clean%20professional%20photography%20with%20soft%20natural%20lighting%20and%20minimalist%20background&width=200&height=200&seq=store001&orientation=squarish",
-  address: "北京市朝阳区三里屯街道工体北路8号",
-  phone: "010-12345678",
-  businessHours: "10:00-22:00",
-  license: "京朝工商备字第123456号",
-  foodLicense: "JY11105010012345",
-  deliveryRange: "3公里内",
-  minOrder: 20,
-};
-
-export const deliveryTask = {
-  id: 1,
-  deliveryTime: 23,
-  deliveryFee: 6
-}
-
-export const commentList = [
-  {
-    id: 1,
-    username: "美食达人小王",
-    rating: 5,
-    date: "2024-01-15",
-    content:
-      "味道非常正宗，麻辣烫的汤底特别香，配菜新鲜，服务态度也很好，下次还会再来！",
-    avatar:
-      "https://readdy.ai/api/search-image?query=friendly%20asian%20person%20avatar%20profile%20photo%20with%20warm%20smile%2C%20professional%20headshot%20photography%20with%20clean%20background&width=100&height=100&seq=user001&orientation=squarish",
-    images: [
-      "https://readdy.ai/api/search-image?query=delicious%20mala%20tang%20hot%20pot%20with%20colorful%20ingredients%20and%20spicy%20red%20broth%20in%20bowl%2C%20appetizing%20food%20photography&width=150&height=150&seq=review001&orientation=squarish",
-      "https://readdy.ai/api/search-image?query=various%20hot%20pot%20ingredients%20including%20vegetables%20meat%20and%20tofu%20arranged%20beautifully%2C%20food%20photography&width=150&height=150&seq=review002&orientation=squarish",
-    ],
-  },
-  {
-    id: 2,
-    username: "吃货小李",
-    rating: 4,
-    date: "2024-01-12",
-    content:
-      "整体不错，分量足够，价格合理。就是稍微有点咸，不过还是会推荐给朋友的。",
-    avatar:
-      "https://readdy.ai/api/search-image?query=happy%20young%20asian%20person%20avatar%20with%20cheerful%20expression%2C%20professional%20portrait%20photography%20with%20neutral%20background&width=100&height=100&seq=user002&orientation=squarish",
-    images: [],
-  },
-  {
-    id: 3,
-    username: "川菜爱好者",
-    rating: 5,
-    date: "2024-01-10",
-    content:
-      "作为一个四川人，这家的麻辣烫真的很地道！辣度刚好，麻味也很正宗，强烈推荐！",
-    avatar:
-      "https://readdy.ai/api/search-image?query=mature%20asian%20person%20with%20satisfied%20expression%2C%20professional%20headshot%20with%20clean%20background&width=100&height=100&seq=user003&orientation=squarish",
-    images: [
-      "https://readdy.ai/api/search-image?query=authentic%20sichuan%20style%20mala%20tang%20with%20rich%20red%20spicy%20broth%20and%20various%20ingredients%2C%20traditional%20food%20photography&width=150&height=150&seq=review003&orientation=squarish",
-    ],
-  },
-];
-export const commentStatus = [65, 25, 8, 2, 0];
 
 export const menuItems = [
   {
