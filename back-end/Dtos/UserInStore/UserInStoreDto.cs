@@ -95,7 +95,8 @@ namespace BackEnd.Dtos.UserInStore
         public string Username { get; set; } = null!;
 
         [Required]
-        public decimal Rating { get; set; }
+        [Range(1,5)]
+        public int Rating { get; set; }
 
         [Required]
         public DateTime PostedAt { get; set; }

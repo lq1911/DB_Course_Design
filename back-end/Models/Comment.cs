@@ -18,6 +18,10 @@ namespace BackEnd.Models
         public string Content { get; set; } = null!;
 
         [Required]
+        [Range(1,5)]
+        public int Rating { get; set; }
+
+        [Required]
         public DateTime PostedAt { get; set; }
 
         public int Likes { get; set; } = 0;
