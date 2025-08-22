@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50">
+    <!-- 返回按钮 -->
     <button @click="goBack"
       class="fixed left-4 top-6 flex items-center bg-white shadow-lg px-3 py-2 rounded-xl z-10 hover:bg-gray-100">
       <i class="fas fa-arrow-left mr-2"></i>
@@ -11,16 +12,18 @@
         <!-- 左侧菜品列表 -->
         <div class="w-[125vh] h-[95vh] bg-white rounded-2xl shadow-lg p-6 overflow-y-auto">
           <div class="flex items-center justify-between mb-6 border-b">
-            <div class="flex items-center gap-3">
-              <h1 class="text-2xl font-bold text-gray-900">已选菜品</h1>
-            </div>
+            <h1 class="text-2xl font-bold text-gray-900">已选菜品</h1>
           </div>
 
           <!-- 菜品列表 -->
-          <div v-if="items.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <DishCard v-for="item in items" :key="item.id" :item="item" 
+          <div v-if="cartItems.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <DishCard
+              v-for="item in cartItems"
+              :key="item.id"
+              :item="item"
               @updateQuantity="updateQuantity"
-              @onRemove="removeItem" />
+              @onRemove="removeItem"
+            />
           </div>
           <div v-else class="text-center py-12">
             <h3 class="text-lg font-semibold text-gray-500 mb-2">购物车是空的</h3>
@@ -30,12 +33,21 @@
 
         <!-- 右侧订单/支付区 -->
         <div class="space-y-4 w-[45vh]">
-          <AddressSelector :selectedAddress="selectedAddress" 
-          @onAddressChange="selectedAddress = $event" />
-          <CouponSelector :selectedCoupon="selectedCoupon" :totalAmount="subtotal"
-            @onCouponChange="selectedCoupon = $event" />
+          <AddressSelector
+            :selectedAddress="selectedAddress"
+            @onAddressChange="selectedAddress = $event"
+          />
+          <CouponSelector
+            :totalAmount="subtotal"
+            :selectedCoupon="selectedCoupon"
+            @onCouponChange="selectedCoupon = $event"
+          />
           <PaymentSelector v-model:selectedMethod="paymentMethod" />
-          <OrderSummary :items="items" :deliveryFee="deliveryFee" :isProcessing="isProcessing" @checkout="checkout" />
+          <OrderSummary
+            :subtotal="subtotal"
+            :selectedCoupon="selectedCoupon"
+            @checkout="checkout"
+          />
         </div>
       </div>
     </div>
@@ -44,7 +56,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
+
+import type { Address } from '@/api/user_address';
+import type { MenuItem, ShoppingCart } from '@/api/user_checkout';
+import type { CouponInfo } from '@/api/user_coupon';
+import { getAddress } from '@/api/user_address';
+import { getMenuItem, getShoppingCart, addOrUpdateCartItem, removeCartItem } from '@/api/user_checkout';
 
 import DishCard from '@/components/user/Checkout/DishCard.vue';
 import AddressSelector from '@/components/user/Checkout/AddressSelector.vue';
@@ -52,65 +70,82 @@ import CouponSelector from '@/components/user/Checkout/CouponSelector.vue';
 import PaymentSelector from '@/components/user/Checkout/PaymentSelector.vue';
 import OrderSummary from '@/components/user/Checkout/OrderSummary.vue';
 
-interface Item { id: number; name: string; price: number; quantity: number; image_url?: string }
-interface Coupon { id: number; discount_amount: number; min_amount: number }
-interface Address { id: number; name: string; phone: string; address: string; label?: string; is_default?: boolean }
-
-const items = ref<Item[]>([]);
-const selectedAddress = ref<Address | null>(null);
-const selectedCoupon = ref<Coupon | null>(null);
-const paymentMethod = ref('wechat');
-const isProcessing = ref(false);
-const deliveryFee = ref(5);
-
+// 路由参数
+const route = useRoute();
 const router = useRouter();
+const storeID = route.params.id as string;
+const userID = 0;  // 待添加用户ID
 
-const subtotal = computed(() =>
-  items.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
-);
-
-// 模拟加载购物车
-onMounted(() => {
-  // TODO: 替换为接口请求
-  items.value = [
-    { id: 1, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 2, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 3, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 4, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 5, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 6, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 7, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 8, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 9, name: '番茄炒蛋', price: 12, quantity: 1 },
-    { id: 10, name: '番茄炒蛋', price: 12, quantity: 1 }
-  ];
+// 数据
+const menuItems = ref<MenuItem[]>([]);
+const cart = ref<ShoppingCart>({
+  cartId: 0,
+  totalPrice: 0,
+  items: [],
 });
 
-// --- 方法 ---
-function updateQuantity(itemId: number, newQuantity: number) {
-  const item = items.value.find(i => i.id === itemId);
-  if (item) item.quantity = newQuantity;
+const selectedAddress = ref<Address>();
+const selectedCoupon = ref < CouponInfo | null>(null);
+const paymentMethod = ref('wechat');
+
+// 计算已选菜品
+const cartItems = computed(() => {
+  return cart.value.items
+    .map(ci => {
+      const dish = menuItems.value.find(d => d.id === ci.dishId);
+      return dish ? { ...dish, quantity: ci.quantity } : null;
+    })
+    .filter((item): item is MenuItem & { quantity: number } => item !== null);
+});
+
+const subtotal = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+);
+
+async function loadData() {
+  selectedAddress.value = await getAddress(userID);
+  menuItems.value = await getMenuItem(storeID);
+  cart.value = await getShoppingCart(storeID);
 }
 
-function removeItem(itemId: number) {
-  items.value = items.value.filter(i => i.id !== itemId);
+// 增减菜品数量
+async function updateQuantity(dish: MenuItem, quantity: number) {
+  if (!cart.value.cartId) return;
+  if (quantity > 0) {
+    await addOrUpdateCartItem(cart.value.cartId, dish.id, quantity);
+  } else {
+    await removeCartItem(cart.value.cartId, dish.id);
+  }
+  await loadData();
 }
 
+// 移除菜品
+async function removeItem(dish: MenuItem) {
+  if (!cart.value.cartId) return;
+  await removeCartItem(cart.value.cartId, dish.id);
+  await loadData();
+}
+
+// 支付结算
 async function checkout() {
   if (!selectedAddress.value) {
     alert('请先选择收货地址');
     return;
   }
-  isProcessing.value = true;
+  if (cartItems.value.length === 0) {
+    alert('购物车为空');
+    return;
+  }
+
   await new Promise(resolve => setTimeout(resolve, 2000)); // 模拟支付
-  items.value = [];
-  selectedCoupon.value = null;
-  isProcessing.value = false;
   alert('支付成功！订单已提交。');
+
+  cart.value.items = [];
 }
 
 function goBack() {
-    router.back();
+  router.back();
 }
 
+onMounted(loadData);
 </script>

@@ -13,7 +13,7 @@
           <span class="text-gray-600">配送费</span>
           <span>¥{{ deliveryFee.toFixed(2) }}</span>
         </div>
-        <div v-if="discount > 0" class="flex justify-between text-sm">
+        <div class="flex justify-between text-sm">
           <span class="text-gray-600">优惠金额</span>
           <span class="text-[#F9771C] font-semibold">-¥{{ discount.toFixed(2) }}</span>
         </div>
@@ -28,10 +28,10 @@
 
       <button
         class="w-full bg-[#F9771C] hover:bg-[#F9771C]/90 text-white font-semibold py-3 text-lg rounded"
-        @click="onCheckout"
-        :disabled="isProcessing || items.length === 0"
+        @click="emit('checkout')"
+        :disabled="total === 0"
       >
-        {{ isProcessing ? '处理中...' : `立即支付 ¥${total.toFixed(2)}` }}
+        {{ `立即支付 ¥${total.toFixed(2)}` }}
       </button>
     </div>
   </div>
@@ -40,43 +40,19 @@
 <script setup lang="ts">
 import { computed, defineProps, defineEmits } from 'vue';
 
-interface Item {
-  id: string | number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface Coupon {
-  id: string | number;
-  name: string;
-  discount_amount: number;
-}
+import type { CouponInfo } from '@/api/user_coupon';
+import { getDeliveryTasks } from '@/api/user_store_info';
 
 const props = defineProps<{
-  items: Item[];
-  selectedCoupon?: Coupon | null;
-  deliveryFee?: number;
-  isProcessing?: boolean;
+  subtotal: number;
+  selectedCoupon?: CouponInfo | null;
 }>();
 
 const emit = defineEmits<{
   (e: 'checkout'): void;
 }>();
 
-const deliveryFee = props.deliveryFee ?? 5;
-
-const subtotal = computed(() =>
-  props.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-);
-
-const discount = computed(() => props.selectedCoupon?.discount_amount ?? 0);
-
-const total = computed(() => Math.max(0, subtotal.value + deliveryFee - discount.value));
-
-function onCheckout() {
-  emit('checkout');
-}
+const deliveryFee = getDeliveryTasks().deliveryFee;
+const discount = computed(() => props.selectedCoupon?.discountAmount ?? 0);
+const total = computed(() => Math.max(0, props.subtotal + deliveryFee - discount.value));
 </script>
-
-<style scoped></style>
