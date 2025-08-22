@@ -44,6 +44,7 @@ import ItemCart from '@/components/user/StoreDetail/OrderView/ItemCart.vue'
 // 路由
 const route = useRoute()
 const storeID = computed(() => route.params.id as string)
+const userID = 0;  // 待添加用户编号
 
 // 数据
 const storeInfo = ref<StoreInfo>()
@@ -92,7 +93,7 @@ async function decreaseQuantity(dish: MenuItem) {
 
 // 读取购物车
 async function loadCart() {
-  const data = await getShoppingCart(storeID.value)
+  const data = await getShoppingCart(storeID.value, userID)
   cart.value = data ?? { cartId: 0, totalPrice: 0, items: [] }
 }
 

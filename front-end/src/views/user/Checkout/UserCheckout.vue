@@ -105,7 +105,7 @@ const subtotal = computed(() =>
 async function loadData() {
   selectedAddress.value = await getAddress(userID);
   menuItems.value = await getMenuItem(storeID);
-  cart.value = await getShoppingCart(storeID);
+  cart.value = await getShoppingCart(storeID, userID);
 }
 
 // 增减菜品数量

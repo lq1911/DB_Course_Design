@@ -1,4 +1,6 @@
 import { getData } from '@/api/multiuse_function'
+import { postData } from '@/api/multiuse_function'
+import { deleteData } from '@/api/multiuse_function'
 
 export interface ShoppingCartItem {
     itemId: number;
@@ -32,24 +34,24 @@ export async function getMenuItem(StoreID: string) {
     });
 }
 
-export async function getShoppingCart(StoreID: string) {
+export async function getShoppingCart(StoreID: string, UserID: number) {
     return getData<ShoppingCart>("/api/store/shoppingcart", {
         params: {
-            storeId: StoreID
+            storeId: StoreID,
+            userId: UserID
         }
     });
 }
 
 export async function addOrUpdateCartItem(cartId: number, dishId: number, quantity: number) {
-  return getData('/api/cart/item', {
+  return postData<ShoppingCartItem>('/api/store/cart/change', {
     method: 'POST',
     data: { cartId, dishId, quantity }
   });
 }
 
-// 删除购物车项
 export async function removeCartItem(cartId: number, dishId: number) {
-  return getData('/api/cart/item', {
+  return deleteData<ShoppingCartItem>('/api/store/cart/remove', {
     method: 'DELETE',
     data: { cartId, dishId }
   });
