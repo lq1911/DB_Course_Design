@@ -43,7 +43,6 @@ const navItems = [
     { path: "/home/orders", label: "订单" },
 ];
 
-
 const goToPage = (path: string) => {
     router.push(path)
 };

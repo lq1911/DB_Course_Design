@@ -2,7 +2,7 @@ import { getData } from '@/api/multiuse_function'
 
 // 店家信息
 export interface StoreInfo {
-  id: string
+  id: number
   name: string
   image: string
   address: string
@@ -15,7 +15,7 @@ export interface StoreInfo {
 
 // 外送任务
 export interface DeliveryTask {
-  id: string
+  id: number
   deliveryTime: number
   deliveryFee: number
 }
