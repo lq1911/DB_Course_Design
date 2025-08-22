@@ -108,6 +108,7 @@
 | storeName    | string      | 店铺名称                                       |
 | dishImage    | string[]    | 已购商品图片列表，每个元素为商品图片 URL       |
 | totalAmount  | number      | 订单的总金额        |
+| orderStatus  | number      | 订单的状态(待数据库添加)        |
 
 - 接口地址: `GET /api/user/home/orders`
 
