@@ -15,10 +15,12 @@
       </div>
       <div class="p-4">
         <div v-if="selectedCoupon" class="flex items-center justify-between">
-          <div>
-            <span class="font-semibold text-gray-900">{{ selectedCoupon.name }}</span>
-            <p class="text-sm text-[#F9771C] font-semibold">
-              -¥{{ selectedCoupon.discount_amount.toFixed(2) }}
+          <div class="flex-1">
+            <p class="text-[#F9771C] font-bold text-lg mb-1">
+              ¥{{ selectedCoupon.discountAmount.toFixed(2) }}
+            </p>
+            <p class="text-xs text-gray-500">
+              满¥{{ selectedCoupon.minimumSpend.toFixed(2) }}可用 · 有效期至 {{ formatDate(selectedCoupon.validTo) }}
             </p>
           </div>
           <span class="px-2 py-0.5 text-[#F9771C] border border-[#F9771C] rounded text-xs">
@@ -29,9 +31,6 @@
           <span class="text-gray-600">
             {{ availableCoupons.length }} 张可用
           </span>
-          <p v-if="bestCoupon" class="text-sm text-[#F9771C]">
-            最高可省 ¥{{ bestCoupon.discount_amount.toFixed(2) }}
-          </p>
         </div>
       </div>
     </div>
@@ -40,10 +39,10 @@
     <transition name="fade">
       <div
         v-if="showSelector"
-        class="fixed inset-0 bg-black/50 z-50 flex items-end justify-center"
+        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
       >
         <div
-          class="w-full max-w-md bg-white rounded-t-2xl max-h-[80vh] overflow-hidden"
+          class="w-full max-w-md bg-white rounded-2xl max-h-[80vh] overflow-hidden"
         >
           <div class="p-4 border-b flex justify-between items-center">
             <h3 class="text-lg font-semibold">选择优惠券</h3>
@@ -66,45 +65,42 @@
             <!-- 可用优惠券 -->
             <div
               v-for="coupon in availableCoupons"
-              :key="coupon.id"
+              :key="coupon.couponID"
               class="p-3 border rounded-lg cursor-pointer transition-colors"
-              :class="selectedCoupon?.id === coupon.id ? 'border-[#F9771C] bg-[#F9771C]/5' : 'border-gray-200 hover:bg-gray-50'"
+              :class="selectedCoupon?.couponID === coupon.couponID ? 'border-[#F9771C] bg-[#F9771C]/5' : 'border-gray-200 hover:bg-gray-50'"
               @click="selectCoupon(coupon)"
             >
               <div class="flex items-center justify-between">
                 <div class="flex-1">
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="font-semibold">{{ coupon.name }}</span>
-                    <span class="text-xs px-1 border rounded">{{ coupon.type }}</span>
-                  </div>
-                  <p class="text-[#F9771C] font-bold text-lg mb-1">¥{{ coupon.discount_amount.toFixed(2) }}</p>
+                  <p class="text-[#F9771C] font-bold text-lg mb-1">
+                    ¥{{ coupon.discountAmount.toFixed(2) }}
+                  </p>
                   <p class="text-xs text-gray-500">
-                    满¥{{ coupon.min_amount.toFixed(2) }}可用 · 有效期至 {{ formatDate(coupon.expiry_date) }}
+                    满¥{{ coupon.minimumSpend.toFixed(2) }}可用 · 有效期至 {{ formatDate(coupon.validTo) }}
                   </p>
                 </div>
-                <i v-if="selectedCoupon?.id === coupon.id" class="fas fa-check text-[#F9771C]"></i>
+                <i v-if="selectedCoupon?.couponID === coupon.couponID" class="fas fa-check text-[#F9771C]"></i>
               </div>
             </div>
 
             <!-- 不可用优惠券 -->
             <div
               v-for="coupon in unavailableCoupons"
-              :key="coupon.id"
+              :key="coupon.couponID"
               class="p-3 border border-gray-200 rounded-lg bg-gray-50 opacity-60"
             >
               <div class="flex items-center justify-between">
                 <div class="flex-1">
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="font-semibold">{{ coupon.name }}</span>
-                    <span class="text-xs px-1 border rounded">{{ coupon.type }}</span>
-                  </div>
-                  <p class="text-gray-500 font-bold text-lg mb-1">¥{{ coupon.discount_amount.toFixed(2) }}</p>
+                  <p class="text-gray-500 font-bold text-lg mb-1">
+                    ¥{{ coupon.discountAmount.toFixed(2) }}
+                  </p>
                   <p class="text-xs text-gray-400">
-                    还差¥{{ (coupon.min_amount - totalAmount).toFixed(2) }}可使用
+                    还差¥{{ (coupon.minimumSpend - totalAmount).toFixed(2) }}可使用
                   </p>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -114,62 +110,42 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, defineProps, defineEmits } from 'vue';
+import { CouponInfo, getCouponInfo } from '@/api/user_coupon';
 
-interface Coupon {
-  id: number;
-  name: string;
-  type: string;
-  discount_amount: number;
-  min_amount: number;
-  expiry_date: string;
-  is_used: boolean;
-}
-
-const selectedCoupon = ref({
-  id: 1,
-  name: '新人满减券',
-  type: '满减',
-  discount_amount: 5,
-  min_amount: 20,
-  expiry_date: '2025-12-31',
-  is_used: false
-});
+const showSelector = ref(false);
+const userID = 0;  // TODO: 替换成真实用户ID
 
 const props = defineProps<{
-//   selectedCoupon: Coupon | null;
   totalAmount: number;
+  selectedCoupon: CouponInfo | null;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:selectedCoupon', coupon: Coupon | null): void;
+  (e: 'update:selectedCoupon', coupon: CouponInfo | null): void;
 }>();
 
-const coupons = ref<Coupon[]>([]);
-const showSelector = ref(false);
+const coupons = ref<CouponInfo[]>([]);
 
-// 模拟获取优惠券
-onMounted(() => {
-  coupons.value = [
-    { id: 1, name: '满100减20', type: '满减', discount_amount: 20, min_amount: 100, expiry_date: '2025-12-31', is_used: false },
-    { id: 2, name: '满200减50', type: '满减', discount_amount: 50, min_amount: 200, expiry_date: '2025-12-31', is_used: false },
+onMounted(async () => {
+  // coupons.value = await getCouponInfo(userID);
+});
+
+// 可用优惠券，选中的放最前面
+const availableCoupons = computed(() => {
+  const list = coupons.value.filter(c => props.totalAmount >= c.minimumSpend);
+  if (!props.selectedCoupon) return list;
+  return [
+    props.selectedCoupon,
+    ...list.filter(c => c.couponID !== props.selectedCoupon?.couponID)
   ];
 });
 
-const availableCoupons = computed(() =>
-  coupons.value.filter(c => !c.is_used && props.totalAmount >= c.min_amount)
-);
-
+// 不可用优惠券
 const unavailableCoupons = computed(() =>
-  coupons.value.filter(c => props.totalAmount < c.min_amount)
+  coupons.value.filter(c => props.totalAmount < c.minimumSpend)
 );
 
-const bestCoupon = computed(() => {
-  return availableCoupons.value.reduce((best, current) =>
-    !best || current.discount_amount > best.discount_amount ? current : best, null as Coupon | null
-  );
-});
-
-function selectCoupon(coupon: Coupon | null) {
+function selectCoupon(coupon: CouponInfo | null) {
   emit('update:selectedCoupon', coupon);
   showSelector.value = false;
 }
@@ -179,14 +155,3 @@ function formatDate(dateStr: string) {
   return `${date.getMonth() + 1}月${date.getDate()}日`;
 }
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
