@@ -40,7 +40,14 @@
 
 | 字段名   |  类型  | 说明   |
 | -------- | ----- | ----- |
-| id | number |店铺编号 |
+| recomStores | showStore[] | 推荐商店数组 |
+
+- 以下为每个元素`showStore`的内容
+
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| id | number | 店铺编号 |
+| image | string | 店铺头像 |
 | averageRating | number | 店铺均分 |
 | name | string | 店铺名字 |
 | monthlySales | number | 店铺月销售量 |
@@ -51,7 +58,7 @@
 
 - 用来获得搜索商家的信息
 
-- **算法:** 根据前端输入的信息，进行匹配，返回所有相关的店铺以及美食，分别返回两组数据
+- **算法:** 根据前端输入的信息，进行匹配，返回所有相关的店铺
 
 - 输入表单说明
 
@@ -65,10 +72,17 @@
 
 | 字段名   |  类型  | 说明   |
 | -------- | ----- | ----- |
+| searchStores | showStore[] | 商店数组 |
+
+- 以下为每个元素`showStore`的内容
+
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| id | number | 店铺编号 |
+| image | string | 店铺图片 |
 | averageRating | number | 店铺均分 |
 | name | string | 店铺名字 |
 | monthlySales | number | 店铺月销售量 |
-| storeAddress | string | 店铺地址 |
 
 - 接口地址: `GET /api/user/home/search`
 

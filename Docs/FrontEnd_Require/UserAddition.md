@@ -41,3 +41,25 @@
 | address      | string      | 收货地址       |
 
 - 接口地址: `GET /api/user/profile/address`
+
+**3. 所有商店接口**
+
+- 用来获得所有商店信息
+
+- 获得信息说明
+
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| allStores | showStore[] | 商店数组 |
+
+- 以下为每个元素`showStore`的内容
+
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| id | number | 店铺编号 |
+| image | string | 店铺图片 |
+| averageRating | number | 店铺均分 |
+| name | string | 店铺名字 |
+| monthlySales | number | 店铺月销售量 |
+
+- 接口地址: `GET /api/user/home/stores`
