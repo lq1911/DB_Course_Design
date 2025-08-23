@@ -22,22 +22,22 @@ public class UserInStoreService : IUserInStoreService
     /// </summary>
     public async Task<StoreResponseDto?> GetStoreInfoAsync(StoreRequestDto request)
     {
-        var store = await _storeRepository.GetByIdAsync(request.StoreID);
+        var store = await _storeRepository.GetByIdAsync(request.StoreId);
 
         if (store == null) return null;
 
         return new StoreResponseDto
         {
-            StoreID = store.StoreID,
-            StoreName = store.StoreName,
-            StoreImage = "", // TODO: 店铺图片字段
-            StoreAddress = store.StoreAddress,
+            Id = store.StoreID,
+            Name = store.StoreName,
+            Image = "", // TODO: 店铺图片字段
+            Address = store.StoreAddress,
             OpenTime = store.OpenTime,
             CloseTime = store.CloseTime,
-            AverageRating = store.AverageRating,
+            Rating = store.AverageRating,
             MonthlySales = store.MonthlySales,
-            StoreDiscription = store.StoreFeatures,
-            StoreCreationTime = store.StoreCreationTime
+            Discription = store.StoreFeatures,
+            CreationTime = store.StoreCreationTime
         };
     }
 
@@ -46,7 +46,7 @@ public class UserInStoreService : IUserInStoreService
     /// </summary>
     public async Task<List<MenuResponseDto>> GetMenuAsync(MenuRequestDto request)
     {
-        var store = await _storeRepository.GetByIdAsync(request.StoreID);
+        var store = await _storeRepository.GetByIdAsync(request.StoreId);
 
         if (store == null || store.Menus == null) return new List<MenuResponseDto>();
 
@@ -57,12 +57,12 @@ public class UserInStoreService : IUserInStoreService
 
         return dishes.Select(d => new MenuResponseDto
         {
-            DishID = d.DishID,
-            DishCategoryID = 0, // 目前 Dish 没有分类字段，可以扩展
-            DishName = d.DishName,
+            Id = d.DishID,
+            CategoryId = 0, // 目前 Dish 没有分类字段，可以扩展
+            Name = d.DishName,
             Description = d.Description,
             Price = d.Price,
-            Dishimage = "", // 等待菜品图片字段添加
+            Image = "", // 等待菜品图片字段添加
             IsSoldOut = d.IsSoldOut
         }).ToList();
     }
@@ -78,13 +78,13 @@ public class UserInStoreService : IUserInStoreService
 
         return comments.Select(c => new CommentResponseDto
         {
-            CommentID = c.CommentID,
+            Id = c.CommentID,
             Username = c.Commenter?.User?.Username ?? "匿名用户",
             Rating = c.Rating,
-            PostedAt = c.PostedAt,
+            Date = c.PostedAt,
             Content = c.Content,
             Avatar = c.Commenter?.User?.Avatar ?? "/images/user/default.png",
-            CommentImage = Array.Empty<string>() // 目前没图片表，可以后续扩展
+            Images = Array.Empty<string>() // 目前没图片表，可以后续扩展
         }).ToList();
     }
 
@@ -96,14 +96,16 @@ public class UserInStoreService : IUserInStoreService
         var comments = (await _commentRepository.GetAllAsync())
             .Where(c => c.StoreID == storeId)
             .Select(c => c.Rating);
-            
-        int good = comments.Count(r => r >= 4);
+
+        int perfect = comments.Count(r => r == 5);
+        int good = comments.Count(r => r == 4 );
         int normal = comments.Count(r => r == 3);
-        int bad = comments.Count(r => r <= 2);
+        int bad = comments.Count(r => r == 2);
+        int awful = comments.Count(r => r == 1);
 
         return new CommentStateDto
         {
-            Status = new List<int> { good, normal, bad }
+            Status = new List<int> { perfect, good, normal, bad, awful}
         };
     }
 }

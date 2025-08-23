@@ -21,7 +21,7 @@ namespace BackEnd.Controllers
         [HttpGet("storeInfo")]
         public async Task<ActionResult<StoreResponseDto>> GetStoreInfo([FromQuery] StoreRequestDto request)
         {
-            if (request.StoreID <= 0)
+            if (request.StoreId <= 0)
                 return BadRequest(new
                 {
                     code = 400,
@@ -42,7 +42,7 @@ namespace BackEnd.Controllers
         [HttpGet("dish")]
         public async Task<ActionResult<List<MenuResponseDto>>> GetMenu([FromQuery] MenuRequestDto request)
         {
-            if (request.StoreID <= 0 || request.UserID <= 0)
+            if (request.StoreId <= 0 || request.UserId <= 0)
                 return BadRequest("参数无效");
 
             var result = await _userInStoreService.GetMenuAsync(request);

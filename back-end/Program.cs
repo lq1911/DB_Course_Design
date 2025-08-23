@@ -50,10 +50,24 @@ builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IStoreViolationPenaltyRepository, StoreViolationPenaltyRepository>();
 builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 
 // 注册 Service 层
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+
+
+// 添加 CORS 服务
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:8080") // Vue 前端地址
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -63,6 +77,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// 使用 CORS
+app.UseCors("AllowVueApp");
 
 app.UseHttpsRedirection();
 

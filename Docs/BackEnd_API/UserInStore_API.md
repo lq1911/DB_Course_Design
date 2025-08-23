@@ -41,16 +41,16 @@
 |--------|------|----------|------|
 | `code` | int | 是 | 状态码 |
 | `message` | string | 是 | 接口返回说明信息 |
-| `storeId` | int | 店铺编号  |
-| `storeName` | string | 店铺名称 |
-| `storeImage` | string | 店铺封面图片 URL |
-| `storeAddress` | string | 店铺地址 |
-| `openTime` | string || 开店时间 |
-| `closeTime`| string || 打烊时间 |
-| `averageRating` | decimal(10, 2) | 店铺评分 |
-| `monthlySales`  | int | 店铺月销售量 |
-| `storeDiscription` | string | 店铺描述 |
-| `createTime` | DateTime | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
+| `Id` | int | 店铺编号  |
+| `Name` | string | 店铺名称 |
+| `Image` | string | 店铺封面图片 URL |
+| `Address` | string | 店铺地址 |
+| `OpenTime` | string || 开店时间 |
+| `CloseTime`| string || 打烊时间 |
+| `Rating` | decimal(10, 2) | 店铺评分 |
+| `MonthlySales`  | int | 店铺月销售量 |
+| `Discription` | string | 店铺描述 |
+| `CreateTime` | DateTime | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
 
 ## 2. 菜单接口
 - **接口名称**: dish
@@ -63,21 +63,21 @@
 ```json
 [
   {
-    "dishId": 101,
-    "dishCategoryId": 0,
-    "dishName": "番茄牛腩锅底",
+    "id": 101,
+    "categoryId": 0,
+    "name": "番茄牛腩锅底",
     "description": "浓郁番茄汤，搭配牛腩",
     "price": 88.00,
-    "dishimage": "/images/dish/101.png",
+    "image": "/images/dish/101.png",
     "isSoldOut": false
   },
   {
-    "dishId": 102,
-    "dishCategoryId": 0,
-    "dishName": "毛肚",
+    "Id": 102,
+    "categoryId": 0,
+    "name": "毛肚",
     "description": "新鲜毛肚，口感脆爽",
     "price": 36.00,
-    "dishimage": "/images/dish/102.png",
+    "image": "/images/dish/102.png",
     "isSoldOut": false
   }
 ]
@@ -109,22 +109,22 @@
 {
   "comments": [
     {
-      "commentId": 201,
+      "id": 201,
       "username": "小明",
       "rating": 5,
-      "postedAt": "2023-11-10T18:23:00",
+      "date": "2023-11-10T18:23:00",
       "content": "味道很棒，服务也很好！",
       "avatar": "/images/user/1.png",
-      "commentImage": []
+      "images": []
     },
     {
-      "commentId": 202,
+      "id": 202,
       "username": "小红",
       "rating": 3,
-      "postedAt": "2023-11-08T12:00:00",
+      "date": "2023-11-08T12:00:00",
       "content": "一般般，等位时间太长",
       "avatar": "/images/user/2.png",
-      "commentImage": []
+      "images": []
     }
   ]
 }
@@ -135,16 +135,25 @@
   "message": "店铺编号无效"
 }
 ```
-- 无返回结果
-```json
-
-```
 
 ### 响应说明
 | 参数名 | 类型 | 是否必填 | 说明 |
 |--------|------|----------|------|
 | `code` | int | 是 | 状态码 |
 | `message` | string | 是 | 接口返回说明信息 |
+| `comments`  | Comment[]   | 评论列表，每个元素为 Comment 类型 |
+
+> 以下为上面评论数组中`Comment`对象的具体属性
+
+| 参数名  | 类型  | 是否必填 | 说明                          |
+| -------- | ----------- | ----------------------------- |
+| `id`       | int      | 评论编号                      |
+| `username` | string      | 评论用户昵称                  |
+| `rating`   | int      | 评分（Range 1-5）                |
+| `date`     | string      | 评论日期  |
+| `content`  | string      | 评论内容                      |
+| `avatar`   | string      | 用户头像 URL                  |
+| `images`   | string[]    | 评论附带图片列表              |
 
 
 
@@ -158,7 +167,7 @@
 - 成功
 ```json
 {
-  "status": [20, 5, 3]
+  "status": [10, 20, 5, 3, 1]
 }
 ```
 - 输入有误
@@ -173,3 +182,6 @@
 |--------|------|----------|------|
 | `code` | int | 是 | 状态码 |
 | `message` | string | 是 | 接口返回说明信息 |
+| 字段名   | 类型        | 说明                          |
+| -------- | ----------- | ----------------------------- |
+| `status`   | number[]    | 各类评论数量状态数组，长度为5 |

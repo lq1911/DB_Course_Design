@@ -11,24 +11,24 @@ namespace BackEnd.Dtos.UserInStore
     {
 
         [Required]
-        public int StoreID;
+        public int StoreId;
     }
 
     public class StoreResponseDto
     {
         [Required]
-        public int StoreID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string StoreName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         [Required]
-        public string StoreImage { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         [Required]
         [StringLength(100)]
-        public string StoreAddress { get; set; } = null!;
+        public string Address { get; set; } = null!;
 
         // 开业时间
         [Required]
@@ -38,38 +38,38 @@ namespace BackEnd.Dtos.UserInStore
         public TimeSpan CloseTime { get; set; } = TimeSpan.FromHours(22); // 22:00
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal AverageRating { get; set; } = 0.00m;
+        public decimal Rating { get; set; } = 0.00m;
 
         [Required]
         public int MonthlySales { get; set; }
 
         [Required]
         [StringLength(500)]
-        public string StoreDiscription { get; set; } = null!;
+        public string Discription { get; set; } = null!;
 
         [Required]
-        public DateTime StoreCreationTime { get; set; }
+        public DateTime CreationTime { get; set; }
     }
 
     public class MenuRequestDto
     {
         [Required]
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
         [Required]
-        public int StoreID { get; set; }
+        public int StoreId { get; set; }
     }
 
     public class MenuResponseDto
     {
         [Required]
-        public int DishID { get; set; }
+        public int Id { get; set; }
 
-        public int DishCategoryID { get; set; }
+        public int CategoryId { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string DishName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         [Required]
         [StringLength(500)]
@@ -80,7 +80,7 @@ namespace BackEnd.Dtos.UserInStore
         public decimal Price { get; set; }
 
         [Required]
-        public string Dishimage { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         [Required]
         public DishIsSoldOut IsSoldOut { get; set; } = DishIsSoldOut.IsSoldOut;
@@ -89,7 +89,7 @@ namespace BackEnd.Dtos.UserInStore
     public class CommentResponseDto
     {
         [Required]
-        public int CommentID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Username { get; set; } = null!;
@@ -99,7 +99,7 @@ namespace BackEnd.Dtos.UserInStore
         public int Rating { get; set; }
 
         [Required]
-        public DateTime PostedAt { get; set; }
+        public DateTime Date { get; set; }
 
         [Required]
         [StringLength(500)]
@@ -108,7 +108,7 @@ namespace BackEnd.Dtos.UserInStore
         [MaxLength(255)]
         public string? Avatar { get; set; }
 
-        public string[] CommentImage { get; set; } = Array.Empty<string>();
+        public string[] Images { get; set; } = Array.Empty<string>();
     }
 
     public class CommentStateDto
