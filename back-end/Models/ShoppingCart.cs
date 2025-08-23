@@ -19,9 +19,12 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal TotalPrice { get; set; } = 0.00m;
 
-        public int? OrderID { get; set; }
-        [ForeignKey("OrderID")]
         public FoodOrder? Order { get; set; }
+
+        [Required]
+        public int CustomerID { get; set; }
+        [ForeignKey("CustomerID")]
+        public Customer Customer { get; set; } = null!;
 
         // 一对多导航属性
         // 购物车项

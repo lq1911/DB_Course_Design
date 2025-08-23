@@ -7,6 +7,6 @@ namespace BackEnd.DTOs.Courier
     {
         // 使用 [Required] 特性来确保前端必须提供这个值
         [Required(ErrorMessage = "isOnline 字段是必需的。")]
-        public bool? IsOnline { get; set; }
+        public required bool IsOnline { get; set; }
     }
 }

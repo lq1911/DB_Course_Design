@@ -13,19 +13,17 @@ namespace BackEnd.Data.SetConfigs
             builder.HasKey(fo => fo.OrderID);
             builder.Property(fo => fo.OrderID).HasColumnName("ORDERID").ValueGeneratedOnAdd();
 
-            builder.Property(fo => fo.PaymentTime).HasColumnName("PAYMENTTIME").IsRequired();
+            builder.Property(fo => fo.OrderTime).HasColumnName("ORDERTIME").IsRequired();
+
+            builder.Property(fo => fo.PaymentTime).HasColumnName("PAYMENTTIME").IsRequired(false);
 
             builder.Property(fo => fo.Remarks).HasColumnName("REMARKS").HasMaxLength(255);
 
-            builder.Property(fo => fo.Rating).HasColumnName("RATING").HasColumnType("decimal(2,1)");
-
-            builder.Property(fo => fo.RatingComment).HasColumnName("RATINGCOMMENT").HasMaxLength(500);
-
-            builder.Property(fo => fo.RatingTime).HasColumnName("RATINGTIME");
+            builder.Property(fo => fo.FoodOrderState).HasColumnName("FOODORDERSTATE").IsRequired().HasConversion<string>().HasMaxLength(20);
 
             builder.Property(fo => fo.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
 
-            builder.Property(fo => fo.CartID).HasColumnName("CARTID").IsRequired();
+            builder.Property(fo => fo.CartID).HasColumnName("CARTID").IsRequired(false);
 
             builder.Property(fo => fo.StoreID).HasColumnName("STOREID").IsRequired();
 
@@ -44,7 +42,7 @@ namespace BackEnd.Data.SetConfigs
             builder.HasOne(e => e.Cart)
                    .WithOne(c => c.Order)
                    .HasForeignKey<FoodOrder>(e => e.CartID)
-                   .OnDelete(DeleteBehavior.Restrict); // 禁止删除已生成订单的购物车
+                   .OnDelete(DeleteBehavior.SetNull); // 购物车删除时，订单的 CartID 设为 null
 
             // 关系三: FoodOrder -> Store (多对一)
             builder.HasOne(e => e.Store)
@@ -63,6 +61,12 @@ namespace BackEnd.Data.SetConfigs
                    .WithOne(a => a.Order)
                    .HasForeignKey(a => a.OrderID)
                    .OnDelete(DeleteBehavior.Cascade); // 当订单被删除时，其所有售后申请都应被级联删除
+
+            // 关系六: FoodOrder -> Comment (一对多)
+            builder.HasMany(fo => fo.Comments)
+                   .WithOne(c => c.FoodOrder)
+                   .HasForeignKey(c => c.FoodOrderID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

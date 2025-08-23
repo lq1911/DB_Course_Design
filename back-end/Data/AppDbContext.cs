@@ -65,6 +65,7 @@ namespace BackEnd.Data
             modelBuilder.ApplyConfiguration(new ShoppingCartItemConfig());
             modelBuilder.ApplyConfiguration(new StoreConfig());
             modelBuilder.ApplyConfiguration(new StoreViolationPenaltyConfig());
+            modelBuilder.ApplyConfiguration(new Supervise_Config());
             modelBuilder.ApplyConfiguration(new UserConfig());
 
             base.OnModelCreating(modelBuilder); // 调用基类方法
