@@ -1,23 +1,28 @@
 using BackEnd.Dtos.UserInStore;
-using BackEnd.Data;
+using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 public class UserInStoreService : IUserInStoreService
 {
-    private readonly AppDbContext _dbContext;
+    private readonly IStoreRepository _storeRepository;
+    private readonly ICommentRepository _commentRepository;
+    private readonly IDishRepository _dishRepository;
 
-    public UserInStoreService(AppDbContext dbContext)
+    public UserInStoreService(
+        IStoreRepository storeRepository,
+        ICommentRepository commentRepository,
+        IDishRepository dishRepository)
     {
-        _dbContext = dbContext;
+        _storeRepository = storeRepository;
+        _commentRepository = commentRepository;
+        _dishRepository = dishRepository;
     }
-
     /// <summary>
     /// 获取店铺详情
     /// </summary>
     public async Task<StoreResponseDto?> GetStoreInfoAsync(StoreRequestDto request)
     {
-        var store = await _dbContext.Stores
-            .FirstOrDefaultAsync(s => s.StoreID == request.StoreID);
+        var store = await _storeRepository.GetByIdAsync(request.StoreID);
 
         if (store == null) return null;
 
@@ -25,7 +30,7 @@ public class UserInStoreService : IUserInStoreService
         {
             StoreID = store.StoreID,
             StoreName = store.StoreName,
-            StoreImage = "", // 等待店铺图片字段添加
+            StoreImage = "", // TODO: 店铺图片字段
             StoreAddress = store.StoreAddress,
             OpenTime = store.OpenTime,
             CloseTime = store.CloseTime,
@@ -41,11 +46,7 @@ public class UserInStoreService : IUserInStoreService
     /// </summary>
     public async Task<List<MenuResponseDto>> GetMenuAsync(MenuRequestDto request)
     {
-        var store = await _dbContext.Stores
-            .Include(s => s.Menus!)
-                .ThenInclude(m => m.MenuDishes)
-                    .ThenInclude(md => md.Dish)
-            .FirstOrDefaultAsync(s => s.StoreID == request.StoreID);
+        var store = await _storeRepository.GetByIdAsync(request.StoreID);
 
         if (store == null || store.Menus == null) return new List<MenuResponseDto>();
 
@@ -71,12 +72,9 @@ public class UserInStoreService : IUserInStoreService
     /// </summary>
     public async Task<List<CommentResponseDto>> GetCommentListAsync(int storeId)
     {
-        var comments = await _dbContext.Comments
+        var comments = (await _commentRepository.GetAllAsync())
             .Where(c => c.StoreID == storeId)
-            .Include(c => c.Commenter)
-                .ThenInclude(cu => cu.User)
-            .OrderByDescending(c => c.PostedAt)
-            .ToListAsync();
+            .OrderByDescending(c => c.PostedAt);
 
         return comments.Select(c => new CommentResponseDto
         {
@@ -95,11 +93,10 @@ public class UserInStoreService : IUserInStoreService
     /// </summary>
     public async Task<CommentStateDto> GetCommentStateAsync(int storeId)
     {
-        var comments = await _dbContext.Comments
+        var comments = (await _commentRepository.GetAllAsync())
             .Where(c => c.StoreID == storeId)
-            .Select(c => c.Rating)
-            .ToListAsync();
-
+            .Select(c => c.Rating);
+            
         int good = comments.Count(r => r >= 4);
         int normal = comments.Count(r => r == 3);
         int bad = comments.Count(r => r <= 2);

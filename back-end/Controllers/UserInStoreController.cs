@@ -22,7 +22,11 @@ namespace BackEnd.Controllers
         public async Task<ActionResult<StoreResponseDto>> GetStoreInfo([FromQuery] StoreRequestDto request)
         {
             if (request.StoreID <= 0)
-                return BadRequest("店铺编号无效");
+                return BadRequest(new
+                {
+                    code = 400,
+                    message = "店铺编号无效",
+                });
 
             var result = await _userInStoreService.GetStoreInfoAsync(request);
 
