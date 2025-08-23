@@ -109,7 +109,7 @@ namespace BackEnd.Dtos.UserHomepage
     public class UserInfoResponse
     {
         public string Username { get; set; }
-        public string PhoneNumber { get; set; }
+        public long PhoneNumber { get; set; }
         public string Avatar { get; set; }
     }
 
