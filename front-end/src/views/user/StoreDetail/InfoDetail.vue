@@ -1,5 +1,10 @@
 <template>
-  <StoreIntro :storeInfo="storeInfo" />
+    <StoreIntro v-if="storeInfo" :storeInfo="storeInfo" />
+
+    <!-- 加载中 -->
+    <div v-else class="flex justify-center items-center h-64">
+        <i class="fas fa-spinner fa-spin text-3xl text-[#F9771C]"></i>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -13,7 +18,7 @@ import StoreIntro from '@/components/user/StoreDetail/InfoView/StoreInfo.vue'
 
 const route = useRoute();
 const storeID = computed(() => route.params.id as string);
-const storeInfo = ref<StoreInfo | null>(null);
+const storeInfo = ref<StoreInfo>();
 
 onMounted(async () => {
     storeInfo.value = await getStoreInfo(storeID.value);
