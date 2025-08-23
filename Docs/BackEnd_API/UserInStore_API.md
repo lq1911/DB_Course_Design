@@ -47,10 +47,10 @@
 | `storeAddress` | string | 店铺地址 |
 | `openTime` | string || 开店时间 |
 | `closeTime`| string || 打烊时间 |
-| `averageRating`        | number      | 店铺评分                        |
-| `monthlySales`  | number      | 店铺月销售量                     |
-| `storeDiscription`   | string      | 店铺描述                        |
-| `createTime`    | string      | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
+| `averageRating` | decimal(10, 2) | 店铺评分 |
+| `monthlySales`  | int | 店铺月销售量 |
+| `storeDiscription` | string | 店铺描述 |
+| `createTime` | DateTime | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
 
 ## 2. 菜单接口
 - **接口名称**: dish
