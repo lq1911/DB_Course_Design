@@ -7,11 +7,14 @@ namespace BackEnd.Dtos.UserHomepage
     public class HomeRecmDto
     {
         [Key]
-        public int StoreID { get; set; }
+        public int Id { get; set; }
+
+        [Required]
+        public string Image { get; set; } = null!;
 
         [Required]
         [StringLength(50)]
-        public string StoreName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal AverageRating { get; set; } = 0.00m;
@@ -26,27 +29,30 @@ namespace BackEnd.Dtos.UserHomepage
         public int UserId { get; set; }
 
         [Required]
-        public Array UserAddress { get; set; } = null!;
+        public Array Address { get; set; } = null!;
 
         [Required]
-        public string SearchName { get; set; } = null!;
+        public string Keyword { get; set; } = null!;
     }
 
     public class HomeSearchGetDto
     {
+        [Required]
+        public int Id { get; set; }
+
+        [Required]
+        public string Image { get; set; } = null!;
+
         [Column(TypeName = "decimal(10,2)")]
         public decimal AverageRating { get; set; } = 0.00m;
 
         [Required]
         [StringLength(50)]
-        public string StoreName { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         [Required]
         public int MonthlySales { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string StoreAddress { get; set; } = null!;
     }
 
     public class UserIdDto
@@ -96,6 +102,7 @@ namespace BackEnd.Dtos.UserHomepage
 
         [Required]
         public string? StoreImage { get; set; } // Address of Image
+
         public List<DishDto> OrderedDishes { get; set; } = new List<DishDto>();
 
         // public TYPE OrderedFood { get; set; }
@@ -108,9 +115,9 @@ namespace BackEnd.Dtos.UserHomepage
     // 用户信息响应DTO
     public class UserInfoResponse
     {
-        public string Username { get; set; }
+        public string Name { get; set; }
         public long PhoneNumber { get; set; }
-        public string Avatar { get; set; }
+        public string Image { get; set; }
     }
 
     public class CouponDto

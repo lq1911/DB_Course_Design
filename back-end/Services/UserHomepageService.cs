@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using BackEnd.Dtos.UserHomepage;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
-using BackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 namespace BackEnd.Services
 {
@@ -54,8 +53,9 @@ namespace BackEnd.Services
                 .Take(4)
                 .Select(s => new HomeRecmDto
                 {
-                    StoreID = s.StoreID,
-                    StoreName = s.StoreName,
+                    Id = s.StoreID,
+                    // Image = s.StoreImage,
+                    Name = s.StoreName,
                     AverageRating = s.AverageRating,
                     MonthlySales = s.MonthlySales
                 });
@@ -70,13 +70,14 @@ namespace BackEnd.Services
             
              var stores = await _storeRepository.GetAllAsync();
             var storeResults = stores
-                .Where(s => s.StoreName.Contains(searchDto.SearchName))
+                .Where(s => s.StoreName.Contains(searchDto.Keyword))
                 .Select(s => new HomeSearchGetDto
                 {
+                    Id = s.StoreID,
+                    // Image = s.order.Store?.ImageUrl,
+                    Name = s.StoreName,
                     AverageRating = s.AverageRating,
-                    StoreName = s.StoreName,
-                    MonthlySales = s.MonthlySales,
-                    StoreAddress = s.StoreAddress
+                    MonthlySales = s.MonthlySales
                 })
                 .ToList();
 
@@ -86,16 +87,17 @@ namespace BackEnd.Services
             var menuDishes = await _menuDishRepository.GetAllAsync();
 
             var dishResults = dishes
-                .Where(d => d.DishName.Contains(searchDto.SearchName))
+                .Where(d => d.DishName.Contains(searchDto.Keyword))
                 .SelectMany(d => d.MenuDishes)          // Dish → Menu_Dish
                 .Select(md => md.Menu.Store)            // Menu_Dish → Menu → Store
                 .Distinct()                             // 避免重复
                 .Select(store => new HomeSearchGetDto
                 {
+                    Id = store.StoreID,
+                    // Image = store.StoreImage,
+                    Name = store.StoreName,
                     AverageRating = store.AverageRating,
-                    StoreName = store.StoreName,
-                    MonthlySales = store.MonthlySales,
-                    StoreAddress = store.StoreAddress
+                    MonthlySales = store.MonthlySales
                 })
                 .ToList();
 
@@ -135,9 +137,9 @@ namespace BackEnd.Services
 
             return new UserInfoResponse
             {
-                Username = user.Username,
+                Name = user.Username,
                 PhoneNumber = user.PhoneNumber,
-                Avatar = user.Avatar
+                Image = user.Avatar
             };
         }
 
@@ -145,10 +147,10 @@ namespace BackEnd.Services
         // 查询用户优惠券（带 CouponManager 信息）
         public async Task<IEnumerable<CouponDto>> GetUserCouponsAsync(UserIdDto userIdDto)
         {
-            var coupons = await _context.Coupons
-                .AsNoTracking()
+            var coupons = await _couponRepository.GetAllAsync();
+
+            var results = coupons
                 .Where(c => c.Customer.UserID == userIdDto.UserId)   // 过滤用户
-                .Include(c => c.CouponManager)                       // 关联 CouponManager
                 .Select(c => new CouponDto
                 {
                     CouponID = c.CouponID,
@@ -159,10 +161,9 @@ namespace BackEnd.Services
                     MinimumSpend = c.CouponManager.MinimumSpend,
                     DiscountAmount = c.CouponManager.DiscountAmount,
                     ValidTo = c.CouponManager.ValidTo
-                })
-                .ToListAsync();
+                });
 
-            return coupons;
+            return results;
         }
     }
 

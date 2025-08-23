@@ -66,9 +66,7 @@ namespace BackEnd.Controllers
 
             return Ok(new
                 {
-                    code = 200,
-                    message = "Search results retrieved successfully",
-                    data = new
+                    showStore = new
                     {
                         Stores = stores,
                         Dishes = dishes
@@ -119,15 +117,7 @@ namespace BackEnd.Controllers
                 return NotFound(new { code = 404, message = "User not found" });
             }
 
-            return Ok(new
-            {
-                code = 200,
-                message = "success",
-                data = new
-                {
-                    User = userInfo
-                }
-            });
+            return Ok(userInfo);
         }
         
         [HttpGet("couponInfo")]
@@ -152,12 +142,7 @@ namespace BackEnd.Controllers
                     message = "There's No Coupon For User.",
                 });
             }
-            return Ok(new
-            {
-                code = 200,
-                massage = "Coupons retrieved successfully",
-                data = coupons
-            });
+            return Ok(coupons);
         }
 
     }
