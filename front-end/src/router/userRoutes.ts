@@ -22,7 +22,14 @@ const userRoutes: Array<RouteRecordRaw> = [
     name: 'Order',
     component: UserOrderView,
     meta: { title: '订单' }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('@/views/administrator/AdminView.vue'),
+    meta: { title: '管理员' }
   }
+
 ]
 
 export default userRoutes;
