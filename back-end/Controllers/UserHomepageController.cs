@@ -65,13 +65,13 @@ namespace BackEnd.Controllers
             }
 
             return Ok(new
+            {
+                showStore = new
                 {
-                    showStore = new
-                    {
-                        Stores = stores,
-                        Dishes = dishes
-                    }
-                });
+                    Stores = stores,
+                    Dishes = dishes
+                }
+            });
         }
         // 输入：用户id
         // 输出：用户的历史订单
@@ -119,7 +119,7 @@ namespace BackEnd.Controllers
 
             return Ok(userInfo);
         }
-        
+
         [HttpGet("couponInfo")]
         public async Task<IActionResult> GetUserCoupons([FromQuery] UserIdDto userIdDto)
         {
@@ -143,6 +143,20 @@ namespace BackEnd.Controllers
                 });
             }
             return Ok(coupons);
+        }
+        [HttpGet("stores")]
+        public async Task<ActionResult<StoresResponseDto>> GetAllStores()
+        {
+            try
+            {
+                var stores = await _userHomepageService.GetAllStoresAsync();
+                return Ok(stores);
+            }
+            catch (Exception ex)
+            {
+                // 记录异常日志
+                return StatusCode(500, "获取商店信息时发生错误");
+            }
         }
 
     }

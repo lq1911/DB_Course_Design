@@ -23,7 +23,7 @@ namespace BackEnd.Repositories
                                  .Include(fo => fo.AfterSaleApplications)  // 售后申请
                                  .ToListAsync();
         }
-        public async Task<IEnumerable<FoodOrder>> GetAllAsync(int userId)
+        public async Task<IEnumerable<FoodOrder>> GetByUserIdAsync(int userId)
         {
             return await _context.FoodOrders
                                  .Where(fo => fo.CustomerID == userId)

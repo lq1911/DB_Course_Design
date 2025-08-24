@@ -6,6 +6,7 @@ using BackEnd.Dtos.UserHomepage;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using BackEnd.Models.Enums;
 namespace BackEnd.Services
 {
     public class UserHomepageService : IUserHomepageService
@@ -67,8 +68,8 @@ namespace BackEnd.Services
             SearchAsync(HomeSearchDto searchDto)
         {
             // 店铺搜索
-            
-             var stores = await _storeRepository.GetAllAsync();
+
+            var stores = await _storeRepository.GetAllAsync();
             var storeResults = stores
                 .Where(s => s.StoreName.Contains(searchDto.Keyword))
                 .Select(s => new HomeSearchGetDto
@@ -106,7 +107,7 @@ namespace BackEnd.Services
         public async Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId)
         {
             // 查询用户的所有订单，包含相关数据
-            var orders = await _foodOrderRepository.GetAllAsync(userId);
+            var orders = await _foodOrderRepository.GetByUserIdAsync(userId);
 
             // 转换为DTO
             var result = new HistoryOrderGetDto();
@@ -164,6 +165,24 @@ namespace BackEnd.Services
                 });
 
             return results;
+        }
+        public async Task<StoresResponseDto> GetAllStoresAsync()
+        {
+            // 获取所有运营中的店铺
+            var stores = await _storeRepository.GetAllAsync();
+            var operationalStores = stores
+                .Where(s => s.StoreState == StoreState.IsOperation)
+                .Select(s => new ShowStoreDto
+                {
+                    Id = s.StoreID,
+                    //Image = s.StoreImage ?? "",
+                    AverageRating = s.AverageRating,
+                    Name = s.StoreName,
+                    MonthlySales = s.MonthlySales
+                })
+                .ToList();
+
+            return new StoresResponseDto { AllStores = operationalStores };
         }
     }
 

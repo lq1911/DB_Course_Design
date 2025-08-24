@@ -18,6 +18,8 @@ namespace BackEnd.Services.Interfaces
         // 获取指定用户的优惠券信息
         Task<IEnumerable<CouponDto>> GetUserCouponsAsync(UserIdDto userIdDto);
 
+        Task<StoresResponseDto> GetAllStoresAsync();
+
     }
     
 }

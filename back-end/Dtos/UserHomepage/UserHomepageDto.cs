@@ -79,7 +79,7 @@ namespace BackEnd.Dtos.UserHomepage
         public int DishID { get; set; }
         public string DishName { get; set; } = null!;
         public decimal Price { get; set; }
-        
+
         //public string? DishImage { get; set; }
     }
     public class HistoryOrderDto
@@ -142,5 +142,17 @@ namespace BackEnd.Dtos.UserHomepage
 
         [Required]
         public DateTime ValidTo { get; set; }
+    }
+    public class ShowStoreDto
+    {
+        public int Id { get; set; }
+        public string Image { get; set; } = null!;
+        public decimal AverageRating { get; set; }
+        public string Name { get; set; } = null!;
+        public int MonthlySales { get; set; }
+    }
+     public class StoresResponseDto
+    {
+        public List<ShowStoreDto> AllStores { get; set; } = new List<ShowStoreDto>();
     }
 }
