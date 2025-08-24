@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<Menu> builder)
         {
-            builder.ToTable("MENU");
+            builder.ToTable("MENUS");
 
             builder.HasKey(m => m.MenuID);
 

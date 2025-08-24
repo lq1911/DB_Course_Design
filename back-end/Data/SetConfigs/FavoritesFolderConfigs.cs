@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<FavoritesFolder> builder)
         {
-            builder.ToTable("FAVORITESFOLDER");
+            builder.ToTable("FAVORITES_FOLDERS");
 
             builder.HasKey(ff => ff.FolderID);
 

@@ -29,10 +29,6 @@ namespace BackEnd.Data.EntityConfigs
                    .HasColumnName("ACCEPTTIME")
                    .IsRequired();
 
-            builder.Property(dt => dt.CourierLongitude).HasColumnName("COURIERLONGITUDE").HasColumnType("decimal(10,6)");
-
-            builder.Property(dt => dt.CourierLatitude).HasColumnName("COURIERLATITUDE").HasColumnType("decimal(10,6)");
-
             builder.Property(dt => dt.Status)
                   .HasColumnName("STATUS")
                   .IsRequired()

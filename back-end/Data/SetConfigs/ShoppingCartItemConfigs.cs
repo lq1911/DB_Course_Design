@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<ShoppingCartItem> builder)
         {
-            builder.ToTable("SHOPPINGCARTITEM");
+            builder.ToTable("SHOPPING_CART_ITEMS");
 
             // --- 主键和基础属性配置 ---
             builder.HasKey(sci => sci.ItemID);

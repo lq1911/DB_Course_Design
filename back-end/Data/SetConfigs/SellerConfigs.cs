@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<Seller> builder)
         {
-            builder.ToTable("SELLER");
+            builder.ToTable("SELLERS");
 
             builder.HasKey(s => s.UserID);
 

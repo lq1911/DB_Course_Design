@@ -20,12 +20,6 @@ namespace BackEnd.Models
         [Required]
         public DateTime EstimatedDeliveryTime { get; set; }
 
-        [Column(TypeName = "decimal(10,6)")]
-        public decimal? CourierLongitude { get; set; }
-
-        [Column(TypeName = "decimal(10,6)")]
-        public decimal? CourierLatitude { get; set; }
-
         // 发布任务时间
         [Required]
         public DateTime PublishTime { get; set; }

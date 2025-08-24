@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<Store> builder)
         {
-            builder.ToTable("STORE");
+            builder.ToTable("STORES");
 
             // --- 主键和基础属性配置 ---
             builder.HasKey(s => s.StoreID);

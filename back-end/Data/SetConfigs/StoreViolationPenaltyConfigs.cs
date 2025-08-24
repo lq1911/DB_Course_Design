@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<StoreViolationPenalty> builder)
         {
-            builder.ToTable("STOREVIOLATIONPENALTIE");
+            builder.ToTable("STORE_VIOLATION_PENALTIES");
 
             // --- 主键和基础属性配置 ---
             builder.HasKey(svp => svp.PenaltyID);

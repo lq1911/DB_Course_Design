@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<FoodOrder> builder)
         {
-            builder.ToTable("FOODORDER");
+            builder.ToTable("FOOD_ORDERS");
 
             builder.HasKey(fo => fo.OrderID);
             builder.Property(fo => fo.OrderID).HasColumnName("ORDERID").ValueGeneratedOnAdd();
