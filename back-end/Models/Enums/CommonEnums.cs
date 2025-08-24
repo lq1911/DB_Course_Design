@@ -47,10 +47,32 @@ namespace BackEnd.Models.Enums
         Banned = 2  // 封禁
     }
 
+    // 店铺种类
+    public enum StoreCategory
+    {
+        DeliciousFood = 0,
+        SuperMarket = 1,
+        GreenGrocery = 2
+    }
+
     // 商家状态
     public enum SellerState
     {
         Normal = 0,
         Banned = 1
+    }
+
+    public enum FoodOrderState
+    {
+        Pending = 0,
+        Preparing = 1,
+        Completed = 2
+    }
+
+    public enum CommentType
+    {
+        Comment = 0,
+        Store = 1,
+        FoodOrder = 2
     }
 }

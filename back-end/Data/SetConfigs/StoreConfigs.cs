@@ -32,6 +32,10 @@ namespace BackEnd.Data.SetConfigs
 
             builder.Property(s => s.StoreState).HasColumnName("STORESTATE").IsRequired().HasConversion<string>().HasMaxLength(20);
 
+            builder.Property(s => s.StoreCategory).HasColumnName("STORECATEGORY").IsRequired().HasConversion<string>().HasMaxLength(20);
+
+            builder.Property(s => s.StoreImage).HasColumnName("STOREIMAGE").HasMaxLength(500).IsRequired(false);
+
             // 忽略不映射到数据库的属性
             builder.Ignore(s => s.IsOpen);
             builder.Ignore(s => s.BusinessHoursDisplay);

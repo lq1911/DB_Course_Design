@@ -13,8 +13,9 @@
         <h1 class="text-5xl font-bold mb-4">新鲜美食 快速送达</h1>
         <p class="text-xl mb-8">精选优质商家，30 分钟内送达您的美食</p>
         <button
-          class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full text-lg font-medium transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-        >
+          class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors cursor-pointer whitespace-nowrap"
+          @click="goToPage('restaurants')"
+          >
           立即点餐
         </button>
       </div>
@@ -22,8 +23,13 @@
   </section>
 </template>
 
-<style scoped>
-.\!rounded-button {
-  border-radius: 8px;
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
+
+function goToPage(path: string) {
+  router.push(path);
 }
-</style>
+
+</script>

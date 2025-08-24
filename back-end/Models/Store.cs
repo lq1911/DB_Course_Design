@@ -1,6 +1,6 @@
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -63,6 +63,13 @@ namespace BackEnd.Models
         // 新增店铺状态
         [Required]
         public StoreState StoreState { get; set; } = StoreState.IsOperation;
+
+        // 店铺种类
+        [Required]
+        public StoreCategory StoreCategory { get; set; }
+
+        // 新增店铺图片
+        public string? StoreImage { get; set; }
 
         [Required]
         public int SellerID { get; set; }

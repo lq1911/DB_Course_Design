@@ -7,6 +7,10 @@ import StoreLayout from '@/views/user/StoreDetail/StoreLayout.vue'
 const inStoreRoutes: Array<RouteRecordRaw> = [
     {
         path: '/store/:id',
+        redirect: '/store/:id/order'
+    },
+    {
+        path: '/store/:id',
         component: StoreLayout,
         children: [
             {
@@ -23,7 +27,7 @@ const inStoreRoutes: Array<RouteRecordRaw> = [
                 path: 'info',
                 component: StoreInfo,
                 meta: {title: '商家信息'}
-            }
+            },
         ]
     },
 ];

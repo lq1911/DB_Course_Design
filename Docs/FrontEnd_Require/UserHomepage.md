@@ -38,35 +38,53 @@
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| store.ID | 店铺编号 |
-| store.AverageRating | 店铺均分 |
-| store.Name | 店铺名字 |
-| store. MonthlySales | 店铺月销售量 |
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| recomStores | showStore[] | 推荐商店数组 |
+
+- 以下为每个元素`showStore`的内容
+
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| id | number | 店铺编号 |
+| image | string | 店铺头像 |
+| averageRating | number | 店铺均分 |
+| name | string | 店铺名字 |
+| monthlySales | number | 店铺月销售量 |
+
+- 接口地址: `GET /api/user/home/recommend`
 
 **2. 搜索接口**
 
 - 用来获得搜索商家的信息
 
-- **算法:** 根据前端输入的信息，进行匹配，返回所有相关的店铺以及美食，分别返回两组数据
+- **算法:** 根据前端输入的信息，进行匹配，返回所有相关的店铺
 
 - 输入表单说明
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-| address | array? | 是 | 消费者地址 |
-| SearchName | string | 是 | 输入搜索信息 |
+| userId | int | 是 | 消费者编号 |
+| address | string | 是 | 消费者地址 |
+| keyword | string | 是 | 输入搜索信息 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| store.AverageRating | 店铺均分 |
-| store.Name | 店铺名字 |
-| store.MonthlySales | 店铺月销售量 |
-| store.StoreAddress | 店铺地址 |
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| searchStores | showStore[] | 商店数组 |
+
+- 以下为每个元素`showStore`的内容
+
+| 字段名   |  类型  | 说明   |
+| -------- | ----- | ----- |
+| id | number | 店铺编号 |
+| image | string | 店铺图片 |
+| averageRating | number | 店铺均分 |
+| name | string | 店铺名字 |
+| monthlySales | number | 店铺月销售量 |
+
+- 接口地址: `GET /api/user/home/search`
 
 **3. 订单接口**
 
@@ -76,21 +94,23 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
-
+| userId | int | 是 | 消费者编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Order.OrderID | 订单均分 |
-| Order.PaymentTime | 支付时间 |
-| Order.CartID | 购物车编号 |
-| Order.StoreID | 店铺编号 |
-| Store.Image | 店铺图片 |
-| Store.Name | 店铺 |
-| Cart.? | 已购商品信息(待添加) |
+| 字段名       | 类型        | 说明                                           |
+| ------------ | ----------- | ---------------------------------------------- |
+| orderID      | number      | 订单编号                                       |
+| paymentTime  | string      | 支付时间                                      |
+| cartID       | number      | 对应购物车编号                                 |
+| storeID      | number      | 店铺编号                                       |
+| storeImage   | string      | 店铺封面图片 URL                               |
+| storeName    | string      | 店铺名称                                       |
+| dishImage    | string[]    | 已购商品图片列表，每个元素为商品图片 URL       |
+| totalAmount  | number      | 订单的总金额        |
+| orderStatus  | number      | 订单的状态(待数据库添加)        |
 
+- 接口地址: `GET /api/user/home/orders`
 
 **4. 用户信息接口**
 
@@ -100,15 +120,17 @@
 
 | 字段名   | 类型   | 是否必填 | 说明 |
 | -------- | ------ | -------- | ----- |
-| UserId | int | 是 | 消费者编号 |
+| userId | int | 是 | 消费者编号 |
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| User.Name | 用户昵称 |
-| User.PhoneNumber | 用户号码 |
-| User.Avatar | 用户头像 |
+| 字段名       | 类型        | 说明           |
+| ------------ | ----------- | -------------- |
+| name         | string      | 用户昵称       |
+| phoneNumber  | number      | 用户电话号码   |
+| image        | string      | 用户头像 URL   |
+
+- 接口地址: `GET /api/user/home/userInfo`
 
 **5. 优惠券接口**
 
@@ -122,15 +144,17 @@
 
 - 获得信息说明
 
-| 字段名   | 说明   |
-| -------- | ----- |
-| Coupon.CouponID | 优惠券编号 |
-| Coupon.CouponState | 优惠券状态 |
-| Coupon.OrderID | 订单编号 |
-| Coupon.CouponManagerID | 优惠券管理器编号 |
-| Coupon.MinimumSpend | 最低消费 |
-| Coupon.DiscountAmount | 优惠金额 |
-| Coupon.ValidTo | 有效期截至时间 |
+| 字段名          | 类型        | 说明                          |
+| --------------- | ----------- | ----------------------------- |
+| couponID        | number      | 优惠券编号                    |
+| couponState     | number      | 优惠券状态 |
+| orderID         | number      | 关联订单编号（若未使用则可能为空或 0） |
+| couponManagerID | number      | 发放优惠券的管理员或活动编号 |
+| minimumSpend    | number      | 使用该优惠券的最低消费金额  |
+| discountAmount  | number      | 优惠金额                      |
+| validTo         | string      | 优惠券有效期截止日期 |
+
+- 接口地址: `GET /api/user/home/couponInfo`
 
 ---
 

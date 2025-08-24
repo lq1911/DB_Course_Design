@@ -13,13 +13,13 @@
                                 <span class="text-lg font-bold text-[#F9771C]">¥{{ item.price }}</span>
                             </div>
                             <div v-if="!isItemSoldOut(item.isSoldOut)" class="flex items-center space-x-2">
-                                <button @click="emit('decrease', item.id)" :disabled="!getItemQuantity(item.id)"
-                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-300 disabled:opacity-50 cursor-pointer !rounded-button whitespace-nowrap">
+                                <button @click="emit('decrease', item)" :disabled="!getItemQuantity(item.id)"
+                                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-300 disabled:opacity-50 cursor-pointer">
                                     <i class="fas fa-minus text-xs"></i>
                                 </button>
                                 <span class="w-8 text-center">{{ getItemQuantity(item.id) || 0 }}</span>
-                                <button @click="emit('increase', item.id)"
-                                    class="w-8 h-8 rounded-full bg-[#F9771C] text-white flex items-center justify-center hover:bg-orange-600 cursor-pointer !rounded-button whitespace-nowrap">
+                                <button @click="emit('increase', item)"
+                                    class="w-8 h-8 rounded-full bg-[#F9771C] text-white flex items-center justify-center hover:bg-orange-600 cursor-pointer">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
@@ -40,25 +40,26 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
-
-import type { MenuItem } from '@/api/store_info'
+import type { MenuItem, ShoppingCart } from '@/api/user_checkout';
 
 const props = defineProps<{
     categories: Array<{ id: number, name: string }>;
     activeCategory: number;
-    cart: Record<number, number>;
-    menuItems: MenuItem | null;
+    cart: ShoppingCart;
+    menuItems: MenuItem[];
 }>();
 
-const isItemSoldOut = (isSoldOut?: number) =>  isSoldOut !== 0 ; // 等于0返回False
-const getCurrentMenuItems = () => menuItems.filter(item => item.categoryId === props.activeCategory);
-const getItemQuantity = (itemId: number) => props.cart[itemId] || 0;
+const isItemSoldOut = (isSoldOut?: number) =>  isSoldOut !== 0; // 等于0返回False
+
+const getCurrentMenuItems = () => props.menuItems.filter(item => item.categoryId === props.activeCategory);
+
+const getItemQuantity = (dishId: number) => {
+    const item = props.cart.items.find(i => i.dishId === dishId);
+    return item ? item.quantity : 0;
+}
 
 const emit = defineEmits<{
-    (e: 'increase', itemId: number): void;
-    (e: 'decrease', itemId: number): void;
+    (e: 'increase', item: MenuItem): void;
+    (e: 'decrease', item: MenuItem): void;
 }>();
-
-// 测试代码
-import { menuItems } from '@/api/store_info';
 </script>

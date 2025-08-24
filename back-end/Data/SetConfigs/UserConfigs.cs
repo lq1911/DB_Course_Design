@@ -16,8 +16,7 @@ namespace BackEnd.Data.SetConfigs
 
             builder.Property(u => u.Username).HasColumnName("USERNAME").IsRequired().HasMaxLength(15);
 
-            // 建议：密码存储的是哈希值，长度通常较长。128位是一个合理的选择。
-            builder.Property(u => u.Password).HasColumnName("PASSWORD").IsRequired().HasMaxLength(128);
+            builder.Property(u => u.Password).HasColumnName("PASSWORD").IsRequired().HasMaxLength(64);
 
             // 修正：PhoneNumber 是 long 类型，不应有 MaxLength 限制。
             builder.Property(u => u.PhoneNumber).HasColumnName("PHONENUMBER").IsRequired();

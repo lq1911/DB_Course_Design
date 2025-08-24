@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace BackEnd.Models
 {
     // 骑手类
@@ -27,6 +28,18 @@ namespace BackEnd.Models
         public decimal AverageRating { get; set; } = 0.00m;
 
         public int MonthlySalary { get; set; } = 0;
+
+        // 新增属性：表示骑手当前是否在线
+        [Required]
+        public bool IsOnline { get; set; } = false; // 默认为离线
+
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? CourierLongitude { get; set; }
+
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? CourierLatitude { get; set; }
+
+        public DateTime? LastOnlineTime { get; set; }
 
         // 一对多导航属性
         // 配送任务

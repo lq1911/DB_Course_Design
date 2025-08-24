@@ -36,5 +36,8 @@ namespace BackEnd.Models
 
         // 评论
         public ICollection<Comment>? Comments { get; set; }
+
+        // 购物车
+        public ICollection<ShoppingCart>? ShoppingCarts { get; set; }
     }
 }

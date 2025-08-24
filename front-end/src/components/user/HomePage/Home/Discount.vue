@@ -5,7 +5,7 @@
       <div
         v-for="(promo, index) in promotions"
         :key="index"
-        class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer text-left"
+        class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow text-left"
       >
         <img :src="promo.image" :alt="promo.title" class="w-full h-48 object-cover object-top" />
         <div class="p-4">
