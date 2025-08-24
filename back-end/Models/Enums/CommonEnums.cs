@@ -61,4 +61,18 @@ namespace BackEnd.Models.Enums
         Normal = 0,
         Banned = 1
     }
+
+    public enum FoodOrderState
+    {
+        Pending = 0,
+        Preparing = 1,
+        Completed = 2
+    }
+
+    public enum CommentType
+    {
+        Comment = 0,
+        Store = 1,
+        FoodOrder = 2
+    }
 }

@@ -70,6 +70,12 @@ namespace BackEnd.Data.EntityConfigs
                    .HasForeignKey(co => co.CommenterID)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            // 关系七: 与 ShoppingCart 的一对多关系
+            // 不允许删除仍有购物车的顾客
+            builder.HasMany(c => c.ShoppingCarts)
+                   .WithOne(sc => sc.Customer)
+                   .HasForeignKey(sc => sc.CustomerID)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,10 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using BackEnd.Services.Interfaces;
 using BackEnd.DTOs.Courier; // 已更新为新的 DTO 路径
-using Microsoft.AspNetCore.Authorization;
+using BackEnd.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System;
-using System.Threading.Tasks;
 
 namespace BackEnd.Controllers
 {
@@ -151,7 +148,7 @@ namespace BackEnd.Controllers
                 var courierId = GetCurrentCourierId();
 
                 // 注意：我们从可空的 DTO 属性中获取值
-                var success = await _courierService.ToggleWorkStatusAsync(courierId, request.IsOnline.Value);
+                var success = await _courierService.ToggleWorkStatusAsync(courierId, request.IsOnline);
 
                 if (!success)
                 {
@@ -324,12 +321,4 @@ namespace BackEnd.Controllers
             }
         }
     }
-
-    
-    
-
-
-
-
-    
 }
