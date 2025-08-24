@@ -14,7 +14,7 @@
   "storeName": "海底捞火锅",
   "storeImage": "/images/store/1.png",
   "storeAddress": "北京市朝阳区三里屯路 8 号",
-  "openTime": "10:00:00",
+  "openTime": "08:00:00",
   "closeTime": "22:00:00",
   "averageRating": 4.6,
   "monthlySales": 1350,
@@ -41,16 +41,16 @@
 |--------|------|----------|------|
 | `code` | int | 是 | 状态码 |
 | `message` | string | 是 | 接口返回说明信息 |
-| `Id` | int | 店铺编号  |
-| `Name` | string | 店铺名称 |
-| `Image` | string | 店铺封面图片 URL |
-| `Address` | string | 店铺地址 |
-| `OpenTime` | string || 开店时间 |
-| `CloseTime`| string || 打烊时间 |
-| `Rating` | decimal(10, 2) | 店铺评分 |
-| `MonthlySales`  | int | 店铺月销售量 |
-| `Discription` | string | 店铺描述 |
-| `CreateTime` | DateTime | 店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
+| `Id` | int | 是 | 店铺编号  |
+| `Name` | string | 是 |店铺名称 |
+| `Image` | string | 是 |店铺封面图片 URL |
+| `Address` | string | 是 |店铺地址 |
+| `OpenTime` | string | 是 |开店时间 |
+| `CloseTime`| string | 是 |打烊时间 |
+| `Rating` | decimal(10, 2) | 是 |店铺评分 |
+| `MonthlySales`  | int | 是 |店铺月销售量 |
+| `Discription` | string | 是 |店铺描述 |
+| `CreateTime` | DateTime | 是 |店铺创建时间（格式如 YYYY-MM-DD HH:mm:ss） |
 
 ## 2. 菜单接口
 - **接口名称**: dish
@@ -94,7 +94,13 @@
 |--------|------|----------|------|
 | `code` | int | 是 | 状态码 |
 | `message` | string | 是 | 接口返回说明信息 |
-
+| `id`           | number      | 是 |菜品编号                       |
+| `categoryId`   | number      | 是 |菜品分类编号                   |
+| `name`         | string      | 是 |菜品名称                       |
+| `description`  | string      | 是 |菜品描述                       |
+| `price`        | number      | 是 |菜品价格                       |
+| `image`        | string      | 是 |菜品图片 URL                    |
+| `isSoldOut`    | number      | 是 |是否售罄（0=在售, 1=售罄）    |
 
 
 ## 3. 评价接口

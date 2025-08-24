@@ -1,4 +1,4 @@
-using BackEnd.Dtos.UserInStore;
+using BackEnd.Dtos.User;
 
 public interface IUserInStoreService
 {

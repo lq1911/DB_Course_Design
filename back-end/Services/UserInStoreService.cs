@@ -1,4 +1,4 @@
-using BackEnd.Dtos.UserInStore;
+using BackEnd.Dtos.User;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,16 +6,14 @@ public class UserInStoreService : IUserInStoreService
 {
     private readonly IStoreRepository _storeRepository;
     private readonly ICommentRepository _commentRepository;
-    private readonly IDishRepository _dishRepository;
+
 
     public UserInStoreService(
         IStoreRepository storeRepository,
-        ICommentRepository commentRepository,
-        IDishRepository dishRepository)
+        ICommentRepository commentRepository)
     {
         _storeRepository = storeRepository;
         _commentRepository = commentRepository;
-        _dishRepository = dishRepository;
     }
     /// <summary>
     /// 获取店铺详情
@@ -105,7 +103,7 @@ public class UserInStoreService : IUserInStoreService
 
         return new CommentStateDto
         {
-            Status = new List<int> { perfect, good, normal, bad, awful}
+            Status = new List<int> { perfect, good, normal, bad, awful }
         };
     }
 }

@@ -1,4 +1,4 @@
-using BackEnd.Dtos.UserInStore;
+using BackEnd.Dtos.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackEnd.Controllers

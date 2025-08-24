@@ -1,9 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using BackEnd.Data;
 using BackEnd.Repositories;
 using BackEnd.Repositories.Interfaces;
-using BackEnd.Services;
 using BackEnd.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using BackEnd.Services;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,13 +54,18 @@ builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IStoreViolationPenaltyRepository, StoreViolationPenaltyRepository>();
 builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
+
+
 
 // 注册 Service 层
+builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<ICourierService, CourierService>();
 
+//骑手服务注入
+builder.Services.AddScoped<ICourierService, CourierService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICourierRepository, CourierRepository>();
 
 // 添加 CORS 服务
 builder.Services.AddCors(options =>
