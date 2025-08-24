@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection.Metadata;
+using System.Text.Json.Serialization;
 using BackEnd.Models.Enums;
 
 
@@ -21,21 +22,26 @@ namespace BackEnd.Dtos.User
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string Image { get; set; } = null!;
+        public string Image { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100)]
-        public string Address { get; set; } = null!;
+        public string Address { get; set; } = string.Empty;
 
         // 开业时间
+
         [Required]
+        [JsonIgnore]
         public TimeSpan OpenTime { get; set; } = TimeSpan.FromHours(9);  // 09:00
 
         [Required]
+        [JsonIgnore]
         public TimeSpan CloseTime { get; set; } = TimeSpan.FromHours(22); // 22:00
+
+        public string BusinessHours { get; set; } = string.Empty;
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Rating { get; set; } = 0.00m;
@@ -45,7 +51,7 @@ namespace BackEnd.Dtos.User
 
         [Required]
         [StringLength(500)]
-        public string Discription { get; set; } = null!;
+        public string Discription { get; set; } = string.Empty;
 
         [Required]
         public DateTime CreationTime { get; set; }
@@ -69,18 +75,18 @@ namespace BackEnd.Dtos.User
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [StringLength(500)]
-        public string Description { get; set; } = null!;
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
 
         [Required]
-        public string Image { get; set; } = null!;
+        public string Image { get; set; } = string.Empty;
 
         [Required]
         public DishIsSoldOut IsSoldOut { get; set; } = DishIsSoldOut.IsSoldOut;
@@ -92,7 +98,7 @@ namespace BackEnd.Dtos.User
         public int Id { get; set; }
 
         [Required]
-        public string Username { get; set; } = null!;
+        public string Username { get; set; } = string.Empty;
 
         [Range(1,5)]
         public int? Rating { get; set; }
@@ -102,7 +108,7 @@ namespace BackEnd.Dtos.User
 
         [Required]
         [StringLength(500)]
-        public string Content { get; set; } = null!;
+        public string Content { get; set; } = string.Empty;
 
         [MaxLength(255)]
         public string? Avatar { get; set; }

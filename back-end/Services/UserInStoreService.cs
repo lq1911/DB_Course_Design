@@ -28,10 +28,11 @@ public class UserInStoreService : IUserInStoreService
         {
             Id = store.StoreID,
             Name = store.StoreName,
-            Image = "", // TODO: 店铺图片字段
+            Image = store.StoreImage, // TODO: 店铺图片字段
             Address = store.StoreAddress,
             OpenTime = store.OpenTime,
             CloseTime = store.CloseTime,
+            BusinessHours = $"{store.OpenTime:hh\\:mm}-{store.CloseTime:hh\\:mm}",
             Rating = store.AverageRating,
             MonthlySales = store.MonthlySales,
             Discription = store.StoreFeatures,
@@ -60,7 +61,7 @@ public class UserInStoreService : IUserInStoreService
             Name = d.DishName,
             Description = d.Description,
             Price = d.Price,
-            Image = "", // 等待菜品图片字段添加
+            Image = d.DishImage,
             IsSoldOut = d.IsSoldOut
         }).ToList();
     }
