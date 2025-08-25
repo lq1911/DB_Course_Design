@@ -26,13 +26,13 @@ namespace BackEnd.Data.SetConfigs
             builder.HasOne(rc => rc.Admin)
                    .WithMany(a => a.ReviewComments)
                    .HasForeignKey(rc => rc.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过删除审核记录来删除管理员
+                   .OnDelete(DeleteBehavior.Cascade);
 
             // 关系二: Review_Comment -> Comment (多对一)
             builder.HasOne(rc => rc.Comment)
                    .WithMany(c => c.ReviewComments)
                    .HasForeignKey(rc => rc.CommentID)
-                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过删除审核记录来删除评论
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

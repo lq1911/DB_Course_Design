@@ -56,6 +56,11 @@ namespace BackEnd.Models
         [ForeignKey("CourierID")]
         public Courier Courier { get; set; } = null!;
 
+        [Required]
+        public int OrderID { get; set; }
+        [ForeignKey("OrderID")]
+        public FoodOrder Order { get; set; } = null!;
+
         // 一对多导航属性
         // 配送投诉
         public ICollection<DeliveryComplaint>? DeliveryComplaints { get; set; }

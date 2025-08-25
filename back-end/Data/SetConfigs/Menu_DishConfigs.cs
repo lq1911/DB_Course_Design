@@ -24,13 +24,13 @@ namespace BackEnd.Data.SetConfigs
             builder.HasOne(md => md.Menu)
                    .WithMany(m => m.MenuDishes)
                    .HasForeignKey(md => md.MenuID)
-                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过中间表删除主表记录
+                   .OnDelete(DeleteBehavior.Cascade);
 
             // 关系二: Menu_Dish -> Dish (多对一)
             builder.HasOne(md => md.Dish)
                    .WithMany(d => d.MenuDishes)
                    .HasForeignKey(md => md.DishID)
-                   .OnDelete(DeleteBehavior.Restrict); // 禁止通过中间表删除主表记录
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

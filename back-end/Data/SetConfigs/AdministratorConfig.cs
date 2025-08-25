@@ -24,34 +24,11 @@ namespace BackEnd.Data.EntityConfigs
             // 配置外键关系
             // ---------------------------------------------------------------
 
-            // 配置一对一关系: Administrator -> User
+            // 关系一: Administrator -> User (一对一)
             builder.HasOne(a => a.User)
                    .WithOne()
-                   .HasForeignKey<Administrator>(a => a.UserID);
-
-            // 配置多对多关系: Administrator -> Review_Comment
-            builder.HasMany(a => a.ReviewComments)
-                   .WithOne(rc => rc.Admin)
-                   .HasForeignKey(rc => rc.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 配置多对多关系: Administrator -> Supervise_
-            builder.HasMany(a => a.Supervise_s)
-                   .WithOne(s => s.Admin)
-                   .HasForeignKey(s => s.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 配置多对多关系: Administrator -> Evaluate_AfterSale
-            builder.HasMany(a => a.EvaluateAfterSales)
-                   .WithOne(eas => eas.Admin)
-                   .HasForeignKey(eas => eas.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 配置多对多关系: Administrator -> Evaluate_Complaint
-            builder.HasMany(a => a.EvaluateComplaints)
-                   .WithOne(ec => ec.Admin)
-                   .HasForeignKey(ec => ec.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .HasForeignKey<Administrator>(a => a.UserID)
+                   .OnDelete(DeleteBehavior.Cascade); // 当User被删除时，关联的Administrator也应被删除
 
             // 忽略不映射到数据库的便捷属性
             builder.Ignore(a => a.Comments);

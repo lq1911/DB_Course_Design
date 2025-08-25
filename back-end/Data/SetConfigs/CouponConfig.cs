@@ -36,7 +36,7 @@ namespace BackEnd.Data.EntityConfigs
             builder.HasOne(c => c.Customer)
                    .WithMany(cu => cu.Coupons)
                    .HasForeignKey(c => c.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止删除有优惠券的客户
+                   .OnDelete(DeleteBehavior.Cascade);
 
             // 关系三: Coupon -> FoodOrder (多对一)
             builder.HasOne(c => c.Order)

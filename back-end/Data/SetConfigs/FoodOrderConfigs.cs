@@ -27,6 +27,10 @@ namespace BackEnd.Data.SetConfigs
 
             builder.Property(fo => fo.StoreID).HasColumnName("STOREID").IsRequired();
 
+            // 在 CartID 列上创建一个唯一索引
+            builder.HasIndex(fo => fo.CartID)
+                   .IsUnique();
+
             // ---------------------------------------------------------------
             // 配置关系
             // ---------------------------------------------------------------
@@ -49,24 +53,6 @@ namespace BackEnd.Data.SetConfigs
                    .WithMany(s => s.FoodOrders)
                    .HasForeignKey(e => e.StoreID)
                    .OnDelete(DeleteBehavior.Restrict); // 禁止删除仍有订单的商店
-
-            // 关系四: FoodOrder -> Coupon (一对多)
-            builder.HasMany(e => e.Coupons)
-                   .WithOne(c => c.Order)
-                   .HasForeignKey(c => c.OrderID)
-                   .OnDelete(DeleteBehavior.SetNull); // 订单删除时，关联的优惠券设为未使用，而不是删除优惠券本身
-
-            // 关系五: FoodOrder -> AfterSaleApplication (一对多)
-            builder.HasMany(e => e.AfterSaleApplications)
-                   .WithOne(a => a.Order)
-                   .HasForeignKey(a => a.OrderID)
-                   .OnDelete(DeleteBehavior.Cascade); // 当订单被删除时，其所有售后申请都应被级联删除
-
-            // 关系六: FoodOrder -> Comment (一对多)
-            builder.HasMany(fo => fo.Comments)
-                   .WithOne(c => c.FoodOrder)
-                   .HasForeignKey(c => c.FoodOrderID)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

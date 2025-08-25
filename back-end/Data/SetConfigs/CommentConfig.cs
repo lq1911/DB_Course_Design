@@ -64,32 +64,26 @@ namespace BackEnd.Data.EntityConfigs
             builder.HasOne(c => c.Store)
                    .WithMany(s => s.Comments)
                    .HasForeignKey(c => c.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade);
 
             // 关系二: Comment -> Customer (多对一)
             builder.HasOne(c => c.Commenter)
                    .WithMany(cu => cu.Comments)
                    .HasForeignKey(c => c.CommenterID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.SetNull);
 
             // 关系三: Comment -> Comment (自引用，多对一)
             // 用于实现评论回复功能。一个评论可以回复另一个评论。
             builder.HasOne(c => c.ReplyToComment)
                    .WithMany(rc => rc.CommentReplies)
                    .HasForeignKey(c => c.ReplyToCommentID)
-                   .OnDelete(DeleteBehavior.ClientSetNull); // 重要：防止级联删除导致问题
+                   .OnDelete(DeleteBehavior.SetNull); // 重要：防止级联删除导致问题
 
             // 关系四: Comment -> FoodOrder (多对一)
             builder.HasOne(c => c.FoodOrder)
                   .WithMany(fo => fo.Comments)
                   .HasForeignKey(c => c.FoodOrderID)
-                  .OnDelete(DeleteBehavior.Restrict);
-
-            // 关系五: Comment <-> Administrator (多对多，通过 Review_Comment)
-            builder.HasMany(c => c.ReviewComments)
-                   .WithOne(rc => rc.Comment)
-                   .HasForeignKey(rc => rc.CommentID)
-                   .OnDelete(DeleteBehavior.Cascade); // 当评论删除时，相关的审核记录也删除
+                  .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
