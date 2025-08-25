@@ -65,6 +65,12 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMerchantService, MerchantService>();
 builder.Services.AddScoped<IMerchantInformationService, MerchantInformationService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<IDeliveryTaskService, DeliveryTaskService>();
+builder.Services.AddScoped<IPenaltyService, PenaltyService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IAfterSaleService, AfterSaleService>();
 
 var app = builder.Build();
 
