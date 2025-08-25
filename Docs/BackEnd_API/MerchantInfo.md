@@ -1,6 +1,6 @@
-﻿**商家信息接口文档**
+﻿# **商家信息接口文档**
 
-**1. 获取商家信息接口**
+## **1. 获取商家信息接口**
 
 - **接口名称**：FetchMerchantInfo
 - **接口描述**：获取当前登录商家的详细信息，包括基本资料、注册时间和账号状态等
@@ -11,31 +11,21 @@
 
 **返回结果**
 
+```
 {
-
-`  `"code": 200,
-
-`  `"success": true,
-
-`  `"message": null,
-
-`  `"data": {
-
-`    `"id": "1001",
-
-`    `"name": "张三餐厅",
-
-`    `"phone": "13800138000",
-
-`    `"email": "zhangsan@example.com",
-
-`    `"registerTime": "2023-01-15 09:30:00",
-
-`    `"status": "正常营业"
-
-`  `}
-
+    "code": 200,
+    "success": true,
+    "message": null,
+    "data": {
+    "id": "1001",
+      "name": "张三餐厅",
+      "phone": "13800138000",
+      "email": "zhangsan@example.com",
+      "registerTime": "2023-01-15 09:30:00",
+      "status": "正常营业"
+    }
 }
+```
 
 **响应说明**
 
@@ -52,7 +42,7 @@
 |data.registerTime|string|是|注册时间，格式为 YYYY-MM-DD HH:mm:ss|
 |data.status|string|是|账号状态，可选值为 "正常营业" 或 "封禁中"|
 
-**2. 更新商家信息接口**
+## **2. 更新商家信息接口**
 
 - **接口名称**：SaveShopInfo
 - **接口描述**：更新当前登录商家的联系电话和电子邮箱信息
@@ -68,65 +58,52 @@
 
 **请求示例**
 
+```
 {
-
-`  `"phone": "13900139000",
-
-`  `"email": "newhost@example.com"
-
+    "phone": "13900139000",
+    "email": "newhost@example.com"
 }
+```
 
 **返回结果**
 
 成功更新时：
 
+```
 {
-
-`  `"code": 200,
-
-`  `"success": true,
-
-`  `"message": null,
-
-`  `"data": {
-
-`    `"updatedFields": ["phone", "email"],
-
-`    `"updateTime": "2023-10-20 15:45:30"
-
-`  `}
-
+    "code": 200,
+    "success": true,
+    "message": null,
+    "data": {
+      "updatedFields": ["phone", "email"],
+      "updateTime": "2023-10-20 15:45:30"
+    }
 }
+```
 
 无更新内容时：
 
+```
 {
-
-`  `"code": 200,
-
-`  `"success": true,
-
-`  `"message": "没有需要更新的信息",
-
-`  `"data": null
-
+    "code": 200,
+    "success": true,
+    "message": "没有需要更新的信息",
+    "data": null
 }
+```
 
 更新失败时：
 
+```
 {
-
-`  `"code": 400,
-
-`  `"success": false,
-
-`  `"message": "用户不存在",
-
-`  `"data": null
-
+    "code": 400,
+    "success": false,
+    "message": "用户不存在",
+    "data": null
 }
+```
 
-响应说明
+**响应说明**
 
 |**参数名**|**类型**|**是否必填**|**说明**|
 | :-: | :-: | :-: | :-: |
