@@ -29,7 +29,7 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(c => c.MonthlySalary).HasColumnName("MONTHLYSALARY").HasDefaultValue(0);
 
             // 新增骑手属性配置
-            builder.Property(c => c.IsOnline).HasColumnName("ISONLINE").IsRequired().HasDefaultValue(false);
+            builder.Property(c => c.IsOnline).HasColumnName("ISONLINE").IsRequired().HasConversion<string>().HasMaxLength(10);
 
             builder.Property(c => c.CourierLongitude).HasColumnName("COURIERLONGITUDE").HasColumnType("decimal(10,6)").IsRequired(false);
 
