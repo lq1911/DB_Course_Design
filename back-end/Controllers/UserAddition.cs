@@ -7,9 +7,9 @@ namespace BackEnd.Controllers
     [ApiController]
     public class UserProfileController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserAdditionService _userService;
 
-        public UserProfileController(IUserService userService)
+        public UserProfileController(IUserAdditionService userService)
         {
             _userService = userService;
         }
@@ -23,13 +23,30 @@ namespace BackEnd.Controllers
             }
 
             var userProfile = await _userService.GetUserProfileAsync(userId);
-            
+
             if (userProfile == null)
             {
                 return NotFound("用户不存在");
             }
 
             return Ok(userProfile);
+        }
+        [HttpGet("address")]
+        public async Task<ActionResult<UserAddressDto>> GetUserAddress([FromQuery] int userId)
+        {
+            if (userId <= 0)
+            {
+                return BadRequest("用户ID无效");
+            }
+
+            var userAddress = await _userService.GetUserAddressAsync(userId);
+            
+            if (userAddress == null)
+            {
+                return NotFound("用户地址信息不存在");
+            }
+
+            return Ok(userAddress);
         }
     }
 }
