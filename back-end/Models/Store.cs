@@ -68,6 +68,9 @@ namespace BackEnd.Models
         [Required]
         public StoreCategory StoreCategory { get; set; }
 
+        // 新增店铺图片
+        public string? StoreImage { get; set; }
+
         [Required]
         public int SellerID { get; set; }
         [ForeignKey("SellerID")]

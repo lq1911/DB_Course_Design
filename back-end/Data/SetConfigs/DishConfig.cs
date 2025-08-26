@@ -21,6 +21,8 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(d => d.Description).HasColumnName("DESCRIPTION").IsRequired().HasMaxLength(500);
 
+            builder.Property(d => d.DishImage).HasColumnName("DISHIMAGE").HasMaxLength(500).IsRequired(false);
+
             builder.Property(d => d.IsSoldOut)
                    .HasColumnName("ISSOLDOUT")
                    .IsRequired()

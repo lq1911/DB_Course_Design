@@ -14,7 +14,6 @@ namespace BackEnd.Dtos.AuthRequest
         public required string Email { get; set; }
         public required string Gender { get; set; }
         public required string Birthday { get; set; }
-        public required string VerificationCode { get; set; }
         public required string Role { get; set; }
         public string? AvatarUrl { get; set; }
         public int IsPublic { get; set; }
@@ -45,7 +44,6 @@ namespace BackEnd.Dtos.AuthRequest
         public required string OpenTime { get; set; }
         public required string CloseTime { get; set; }
         public required string EstablishmentDate { get; set; }
-        public required IFormFile BusinessLicense { get; set; }
         public required string Category { get; set; }
     }
 

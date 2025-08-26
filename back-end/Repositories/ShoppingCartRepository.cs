@@ -18,6 +18,7 @@ namespace BackEnd.Repositories
             return await _context.ShoppingCarts
                                  .Include(sc => sc.Order)             // 关联订单
                                  .Include(sc => sc.ShoppingCartItems) // 购物车项
+                                 .Include(sc => sc.Customer)          // 购物车的消费者
                                  .ToListAsync();
         }
 
@@ -26,6 +27,7 @@ namespace BackEnd.Repositories
             return await _context.ShoppingCarts
                                  .Include(sc => sc.Order)
                                  .Include(sc => sc.ShoppingCartItems)
+                                 .Include(sc => sc.Customer)
                                  .FirstOrDefaultAsync(sc => sc.CartID == id);
         }
 

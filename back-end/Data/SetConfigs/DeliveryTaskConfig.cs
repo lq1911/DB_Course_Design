@@ -1,4 +1,5 @@
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +32,17 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(dt => dt.CourierLongitude).HasColumnName("COURIERLONGITUDE").HasColumnType("decimal(10,6)");
 
             builder.Property(dt => dt.CourierLatitude).HasColumnName("COURIERLATITUDE").HasColumnType("decimal(10,6)");
+
+            builder.Property(dt => dt.Status)
+                  .HasColumnName("STATUS")
+                  .IsRequired()
+                  .HasConversion<string>() // 将枚举存储为字符串
+                  .HasMaxLength(20)
+                  .HasDefaultValue(DeliveryStatus.Pending);
+
+            builder.Property(dt => dt.CompletionTime).HasColumnName("COMPLETIONTIME").IsRequired(false);
+
+            builder.Property(dt => dt.DeliveryFee).HasColumnName("DELIVERYFEE").HasColumnType("decimal(5,2)").IsRequired().HasDefaultValue(0.00m);
 
             builder.Property(dt => dt.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
 
