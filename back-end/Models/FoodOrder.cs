@@ -25,6 +25,9 @@ namespace BackEnd.Models
         [Required]
         public FoodOrderState FoodOrderState { get; set; } = FoodOrderState.Pending;
 
+        // 新增配送任务的导航属性
+        public DeliveryTask? DeliveryTask { get; set; }
+
         [Required]
         public int CustomerID { get; set; }
         [ForeignKey("CustomerID")]

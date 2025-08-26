@@ -29,10 +29,6 @@ namespace BackEnd.Data.EntityConfigs
                    .HasColumnName("ACCEPTTIME")
                    .IsRequired();
 
-            builder.Property(dt => dt.CourierLongitude).HasColumnName("COURIERLONGITUDE").HasColumnType("decimal(10,6)");
-
-            builder.Property(dt => dt.CourierLatitude).HasColumnName("COURIERLATITUDE").HasColumnType("decimal(10,6)");
-
             builder.Property(dt => dt.Status)
                   .HasColumnName("STATUS")
                   .IsRequired()
@@ -59,25 +55,25 @@ namespace BackEnd.Data.EntityConfigs
             builder.HasOne(dt => dt.Customer)
                    .WithMany(c => c.DeliveryTasks)
                    .HasForeignKey(dt => dt.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止删除仍有配送任务的顾客
+                   .OnDelete(DeleteBehavior.Restrict);
 
             // 关系二: DeliveryTask -> Store (多对一)
             builder.HasOne(dt => dt.Store)
                    .WithMany(s => s.DeliveryTasks)
                    .HasForeignKey(dt => dt.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止删除仍有配送任务的商店
+                   .OnDelete(DeleteBehavior.Restrict);
 
             // 关系三: DeliveryTask -> Courier (多对一)
             builder.HasOne(dt => dt.Courier)
                    .WithMany(c => c.DeliveryTasks)
                    .HasForeignKey(dt => dt.CourierID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止删除正在执行任务的骑手
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            // 关系四: DeliveryTask -> DeliveryComplaint (一对多)
-            builder.HasMany(dt => dt.DeliveryComplaints)
-                   .WithOne(dc => dc.DeliveryTask)
-                   .HasForeignKey(dc => dc.DeliveryTaskID)
-                   .OnDelete(DeleteBehavior.Cascade); // 当任务被删除时，关联的投诉也应被删除
+            // 关系四: DeliveryTask -> FoodOrder (一对一)
+            builder.HasOne(dt => dt.Order)
+                   .WithOne(fd => fd.DeliveryTask)
+                   .HasForeignKey<DeliveryTask>(dt => dt.OrderID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
