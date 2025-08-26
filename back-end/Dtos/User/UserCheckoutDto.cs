@@ -13,7 +13,7 @@ namespace BackEnd.Dtos.User
         public CouponState CouponState { get; set; }
 
         [Required]
-        public int OrderID { get; set; }
+        public int? OrderID { get; set; }
 
         [Required]
         public int CouponManagerID { get; set; }
@@ -27,7 +27,7 @@ namespace BackEnd.Dtos.User
         public decimal DiscountAmount { get; set; }
 
         [Required]
-        public DateTime ValidTo { get; set; }
+        public string ValidTo { get; set; }
     }
 
     public class CartRequestDto
