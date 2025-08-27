@@ -2,7 +2,7 @@ using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BackEnd.Data.SetConfigs // 注意：你的原始文件命名空间是 EntityConfigs，我改回了 SetConfigs 以匹配你的项目结构
+namespace BackEnd.Data.EntityConfigs
 {
     public class CommentConfig : IEntityTypeConfiguration<Comment>
     {

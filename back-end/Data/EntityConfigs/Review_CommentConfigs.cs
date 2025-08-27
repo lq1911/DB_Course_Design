@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BackEnd.Models;
 
-namespace BackEnd.Data.SetConfigs
+namespace BackEnd.Data.EntityConfigs
 {
     public class Review_CommentConfig : IEntityTypeConfiguration<Review_Comment>
     {
