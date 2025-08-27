@@ -29,7 +29,7 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(c => c.MonthlySalary).HasColumnName("MONTHLYSALARY").HasDefaultValue(0);
 
             // 新增骑手属性配置
-            builder.Property(c => c.IsOnline).HasColumnName("ISONLINE").IsRequired().HasDefaultValue(false);
+            builder.Property(c => c.IsOnline).HasColumnName("ISONLINE").IsRequired().HasConversion<string>().HasMaxLength(10);
 
             builder.Property(c => c.CourierLongitude).HasColumnName("COURIERLONGITUDE").HasColumnType("decimal(10,6)").IsRequired(false);
 
@@ -41,17 +41,11 @@ namespace BackEnd.Data.EntityConfigs
             // 配置外键关系
             // ---------------------------------------------------------------
 
-            // 配置一对一关系: Courier -> User
+            // 关系一: Courier -> User (一对一)
             builder.HasOne(c => c.User)
                    .WithOne(u => u.Courier)
                    .HasForeignKey<Courier>(c => c.UserID)
                    .OnDelete(DeleteBehavior.Cascade); // 当User被删除时，关联的Courier也应被删除
-
-            // 配置一对多关系: Courier -> DeliveryTask
-            builder.HasMany(c => c.DeliveryTasks)
-                   .WithOne(dt => dt.Courier)
-                   .HasForeignKey(dt => dt.CourierID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止删除仍有配送任务的骑手
         }
     }
 }

@@ -26,14 +26,14 @@ namespace BackEnd.Data.EntityConfigs
             builder.HasOne(eas => eas.Admin)
                    .WithMany(a => a.EvaluateAfterSales)
                    .HasForeignKey(eas => eas.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止直接通过中间实体删除主实体
+                   .OnDelete(DeleteBehavior.Cascade);
 
 
             // 关系二: Evaluate_AfterSale -> AfterSaleApplication (多对一)
             builder.HasOne(eas => eas.Application)
                    .WithMany(asa => asa.EvaluateAfterSales)
                    .HasForeignKey(eas => eas.ApplicationID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

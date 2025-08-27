@@ -20,12 +20,6 @@ namespace BackEnd.Models
         [Required]
         public DateTime EstimatedDeliveryTime { get; set; }
 
-        [Column(TypeName = "decimal(10,6)")]
-        public decimal? CourierLongitude { get; set; }
-
-        [Column(TypeName = "decimal(10,6)")]
-        public decimal? CourierLatitude { get; set; }
-
         // 发布任务时间
         [Required]
         public DateTime PublishTime { get; set; }
@@ -61,6 +55,11 @@ namespace BackEnd.Models
         public int CourierID { get; set; }
         [ForeignKey("CourierID")]
         public Courier Courier { get; set; } = null!;
+
+        [Required]
+        public int OrderID { get; set; }
+        [ForeignKey("OrderID")]
+        public FoodOrder Order { get; set; } = null!;
 
         // 一对多导航属性
         // 配送投诉

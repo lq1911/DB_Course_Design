@@ -33,14 +33,7 @@ namespace BackEnd.Data.EntityConfigs
             builder.HasOne(cm => cm.Store)
                    .WithMany(s => s.CouponManagers)
                    .HasForeignKey(cm => cm.StoreID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止删除仍有优惠券模板的商店
-
-            // 关系二: CouponManager -> Coupon (一对多)
-            // 一个优惠券模板可以生成多个优惠券实例
-            builder.HasMany(cm => cm.Coupons)
-                   .WithOne(c => c.CouponManager)
-                   .HasForeignKey(c => c.CouponManagerID)
-                   .OnDelete(DeleteBehavior.Cascade); // 当模板删除时，所有相关的优惠券实例也会被删除
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

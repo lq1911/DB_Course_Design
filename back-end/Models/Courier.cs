@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -31,7 +32,7 @@ namespace BackEnd.Models
 
         // 新增属性：表示骑手当前是否在线
         [Required]
-        public bool IsOnline { get; set; } = false; // 默认为离线
+        public CourierIsOnline IsOnline { get; set; } = CourierIsOnline.Offline; // 默认为离线
 
         [Column(TypeName = "decimal(10,6)")]
         public decimal? CourierLongitude { get; set; }

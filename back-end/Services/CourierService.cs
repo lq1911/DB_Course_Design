@@ -1,13 +1,8 @@
 using BackEnd.DTOs.Courier;
-using BackEnd.Models;
 using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore; // 引入它以使用 Include 和 ThenInclude
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackEnd.Services
 {
@@ -50,7 +45,7 @@ namespace BackEnd.Services
             if (courier == null) return null;
             var statusDto = new WorkStatusDto
             {
-                IsOnline = courier.IsOnline
+                IsOnline = courier.IsOnline == CourierIsOnline.Online ? true : false
             };
             return statusDto;
         }
@@ -70,7 +65,7 @@ namespace BackEnd.Services
         {
             var courier = await _courierRepository.GetByIdAsync(courierId);
             if (courier == null) return false;
-            courier.IsOnline = isOnline;
+            courier.IsOnline = isOnline ? CourierIsOnline.Online : CourierIsOnline.Offline;
             await _courierRepository.UpdateAsync(courier);
             await _courierRepository.SaveAsync();
             return true;
