@@ -1,215 +1,193 @@
-# 管理员后台系统
+### 页面描述
+该页面是外卖管理系统的核心后台管理界面，供系统管理员使用。管理员可以在此页面集中处理用户的售后申请、投诉、店铺的违规举报以及审核用户评论。此外，管理员也可以查看和修改自己的个人信息。
 
-## 📄 页面描述
+### 页面路径: `/admin`
 
-系统管理员使用的核心后台管理界面,用于处理:
-- 用户售后申请
-- 用户投诉
-- 店铺违规举报
-- 用户评论审核
-- 管理员个人信息管理
+### 页面功能点
+*   **Function_1:** 通过侧边栏导航，切换不同的管理面板（管理员信息、售后处理、投诉处理、违规举报处理、评论审核）。
+*   **Function_2:** 在各个管理列表中，可以根据处理状态（如“待处理”、“已完成”）对列表进行筛选。
+*   **Function_3:** 在各个管理列表中，提供搜索框，支持根据关键信息（如编号、名称）进行模糊搜索。
+*   **Function_4:** 点击列表中的“查看详情”按钮，会弹出模态框，展示该条记录的详细信息。
+*   **Function_5:** 在详情模态框中，管理员可以填写处理备注、选择处罚措施、填写处罚原因，并执行处理操作。
+*   **Function_6:** 处理操作会更新该条记录的状态和信息，并在界面上实时反馈。
+*   **Function_7:** 在“管理员信息”面板中，可以查看和编辑当前管理员的个人资料。
 
-**页面路径**: `/admin`
+### 调用接口
 
-## 🎯 核心功能点
-
-1. 🔄 **面板切换**: 通过侧边栏在不同管理面板间切换
-   - 管理员信息
-   - 售后处理
-   - 投诉处理
-   - 违规举报处理
-   - 评论审核
-
-2. 📊 **列表管理**:
-   - 状态筛选 (待处理/已完成)
-   - 关键词搜索
-   - 详情查看
-   - 处理操作
-   - 实时状态更新
-
-## 🔌 API 接口文档
-
-### 1. 售后管理接口
-
-#### 1.1 获取售后列表
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `GET /api/v1/after-sales` |
-| 调用时机 | 页面加载时 |
-
-**返回数据结构**:
-
+---
+#### 1. 获取售后列表接口
+*   **接口说明:**
+    进入页面时调用，用于获取**所有**售后申请的列表数据。前端会一次性获取全部数据，然后在本地进行分页、筛选和搜索。
+*   **请求路径:** `/api/v1/after-sales`
+*   **请求方法:** `GET`
+*   **获得信息说明 (返回一个对象数组):**
 | 字段名 | 类型 | 说明 |
-|--------|------|------|
-| id | number | 唯一ID |
-| applicationId | string | 售后申请编号 |
-| orderId | string | 关联订单编号 |
-| applicationTime | string | 申请时间 (YYYY-MM-DD HH:mm) |
-| description | string | 情况说明 |
-| status | string | 状态 ("待处理"/"已完成") |
-| punishment | string | 处理措施，默认为 "-" |
+| :--- | :--- | :--- |
+| `id` | `number` | 唯一ID |
+| `applicationId` | `string` | 售后申请编号 |
+| `orderId` | `string` | 关联的订单编号 |
+| `applicationTime` | `string` | 申请时间 (格式: "YYYY-MM-DD HH:mm") |
+| `description` | `string` | 用户提交的情况说明 |
+| `status` | `string` | 当前状态，值为 "待处理" 或 "已完成" |
+| `punishment` | `string` | 已执行的处理措施，默认为 "-" |
 
-#### 1.2 更新售后信息
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `PUT /api/v1/after-sales/{id}` |
-| 调用时机 | 管理员在售后详情弹窗中执行处罚时 |
-
-**输入表单结构**:
-
+---
+#### 2. 更新售后信息接口
+*   **接口说明:**
+    管理员在售后详情弹窗中执行处罚时调用，用于更新指定售后申请的状态和处理结果。
+*   **请求路径:** `/api/v1/after-sales/{id}`
+*   **请求方法:** `PUT`
+*   **输入表单说明 (Request Body):**
 | 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| id | number | 是 | 售后记录ID |
-| applicationId | string | 是 | 售后申请编号 |
-| orderId | string | 是 | 关联订单编号 |
-| applicationTime | string | 是 | 申请时间 |
-| description | string | 是 | 情况说明 |
-| status | string | 是 | 状态，固定为 "已完成" |
-| punishment | string | 是 | 处罚措施文本 |
-| punishmentReason | string | 是 | 处罚原因 |
-| processingNote | string | 是 | 处理备注 |
+| :--- | :--- | :--- | :--- |
+| `id` | `number` | 是 | 要更新的售后记录的ID |
+| `...` | `any` | 是 | 其他所有原字段都需要原样返回 |
+| `status` | `string` | 是 | 更新后的状态，固定为 "已完成" |
+| `punishment` | `string` | 是 | 管理员选择的处罚措施文本 |
+| `punishmentReason` | `string` | 是 | 管理员填写的处罚原因 |
+| `processingNote` | `string` | 是 | 管理员填写的处理备注 |
+*   **获得信息说明 (返回更新后的对象):**
+    返回与输入表单结构相同的更新后的售后对象。
 
-**返回数据结构**:
-返回与输入表单结构相同的更新后的售后对象。
-
-### 2. 投诉管理接口
-
-#### 2.1 获取投诉列表
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `GET /api/v1/complaints` |
-| 调用时机 | 页面加载时 |
-
-**返回数据结构**:
-
+---
+#### 3. 获取投诉列表接口
+*   **接口说明:**
+    进入页面时调用，用于获取**所有**投诉记录的列表数据。
+*   **请求路径:** `/api/v1/complaints`
+*   **请求方法:** `GET`
+*   **获得信息说明 (返回一个对象数组):**
 | 字段名 | 类型 | 说明 |
-|--------|------|------|
-| id | number | 唯一ID |
-| complaintId | string | 投诉编号 |
-| target | string | 投诉对象 |
-| content | string | 投诉内容 |
-| applicationTime | string | 申请时间 (YYYY-MM-DD HH:mm) |
-| status | string | 状态 ("待处理"/"已完成") |
-| punishment | string | 处理措施，默认为 "-" |
+| :--- | :--- | :--- |
+| `id` | `number` | 唯一ID |
+| `complaintId` | `string` | 投诉编号 |
+| `target` | `string` | 投诉对象 (例如: "骑手张三", "商家李记餐厅") |
+| `content` | `string` | 投诉内容 |
+| `applicationTime` | `string` | 申请时间 (格式: "YYYY-MM-DD HH:mm") |
+| `status` | `string` | 当前状态，值为 "待处理" 或 "已完成" |
+| `punishment` | `string` | 已执行的处理措施，默认为 "-" |
 
-#### 2.2 更新投诉信息
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `PUT /api/v1/complaints/{id}` |
-| 调用时机 | 管理员在投诉详情弹窗中执行处罚时 |
-
-**输入表单结构**:
-
+---
+#### 4. 更新投诉信息接口
+*   **接口说明:**
+    管理员在投诉详情弹窗中执行处罚时调用，用于更新指定投诉记录的状态和处理结果。
+*   **请求路径:** `/api/v1/complaints/{id}`
+*   **请求方法:** `PUT`
+*   **输入表单说明 (Request Body):**
 | 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| id | number | 是 | 投诉记录ID |
-| complaintId | string | 是 | 投诉编号 |
-| target | string | 是 | 投诉对象 |
-| content | string | 是 | 投诉内容 |
-| applicationTime | string | 是 | 申请时间 |
-| status | string | 是 | 状态，固定为 "已完成" |
-| punishment | string | 是 | 处罚措施文本 |
-| punishmentReason | string | 是 | 处罚原因 |
-| processingNote | string | 是 | 处理备注 |
+| :--- | :--- | :--- | :--- |
+| `id` | `number` | 是 | 要更新的投诉记录的ID |
+| `...` | `any` | 是 | 其他所有原字段都需要原样返回 |
+| `status` | `string` | 是 | 更新后的状态，固定为 "已完成" |
+| `punishment` | `string` | 是 | 管理员选择的处罚措施文本 |
+| `punishmentReason` | `string` | 是 | 管理员填写的处罚原因 |
+| `processingNote` | `string` | 是 | 管理员填写的处理备注 |
+*   **获得信息说明 (返回更新后的对象):**
+    返回与输入表单结构相同的更新后的投诉对象。
 
-**返回数据结构**:
-返回与输入表单结构相同的更新后的投诉对象。
-
-### 3. 违规举报管理接口
-
-#### 3.1 获取违规举报列表
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `GET /api/v1/violations` |
-| 调用时机 | 页面加载时 |
-
-**返回数据结构**:
-
+---
+#### 5. 获取违规举报列表接口
+*   **接口说明:**
+    进入页面时调用，用于获取**所有**店铺违规举报的列表数据。
+*   **请求路径:** `/api/v1/violations`
+*   **请求方法:** `GET`
+*   **获得信息说明 (返回一个对象数组):**
 | 字段名 | 类型 | 说明 |
-|--------|------|------|
-| id | number | 唯一ID |
-| punishmentId | string | 处罚编号 |
-| storeName | string | 违规店铺名称 |
-| reason | string | 违规原因 |
-| merchantPunishment | string | 对商家的处罚措施，默认为 "-" |
-| storePunishment | string | 对店铺的处罚措施，默认为 "-" |
-| punishmentTime | string | 处罚时间 (YYYY-MM-DD HH:mm) |
-| status | string | 状态 ("待处理"/"执行中"/"已完成") |
+| :--- | :--- | :--- |
+| `id` | `number` | 唯一ID |
+| `punishmentId` | `string` | 处罚编号 |
+| `storeName` | `string` | 违规的店铺名称 |
+| `reason` | `string` | 违规原因 |
+| `merchantPunishment` | `string` | 对商家的处罚措施，默认为 "-" |
+| `storePunishment` | `string` | 对店铺的处罚措施，默认为 "-" |
+| `punishmentTime` | `string` | 处罚时间 (格式: "YYYY-MM-DD HH:mm") |
+| `status` | `string` | 当前状态，值为 "待处理", "执行中" 或 "已完成" |
 
-#### 3.2 更新违规举报信息
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `PUT /api/v1/violations/{id}` |
-| 调用时机 | 管理员在违规详情弹窗中“开始执行”或“完成执行”时 |
-
-**输入表单结构**:
-
+---
+#### 6. 更新违规举报信息接口
+*   **接口说明:**
+    管理员在违规详情弹窗中“开始执行”或“完成执行”时调用。
+*   **请求路径:** `/api/v1/violations/{id}`
+*   **请求方法:** `PUT`
+*   **输入表单说明 (Request Body):**
 | 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| id | number | 是 | 违规记录ID |
-| punishmentId | string | 是 | 处罚编号 |
-| storeName | string | 是 | 违规店铺名称 |
-| reason | string | 是 | 违规原因 |
-| punishmentTime | string | 是 | 处罚时间 |
-| status | string | 是 | 状态 ("执行中"/"已完成") |
-| merchantPunishment| string | “开始执行”时必填 | 对商家的处罚措施 |
-| storePunishment| string | “开始执行”时必填 | 对店铺的处罚措施 |
-| processingNote | string | 是 | 处理备注 |
+| :--- | :--- | :--- | :--- |
+| `id` | `number` | 是 | 要更新的违规记录的ID |
+| `...` | `any` | 是 | 其他所有原字段都需要原样返回 |
+| `status` | `string` | 是 | “开始执行”时，值为 "执行中"。<br>“完成执行”时，值为 "已完成"。 |
+| `merchantPunishment`| `string` | **“开始执行”时**必填 | 管理员选择的对商家处罚措施 |
+| `storePunishment`| `string` | **“开始执行”时**必填 | 管理员选择的对店铺处罚措施 |
+| `processingNote` | `string` | 是 | 管理员填写的处理备注 |
+*   **获得信息说明 (返回更新后的对象):**
+    返回与输入表单结构相同的更新后的违规对象。
 
-**返回数据结构**:
-返回与输入表单结构相同的更新后的违规对象。
-
-### 4. 评论审核管理接口
-
-#### 4.1 获取评论审核列表
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `GET /api/v1/reviews` |
-| 调用时机 | 页面加载时 |
-
-**返回数据结构**:
-
+---
+#### 7. 获取评论审核列表接口
+*   **接口说明:**
+    进入页面时调用，用于获取**所有**待审核或已审核的评论列表。
+*   **请求路径:** `/api/v1/reviews`
+*   **请求方法:** `GET`
+*   **获得信息说明 (返回一个对象数组):**
 | 字段名 | 类型 | 说明 |
-|--------|------|------|
-| id | number | 唯一ID |
-| reviewId | string | 评论ID |
-| username | string | 用户名 |
-| storeName | string | 店铺名称 |
-| content | string | 评论内容 |
-| rating | number | 评分 (1-5) |
-| submitTime | string | 提交时间 (YYYY-MM-DD HH:mm) |
-| status | string | 状态 ("待处理"/"已完成") |
-| punishment | string | 处理措施，默认为 "-" |
+| :--- | :--- | :--- |
+| `id` | `number` | 唯一ID |
+| `reviewId` | `string` | 评论ID |
+| `username` | `string` | 评论的用户名 |
+| `storeName` | `string` | 评论的店铺名称 |
+| `content` | `string` | 评论内容 |
+| `rating` | `number` | 评分 (1-5) |
+| `submitTime` | `string` | 提交时间 (格式: "YYYY-MM-DD HH:mm") |
+| `status` | `string` | 当前状态，值为 "待处理" 或 "已完成" |
+| `punishment` | `string` | 已执行的处理措施，默认为 "-" |
 
-#### 4.2 更新评论审核信息
-
-| 配置项 | 说明 |
-|--------|------|
-| 请求路径 | `PUT /api/v1/reviews/{id}` |
-| 调用时机 | 管理员在评论详情弹窗中执行处理时 |
-
-**输入表单结构**:
-
+---
+#### 8. 更新评论审核信息接口
+*   **接口说明:**
+    管理员在评论详情弹窗中执行处理时调用，用于更新评论的状态和处理结果。
+*   **请求路径:** `/api/v1/reviews/{id}`
+*   **请求方法:** `PUT`
+*   **输入表单说明 (Request Body):**
 | 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| id | number | 是 | 评论记录ID |
-| reviewId | string | 是 | 评论ID |
-| username | string | 是 | 用户名 |
-| storeName | string | 是 | 店铺名称 |
-| content | string | 是 | 评论内容 |
-| rating | number | 是 | 评分 |
-| submitTime | string | 是 | 提交时间 |
-| status | string | 是 | 状态，固定为 "已完成" |
-| punishment | string | 是 | 处理方式文本 (如 "通过审核", "删除评论") |
-| punishmentReason | string | 是 | 处理原因 |
-| processingNote | string | 是 | 审核备注 |
+| :--- | :--- | :--- | :--- |
+| `id` | `number` | 是 | 要更新的评论记录的ID |
+| `...` | `any` | 是 | 其他所有原字段都需要原样返回 |
+| `status` | `string` | 是 | 更新后的状态，固定为 "已完成" |
+| `punishment` | `string` | 是 | 管理员选择的处理方式文本 (如 "通过审核", "删除评论") |
+| `punishmentReason` | `string` | 是 | 管理员填写的处理原因 |
+| `processingNote` | `string` | 是 | 管理员填写的审核备注 |
+*   **获得信息说明 (返回更新后的对象):**
+    返回与输入表单结构相同的更新后的评论对象。
 
-**返回数据结构**:
-返回与输入表单结构相同的更新后的评论对象。
+---
+#### 9. 获取管理员信息接口
+*   **接口说明:**
+    进入页面时调用，用于获取当前登录管理员的详细信息。
+*   **请求路径:** `/api/v1/admin/info`
+*   **请求方法:** `GET`
+*   **获得信息说明 (返回一个对象):**
+| 字段名 | 类型 | 说明 |
+| :--- | :--- | :--- |
+| `id` | `string` | 管理员ID (e.g., "ADM001") |
+| `username` | `string` | 登录用户名 |
+| `name` | `string` | 昵称/显示名 (e.g., "张管理员") |
+| `realName` | `string` | 真实姓名 (e.g., "张伟") |
+| `role` | `string` | 角色 (e.g., "系统管理员") |
+| `registrationDate` | `string` | 注册日期 (e.g., "2023-01-15") |
+| `avatarUrl` | `string` | 头像图片的URL |
+| `phone` | `string` | 手机号 |
+| `email` | `string` | 电子邮箱 |
+| `gender` | `string` | 性别，值为 "男" 或 "女" |
+| `birthDate` | `string` | 出生日期 (e.g., "1990-05-15") |
+| `managementScope`| `string` | 负责管理的模块描述 |
+| `averageRating` | `number` | 处理事项的平均评分 |
+| `isPublic` | `boolean` | 个人信息是否公开 |
+
+---
+#### 10. 更新管理员信息接口
+*   **接口说明:**
+    在管理员信息页面点击“保存修改”时调用，用于更新管理员的个人资料。
+*   **请求路径:** `/api/v1/admin/info`
+*   **请求方法:** `PUT`
+*   **输入表单说明 (Request Body):**
+    请求体为一个完整的 AdminInfo 对象，其结构与 “9. 获取管理员信息接口” 的返回对象完全相同。前端会将表单中所有字段（包括只读字段）一并提交。
+*   **获得信息说明 (返回更新后的对象):**
+    成功更新后，返回与输入表单结构相同的、最新的管理员信息对象。

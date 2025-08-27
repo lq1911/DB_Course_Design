@@ -919,6 +919,24 @@ import axios from 'axios'; // 导入axios用于真实API请求
 // =================================================================
 // 步骤 2: 定义数据类型
 // =================================================================
+interface AdminInfo {
+  id: string; // e.g., "ADM001"
+  username: string;
+  name: string; // The display name, e.g., "张管理员"
+  realName: string; // e.g., "张伟"
+  role: string; // e.g., "系统管理员"
+  registrationDate: string; // e.g., "2023-01-15"
+  avatarUrl: string;
+  phone: string;
+  email: string;
+  gender: '男' | '女';
+  birthDate: string; // e.g., "1990-05-15"
+  managementScope: string;
+  averageRating: number;
+  isPublic: boolean;
+}
+
+
 interface AfterSaleItem {
   id: number;
   applicationId: string;
@@ -995,7 +1013,23 @@ const mockApi = {
     { id: 2, reviewId: 'RV202401002', username: '用户李四', storeName: '快餐店', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
     { id: 3, reviewId: 'RV202401003', username: '用户王五', storeName: '小吃摊', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
   ]),
-  // 模拟更新操作 (在控制台打印信息)
+    getAdminInfo: async (): Promise<AdminInfo> => ({
+    id: 'ADM001',
+    username: 'admin_zhang',
+    name: '张管理员',
+    realName: '张伟',
+    role: '系统管理员',
+    registrationDate: '2023-01-15',
+    avatarUrl: 'https://readdy.ai/api/search-image?query=professional%20business%20administrator%20avatar%20portrait%20with%20clean%20white%20background%20modern%20corporate%20headshot%20style%20high%20quality%20detailed%20facial%20features%20confident%20expression&width=120&height=120&seq=admin-profile-001&orientation=squarish',
+    phone: '13800138000',
+    email: 'admin@fooddelivery.com',
+    gender: '男',
+    birthDate: '1990-05-15',
+    managementScope: '售后处理、投诉管理、评论审核',
+    averageRating: 4.8,
+    isPublic: true,
+  }),
+  updateAdminInfo: async (data: AdminInfo) => {console.log('【Mock API】更新管理员信息:', data);return { success: true, data };},
   updateAfterSale: async (item: AfterSaleItem) => { console.log('【Mock API】更新售后:', item); return { success: true, data: item }; },
   updateComplaint: async (item: ComplaintItem) => { console.log('【Mock API】更新投诉:', item); return { success: true, data: item }; },
   updateViolation: async (item: ViolationItem) => { console.log('【Mock API】更新违规:', item); return { success: true, data: item }; },
@@ -1010,10 +1044,12 @@ const realApi = {
     getComplaintsList: () => apiClient.get<ComplaintItem[]>('/complaints').then(res => res.data),
     getViolationsList: () => apiClient.get<ViolationItem[]>('/violations').then(res => res.data),
     getReviewsList: () => apiClient.get<ReviewItem[]>('/reviews').then(res => res.data),
+    getAdminInfo: () => apiClient.get<AdminInfo>('/admin/info').then(res => res.data),
     updateAfterSale: (item: AfterSaleItem) => apiClient.put(`/after-sales/${item.id}`, item).then(res => res.data),
     updateComplaint: (item: ComplaintItem) => apiClient.put(`/complaints/${item.id}`, item).then(res => res.data),
     updateViolation: (item: ViolationItem) => apiClient.put(`/violations/${item.id}`, item).then(res => res.data),
     updateReview: (item: ReviewItem) => apiClient.put(`/reviews/${item.id}`, item).then(res => res.data),
+    updateAdminInfo: (data: AdminInfo) => apiClient.put<AdminInfo>('/admin/info', data).then(res => res.data),
 };
 
 // 3.3 ----------------- API切换器 -----------------
