@@ -26,20 +26,7 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(c => c.Rating).HasColumnName("RATING").IsRequired(false).HasComment("评分：1-5分");
 
-            // 配置字符串数组属性 - 存储为 JSON
-            builder.Property(c => c.CommentImage)
-                   .HasConversion(
-                       v => v == null ? null : JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                       v => string.IsNullOrEmpty(v) ? null : JsonSerializer.Deserialize<string[]>(v, (JsonSerializerOptions?)null)
-                   )
-                   .HasColumnName("COMMENTIMAGE")
-                   .HasColumnType("nvarchar(max)")
-                   .IsRequired(false);
-
-            builder.Property(c => c.CommentImage)
-                   .Metadata.SetValueComparer(
-                       ValueComparer.CreateDefault(typeof(string[]), favorStructuralComparisons: true)
-                   );
+            builder.Property(c => c.CommentImage).HasColumnName("COMMENTIMAGE").IsRequired(false).HasMaxLength(1000);
 
             // 配置评论类型
             builder.Property(c => c.CommentType)

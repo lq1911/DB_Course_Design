@@ -28,7 +28,7 @@ namespace BackEnd.Models
         [Range(1, 5)]
         public int? Rating { get; set; }
 
-        public string[]? CommentImage { get; set; }
+        public string? CommentImage { get; set; }
 
         [Required]
         public CommentType CommentType { get; set; }
