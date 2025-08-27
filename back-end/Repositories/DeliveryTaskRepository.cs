@@ -58,5 +58,10 @@ namespace BackEnd.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public IQueryable<DeliveryTask> GetQueryable()
+        {
+            return _context.DeliveryTasks.AsQueryable();
+        }
     }
 }

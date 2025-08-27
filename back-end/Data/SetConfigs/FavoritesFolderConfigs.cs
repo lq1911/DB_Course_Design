@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<FavoritesFolder> builder)
         {
-            builder.ToTable("FAVORITESFOLDER");
+            builder.ToTable("FAVORITES_FOLDERS");
 
             builder.HasKey(ff => ff.FolderID);
 
@@ -28,12 +28,6 @@ namespace BackEnd.Data.SetConfigs
                    .WithMany(c => c.FavoritesFolders) // 明确指定 Customer 端的反向导航属性
                    .HasForeignKey(f => f.CustomerID)
                    .OnDelete(DeleteBehavior.Cascade); // 当顾客被删除时，其所有收藏夹也应被级联删除
-
-            // 关系二: FavoritesFolder -> FavoriteItem (一对多)
-            builder.HasMany(f => f.FavoriteItems)
-                   .WithOne(fi => fi.Folder) // 明确指定 FavoriteItem 端的反向导航属性
-                   .HasForeignKey(fi => fi.FolderID)
-                   .OnDelete(DeleteBehavior.Cascade); // 当收藏夹被删除时，其包含的所有收藏项都应被级联删除
         }
     }
 }

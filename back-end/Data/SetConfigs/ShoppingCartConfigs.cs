@@ -8,7 +8,7 @@ namespace BackEnd.Data.SetConfigs
     {
         public void Configure(EntityTypeBuilder<ShoppingCart> builder)
         {
-            builder.ToTable("SHOPPINGCART");
+            builder.ToTable("SHOPPING_CARTS");
 
             builder.HasKey(sc => sc.CartID);
 
@@ -18,24 +18,17 @@ namespace BackEnd.Data.SetConfigs
 
             builder.Property(sc => sc.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(10,2)").HasDefaultValue(0.00m);
 
-            builder.Property(sc => sc.OrderID).HasColumnName("ORDERID");
+            builder.Property(sc => sc.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
 
             // ---------------------------------------------------------------
             // 关系配置
             // ---------------------------------------------------------------
 
-            // 关系一: ShoppingCart 与 FoodOrder (一对一，可选关系)
-            builder.HasOne(sc => sc.Order)
-                   .WithOne(o => o.Cart)
-                   .HasForeignKey<ShoppingCart>(sc => sc.OrderID)
-                   .OnDelete(DeleteBehavior.SetNull); // 如果订单被删除，仅将购物车的 OrderID 设为 NULL，不删除购物车本身。
-
-            // 关系二: ShoppingCart 与 ShoppingCartItem (一对多)
-            // 一个购物车包含多个购物车项。
-            builder.HasMany(cart => cart.ShoppingCartItems) // 一个购物车有多个 ShoppingCartItems
-                   .WithOne(sci => sci.Cart)
-                   .HasForeignKey(sci => sci.Cart)
-                   .OnDelete(DeleteBehavior.Cascade); // 当购物车被删除时，其包含的所有项也应被级联删除，以保持数据干净。
+            // 关系一: ShoppingCart -> Customer (多对一)
+            builder.HasOne(sc => sc.Customer)
+                   .WithMany(cu => cu.ShoppingCarts)
+                   .HasForeignKey(sc => sc.CustomerID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

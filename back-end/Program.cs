@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using Oracle.EntityFrameworkCore;
 using BackEnd.Data;
-using BackEnd.Repositories.Interfaces;
 using BackEnd.Repositories;
-using BackEnd.Services.Interfaces;
+using BackEnd.Repositories.Interfaces;
 using BackEnd.Services;
+using BackEnd.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 启用 MVC 控制器支持
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    // 配置 JSON 序列化为驼峰命名（小驼峰）
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
 
 // 注册 Repository 层
 // Repository 层注入，接口在前，实现类在后
@@ -52,15 +56,17 @@ builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // 注册 Service 层
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRegisterService, RegisterService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ICourierService, CourierService>();
 
 var app = builder.Build();
 
 // 如果是开发环境，启用 Swagger UI 来浏览 API 接口文档
 if (app.Environment.IsDevelopment())
 {
-     app.UseSwagger();
-     app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

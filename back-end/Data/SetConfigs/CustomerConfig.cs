@@ -29,47 +29,11 @@ namespace BackEnd.Data.EntityConfigs
             // 配置外键关系
             // ---------------------------------------------------------------
 
-            // 关系一: 与 User 的一对一关系
+            // 关系一: Customer -> User (一对一)
             builder.HasOne(c => c.User)
                    .WithOne(u => u.Customer)
                    .HasForeignKey<Customer>(c => c.UserID)
                    .OnDelete(DeleteBehavior.Cascade);
-
-            // 关系二: 与 DeliveryTask 的一对多关系
-            // 不允许删除仍有关联配送任务的顾客
-            builder.HasMany(c => c.DeliveryTasks)
-                   .WithOne(dt => dt.Customer)
-                   .HasForeignKey(dt => dt.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 关系三: 与 FoodOrder 的一对多关系
-            // 不允许删除仍有订单历史的顾客
-            builder.HasMany(c => c.FoodOrders)
-                   .WithOne(fo => fo.Customer)
-                   .HasForeignKey(fo => fo.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 关系四: 与 Coupon 的一对多关系
-            // 不允许删除仍持有优惠券的顾客
-            builder.HasMany(c => c.Coupons)
-                   .WithOne(co => co.Customer)
-                   .HasForeignKey(co => co.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 关系五: 与 FavoritesFolder 的一对多关系
-            // 收藏夹是顾客的私有数据，当顾客被删除时，其收藏夹也应被级联删除
-            builder.HasMany(c => c.FavoritesFolders)
-                   .WithOne(ff => ff.Customer)
-                   .HasForeignKey(ff => ff.CustomerID)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            // 关系六: 与 Comment 的一对多关系
-            // 不允许删除仍有评论的顾客
-            builder.HasMany(c => c.Comments)
-                   .WithOne(co => co.Commenter)
-                   .HasForeignKey(co => co.CommenterID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
         }
     }
 }

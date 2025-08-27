@@ -24,17 +24,11 @@ namespace BackEnd.Data.EntityConfigs
             // 配置外键关系
             // ---------------------------------------------------------------
 
-            // 配置多对一关系: AfterSaleApplication -> FoodOrder
+            // 关系一: AfterSaleApplication -> FoodOrder (多对一)
             builder.HasOne(asa => asa.Order)
                    .WithMany(fo => fo.AfterSaleApplications)
                    .HasForeignKey(asa => asa.OrderID)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // 配置多对多关系: AfterSaleApplication -> Administrator (通过 Evaluate_AfterSale)
-            builder.HasMany(asa => asa.EvaluateAfterSales)
-                   .WithOne(eas => eas.Application)
-                   .HasForeignKey(eas => eas.ApplicationID)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

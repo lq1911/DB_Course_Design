@@ -26,14 +26,14 @@ namespace BackEnd.Data.EntityConfigs
             builder.HasOne(ec => ec.Admin)
                    .WithMany(a => a.EvaluateComplaints)
                    .HasForeignKey(ec => ec.AdminID)
-                   .OnDelete(DeleteBehavior.Restrict); // 防止直接通过中间实体删除主实体
+                   .OnDelete(DeleteBehavior.Cascade);
 
 
             // 关系二: Evaluate_Complaint -> DeliveryComplaint (多对一)
             builder.HasOne(ec => ec.Complaint)
                    .WithMany(dc => dc.EvaluateComplaints)
                    .HasForeignKey(ec => ec.ComplaintID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

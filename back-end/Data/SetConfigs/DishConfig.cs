@@ -21,6 +21,8 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(d => d.Description).HasColumnName("DESCRIPTION").IsRequired().HasMaxLength(500);
 
+            builder.Property(d => d.DishImage).HasColumnName("DISHIMAGE").HasMaxLength(500).IsRequired(false);
+
             builder.Property(d => d.IsSoldOut)
                    .HasColumnName("ISSOLDOUT")
                    .IsRequired()
@@ -31,13 +33,6 @@ namespace BackEnd.Data.EntityConfigs
             // ---------------------------------------------------------------
             // 关系配置
             // ---------------------------------------------------------------
-
-            // 配置与 Menu 的多对多关系 (通过 Menu_Dish 中间表)
-            // 一个菜品可以出现在多个 Menu_Dish 记录中
-            builder.HasMany(d => d.MenuDishes)
-                   .WithOne(md => md.Dish) // 每个 Menu_Dish 记录对应一个菜品
-                   .HasForeignKey(md => md.DishID) // 外键在 Menu_Dish 表上
-                   .OnDelete(DeleteBehavior.Cascade); // 当菜品被删除时，其在所有菜单中的记录也应被删除
         }
     }
 }

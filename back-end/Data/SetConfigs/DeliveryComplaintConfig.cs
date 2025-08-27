@@ -28,18 +28,11 @@ namespace BackEnd.Data.EntityConfigs
             // 配置外键关系
             // ---------------------------------------------------------------
 
-            // 关系一: DeliveryComplaint <-> DeliveryTask (多对一)
+            // 关系一: DeliveryComplaint -> DeliveryTask (多对一)
             builder.HasOne(dc => dc.DeliveryTask)
                    .WithMany(dt => dt.DeliveryComplaints)
                    .HasForeignKey(dc => dc.DeliveryTaskID)
-                   .OnDelete(DeleteBehavior.Cascade); // 如果配送任务记录被删除，相关的投诉也应被删除
-
-            // 关系二: 与 Administrator 的多对多关系 (通过 Evaluate_Complaint)
-            // 投诉记录被删除时，相关的处理记录也应被级联删除
-            builder.HasMany(dc => dc.EvaluateComplaints)
-                   .WithOne(ec => ec.Complaint) // 假设 Evaluate_Complaint 中有 Complaint 导航属性
-                   .HasForeignKey(ec => ec.ComplaintID) // 假设 Evaluate_Complaint 中有 ComplaintID 外键
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.SetNull); // 需要保存投诉记录
         }
     }
 }
