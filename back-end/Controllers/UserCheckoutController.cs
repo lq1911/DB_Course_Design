@@ -6,21 +6,20 @@ using System.ComponentModel.DataAnnotations;
 namespace BackEnd.Controllers
 {
     [ApiController]
-    [Route("api/user")]
-    public class UserCouponController : ControllerBase
+    [Route("api")]
+    public class UserCheckoutController : ControllerBase
     {
-        private readonly IUserCouponService _userCouponService;
-        private readonly ILogger<UserCouponController> _logger;
-
-        public UserCouponController(
-            IUserCouponService userCouponService,
-            ILogger<UserCouponController> logger)
+        private readonly IUserCheckoutService _userCheckoutService;
+        private readonly ILogger<UserCheckoutController> _logger;
+        public UserCheckoutController(
+            IUserCheckoutService userCheckoutService,
+            ILogger<UserCheckoutController> logger)
         {
-            _userCouponService = userCouponService;
+            _userCheckoutService = userCheckoutService;
             _logger = logger;
         }
 
-        [HttpGet("coupons")]
+        [HttpGet("user/coupons")]
         [ProducesResponseType(typeof(List<UserCouponDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -29,7 +28,7 @@ namespace BackEnd.Controllers
         {
             try
             {
-                var coupons = await _userCouponService.GetUserCouponsAsync(userId);
+                var coupons = await _userCheckoutService.GetUserCouponsAsync(userId);
                 return Ok(coupons);
             }
             catch (ValidationException ex)
@@ -42,34 +41,19 @@ namespace BackEnd.Controllers
                 return StatusCode(500, new { message = "获取优惠券信息时发生错误" });
             }
         }
-    }
-    [ApiController]
-    [Route("api/store")]
-    public class StoreController : ControllerBase
-    {
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ILogger<StoreController> _logger;
 
-        public StoreController(
-            IShoppingCartService shoppingCartService,
-            ILogger<StoreController> logger)
-        {
-            _shoppingCartService = shoppingCartService;
-            _logger = logger;
-        }
-
-        [HttpGet("shoppingcart")]
-        [ProducesResponseType(typeof(ShoppingCartDto), StatusCodes.Status200OK)]
+        [HttpGet("store/shoppingcart")]
+        [ProducesResponseType(typeof(ShoppingCartItemDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ShoppingCartDto>> GetShoppingCart(
+        public async Task<ActionResult<ShoppingCartItemDto>> GetShoppingCart(
             [FromQuery, Required] int userId,
-            [FromQuery, Required] string storeId)
+            [FromQuery, Required] int storeId)
         {
             try
             {
-                var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(userId, storeId);
+                var shoppingCart = await _userCheckoutService.GetShoppingCartAsync(userId, storeId);
                 return Ok(shoppingCart);
             }
             catch (ValidationException ex)
@@ -82,5 +66,62 @@ namespace BackEnd.Controllers
                 return StatusCode(500, new { message = "获取购物车信息时发生错误" });
             }
         }
+
+        // 添加或更新购物车项
+        [HttpPost("store/cart/change")]
+        [ProducesResponseType(typeof(CartResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CartResponseDto>> UpdateCartItem(
+            [FromBody] UpdateCartItemDto dto,
+            [FromQuery][Required] int storeId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var updatedCart = await _userCheckoutService.UpdateCartItemAsync(dto, storeId);
+                return Ok(updatedCart);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "更新购物车项时发生错误 (StoreId={StoreId})", storeId);
+                return StatusCode(500, new { message = "更新购物车项时发生错误" });
+            }
+        }
+
+        // 删除购物车项
+        [HttpDelete("store/cart/remove")]
+        [ProducesResponseType(typeof(CartResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CartResponseDto>> RemoveCartItem(
+            [FromBody] RemoveCartItemDto dto,
+            [FromQuery][Required] int storeId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var updatedCart = await _userCheckoutService.RemoveCartItemAsync(dto, storeId);
+                return Ok(updatedCart);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "删除购物车项时发生错误 (StoreId={StoreId})", storeId);
+                return StatusCode(500, new { message = "删除购物车项时发生错误" });
+            }
+        }
     }
+
 }

@@ -27,7 +27,7 @@ namespace BackEnd.Dtos.User
         public decimal DiscountAmount { get; set; }
 
         [Required]
-        public string ValidTo { get; set; }
+        public string ValidTo { get; set; } = string.Empty;
     }
 
     public class CartRequestDto
