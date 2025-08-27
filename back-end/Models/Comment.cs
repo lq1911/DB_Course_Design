@@ -28,7 +28,8 @@ namespace BackEnd.Models
         [Range(1, 5)]
         public int? Rating { get; set; }
 
-        public string[]? CommentImage { get; set; }
+        [StringLength(1000)] // 假设所有URL加起来总长度不超过1000个字符，你可以根据需要调整
+        public string? CommentImage { get; set; }
 
         [Required]
         public CommentType CommentType { get; set; }
