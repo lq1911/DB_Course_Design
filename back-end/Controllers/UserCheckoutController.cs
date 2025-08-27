@@ -43,4 +43,44 @@ namespace BackEnd.Controllers
             }
         }
     }
+    [ApiController]
+    [Route("api/store")]
+    public class StoreController : ControllerBase
+    {
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ILogger<StoreController> _logger;
+
+        public StoreController(
+            IShoppingCartService shoppingCartService,
+            ILogger<StoreController> logger)
+        {
+            _shoppingCartService = shoppingCartService;
+            _logger = logger;
+        }
+
+        [HttpGet("shoppingcart")]
+        [ProducesResponseType(typeof(ShoppingCartDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ShoppingCartDto>> GetShoppingCart(
+            [FromQuery, Required] int userId,
+            [FromQuery, Required] string storeId)
+        {
+            try
+            {
+                var shoppingCart = await _shoppingCartService.GetShoppingCartAsync(userId, storeId);
+                return Ok(shoppingCart);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "获取用户 {UserId} 在店铺 {StoreId} 的购物车信息时发生错误", userId, storeId);
+                return StatusCode(500, new { message = "获取购物车信息时发生错误" });
+            }
+        }
+    }
 }
