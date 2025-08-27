@@ -1,10 +1,8 @@
 using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.Json;
 
-namespace BackEnd.Data.EntityConfigs
+namespace BackEnd.Data.SetConfigs // 注意：你的原始文件命名空间是 EntityConfigs，我改回了 SetConfigs 以匹配你的项目结构
 {
     public class CommentConfig : IEntityTypeConfiguration<Comment>
     {
@@ -24,16 +22,23 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(c => c.Replies).HasColumnName("REPLIES").HasDefaultValue(0);
 
-            builder.Property(c => c.Rating).HasColumnName("RATING").IsRequired(false).HasComment("评分：1-5分");
+            builder.Property(c => c.Rating).HasColumnName("RATING").IsRequired(false);
 
-            builder.Property(c => c.CommentImage).HasColumnName("COMMENTIMAGE").IsRequired(false).HasMaxLength(1000);
+            // ------------------- 这是核心修改部分 -------------------
+            // CommentImage 现在是一个普通的 string 属性，
+            // 我们只需要为它配置列名和最大长度即可。
+            // 之前所有复杂的 HasConversion 和 SetValueComparer 配置都已移除。
+            builder.Property(c => c.CommentImage)
+                   .HasColumnName("COMMENTIMAGE")
+                   .HasMaxLength(1000) // 使用 HasMaxLength 来生成 NVARCHAR2(1000)
+                   .IsRequired(false);
+            // ------------------- 修改结束 -------------------
 
             // 配置评论类型
             builder.Property(c => c.CommentType)
                    .HasColumnName("COMMENTTYPE")
                    .IsRequired()
-                   .HasConversion<int>() // 枚举存储为整数
-                   .HasComment("评论类型：1=店铺评论，2=订单评论，3=回复评论");
+                   .HasConversion<int>(); // 枚举存储为整数
 
             builder.Property(c => c.ReplyToCommentID).HasColumnName("REPLYTOCOMMENTID").IsRequired(false);
 
@@ -44,7 +49,7 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(c => c.CommenterID).HasColumnName("COMMENTERID").IsRequired();
 
             // ---------------------------------------------------------------
-            // 配置外键关系
+            // 配置外键关系 (这部分保持不变)
             // ---------------------------------------------------------------
 
             // 关系一: Comment -> Store (多对一)
@@ -60,11 +65,10 @@ namespace BackEnd.Data.EntityConfigs
                    .OnDelete(DeleteBehavior.SetNull);
 
             // 关系三: Comment -> Comment (自引用，多对一)
-            // 用于实现评论回复功能。一个评论可以回复另一个评论。
             builder.HasOne(c => c.ReplyToComment)
                    .WithMany(rc => rc.CommentReplies)
                    .HasForeignKey(c => c.ReplyToCommentID)
-                   .OnDelete(DeleteBehavior.SetNull); // 重要：防止级联删除导致问题
+                   .OnDelete(DeleteBehavior.SetNull);
 
             // 关系四: Comment -> FoodOrder (多对一)
             builder.HasOne(c => c.FoodOrder)
