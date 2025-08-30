@@ -10,7 +10,7 @@ namespace BackEnd.Dtos.User
     {
 
         [Required]
-        public int StoreId;
+        public int StoreId{ get; set; }
     }
 
     public class StoreResponseDto
