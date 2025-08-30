@@ -1,9 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using BackEnd.Data;
 using BackEnd.Repositories;
 using BackEnd.Repositories.Interfaces;
-using BackEnd.Services;
 using BackEnd.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using BackEnd.Services;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,10 +55,29 @@ builder.Services.AddScoped<IStoreViolationPenaltyRepository, StoreViolationPenal
 builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+
+
 // 注册 Service 层
+builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+
+//骑手服务注入
 builder.Services.AddScoped<ICourierService, CourierService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICourierRepository, CourierRepository>();
+
+// 添加 CORS 服务
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:8080") // Vue 前端地址
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -68,6 +87,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// 使用 CORS
+app.UseCors("AllowVueApp");
 
 app.UseHttpsRedirection();
 
