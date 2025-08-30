@@ -45,16 +45,16 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(dt => dt.StoreID).HasColumnName("STOREID").IsRequired();
 
             builder.Property(dt => dt.CourierID).HasColumnName("COURIERID").IsRequired();
-
             builder.Property(dt => dt.OrderID).HasColumnName("ORDERID").IsRequired();
+
 
             // ---------------------------------------------------------------
                      // 配置外键关系
                      // ---------------------------------------------------------------
 
-                     // 关系一: DeliveryTask -> Customer (多对一)
-                     // Customer 类中有 DeliveryTasks 导航属性
-                     builder.HasOne(dt => dt.Customer)
+            // 关系一: DeliveryTask -> Customer (多对一)
+            // Customer 类中有 DeliveryTasks 导航属性
+           builder.HasOne(dt => dt.Customer)
                    .WithMany(c => c.DeliveryTasks)
                    .HasForeignKey(dt => dt.CustomerID)
                    .OnDelete(DeleteBehavior.Restrict);

@@ -418,7 +418,7 @@ import {
   Close,
   Delete,
 } from '@element-plus/icons-vue';
-import { getMerchantInfo } from '@/services/merchant_api';
+import { getMerchantInfo } from '@/api/merchant_api';
 
 import axios from 'axios';
 
