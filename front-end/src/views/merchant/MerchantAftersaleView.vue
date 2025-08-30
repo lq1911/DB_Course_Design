@@ -317,11 +317,11 @@
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { Bell, House, List, Ticket, Warning, User } from '@element-plus/icons-vue';
 import { useRouter, useRoute } from 'vue-router';
-import { replyReview, getReviewList, getPenaltyList, getPenaltyDetail, appealPenalty, type Review } from '@/services/merchant_api';
+import { replyReview, getReviewList, getPenaltyList, getPenaltyDetail, appealPenalty, type Review } from '@/api/merchant_api';
 // 1. 引入接口和类型
-import type { AfterSaleApplication, AfterSaleListParams } from '@/services/merchant_api';
-import { getAfterSaleList, getAfterSaleDetail, decideAfterSale } from '@/services/merchant_api';
-import { type PenaltyRecord } from '@/services/merchant_api';
+import type { AfterSaleApplication, AfterSaleListParams } from '@/api/merchant_api';
+import { getAfterSaleList, getAfterSaleDetail, decideAfterSale } from '@/api/merchant_api';
+import { type PenaltyRecord } from '@/api/merchant_api';
 
 // 本地聊天消息类型
 interface LocalChatMessage {

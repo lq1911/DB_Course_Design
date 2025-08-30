@@ -441,7 +441,7 @@ import {
   type ShoppingCartItem,
   type Dish,
   type OrderCouponInfo
-} from '@/services/merchant_api';
+} from '@/api/merchant_api';
 
 // 本地示例数据（与数据库字段对齐）
 const localOrdersSample: (FoodOrder & { localStatus?: string; deliveryStatus?: string })[] = [
