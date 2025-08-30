@@ -10,8 +10,8 @@ using System.Text;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var configuration = builder.Configuration; // 应用程序所有配置信息的集合
-var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -30,18 +30,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     // 配置 JSON 序列化为驼峰命名（小驼峰）
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-});
-
-// 添加 CORS 服务配置 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: myAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.AllowAnyOrigin()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                      });
 });
 
 builder.Services.AddAuthentication(options =>
@@ -104,10 +92,27 @@ builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // 注册 Service 层
+builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+
+//骑手服务注入
 builder.Services.AddScoped<ICourierService, CourierService>();
 builder.Services.AddScoped<IEvaluate_AfterSaleService, Evaluate_AfterSaleService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICourierRepository, CourierRepository>();
+
+// 添加 CORS 服务
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:8080") // Vue 前端地址
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -118,9 +123,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// 使用 CORS
+app.UseCors("AllowVueApp");
 
-app.UseCors(myAllowSpecificOrigins);
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

@@ -39,7 +39,7 @@ export interface UserInfo {
 }
 
 export async function getAllStore() {
-    return getData<AllStore>(`//api/user/home/stores`);
+    return getData<AllStore>(`/api/user/home/stores`);
 }
 
 export async function getRecomStore() {

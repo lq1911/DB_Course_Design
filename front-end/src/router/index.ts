@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
   ...inStoreRoutes,
   ...merchantRoutes,
   ...checkoutRoutes,
-  ...managerRoutes
+  // ...managerRoutes
 ]
 
 const router = createRouter({
