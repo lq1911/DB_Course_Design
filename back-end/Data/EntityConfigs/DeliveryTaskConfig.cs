@@ -46,6 +46,8 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(dt => dt.CourierID).HasColumnName("COURIERID").IsRequired();
 
+            builder.Property(c => c.OrderID).HasColumnName("ORDERID").IsRequired();
+
             // ---------------------------------------------------------------
             // 配置外键关系
             // ---------------------------------------------------------------

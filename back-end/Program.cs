@@ -3,10 +3,15 @@ using BackEnd.Repositories;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services;
 using BackEnd.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration; // 应用程序所有配置信息的集合
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -26,6 +31,49 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     // 配置 JSON 序列化为驼峰命名（小驼峰）
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
+
+// 添加 CORS 服务配置 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        // 验证用于签名 Token 的密钥
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT密钥 'Jwt:Key' 未在配置中设置"))),
+
+        // 不验证发行人 (Issuer)
+        ValidateIssuer = false,
+
+        // 不验证接收方 (Audience)
+        ValidateAudience = false,
+
+        // 验证Token的生命周期
+        ValidateLifetime = true,
+
+        // 允许的服务器时间偏移量，设置为零表示不容忍任何时间误差
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+// 添加授权服务
+builder.Services.AddAuthorization();
 
 // 注册 Repository 层
 // Repository 层注入，接口在前，实现类在后
@@ -59,6 +107,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();
+builder.Services.AddScoped<IEvaluate_AfterSaleService, Evaluate_AfterSaleService>();
 
 var app = builder.Build();
 
@@ -70,6 +119,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(myAllowSpecificOrigins);
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
