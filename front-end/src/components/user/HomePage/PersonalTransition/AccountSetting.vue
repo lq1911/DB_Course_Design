@@ -60,6 +60,7 @@
 import { reactive, defineProps, defineEmits, ref, watch } from 'vue'
 
 import type { AccountInfo } from '@/api/user_account';
+import { saveAccountInfo } from '@/api/user_account';
 
 const props = defineProps<{
     showAccountForm: Boolean;
@@ -70,7 +71,11 @@ const emit = defineEmits<{
     (e: 'update:account', value: AccountInfo): void;
 }>()
 
+// 待添加用户编号
+const userID = 0;
+
 const formData = reactive<AccountInfo>({
+    id: userID,
     name: '',
     phoneNumber: 1,
     image: ''
@@ -100,13 +105,24 @@ function closeForm() {
 }
 
 // 保存修改
-function saveAccount() {
-    accountInfo.name = formData.name;
-    accountInfo.phoneNumber = formData.phoneNumber;
-    accountInfo.image = formData.image;
+async function saveAccount() {
+    try {
+        const result = await saveAccountInfo(formData)
+        if (result.success) {
+            accountInfo.name = formData.name;
+            accountInfo.phoneNumber = formData.phoneNumber;
+            accountInfo.image = formData.image;
 
-    emit('update:account', { ...formData })
-    closeForm()
+            emit('update:account', { ...formData })
+            closeForm()
+        }
+        else {
+            alert(result.message || '保存失败')
+        }
+    } catch (err) {
+        console.error(err)
+        alert('更新账户信息时出错')
+    }
 }
 
 // 头像选择
