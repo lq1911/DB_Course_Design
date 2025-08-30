@@ -21,6 +21,16 @@ export async function postData<T, D = any>(url: string, data?: D, config?: Axios
     }
 }
 
+export async function putData<T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> {
+    try {
+        const response = await API.put<T>(url, data, config);
+        return response.data;
+    } catch (error: unknown) {
+        handleAxiosError(error);
+        throw error;
+    }
+}
+
 export async function deleteData<T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> {
     try {
         const response = await API.delete<T>(url, { ...config, data });
