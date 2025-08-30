@@ -75,4 +75,10 @@ namespace BackEnd.Models.Enums
         Store = 1,
         FoodOrder = 2
     }
+
+    public enum CourierIsOnline
+    {
+        Online = 0,
+        Offline = 1
+    }
 }

@@ -68,7 +68,7 @@
 | dishId    | number  | 是   | 菜品 ID        |
 | quantity  | number  | 是   | 购买数量       |
 
-- 接口地址: `/api/store/cart/change`
+- 接口地址: `POST /api/store/cart/change`
 
 **4. 删除购物车项**
 
@@ -81,4 +81,4 @@
 | cartId    | number  | 是   | 购物车 ID      |
 | dishId    | number  | 是   | 菜品 ID        |
 
-- 接口地址: `/api/store/cart/remove`
+- 接口地址: `DELETE /api/store/cart/remove`

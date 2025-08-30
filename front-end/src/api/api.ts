@@ -58,7 +58,7 @@ interface StoreInfo {
 // --- Axios 实例和拦截器 ---
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api', // 您的后端 API 地址
+  baseURL: 'http://localhost:5250/api', // 您的后端 API 地址
   timeout: 10000,
 });
 
