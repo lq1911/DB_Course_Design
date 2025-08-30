@@ -54,6 +54,7 @@
 import { defineProps, defineEmits, reactive, watch } from 'vue'
 
 import type { Address } from '@/api/user_address';
+import { saveAddressInfo } from '@/api/user_address';
 
 const props = defineProps<{
     showAddressForm: Boolean;
@@ -64,7 +65,11 @@ const emit = defineEmits<{
     (e: "update:address", value: Address): void;
 }>();
 
+// 待添加用户编号
+const userID = 0;
+
 const formData = reactive<Address>({
+    id: userID,
     name: '',
     phoneNumber: 1,
     address: ''
@@ -87,20 +92,30 @@ function closeForm() {
 }
 
 // 保存地址
-function saveAddress() {
-    addrInfo.name = formData.name;
-    addrInfo.phoneNumber = formData.phoneNumber;
-    addrInfo.address = formData.address;
+async function saveAddress() {
+    try {
+        const result = await saveAddressInfo(formData)
+        if (result.success) {
+            addrInfo.name = formData.name;
+            addrInfo.phoneNumber = formData.phoneNumber;
+            addrInfo.address = formData.address;
 
-    emit("update:address", { ...formData });
-    closeForm();
+            emit("update:address", { ...formData });
+            closeForm();
+        } else {
+            alert(result.message || '保存失败')
+        }
+    } catch (err) {
+        console.error(err)
+        alert('更新地址信息时出错')
+    }
 }
 
 // 用户信息, 测试用
 const addrInfo = reactive({
-  name: "张小明",
-  phoneNumber: 1234556,
-  address: "同济大学"
+    name: "张小明",
+    phoneNumber: 1234556,
+    address: "同济大学"
 });
 
 </script>

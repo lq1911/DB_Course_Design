@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BackEnd.Models;
 
-namespace BackEnd.Data.SetConfigs
+namespace BackEnd.Data.EntityConfigs
 {
     public class MenuConfig : IEntityTypeConfiguration<Menu>
     {

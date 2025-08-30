@@ -2,8 +2,8 @@ import axios, { AxiosInstance } from 'axios'
 
 // 创建实例
 const API: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',  // 本地后端地址 
-    // baseURL: 'http://113.44.82.210:3000'  // 服务器后端地址
+    baseURL: 'http://localhost:5250',  // 本地后端地址 
+    // baseURL: 'http://113.44.82.210:5250'  // 服务器后端地址
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'
