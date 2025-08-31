@@ -47,6 +47,13 @@ namespace BackEnd.Repositories
                                  .Include(fo => fo.Comments)
                                  .FirstOrDefaultAsync(fo => fo.OrderID == id);
         }
+        public async Task<List<FoodOrder>> GetOrdersByCustomerIdOrderedByDateAsync(int customerId)
+        {
+            return await _context.FoodOrders
+                .Where(o => o.CustomerID == customerId)
+                .OrderByDescending(o => o.OrderTime)
+                .ToListAsync();
+        }
 
         public async Task AddAsync(FoodOrder foodOrder)
         {

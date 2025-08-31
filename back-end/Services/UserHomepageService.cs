@@ -7,6 +7,7 @@ using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using BackEnd.Models.Enums;
+using BackEnd.Models;
 namespace BackEnd.Services
 {
     public class UserHomepageService : IUserHomepageService
@@ -18,6 +19,7 @@ namespace BackEnd.Services
         private readonly IUserRepository _userRepository;
         private readonly ICouponRepository _couponRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
+        private readonly IShoppingCartRepository _shoppingCartRepository;   
 
         public UserHomepageService(
             IStoreRepository storeRepository,
@@ -26,7 +28,8 @@ namespace BackEnd.Services
             IMenu_DishRepository menuDishRepository,
             IUserRepository userRepository,
             ICouponRepository couponRepository,
-            IFoodOrderRepository foodOrderRepository
+            IFoodOrderRepository foodOrderRepository,
+            IShoppingCartRepository shoppingCartRepository
             )
         {
             _storeRepository = storeRepository;
@@ -106,28 +109,60 @@ namespace BackEnd.Services
         }
         public async Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId)
         {
-            // 查询用户的所有订单，包含相关数据
-            var orders = await _foodOrderRepository.GetByUserIdAsync(userId);
+            // 获取用户的所有订单
+            var orders = await _foodOrderRepository.GetOrdersByCustomerIdOrderedByDateAsync(userId);
+            
 
-            // 转换为DTO
-            var result = new HistoryOrderGetDto();
+            var result = new List<HistoryOrderDto>();
 
             foreach (var order in orders)
             {
-                var orderDto = new HistoryOrderDto
+                // 获取店铺信息
+                var store = await _storeRepository.GetByIdAsync(order.StoreID);
+                
+                // 获取购物车信息（如果存在）
+                List<string> dishImages = new List<string>();
+                decimal totalAmount = 0;
+                
+                if (order.CartID.HasValue)
+                {
+                    var cart = await _shoppingCartRepository.GetByIdAsync(order.CartID.Value);
+
+                    if (cart != null && cart.ShoppingCartItems != null)
+                    {
+                        // 获取所有菜品图片 - 修正后的逻辑
+                dishImages = cart.ShoppingCartItems
+                    .Where(sci => sci.Dish != null && !string.IsNullOrEmpty(sci.Dish.DishImage))
+                    .Select(sci => sci.Dish.DishImage)
+                    .OfType<string>() // 过滤掉 null 值
+                    .Distinct()
+                    .ToList();
+                    
+                // 计算总金额 - 修正后的逻辑
+                totalAmount = cart.ShoppingCartItems
+                    .Where(sci => sci.Dish != null)
+                    .Sum(sci => sci.Quantity * sci.Dish.Price);
+                    }
+                }
+
+                result.Add(new HistoryOrderDto
                 {
                     OrderID = order.OrderID,
-                    PaymentTime = order.PaymentTime,
-                    CartID = order.CartID,
+                    PaymentTime = order.PaymentTime.HasValue ?
+                        order.PaymentTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "",
+                    CartID = order.CartID ?? 0,
                     StoreID = order.StoreID,
-                    StoreName = order.Store?.StoreName ?? "未知商家",
-                    //StoreImage = order.Store?.ImageUrl
-                };
-                result.Orders.Add(orderDto);
+                    StoreImage = store?.StoreImage ?? "",
+                    StoreName = store?.StoreName ?? "",
+                    DishImage = dishImages,
+                    TotalAmount = totalAmount,
+                    OrderStatus = (int)order.FoodOrderState
+                });
             }
 
-            return result;
+            return new HistoryOrderGetDto { Orders = result };
         }
+
 
         public async Task<UserInfoResponse> GetUserInfoAsync(int userId)
         {

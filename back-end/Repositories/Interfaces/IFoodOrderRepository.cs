@@ -9,6 +9,7 @@ namespace BackEnd.Repositories.Interfaces
         Task<IEnumerable<FoodOrder>> GetByUserIdAsync(int userId);
         Task<IEnumerable<FoodOrder>> GetAllAsync();
         Task<FoodOrder?> GetByIdAsync(int id);
+        Task<List<FoodOrder>> GetOrdersByCustomerIdOrderedByDateAsync(int customerId);
         Task AddAsync(FoodOrder foodorder);
         Task UpdateAsync(FoodOrder foodorder);
         Task DeleteAsync(FoodOrder foodorder);

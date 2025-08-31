@@ -85,31 +85,36 @@ namespace BackEnd.Dtos.UserHomepage
     public class HistoryOrderDto
     {
         [Required]
-        public int StoreID { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string StoreName { get; set; } = null!;
-
-        [Required]
         public int OrderID { get; set; }
 
         [Required]
-        public DateTime PaymentTime { get; set; }
+        public string PaymentTime { get; set; } = string.Empty;
 
         [Required]
         public int CartID { get; set; }
 
         [Required]
-        public string? StoreImage { get; set; } // Address of Image
+        public int StoreID { get; set; }
 
-        public List<DishDto> OrderedDishes { get; set; } = new List<DishDto>();
+        [Required]
+        public string StoreImage { get; set; } = string.Empty;
 
-        // public TYPE OrderedFood { get; set; }
+        [Required]
+        public string StoreName { get; set; } = string.Empty;
+
+        [Required]
+        public List<string> DishImage { get; set; } = new List<string>();
+
+        [Required]
+        public decimal TotalAmount { get; set; }
+
+        [Required]
+        public int OrderStatus { get; set; }
     }
-    //获得历史订单DTO
+
     public class HistoryOrderGetDto
     {
+        [Required]
         public List<HistoryOrderDto> Orders { get; set; } = new List<HistoryOrderDto>();
     }
     // 用户信息响应DTO
