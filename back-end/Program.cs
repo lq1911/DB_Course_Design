@@ -108,7 +108,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowVueApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:8080") // Vue 前端地址
+            policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
