@@ -2,7 +2,7 @@ using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BackEnd.Data.SetConfigs
+namespace BackEnd.Data.EntityConfigs
 {
     public class ShoppingCartConfig : IEntityTypeConfiguration<ShoppingCart>
     {
