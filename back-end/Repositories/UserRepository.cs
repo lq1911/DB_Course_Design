@@ -2,6 +2,8 @@ using BackEnd.Data;
 using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic; // 确保 using 了这个
+using System.Threading.Tasks;   // 确保 using 了这个
 
 namespace BackEnd.Repositories
 {
@@ -26,8 +28,11 @@ namespace BackEnd.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User?> GetByPhoneAsync(long phoneNumber)
+        // --- 这是第一个核心修正 ---
+        // 方法签名中的参数类型从 long 修改为 string，以匹配 User 模型
+        public async Task<User?> GetByPhoneAsync(string phoneNumber)
         {
+            // 现在可以直接进行字符串比较
             return await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         }
 
@@ -53,13 +58,12 @@ namespace BackEnd.Repositories
             await _context.SaveChangesAsync();
         }
 
+        // --- 这是第二个核心修正 ---
+        // 方法签名中的参数类型已为 string，无需转换
         public async Task<bool> ExistsByPhoneAsync(string phone)
         {
-            if (long.TryParse(phone, out long phoneNumber))
-            {
-                return await _context.Users.CountAsync(u => u.PhoneNumber == phoneNumber) > 0;
-            }
-            return false;
+            // 直接使用传入的 string 进行比较
+            return await _context.Users.AnyAsync(u => u.PhoneNumber == phone);
         }
     }
 }

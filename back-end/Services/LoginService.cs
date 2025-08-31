@@ -1,12 +1,16 @@
 using BackEnd.Dtos.AuthRequest;
 using BackEnd.Dtos.User;
+using BackEnd.Models;
 using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
+using Microsoft.Extensions.Configuration; // 确保 using 了这个
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic; // 确保 using 了这个
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks; // 确保 using 了这个
 
 namespace BackEnd.Services
 {
@@ -23,8 +27,12 @@ namespace BackEnd.Services
 
         public async Task<LoginResult> LoginAsync(LoginRequest request)
         {
+            // --- 这是核心修改部分 ---
             // 1. 根据手机号查找用户
-            var user = await _userRepository.GetByPhoneAsync(long.Parse(request.PhoneNum));
+            // 【已修正】直接使用 string 类型的 request.PhoneNum 调用仓储层
+            var user = await _userRepository.GetByPhoneAsync(request.PhoneNum);
+            // --- 修改结束 ---
+
             if (user == null)
                 return Fail("手机号或密码错误", 401);
 
@@ -79,7 +87,8 @@ namespace BackEnd.Services
                 new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
-                new Claim("phone", user.PhoneNumber.ToString())
+                // 【已修正】user.PhoneNumber 现在是 string，无需再 .ToString()
+                new Claim("phone", user.PhoneNumber)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -110,4 +119,3 @@ namespace BackEnd.Services
         }
     }
 }
-

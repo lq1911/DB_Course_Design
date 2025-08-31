@@ -22,7 +22,8 @@ namespace BackEnd.Models
         public string Password { get; set; } = null!;
 
         [Required]
-        public long PhoneNumber { get; set; }
+        [StringLength(20)] // 给予合理的长度
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(30)]
