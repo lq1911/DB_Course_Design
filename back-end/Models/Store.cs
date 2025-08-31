@@ -9,15 +9,18 @@ namespace BackEnd.Models{
         public int StoreID { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string StoreName { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(200)]
         public string StoreAddress { get; set; }
 
-        [Required]
-        public DateTime BusinessHours { get; set; } // 若需要营业开始/结束时间建议拆分
+        // 营业开始时间
+        public TimeSpan? OpenTime { get; set; }
+
+        // 营业结束时间
+        public TimeSpan? CloseTime { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal AverageRating { get; set; } = 0.00m;
@@ -25,12 +28,23 @@ namespace BackEnd.Models{
         [Required]
         public int MonthlySales { get; set; }
 
-        [Required]
-        [StringLength(500)]
+        [StringLength(1000)]
         public string StoreFeatures { get; set; }
 
         [Required]
         public DateTime StoreCreationTime { get; set; }
+
+        // 店铺状态
+        [StringLength(40)]
+        public string? StoreState { get; set; }
+
+        // 店铺分类
+        [StringLength(40)]
+        public string? StoreCategory { get; set; }
+
+        // 店铺图片
+        [StringLength(1000)]
+        public string? StoreImage { get; set; }
 
         [Required]
         public int SellerID { get; set; }

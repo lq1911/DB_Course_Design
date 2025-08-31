@@ -25,7 +25,7 @@ namespace BackEnd.Repositories
                 var store = await _context.Stores
                     .FirstOrDefaultAsync(s => s.SellerID == sellerId);
                 
-                Console.WriteLine($"查询结果: {(store == null ? "null" : $"StoreID={store.StoreID}, Name={store.StoreName}")}");
+                Console.WriteLine($"查询结果: {(store == null ? "null" : $"StoreID={store.StoreID}, Name={store.StoreName}, SellerID={store.SellerID}")}");
                 
                 return store;
             }
@@ -40,9 +40,45 @@ namespace BackEnd.Repositories
         // 根据商家ID获取商家信息
         public async Task<Seller?> GetSellerByIdAsync(int sellerId)
         {
-            return await _context.Sellers
-                .Include(s => s.User)  // 包含用户信息
-                .FirstOrDefaultAsync(s => s.UserID == sellerId);
+            try
+            {
+                Console.WriteLine($"=== Repository层: 根据商家ID获取商家信息，商家ID: {sellerId} ===");
+                
+                // 先尝试只获取Seller信息，不包含User
+                var seller = await _context.Sellers
+                    .FirstOrDefaultAsync(s => s.UserID == sellerId);
+                
+                if (seller == null)
+                {
+                    Console.WriteLine("未找到商家信息");
+                    return null;
+                }
+                
+                Console.WriteLine($"找到商家信息: UserID={seller.UserID}, ReputationPoints={seller.ReputationPoints}");
+                
+                // 然后单独获取User信息
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.UserID == sellerId);
+                
+                if (user == null)
+                {
+                    Console.WriteLine("未找到用户信息");
+                    return null;
+                }
+                
+                Console.WriteLine($"找到用户信息: UserID={user.UserID}, Username={user.Username}");
+                
+                // 手动设置导航属性
+                seller.User = user;
+                
+                return seller;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"获取商家信息异常: {ex.Message}");
+                Console.WriteLine($"异常堆栈: {ex.StackTrace}");
+                throw;
+            }
         }
 
         // 根据商家ID获取用户信息
@@ -60,12 +96,35 @@ namespace BackEnd.Repositories
         {
             try
             {
+                Console.WriteLine($"=== Repository层: 开始更新店铺信息 ===");
+                Console.WriteLine($"店铺ID: {store.StoreID}");
+                Console.WriteLine($"店铺名称: {store.StoreName}");
+                Console.WriteLine($"店铺地址: {store.StoreAddress}");
+                Console.WriteLine($"营业开始时间: {store.OpenTime}");
+                Console.WriteLine($"营业结束时间: {store.CloseTime}");
+                Console.WriteLine($"店铺特色: {store.StoreFeatures}");
+                Console.WriteLine($"商家ID: {store.SellerID}");
+                
                 _context.Stores.Update(store);
-                await _context.SaveChangesAsync();
+                Console.WriteLine("店铺信息已标记为更新状态");
+                
+                var result = await _context.SaveChangesAsync();
+                Console.WriteLine($"数据库保存结果: {result} 行受影响");
+                
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"=== Repository层: 更新店铺信息异常 ===");
+                Console.WriteLine($"异常类型: {ex.GetType().Name}");
+                Console.WriteLine($"异常消息: {ex.Message}");
+                Console.WriteLine($"异常堆栈: {ex.StackTrace}");
+                
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"内部异常: {ex.InnerException.Message}");
+                }
+                
                 return false;
             }
         }

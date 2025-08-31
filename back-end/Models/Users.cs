@@ -36,6 +36,10 @@ namespace BackEnd.Models
         [Required]
         public DateTime AccountCreationTime { get; set; }
 
-        public int IsProfilePublic { get; set; } = 0;
+        [MaxLength(10)]
+        public string IsProfilePublic { get; set; } = "0";
+
+        [MaxLength(10)]
+        public string? Role { get; set; }
     }
 }

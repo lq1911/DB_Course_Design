@@ -9,6 +9,7 @@
             <!-- 主导航 -->
             <div class="flex items-center space-x-8">
                 <button v-for="(nav, index) in navItems" 
+                :key="index"
                 :path="index" 
                 @click="goToPage(nav.path)" 
                 :class="{

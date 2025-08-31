@@ -6,5 +6,6 @@ namespace BackEnd.Dtos.Merchant
         public decimal Rating { get; set; }        // 店铺评分
         public int MonthlySales { get; set; }     // 月销量
         public bool IsOpen { get; set; }          // 营业状态
+        public int CreditScore { get; set; }      // 信誉积分
     }
 } 

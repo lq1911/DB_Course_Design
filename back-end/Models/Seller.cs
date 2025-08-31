@@ -17,8 +17,9 @@ namespace BackEnd.Models{
         [StringLength(10)]
         public string BanStatus { get; set; } = "Normal";
 
-        public int? AfterSaleApplicationID { get; set; }
-        [ForeignKey("AfterSaleApplicationID")]
-        public AfterSaleApplication AfterSaleApplication { get; set; }
+        // 暂时注释掉，因为数据库中没有这个字段
+        // public int? AfterSaleApplicationID { get; set; }
+        // [ForeignKey("AfterSaleApplicationID")]
+        // public AfterSaleApplication AfterSaleApplication { get; set; }
     }
 }

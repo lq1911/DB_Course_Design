@@ -6,7 +6,7 @@ namespace BackEnd.Dtos.Merchant
     public class UpdateShopFieldRequestDto
     {
         [Required]
-        public string Field { get; set; } = string.Empty;  // 字段名（'address' | 'businessHours' | 'feature'）
+        public string Field { get; set; } = string.Empty;  // 字段名（'Address'/'address' | 'OpenTime'/'openTime'/'startTime' | 'CloseTime'/'closeTime'/'endTime' | 'Feature'/'feature'）
         
         [Required]
         public string Value { get; set; } = string.Empty;  // 字段值
