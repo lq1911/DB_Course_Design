@@ -8,6 +8,8 @@ namespace BackEnd.Services
     public class UserPlaceOrderService : IUserPlaceOrderService
     {
         private readonly IShoppingCartRepository _cartRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
 
         public UserPlaceOrderService(IShoppingCartRepository cartRepository, IFoodOrderRepository foodOrderRepository)
@@ -48,8 +50,44 @@ namespace BackEnd.Services
                 Message = "订单创建成功"
             });
         }
+        public async Task<ResponseDto> UpdateAccountAsync(UpdateAccountDto dto)
+        {
+            // 查找用户
+            var user = await _userRepository.GetByIdAsync(dto.CustomerId);
+            if (user == null)
+            {
+                return new ResponseDto { Success = false, Message = "用户不存在" };
+            }
 
+            // 更新用户信息
+            user.FullName = dto.Name;
+            user.PhoneNumber = dto.PhoneNumber;
+            user.Avatar = dto.Image;
+            _userRepository.UpdateAsync(user);
+            await _userRepository.SaveAsync();
 
+            return new ResponseDto { Success = true, Message = "账户信息更新成功" };
+        }
 
+        public async Task<ResponseDto> SaveOrUpdateAddressAsync(SaveAddressDto dto)
+        {
+            // 查找客户
+            var customer = await _customerRepository.GetByIdAsync(dto.CustomerId);
+            if (customer == null)
+            {
+                return new ResponseDto { Success = false, Message = "客户不存在" };
+            }
+
+            // 构建地址字符串 (格式: 收件人姓名,手机号,详细地址)
+            string addressString = $"{dto.Name},{dto.PhoneNumber},{dto.Address}";
+            
+            // 更新默认地址
+            customer.DefaultAddress = addressString;
+
+            _customerRepository.UpdateAsync(customer);
+            await _customerRepository.SaveAsync();
+
+            return new ResponseDto { Success = true, Message = "收货地址保存成功" };
+        }
     }
 }
