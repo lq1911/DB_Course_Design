@@ -6,27 +6,29 @@ namespace BackEnd.Data.EntityConfigs
 {
     public class SellerConfig : IEntityTypeConfiguration<Seller>
     {
-        public void Configure(EntityTypeBuilder<Seller> entity)
+        public void Configure(EntityTypeBuilder<Seller> builder)
         {
-            entity.ToTable("SELLERS");
-            entity.HasKey(s => s.UserID);
-            
-            // 映射列名到Oracle数据库中的大写列名，明确指定所有数据类型
-            entity.Property(s => s.UserID).HasColumnName("USERID").HasColumnType("NUMBER(10,0)");
-            
-            // 明确指定数据类型以避免转换错误
-            entity.Property(s => s.SellerRegistrationTime).HasColumnName("SELLERREGISTRATIONTIME").IsRequired().HasColumnType("TIMESTAMP(7)");
-            
-            entity.Property(s => s.ReputationPoints).HasColumnName("REPUTATIONPOINTS").HasColumnType("NUMBER(10,0)").HasDefaultValue(0);
-            entity.Property(s => s.BanStatus).HasColumnName("BANSTATUS").IsRequired().HasMaxLength(10).HasDefaultValue("Normal");
-            // 暂时注释掉，因为数据库中没有这个字段
-            // entity.Property(s => s.AfterSaleApplicationID).HasColumnName("AFTERSALEAPPLICATIONID");
-            
-            entity.HasOne(s => s.User).WithOne().HasForeignKey<Seller>(s => s.UserID);
-            // entity.HasOne(s => s.AfterSaleApplication)
-            //        .WithMany()
-            //        .HasForeignKey(s => s.AfterSaleApplicationID)
-            //        .OnDelete(DeleteBehavior.Restrict);
+            builder.ToTable("SELLERS");
+
+            builder.HasKey(s => s.UserID);
+
+            builder.Property(s => s.UserID).HasColumnName("USERID").ValueGeneratedNever();
+
+            builder.Property(s => s.SellerRegistrationTime).HasColumnName("SELLERREGISTRATIONTIME").IsRequired();
+
+            builder.Property(s => s.ReputationPoints).HasColumnName("REPUTATIONPOINTS").HasDefaultValue(0);
+
+            builder.Property(s => s.BanStatus).HasColumnName("BANSTATUS").IsRequired().HasConversion<string>().HasMaxLength(10);
+
+            // ---------------------------------------------------------------
+            // 关系配置
+            // ---------------------------------------------------------------
+
+            // 关系一: Seller -> User (一对一)
+            builder.HasOne(s => s.User)
+                   .WithOne(u => u.Seller)
+                   .HasForeignKey<Seller>(s => s.UserID)
+                   .OnDelete(DeleteBehavior.Cascade); // 当 User 被删除时，其 Seller 身份也应级联删除
         }
     }
 }

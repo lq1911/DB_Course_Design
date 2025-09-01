@@ -144,19 +144,21 @@ namespace BackEnd.Repositories
             var lastMonth = currentDate.AddMonths(-1);
             
             // 先尝试获取上个月的订单数
-            var lastMonthOrders = await _context.Orders
+            var lastMonthOrders = await _context.FoodOrders
                 .Where(o => o.StoreID == storeId &&
-                           o.PaymentTime.Month == lastMonth.Month &&
-                           o.PaymentTime.Year == lastMonth.Year)
+                           o.PaymentTime.HasValue &&
+                           o.PaymentTime.Value.Month == lastMonth.Month &&
+                           o.PaymentTime.Value.Year == lastMonth.Year)
                 .CountAsync();
 
             // 如果上个月没有订单，则获取本月1日至今的订单数
             if (lastMonthOrders == 0)
             {
                 var firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
-                lastMonthOrders = await _context.Orders
+                lastMonthOrders = await _context.FoodOrders
                     .Where(o => o.StoreID == storeId &&
-                               o.PaymentTime >= firstDayOfMonth)
+                               o.PaymentTime.HasValue &&
+                               o.PaymentTime.Value >= firstDayOfMonth)
                     .CountAsync();
             }
 

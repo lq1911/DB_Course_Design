@@ -1,5 +1,6 @@
 using BackEnd.Dtos.Merchant;
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 
@@ -46,7 +47,7 @@ namespace BackEnd.Services
                 {
                     Rating = store.AverageRating,
                     MonthlySales = store.MonthlySales,
-                    IsOpen = store.StoreState == "1",
+                    IsOpen = store.StoreState == StoreState.IsOperation,
                     CreditScore = 0
                 };
             }
@@ -61,7 +62,7 @@ namespace BackEnd.Services
             Console.WriteLine($"月销量(从数据库): {monthlySales}");
             
             // 从数据库的StoreState字段获取营业状态
-            var isOpen = store.StoreState == "1"; // 1=营业中, 0=休息中
+            var isOpen = store.StoreState == StoreState.IsOperation; // IsOperation=营业中, Closing=休息中
             Console.WriteLine($"营业状态(从数据库): {isOpen} (StoreState={store.StoreState})");
             
             var creditScore = seller.ReputationPoints;
@@ -95,8 +96,8 @@ namespace BackEnd.Services
                 Name = store.StoreName,
                 CreateTime = store.StoreCreationTime.ToString("yyyy-MM-dd HH:mm:ss"),
                 Address = store.StoreAddress,
-                OpenTime = store.OpenTime?.ToString(@"hh\:mm") ?? "",
-                CloseTime = store.CloseTime?.ToString(@"hh\:mm") ?? "",
+                OpenTime = store.OpenTime.ToString(@"hh\:mm"),
+                CloseTime = store.CloseTime.ToString(@"hh\:mm"),
                 Feature = store.StoreFeatures,
                 CreditScore = seller.ReputationPoints
             };
@@ -149,7 +150,7 @@ namespace BackEnd.Services
 
                 // 3. 更新营业状态
                 var oldStatus = store.StoreState;
-                store.StoreState = request.IsOpen ? "1" : "0";  // 1=营业中, 0=休息中
+                store.StoreState = request.IsOpen ? StoreState.IsOperation : StoreState.Closing;  // IsOperation=营业中, Closing=休息中
                 
                 Console.WriteLine($"营业状态从 '{oldStatus}' 更新为 '{store.StoreState}' ({(request.IsOpen ? "营业中" : "休息中")})");
 

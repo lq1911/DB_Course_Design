@@ -1,10 +1,16 @@
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Models
 {
     public class User
-    { 
+    {
+        // 用户类
+        // 主码：UserID
+
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID { get; set; }
 
         [Required]
@@ -12,7 +18,7 @@ namespace BackEnd.Models
         public string Username { get; set; } = null!;
 
         [Required]
-        [MaxLength(10)]
+        [MaxLength(60)]
         public string Password { get; set; } = null!;
 
         [Required]
@@ -36,10 +42,20 @@ namespace BackEnd.Models
         [Required]
         public DateTime AccountCreationTime { get; set; }
 
-        [MaxLength(10)]
-        public string IsProfilePublic { get; set; } = "0";
+        public ProfilePrivacyLevel IsProfilePublic { get; set; } = ProfilePrivacyLevel.Private;
 
-        [MaxLength(10)]
-        public string? Role { get; set; }
+        // 用户的角色名称
+        [Required]
+        public UserIdentity Role { get; set; } = UserIdentity.Customer;
+
+        // 用户的身份 - 使用 [NotMapped] 避免 EF 自动生成查询
+        [NotMapped]
+        public Customer? Customer { get; set; }
+        [NotMapped]
+        public Courier? Courier { get; set; }
+        [NotMapped]
+        public Administrator? Administrator { get; set; }
+        [NotMapped]
+        public Seller? Seller { get; set; }
     }
 }
