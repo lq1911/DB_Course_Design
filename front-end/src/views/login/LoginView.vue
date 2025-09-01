@@ -201,7 +201,7 @@
 
 
                             <!-- 角色特殊信息 -->
-                            <div v-if="selectedRole !== 'consumer'" class="border-t pt-4 mt-6">
+                            <div v-if="selectedRole !== 'customer'" class="border-t pt-4 mt-6">
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">{{ getRoleSpecificTitle() }}</h3>
 
 
@@ -643,41 +643,52 @@ const handleLogin = async () => {
     isLoading.value = true;
 
     try {
-        // 【关键修改】根据后端文档，登录账号的字段名是 "phoneNum"
         const response = await api.login({
             phoneNum: loginForm.account,
             password: loginForm.password,
             role: selectedRole.value
         });
 
-        // 根据后端文档，成功后会返回 token, user, message
         const { token, user, message } = response.data;
-
         localStorage.setItem('authToken', token);
-        alert(message || `${user.username}，欢迎回来！`);
 
-        // 【关键修改】使用后端返回的 user.role 进行跳转判断，更安全可靠
+        // 第1步：我们先在控制台打印日志，确认代码执行到了这里
+        console.log("登录成功！用户信息:", user);
+        console.log("准备根据角色进行跳转，角色是:", user.role);
+        
+        // 【核心修改】我们把 alert 和 router.push 的顺序换一下！
+        // 先执行跳转，再弹出提示。这样可以避免 alert 阻塞路由。
+
+        let targetPath = '/'; // 默认跳转路径
+
         switch (user.role) {
             case 'customer':
-                router.push('/home'); // 消费者跳转到首页
+                targetPath = '/home';
                 break;
             case 'merchant':
-                router.push('/MerchantHome'); // 商家跳转到商家仪表盘
+                targetPath = '/MerchantHome';
                 break;
-            case 'rider':
-                router.push('/courier'); // 骑手跳转到骑手工作台
+            case 'courier':
+                targetPath = '/courier';
                 break;
-            case 'admin':
-                router.push('/admin'); // 管理员跳转到后台管理系统
-                break;
-            default:
-                router.push('/'); // 默认跳转
+            case 'administrator':
+                targetPath = '/admin';
                 break;
         }
 
+        console.log("计算出的目标跳转路径是:", targetPath);
+
+        // 第2步：执行跳转
+        router.push(targetPath);
+
+        // 第3步：跳转执行后，再弹出提示
+        // 我们甚至可以用 setTimeout 延迟一下弹窗，确保路由有足够的时间开始工作
+        setTimeout(() => {
+            alert(message || `${user.username}，欢迎回来！`);
+        }, 100); // 延迟100毫秒
+
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            // 【关键修改】根据后端文档，失败信息在 error.response.data.message
             alert(error.response?.data?.message || '登录失败，服务器返回未知错误。');
         } else {
             alert("发生未知错误，请稍后再试。");

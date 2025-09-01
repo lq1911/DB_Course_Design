@@ -9,7 +9,7 @@ import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
 import checkoutRoutes from './checkoutRoute'
-import managerRoutes from './managerRoute'
+import managerRoutes from './adminRoute'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
   ...inStoreRoutes,
   ...merchantRoutes,
   ...checkoutRoutes,
-  // ...managerRoutes
+  ...managerRoutes
 ]
 
 const router = createRouter({

@@ -1033,7 +1033,7 @@ const mockApi = {
 };
 
 // 3.2 ----------------- 真实API实现 -----------------
-const apiClient = axios.create({ baseURL: '/api/v1', timeout: 5000 }); // 根据你的后端地址修改 baseURL
+const apiClient = axios.create({ baseURL: 'http://localhost:5250/api/admin/after-sales/mine', timeout: 5000 }); // 根据你的后端地址修改 baseURL
 
 apiClient.interceptors.request.use(
   (config) => {
@@ -1074,7 +1074,7 @@ const realApi = {
 };
 
 // 3.3 ----------------- API切换器 -----------------
-const useMock = true; // 切换为 true 使用模拟API，false 使用真实API
+const useMock = false; // 切换为 true 使用模拟API，false 使用真实API
 const api = useMock ? mockApi : realApi;
 
 
