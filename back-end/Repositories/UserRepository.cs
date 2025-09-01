@@ -53,13 +53,13 @@ namespace BackEnd.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsByPhoneAsync(string phone)
-        {
-            if (long.TryParse(phone, out long phoneNumber))
-            {
-                return await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
-            }
-            return false;
-        }
+   public async Task<bool> ExistsByPhoneAsync(string phone)
+{
+    if (long.TryParse(phone, out long phoneNumber))
+    {
+        return await _context.Users.CountAsync(u => u.PhoneNumber == phoneNumber) > 0;
+    }
+    return false;
+}     
     }
 }
