@@ -624,17 +624,15 @@ export const getAfterSaleList = async (
   params: AfterSaleListParams
 ): Promise<PageResult<AfterSaleApplication>> => {
   try {
-    const response = await fetch(`/api/aftersale?${new URLSearchParams({
-      page: params.page.toString(),
-      pageSize: params.pageSize.toString(),
-      ...(params.keyword && { keyword: params.keyword })
-    })}`);
+    const response = await api.get('/aftersale', {
+      params: {
+        page: params.page.toString(),
+        pageSize: params.pageSize.toString(),
+        ...(params.keyword && { keyword: params.keyword })
+      }
+    });
     
-    if (!response.ok) {
-      throw new Error('获取售后申请列表失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('获取售后申请列表失败:', error);
     throw error;
@@ -644,13 +642,9 @@ export const getAfterSaleList = async (
 // 获取售后申请详情
 export const getAfterSaleDetail = async (id: number): Promise<AfterSaleApplication> => {
   try {
-    const response = await fetch(`/api/aftersale/${id}`);
+    const response = await api.get(`/aftersale/${id}`);
     
-    if (!response.ok) {
-      throw new Error('获取售后申请详情失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('获取售后申请详情失败:', error);
     throw error;
@@ -664,19 +658,12 @@ export const decideAfterSale = async (
   data: { remark: string }
 ) => {
   try {
-    const response = await fetch(`/api/aftersale/${id}/decide`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ action, ...data }),
+    const response = await api.post(`/aftersale/${id}/decide`, {
+      action,
+      ...data
     });
     
-    if (!response.ok) {
-      throw new Error('处理售后申请失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('处理售后申请失败:', error);
     throw error;
@@ -686,17 +673,15 @@ export const decideAfterSale = async (
 // 获取评论列表
 export const getReviewList = async (params: any): Promise<PageResult<Review>> => {
   try {
-    const response = await fetch(`/api/reviews?${new URLSearchParams({
-      page: params.page.toString(),
-      pageSize: params.pageSize.toString(),
-      ...(params.keyword && { keyword: params.keyword })
-    })}`);
+    const response = await api.get('/reviews', {
+      params: {
+        page: params.page.toString(),
+        pageSize: params.pageSize.toString(),
+        ...(params.keyword && { keyword: params.keyword })
+      }
+    });
     
-    if (!response.ok) {
-      throw new Error('获取评论列表失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('获取评论列表失败:', error);
     throw error;
@@ -706,19 +691,11 @@ export const getReviewList = async (params: any): Promise<PageResult<Review>> =>
 // 回复评论
 export const replyReview = async (id: number, content: string) => {
   try {
-    const response = await fetch(`/api/reviews/${id}/reply`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content }),
+    const response = await api.post(`/reviews/${id}/reply`, {
+      content
     });
     
-    if (!response.ok) {
-      throw new Error('回复评论失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('回复评论失败:', error);
     throw error;
@@ -741,15 +718,13 @@ export const getPenaltyList = async (params?: {
   keyword?: string;
 }) => {
   try {
-    const response = await fetch(`/api/penalties?${new URLSearchParams({
-      ...(params?.keyword && { keyword: params.keyword })
-    })}`);
+    const response = await api.get('/penalties', {
+      params: {
+        ...(params?.keyword && { keyword: params.keyword })
+      }
+    });
     
-    if (!response.ok) {
-      throw new Error('获取处罚记录失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('获取处罚记录失败:', error);
     throw error;
@@ -759,13 +734,9 @@ export const getPenaltyList = async (params?: {
 // 获取处罚详情
 export const getPenaltyDetail = async (id: string) => {
   try {
-    const response = await fetch(`/api/penalties/${id}`);
+    const response = await api.get(`/penalties/${id}`);
     
-    if (!response.ok) {
-      throw new Error('获取处罚详情失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('获取处罚详情失败:', error);
     throw error;
@@ -775,19 +746,11 @@ export const getPenaltyDetail = async (id: string) => {
 // 提交处罚申诉
 export const appealPenalty = async (id: string, reason: string) => {
   try {
-    const response = await fetch(`/api/penalties/${id}/appeal`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ reason }),
+    const response = await api.post(`/penalties/${id}/appeal`, {
+      reason
     });
     
-    if (!response.ok) {
-      throw new Error('申诉处罚失败');
-    }
-    
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error('申诉处罚失败:', error);
     throw error;
