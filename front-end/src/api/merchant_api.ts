@@ -2,17 +2,29 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:5250/api',
   timeout: 5000,
 });
 
 // 获取店铺概览数据
 export const getShopOverview = async () => {
   try {
+    console.log('正在请求店铺概览数据...');
     const response = await api.get('/shop/overview');
+    console.log('店铺概览数据响应:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('获取店铺概览数据失败:', error);
+  } catch (error: any) {
+    console.error('获取店铺概览数据失败:');
+    console.error('错误类型:', error.constructor.name);
+    console.error('错误消息:', error.message);
+    if (error.response) {
+      console.error('响应状态:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      console.error('响应头:', error.response.headers);
+    } else if (error.request) {
+      console.error('请求配置:', error.request);
+    }
+    console.error('完整错误对象:', error);
     throw error;
   }
 };
@@ -20,10 +32,22 @@ export const getShopOverview = async () => {
 // 获取店铺基本信息
 export const getShopInfo = async () => {
   try {
+    console.log('正在请求店铺基本信息...');
     const response = await api.get('/shop/info');
+    console.log('店铺基本信息响应:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('获取店铺基本信息失败:', error);
+  } catch (error: any) {
+    console.error('获取店铺基本信息失败:');
+    console.error('错误类型:', error.constructor.name);
+    console.error('错误消息:', error.message);
+    if (error.response) {
+      console.error('响应状态:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      console.error('响应头:', error.response.headers);
+    } else if (error.request) {
+      console.error('请求配置:', error.request);
+    }
+    console.error('完整错误对象:', error);
     throw error;
   }
 };
@@ -31,10 +55,22 @@ export const getShopInfo = async () => {
 // 获取商家信息
 export const getMerchantInfo = async () => {
   try {
+    console.log('正在请求商家信息...');
     const response = await api.get('/merchant/info');
+    console.log('商家信息响应:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('获取商家信息失败:', error);
+  } catch (error: any) {
+    console.error('获取商家信息失败:');
+    console.error('错误类型:', error.constructor.name);
+    console.error('错误消息:', error.message);
+    if (error.response) {
+      console.error('响应状态:', error.response.status);
+      console.error('响应数据:', error.response.data);
+      console.error('响应头:', error.response.headers);
+    } else if (error.request) {
+      console.error('请求配置:', error.request);
+    }
+    console.error('完整错误对象:', error);
     throw error;
   }
 };
@@ -83,14 +119,14 @@ export interface Dish {
   dishName: string;       // Dish.DishName
   price: number;          // Dish.Price (decimal)
   description: string;    // Dish.Description
-  isSoldOut: number;      // Dish.IsSoldOut (0/1)
+  isSoldOut: number;      // Dish.IsSoldOut (0=售罄, 2=在售)
 }
 
 export interface NewDishData {
   dishName: string;
   price: string | number;
   description: string;
-  isSoldOut?: number; // 默认 0
+  isSoldOut?: number; // 默认 2 (在售)
 }
 
 // 聊天消息类型
@@ -219,7 +255,7 @@ export const createDish = async (dishData: NewDishData) => {
       DishName: dishData.dishName,
       Price: Number(dishData.price),
       Description: dishData.description,
-      IsSoldOut: dishData.isSoldOut ?? 0,
+      IsSoldOut: dishData.isSoldOut ?? 2,
     };
     const response = await api.post('/dishes', payload);
     const d = response.data;
@@ -266,7 +302,7 @@ export const updateDish = async (dishId: number, dishData: {
   }
 };
 
-// 切换菜品售罄状态（0/1）
+// 切换菜品售罄状态（0=售罄, 2=在售）
 export const toggleDishSoldOut = async (dishId: number, isSoldOut: number) => {
   try {
     const response = await api.patch(`/dishes/${dishId}/soldout`, { IsSoldOut: isSoldOut });
@@ -340,8 +376,6 @@ export interface DeliveryTask {
   taskId: number;                 // DeliveryTask.TaskID
   estimatedArrivalTime: string;   // EstimatedArrivalTime
   estimatedDeliveryTime: string;  // EstimatedDeliveryTime
-  courierLongitude?: number | null; // CourierLongitude
-  courierLatitude?: number | null;  // CourierLatitude
   customerId: number;             // CustomerID
   storeId: number;                // StoreID
 }
@@ -397,8 +431,6 @@ export const publishDeliveryTaskForOrder = async (
           taskId: dt.TaskID ?? dt.taskId,
           estimatedArrivalTime: dt.EstimatedArrivalTime ?? dt.estimatedArrivalTime,
           estimatedDeliveryTime: dt.EstimatedDeliveryTime ?? dt.estimatedDeliveryTime,
-          courierLongitude: dt.CourierLongitude ?? dt.courierLongitude ?? null,
-          courierLatitude: dt.CourierLatitude ?? dt.courierLatitude ?? null,
           customerId: dt.CustomerID ?? dt.customerId,
           storeId: dt.StoreID ?? dt.storeId,
         }
@@ -431,8 +463,6 @@ export const getOrderDeliveryInfo = async (orderId: number) => {
         taskId: (data.DeliveryTask || data.deliveryTask).TaskID ?? (data.DeliveryTask || data.deliveryTask).taskId,
         estimatedArrivalTime: (data.DeliveryTask || data.deliveryTask).EstimatedArrivalTime ?? (data.DeliveryTask || data.deliveryTask).estimatedArrivalTime,
         estimatedDeliveryTime: (data.DeliveryTask || data.deliveryTask).EstimatedDeliveryTime ?? (data.DeliveryTask || data.deliveryTask).estimatedDeliveryTime,
-        courierLongitude: (data.DeliveryTask || data.deliveryTask).CourierLongitude ?? (data.DeliveryTask || data.deliveryTask).courierLongitude ?? null,
-        courierLatitude: (data.DeliveryTask || data.deliveryTask).CourierLatitude ?? (data.DeliveryTask || data.deliveryTask).courierLatitude ?? null,
         customerId: (data.DeliveryTask || data.deliveryTask).CustomerID ?? (data.DeliveryTask || data.deliveryTask).customerId,
         storeId: (data.DeliveryTask || data.deliveryTask).StoreID ?? (data.DeliveryTask || data.deliveryTask).storeId,
       }

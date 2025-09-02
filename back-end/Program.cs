@@ -15,12 +15,13 @@ var configuration = builder.Configuration; // 应用程序所有配置信息的�
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5250); // 让外网访问这个端口
+    options.ListenAnyIP(5250); // 修改为前端期望的端口
 });
 
 // 数据库上下文注册
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .LogTo(Console.WriteLine, LogLevel.Information)); // 添加SQL日志
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -63,6 +64,17 @@ builder.Services.AddAuthentication(options =>
 // 添加授权服务
 builder.Services.AddAuthorization();
 
+// 添加 CORS 支持
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // 注册 Repository 层
 // Repository 层注入，接口在前，实现类在后
 builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
@@ -90,29 +102,15 @@ builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IStoreViolationPenaltyRepository, StoreViolationPenaltyRepository>();
 builder.Services.AddScoped<ISupervise_Repository, Supervise_Repository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 
 // 注册 Service 层
 builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
-
-//骑手服务注入
 builder.Services.AddScoped<ICourierService, CourierService>();
 builder.Services.AddScoped<IEvaluate_AfterSaleService, Evaluate_AfterSaleService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ICourierRepository, CourierRepository>();
-
-// 添加 CORS 服务
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowVueApp",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
+builder.Services.AddScoped<IMerchantService, MerchantService>()
 
 var app = builder.Build();
 
@@ -123,10 +121,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 使用 CORS
-app.UseCors("AllowVueApp");
-
-app.UseHttpsRedirection();
+// 启用 CORS
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 
