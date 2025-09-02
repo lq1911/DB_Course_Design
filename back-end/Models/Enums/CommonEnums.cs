@@ -81,4 +81,11 @@ namespace BackEnd.Models.Enums
         Online = 0,
         Offline = 1
     }
+
+    // 售后申请状态
+    public enum AfterSaleState
+    {
+        Pending = 0,
+        Completed = 1
+    }
 }

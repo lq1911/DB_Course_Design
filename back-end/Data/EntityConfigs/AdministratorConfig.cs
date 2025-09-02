@@ -26,7 +26,7 @@ namespace BackEnd.Data.EntityConfigs
 
             // 关系一: Administrator -> User (一对一)
             builder.HasOne(a => a.User)
-                   .WithOne()
+                   .WithOne(u => u.Administrator)
                    .HasForeignKey<Administrator>(a => a.UserID)
                    .OnDelete(DeleteBehavior.Cascade); // 当User被删除时，关联的Administrator也应被删除
 

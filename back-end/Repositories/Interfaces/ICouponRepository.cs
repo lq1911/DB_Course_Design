@@ -8,6 +8,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<Coupon>> GetAllAsync();
         Task<Coupon?> GetByIdAsync(int id);
+        Task<IEnumerable<Coupon>> GetByCustomerIdAsync(int customerId);
         Task AddAsync(Coupon coupon);
         Task UpdateAsync(Coupon coupon);
         Task DeleteAsync(Coupon coupon);

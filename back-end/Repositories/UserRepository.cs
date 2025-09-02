@@ -23,7 +23,9 @@ namespace BackEnd.Repositories
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users
+                         .Include(u => u.Customer) // 确保 Customer 被加载
+                         .FirstOrDefaultAsync(u => u.UserID == id);
         }
 
         public async Task<User?> GetByPhoneAsync(long phoneNumber)
@@ -57,7 +59,7 @@ namespace BackEnd.Repositories
         {
             if (long.TryParse(phone, out long phoneNumber))
             {
-                return await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
+                return await _context.Users.CountAsync(u => u.PhoneNumber == phoneNumber) > 0;
             }
             return false;
         }
