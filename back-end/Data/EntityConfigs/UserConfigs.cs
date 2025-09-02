@@ -18,7 +18,6 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(u => u.Password).HasColumnName("PASSWORD").IsRequired().HasMaxLength(64);
 
-            // 修正：PhoneNumber 是 long 类型，不应有 MaxLength 限制。
             builder.Property(u => u.PhoneNumber).HasColumnName("PHONENUMBER").IsRequired();
 
             builder.Property(u => u.Email).HasColumnName("EMAIL").IsRequired().HasMaxLength(30);

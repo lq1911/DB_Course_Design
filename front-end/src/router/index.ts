@@ -8,7 +8,7 @@ import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
 import checkoutRoutes from './checkoutRoute'
-import managerRoutes from './managerRoute'
+import managerRoutes from './adminRoute'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,11 +33,6 @@ const routes: Array<RouteRecordRaw> = [
   ...userRoutes,
   ...inStoreRoutes,
   ...checkoutRoutes,
-  // 骑手路由  
-  ...courierRoutes,
-  // 店铺路由
-  ...merchantRoutes,
-  // 管理员路由
   ...managerRoutes
 ]
 

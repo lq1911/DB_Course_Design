@@ -144,7 +144,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-for="item in filteredAfterSales" :key="item.id" class="hover:bg-gray-50">
+                                    <tr v-for="item in filteredAfterSales" :key="item.applicationId" class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
                                             item.applicationId }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.orderId }}
@@ -250,7 +250,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-for="item in filteredComplaints" :key="item.id" class="hover:bg-gray-50">
+                                    <tr v-for="item in filteredComplaints" :key="item.complaintId" class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
                                             item.complaintId }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.target }}
@@ -354,7 +354,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-for="item in filteredViolations" :key="item.id" class="hover:bg-gray-50">
+                                    <tr v-for="item in filteredViolations" :key="item.punishmentId" class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
                                             item.punishmentId }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.storeName
@@ -469,7 +469,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-for="item in filteredReviews" :key="item.id" class="hover:bg-gray-50">
+                                    <tr v-for="item in filteredReviews" :key="item.reviewId" class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
                                             item.reviewId }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.username
@@ -919,8 +919,25 @@ import axios from 'axios'; // 导入axios用于真实API请求
 // =================================================================
 // 步骤 2: 定义数据类型
 // =================================================================
+interface AdminInfo {
+  id: string; // e.g., "ADM001"
+  username: string;
+  name: string; // The display name, e.g., "张管理员"
+  realName: string; // e.g., "张伟"
+  role: string; // e.g., "系统管理员"
+  registrationDate: string; // e.g., "2023-01-15"
+  avatarUrl: string;
+  phone: string;
+  email: string;
+  gender: '男' | '女';
+  birthDate: string; // e.g., "1990-05-15"
+  managementScope: string;
+  averageRating: number;
+  isPublic: boolean;
+}
+
+
 interface AfterSaleItem {
-  id: number;
   applicationId: string;
   orderId: string;
   applicationTime: string;
@@ -932,7 +949,6 @@ interface AfterSaleItem {
 }
 
 interface ComplaintItem {
-  id: number;
   complaintId: string;
   target: string;
   content: string;
@@ -944,7 +960,6 @@ interface ComplaintItem {
 }
 
 interface ViolationItem {
-  id: number;
   punishmentId: string;
   storeName: string;
   reason: string;
@@ -956,7 +971,6 @@ interface ViolationItem {
 }
 
 interface ReviewItem {
-  id: number;
   reviewId: string;
   username: string;
   storeName: string;
@@ -976,26 +990,42 @@ interface ReviewItem {
 // 3.1 ----------------- 模拟API实现 -----------------
 const mockApi = {
   getAfterSalesList: async (): Promise<AfterSaleItem[]> => ([
-    { id: 1, applicationId: 'AS202401001', orderId: 'ORD202401001', applicationTime: '2024-01-15 14:30', description: '商品质量问题，要求退款', status: '待处理', punishment: '-' },
-    { id: 2, applicationId: 'AS202401002', orderId: 'ORD202401002', applicationTime: '2024-01-15 13:45', description: '配送延误，商品已变质', status: '待处理', punishment: '-' },
-    { id: 3, applicationId: 'AS202401003', orderId: 'ORD202401003', applicationTime: '2024-01-15 12:20', description: '商品与描述不符', status: '已完成', punishment: '全额退款' },
+    { applicationId: 'AS202401001', orderId: 'ORD202401001', applicationTime: '2024-01-15 14:30', description: '商品质量问题，要求退款', status: '待处理', punishment: '-' },
+    { applicationId: 'AS202401002', orderId: 'ORD202401002', applicationTime: '2024-01-15 13:45', description: '配送延误，商品已变质', status: '待处理', punishment: '-' },
+    { applicationId: 'AS202401003', orderId: 'ORD202401003', applicationTime: '2024-01-15 12:20', description: '商品与描述不符', status: '已完成', punishment: '全额退款' },
   ]),
   getComplaintsList: async (): Promise<ComplaintItem[]> => ([
-    { id: 1, complaintId: 'CP202401001', target: '骑手张三', content: '配送员态度恶劣，服务质量差', applicationTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
-    { id: 2, complaintId: 'CP202401002', target: '商家李记餐厅', content: '商家出餐速度慢，影响配送时效', applicationTime: '2024-01-15 13:45', status: '待处理', punishment: '-' },
-    { id: 3, complaintId: 'CP202401003', target: '骑手王五', content: '配送员未按时送达，且态度不好', applicationTime: '2024-01-15 12:20', status: '已完成', punishment: '暂停接单 3 天' }
+    { complaintId: 'CP202401001', target: '骑手张三', content: '配送员态度恶劣，服务质量差', applicationTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
+    { complaintId: 'CP202401002', target: '商家李记餐厅', content: '商家出餐速度慢，影响配送时效', applicationTime: '2024-01-15 13:45', status: '待处理', punishment: '-' },
+    { complaintId: 'CP202401003', target: '骑手王五', content: '配送员未按时送达，且态度不好', applicationTime: '2024-01-15 12:20', status: '已完成', punishment: '暂停接单 3 天' }
   ]),
   getViolationsList: async (): Promise<ViolationItem[]> => ([
-    { id: 1, punishmentId: 'PUN202401001', storeName: '张记小炒', reason: '食品安全问题，使用过期食材制作食品', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 14:30', status: '待处理' },
-    { id: 2, punishmentId: 'PUN202401002', storeName: '美味餐厅', reason: '虚假宣传，图片与实物不符', merchantPunishment: '罚款500元', storePunishment: '下架违规商品', punishmentTime: '2024-01-15 13:45', status: '已完成' },
-    { id: 3, punishmentId: 'PUN202401003', storeName: '快送外卖', reason: '配送员私自拆开包装', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 12:20', status: '待处理' }
+    { punishmentId: 'PUN202401001', storeName: '张记小炒', reason: '食品安全问题，使用过期食材制作食品', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 14:30', status: '待处理' },
+    { punishmentId: 'PUN202401002', storeName: '美味餐厅', reason: '虚假宣传，图片与实物不符', merchantPunishment: '罚款500元', storePunishment: '下架违规商品', punishmentTime: '2024-01-15 13:45', status: '已完成' },
+    { punishmentId: 'PUN202401003', storeName: '快送外卖', reason: '配送员私自拆开包装', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 12:20', status: '待处理' }
   ]),
   getReviewsList: async (): Promise<ReviewItem[]> => ([
-    { id: 1, reviewId: 'RV202401001', username: '用户张三', storeName: '美味餐厅', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
-    { id: 2, reviewId: 'RV202401002', username: '用户李四', storeName: '快餐店', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
-    { id: 3, reviewId: 'RV202401003', username: '用户王五', storeName: '小吃摊', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
+    { reviewId: 'RV202401001', username: '用户张三', storeName: '美味餐厅', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
+    { reviewId: 'RV202401002', username: '用户李四', storeName: '快餐店', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
+    { reviewId: 'RV202401003', username: '用户王五', storeName: '小吃摊', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
   ]),
-  // 模拟更新操作 (在控制台打印信息)
+    getAdminInfo: async (): Promise<AdminInfo> => ({
+    id: 'ADM001',
+    username: 'admin_zhang',
+    name: '张管理员',
+    realName: '张伟',
+    role: '系统管理员',
+    registrationDate: '2023-01-15',
+    avatarUrl: 'https://readdy.ai/api/search-image?query=professional%20business%20administrator%20avatar%20portrait%20with%20clean%20white%20background%20modern%20corporate%20headshot%20style%20high%20quality%20detailed%20facial%20features%20confident%20expression&width=120&height=120&seq=admin-profile-001&orientation=squarish',
+    phone: '13800138000',
+    email: 'admin@fooddelivery.com',
+    gender: '男',
+    birthDate: '1990-05-15',
+    managementScope: '售后处理、投诉管理、评论审核',
+    averageRating: 4.8,
+    isPublic: true,
+  }),
+  updateAdminInfo: async (data: AdminInfo) => {console.log('【Mock API】更新管理员信息:', data);return { success: true, data };},
   updateAfterSale: async (item: AfterSaleItem) => { console.log('【Mock API】更新售后:', item); return { success: true, data: item }; },
   updateComplaint: async (item: ComplaintItem) => { console.log('【Mock API】更新投诉:', item); return { success: true, data: item }; },
   updateViolation: async (item: ViolationItem) => { console.log('【Mock API】更新违规:', item); return { success: true, data: item }; },
@@ -1003,21 +1033,48 @@ const mockApi = {
 };
 
 // 3.2 ----------------- 真实API实现 -----------------
-const apiClient = axios.create({ baseURL: '/api/v1', timeout: 5000 }); // 根据你的后端地址修改 baseURL
+const apiClient = axios.create({ baseURL: 'http://localhost:5250/api/admin/after-sales/mine', timeout: 5000 }); // 根据你的后端地址修改 baseURL
+
+apiClient.interceptors.request.use(
+  (config) => {
+    // 1. 从 localStorage 中获取 Token
+    const token = localStorage.getItem('authToken');
+
+    // 2. 如果 Token 存在，则将其添加到请求头中
+    if (token) {
+      // 这里的 'Bearer ' 是一个标准的格式，后端会需要它来正确解析Token
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // 3. 返回配置好的请求对象，让请求继续发送
+    return config;
+  },
+  (error) => {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  }
+);
+
+
+
+
+
 
 const realApi = {
     getAfterSalesList: () => apiClient.get<AfterSaleItem[]>('/after-sales').then(res => res.data),
     getComplaintsList: () => apiClient.get<ComplaintItem[]>('/complaints').then(res => res.data),
     getViolationsList: () => apiClient.get<ViolationItem[]>('/violations').then(res => res.data),
     getReviewsList: () => apiClient.get<ReviewItem[]>('/reviews').then(res => res.data),
-    updateAfterSale: (item: AfterSaleItem) => apiClient.put(`/after-sales/${item.id}`, item).then(res => res.data),
-    updateComplaint: (item: ComplaintItem) => apiClient.put(`/complaints/${item.id}`, item).then(res => res.data),
-    updateViolation: (item: ViolationItem) => apiClient.put(`/violations/${item.id}`, item).then(res => res.data),
-    updateReview: (item: ReviewItem) => apiClient.put(`/reviews/${item.id}`, item).then(res => res.data),
+    getAdminInfo: () => apiClient.get<AdminInfo>('/admin/info').then(res => res.data),
+    updateAfterSale: (item: AfterSaleItem) => apiClient.put(`/after-sales/${item.applicationId}`, item).then(res => res.data),
+    updateComplaint: (item: ComplaintItem) => apiClient.put(`/complaints/${item.complaintId}`, item).then(res => res.data),
+    updateViolation: (item: ViolationItem) => apiClient.put(`/violations/${item.punishmentId}`, item).then(res => res.data),
+    updateReview: (item: ReviewItem) => apiClient.put(`/reviews/${item.reviewId}`, item).then(res => res.data),
+    updateAdminInfo: (data: AdminInfo) => apiClient.put<AdminInfo>('/admin/info', data).then(res => res.data),
 };
 
 // 3.3 ----------------- API切换器 -----------------
-const useMock = true; // 切换为 true 使用模拟API，false 使用真实API
+const useMock = false; // 切换为 true 使用模拟API，false 使用真实API
 const api = useMock ? mockApi : realApi;
 
 
@@ -1123,7 +1180,8 @@ const handleAfterSaleAction = async () => {
         const punishmentLabel = punishmentOptions.afterSales.find(o => o.value === selectedPunishment.value)?.label || selectedPunishment.value;
         const updatedItem: AfterSaleItem = { ...currentAfterSale.value, status: '已完成', punishment: punishmentLabel, punishmentReason: punishmentReason.value, processingNote: afterSaleNote.value };
         await api.updateAfterSale(updatedItem);
-        const index = afterSalesList.value.findIndex(item => item.id === updatedItem.id);
+        const index = afterSalesList.value.findIndex(item => item.applicationId === updatedItem.applicationId);
+
         if (index !== -1) afterSalesList.value[index] = updatedItem;
         ElMessage.success('处理完成，处罚措施已执行');
         showAfterSaleDetail.value = false;
@@ -1140,7 +1198,9 @@ const handleComplaintProcess = async () => {
         const punishmentLabel = punishmentOptions.complaints.find(o => o.value === selectedComplaintPunishment.value)?.label || selectedComplaintPunishment.value;
         const updatedItem: ComplaintItem = { ...currentComplaint.value, status: '已完成', punishment: punishmentLabel, punishmentReason: complaintPunishmentReason.value, processingNote: complaintNote.value };
         await api.updateComplaint(updatedItem);
-        const index = complaintsList.value.findIndex(item => item.id === updatedItem.id);
+
+        const index = complaintsList.value.findIndex(item => item.complaintId === updatedItem.complaintId);
+
         if (index !== -1) complaintsList.value[index] = updatedItem;
         ElMessage.success('投诉已处理完成');
         showComplaintDetail.value = false;
@@ -1162,7 +1222,9 @@ const handleViolationAction = async (action: 'process' | 'complete') => {
             updatedItem = { ...currentViolation.value, status: '已完成', processingNote: violationNote.value };
         }
         await api.updateViolation(updatedItem);
-        const index = violationsList.value.findIndex(item => item.id === updatedItem.id);
+
+        const index = violationsList.value.findIndex(item => item.punishmentId === updatedItem.punishmentId);
+
         if (index !== -1) violationsList.value[index] = updatedItem;
         ElMessage.success(`处罚已${action === 'process' ? '开始执行' : '执行完成'}`);
         showViolationDetail.value = false;
@@ -1179,7 +1241,9 @@ const handleReviewAction = async () => {
         const punishmentLabel = punishmentOptions.reviews.find(o => o.value === selectedReviewPunishment.value)?.label || selectedReviewPunishment.value;
         const updatedItem: ReviewItem = { ...currentReview.value, status: '已完成', punishment: punishmentLabel, punishmentReason: reviewPunishmentReason.value, processingNote: reviewNote.value };
         await api.updateReview(updatedItem);
-        const index = reviewsList.value.findIndex(item => item.id === updatedItem.id);
+
+        const index = reviewsList.value.findIndex(item => item.reviewId === updatedItem.reviewId);
+
         if (index !== -1) reviewsList.value[index] = updatedItem;
         ElMessage.success('评论处理完成');
         showReviewDetail.value = false;

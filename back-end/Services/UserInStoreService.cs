@@ -1,6 +1,5 @@
 using BackEnd.Dtos.User;
 using BackEnd.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 public class UserInStoreService : IUserInStoreService
 {
@@ -97,7 +96,7 @@ public class UserInStoreService : IUserInStoreService
             .Select(c => c.Rating);
 
         int perfect = comments.Count(r => r == 5);
-        int good = comments.Count(r => r == 4 );
+        int good = comments.Count(r => r == 4);
         int normal = comments.Count(r => r == 3);
         int bad = comments.Count(r => r == 2);
         int awful = comments.Count(r => r == 1);

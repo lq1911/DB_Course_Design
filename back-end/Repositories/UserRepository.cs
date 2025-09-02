@@ -57,7 +57,7 @@ namespace BackEnd.Repositories
         {
             if (long.TryParse(phone, out long phoneNumber))
             {
-                return await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
+                return await _context.Users.CountAsync(u => u.PhoneNumber == phoneNumber) > 0;
             }
             return false;
         }
