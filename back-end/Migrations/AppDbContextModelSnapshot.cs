@@ -58,6 +58,14 @@ namespace BackEnd.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationID"));
 
+                    b.Property<string>("AfterSaleState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("AFTERSALESTATE");
+
                     b.Property<DateTime>("ApplicationTime")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("APPLICATIONTIME");
@@ -71,6 +79,21 @@ namespace BackEnd.Migrations
                     b.Property<int>("OrderID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("ORDERID");
+
+                    b.Property<string>("ProcessingReason")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGREASON");
+
+                    b.Property<string>("ProcessingRemark")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGREMARK");
+
+                    b.Property<string>("ProcessingResult")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGRESULT");
 
                     b.HasKey("ApplicationID");
 
@@ -407,7 +430,8 @@ namespace BackEnd.Migrations
                         .HasColumnName("ESTIMATEDDELIVERYTIME");
 
                     b.Property<int>("OrderID")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("ORDERID");
 
                     b.Property<DateTime>("PublishTime")
                         .HasColumnType("TIMESTAMP(7)")
@@ -949,9 +973,6 @@ namespace BackEnd.Migrations
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("ACCOUNTCREATIONTIME");
 
-                    b.Property<int?>("AdministratorUserID")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<string>("Avatar")
                         .HasMaxLength(255)
                         .HasColumnType("NVARCHAR2(255)")
@@ -989,8 +1010,10 @@ namespace BackEnd.Migrations
                         .HasColumnType("NVARCHAR2(64)")
                         .HasColumnName("PASSWORD");
 
-                    b.Property<long>("PhoneNumber")
-                        .HasColumnType("NUMBER(19)")
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
                         .HasColumnName("PHONENUMBER");
 
                     b.Property<string>("Role")
@@ -1007,15 +1030,13 @@ namespace BackEnd.Migrations
 
                     b.HasKey("UserID");
 
-                    b.HasIndex("AdministratorUserID");
-
                     b.ToTable("USERS", (string)null);
                 });
 
             modelBuilder.Entity("BackEnd.Models.Administrator", b =>
                 {
                     b.HasOne("BackEnd.Models.User", "User")
-                        .WithOne()
+                        .WithOne("Administrator")
                         .HasForeignKey("BackEnd.Models.Administrator", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1412,15 +1433,6 @@ namespace BackEnd.Migrations
                     b.Navigation("Penalty");
                 });
 
-            modelBuilder.Entity("BackEnd.Models.User", b =>
-                {
-                    b.HasOne("BackEnd.Models.Administrator", "Administrator")
-                        .WithMany()
-                        .HasForeignKey("AdministratorUserID");
-
-                    b.Navigation("Administrator");
-                });
-
             modelBuilder.Entity("BackEnd.Models.Administrator", b =>
                 {
                     b.Navigation("EvaluateAfterSales");
@@ -1543,6 +1555,8 @@ namespace BackEnd.Migrations
 
             modelBuilder.Entity("BackEnd.Models.User", b =>
                 {
+                    b.Navigation("Administrator");
+
                     b.Navigation("Courier");
 
                     b.Navigation("Customer");

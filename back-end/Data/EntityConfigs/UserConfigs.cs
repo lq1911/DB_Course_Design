@@ -18,7 +18,6 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(u => u.Password).HasColumnName("PASSWORD").IsRequired().HasMaxLength(64);
 
-            // 修正：PhoneNumber 是 long 类型，不应有 MaxLength 限制。
             builder.Property(u => u.PhoneNumber).HasColumnName("PHONENUMBER").IsRequired();
 
             builder.Property(u => u.Email).HasColumnName("EMAIL").IsRequired().HasMaxLength(30);
@@ -41,6 +40,33 @@ namespace BackEnd.Data.EntityConfigs
             // ---------------------------------------------------------------
             // 关系配置
             // ---------------------------------------------------------------
+            
+            // 配置一对一关系 - 这些关系不需要在USERS表中添加外键列
+            // 因为Customer、Courier、Administrator、Seller表都使用UserID作为主键
+            
+            // 配置与Customer的一对一关系
+            builder.HasOne(u => u.Customer)
+                   .WithOne(c => c.User)
+                   .HasForeignKey<Customer>(c => c.UserID)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            // 配置与Courier的一对一关系
+            builder.HasOne(u => u.Courier)
+                   .WithOne(c => c.User)
+                   .HasForeignKey<Courier>(c => c.UserID)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            // 配置与Administrator的一对一关系
+            builder.HasOne(u => u.Administrator)
+                   .WithOne(a => a.User)
+                   .HasForeignKey<Administrator>(a => a.UserID)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            // 配置与Seller的一对一关系
+            builder.HasOne(u => u.Seller)
+                   .WithOne(s => s.User)
+                   .HasForeignKey<Seller>(s => s.UserID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

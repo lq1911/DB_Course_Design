@@ -6,8 +6,8 @@ import axios from 'axios';
 
 // 登录数据接口
 interface UserData {
-  account: string;
   password:string;
+  phoneNum: string;
   role: string;
 }
 
@@ -58,7 +58,7 @@ interface StoreInfo {
 // --- Axios 实例和拦截器 ---
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5250/api', // 您的后端 API 地址
+  baseURL: 'http://localhost:5250/api', 
   timeout: 10000,
 });
 
@@ -90,7 +90,7 @@ export default {
    * 1. 注册接口 (公开访问)
    *    - 只负责创建最基础的账号
    */
-  register(data: RegistrationData) {
+  register(data: RegistrationData | FormData) { // <--- 修改这里
     return apiClient.post('/register', data);
   },
 

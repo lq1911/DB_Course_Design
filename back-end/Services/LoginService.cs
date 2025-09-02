@@ -58,7 +58,7 @@ namespace BackEnd.Services
         {
             var roleMapping = new Dictionary<string, UserIdentity>
             {
-                { "consumer", UserIdentity.Customer },
+                { "customer", UserIdentity.Customer },
                 { "rider", UserIdentity.Courier },
                 { "merchant", UserIdentity.Seller },
                 { "admin", UserIdentity.Administrator }
@@ -110,4 +110,3 @@ namespace BackEnd.Services
         }
     }
 }
-

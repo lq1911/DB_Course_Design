@@ -9,12 +9,7 @@ const userRoutes: Array<RouteRecordRaw> = [
     path: '/home',
     redirect: '/home/intro'
   },
-  {
-    path: '/admin',
-    name: 'Admin',
-    component: () => import('@/views/administrator/AdminView.vue'),
-    meta: { title: '管理员' }
-  },
+
     {
     path: '/home',
     component: HomeLayout,
