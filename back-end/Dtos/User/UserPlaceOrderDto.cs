@@ -28,7 +28,7 @@ namespace BackEnd.Dtos.User
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public long PhoneNumber { get; set; }
 
         [Required]
         public string Image { get; set; } = string.Empty;
