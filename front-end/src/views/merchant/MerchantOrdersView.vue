@@ -201,8 +201,8 @@
               <el-table-column prop="description" label="描述" />
               <el-table-column prop="isSoldOut" label="状态" width="120">
                 <template #default="scope">
-                  <span :class="{ 'text-gray-500': scope.row.isSoldOut === 1, 'text-green-600': scope.row.isSoldOut === 0 }" class="font-medium">
-                    {{ scope.row.isSoldOut === 1 ? '售罄' : '在售' }}
+                  <span :class="{ 'text-gray-500': scope.row.isSoldOut === 0, 'text-green-600': scope.row.isSoldOut === 2 }" class="font-medium">
+                    {{ scope.row.isSoldOut === 0 ? '售罄' : '在售' }}
                   </span>
                 </template>
               </el-table-column>
@@ -210,8 +210,8 @@
                 <template #default="scope">
                   <div class="flex space-x-2">
                     <button @click="editDish(scope.row)" class="btn-primary btn-small">编辑</button>
-                    <button @click="toggleSoldOut(scope.row)" class="btn-small" :class="{ 'btn-danger': scope.row.isSoldOut === 0, 'btn-success': scope.row.isSoldOut === 1 }">
-                      {{ scope.row.isSoldOut === 0 ? '设为售罄' : '设为在售' }}
+                    <button @click="toggleSoldOut(scope.row)" class="btn-small" :class="{ 'btn-danger': scope.row.isSoldOut === 2, 'btn-success': scope.row.isSoldOut === 0 }">
+                      {{ scope.row.isSoldOut === 2 ? '设为售罄' : '设为在售' }}
                     </button>
                   </div>
                 </template>
@@ -237,7 +237,7 @@
                   <textarea v-model="newDish.description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品描述"></textarea>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <input id="newSoldOut" type="checkbox" v-model="newDish.isSoldOut" true-value="1" false-value="0" />
+                  <input id="newSoldOut" type="checkbox" v-model="newDish.isSoldOut" true-value="0" false-value="2" />
                   <label for="newSoldOut" class="text-sm text-gray-700">售罄</label>
                 </div>
               </div>
@@ -266,7 +266,7 @@
                   <textarea v-model="editingDish.description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品描述"></textarea>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <input id="editSoldOut" type="checkbox" v-model="editingDish.isSoldOut" true-value="1" false-value="0" />
+                  <input id="editSoldOut" type="checkbox" v-model="editingDish.isSoldOut" true-value="0" false-value="2" />
                   <label for="editSoldOut" class="text-sm text-gray-700">售罄</label>
                 </div>
               </div>
@@ -451,9 +451,9 @@ const localOrdersSample: (FoodOrder & { localStatus?: string; deliveryStatus?: s
 ];
 
 const localDishesSample: Dish[] = [
-  { dishId: 1, dishName: '麻婆豆腐', price: 28, description: '特制豆瓣酱，麻辣鲜香', isSoldOut: 0 },
-  { dishId: 2, dishName: '宫保鸡丁', price: 32, description: '鸡丁花生，鲜辣爽口', isSoldOut: 0 },
-  { dishId: 3, dishName: '水煮鱼', price: 58, description: '草鱼片，辣而不燥', isSoldOut: 1 }
+  { dishId: 1, dishName: '麻婆豆腐', price: 28, description: '特制豆瓣酱，麻辣鲜香', isSoldOut: 2 },
+  { dishId: 2, dishName: '宫保鸡丁', price: 32, description: '鸡丁花生，鲜辣爽口', isSoldOut: 2 },
+  { dishId: 3, dishName: '水煮鱼', price: 58, description: '草鱼片，辣而不燥', isSoldOut: 0 }
 ];
 
 const localCartItemsByCartId: Record<number, ShoppingCartItem[]> = {
@@ -533,8 +533,6 @@ const localDeliveryInfoByOrderId: Record<number, OrderDeliveryInfo> = {
       taskId: 5001,
       estimatedArrivalTime: '2024-12-01 12:40:00',
       estimatedDeliveryTime: '2024-12-01 13:00:00',
-      courierLongitude: 116.397389,
-      courierLatitude: 39.908722,
       customerId: 1,
       storeId: 101,
     },
@@ -555,8 +553,6 @@ const localDeliveryInfoByOrderId: Record<number, OrderDeliveryInfo> = {
       taskId: 5002,
       estimatedArrivalTime: '2024-12-01 13:25:00',
       estimatedDeliveryTime: '2024-12-01 13:45:00',
-      courierLongitude: 116.397389,
-      courierLatitude: 39.908722,
       customerId: 2,
       storeId: 101,
     },
@@ -703,7 +699,7 @@ const closeOrderDetailsDialog = () => {
 // 菜品管理
 const dishes = ref<Dish[]>(localDishesSample);
 
-const newDish = ref({ dishName: '', price: '', description: '', isSoldOut: 0 as any });
+const newDish = ref({ dishName: '', price: '', description: '', isSoldOut: 2 as any });
 const editingDish = ref({ dishId: 0, dishName: '', price: 0 as any, description: '', isSoldOut: 0 as any });
 
 const createDishHandler = async () => {
@@ -720,7 +716,7 @@ const createDishHandler = async () => {
     });
     dishes.value.push(created as any);
     showDishForm.value = false;
-    newDish.value = { dishName: '', price: '', description: '', isSoldOut: 0 } as any;
+    newDish.value = { dishName: '', price: '', description: '', isSoldOut: 2 } as any;
     ElMessage.success('菜品创建成功');
   } catch (error) {
     ElMessage.error(handleApiError(error));
@@ -752,7 +748,7 @@ const updateDishHandler = async () => {
 
 const toggleSoldOut = async (dish: any) => {
   try {
-    const newValue = dish.isSoldOut === 1 ? 0 : 1;
+    const newValue = dish.isSoldOut === 0 ? 2 : 0;
     await toggleDishSoldOut(dish.dishId, newValue);
     dish.isSoldOut = newValue;
     ElMessage.success('状态更新成功');
@@ -835,8 +831,6 @@ const submitPublish = async () => {
           taskId: 5000 + orderId,
           estimatedArrivalTime: eta,
           estimatedDeliveryTime: etd,
-          courierLongitude: 116.397389,
-          courierLatitude: 39.908722,
           customerId: publishTargetOrder.value.customerId,
           storeId: publishTargetOrder.value.storeId,
         },
