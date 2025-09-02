@@ -111,7 +111,7 @@ namespace BackEnd.Dtos.User
         [MaxLength(255)]
         public string? Avatar { get; set; }
 
-        public string Images { get; set; } = string.Empty;
+        public string[] Images { get; set; } = Array.Empty<string>();
     }
 
     public class CommentStateDto

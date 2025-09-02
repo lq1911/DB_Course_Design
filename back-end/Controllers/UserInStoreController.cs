@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BackEnd.Controllers
 {
     [ApiController]
-    [Route("api/user/store")]
+    [Route("api")]
     public class UserStoreController : ControllerBase
     {
         private readonly IUserInStoreService _userInStoreService;
@@ -18,7 +18,7 @@ namespace BackEnd.Controllers
         /// 获取店铺信息
         /// GET /api/user/store/storeInfo?storeId=1
         /// </summary>
-        [HttpGet("storeInfo")]
+        [HttpGet("user/store/storeInfo")]
         public async Task<ActionResult<StoreResponseDto>> GetStoreInfo([FromQuery] StoreRequestDto request)
         {
             if (request.StoreId <= 0)
@@ -37,15 +37,18 @@ namespace BackEnd.Controllers
 
         /// <summary>
         /// 获取菜单（平铺菜品）
-        /// GET /api/user/store/dish?userId=1&storeId=1
+        /// GET /api/store/dish?userId=1&storeId=1
         /// </summary>
-        [HttpGet("dish")]
+        [HttpGet("store/dish")]
         public async Task<ActionResult<List<MenuResponseDto>>> GetMenu([FromQuery] MenuRequestDto request)
         {
             if (request.StoreId <= 0 || request.UserId <= 0)
                 return BadRequest("参数无效");
 
             var result = await _userInStoreService.GetMenuAsync(request);
+
+            if (result == null) return NotFound("当前无菜品");
+
             return Ok(result);
         }
 
@@ -53,7 +56,7 @@ namespace BackEnd.Controllers
         /// 获取商家评论列表
         /// GET /api/user/store/commentList?storeId=1
         /// </summary>
-        [HttpGet("commentList")]
+        [HttpGet("user/store/commentList")]
         public async Task<ActionResult> GetCommentList([FromQuery] int storeId)
         {
             if (storeId <= 0)
@@ -66,9 +69,9 @@ namespace BackEnd.Controllers
 
         /// <summary>
         /// 获取商家评价状态 [好评数, 中评数, 差评数]
-        /// GET /api/user/store/commentState?storeId=1
+        /// GET /api/user/store/commentStatus?storeId=1
         /// </summary>
-        [HttpGet("commentState")]
+        [HttpGet("user/store/commentStatus")]
         public async Task<ActionResult<CommentStateDto>> GetCommentState([FromQuery] int storeId)
         {
             if (storeId <= 0)

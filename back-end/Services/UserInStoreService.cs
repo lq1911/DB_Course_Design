@@ -82,7 +82,9 @@ public class UserInStoreService : IUserInStoreService
             Date = c.PostedAt,
             Content = c.Content,
             Avatar = c.Commenter?.User?.Avatar ?? "/images/user/default.png",
-            Images = c.CommentImage 
+            Images = string.IsNullOrWhiteSpace(c.CommentImage)
+                    ? Array.Empty<string>()  // 返回一个空数组 []
+                    : c.CommentImage.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
         }).ToList();
     }
 
