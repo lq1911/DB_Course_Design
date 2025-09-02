@@ -58,9 +58,6 @@ namespace BackEnd.Dtos.User
     public class MenuRequestDto
     {
         [Required]
-        public int UserId { get; set; }
-
-        [Required]
         public int StoreId { get; set; }
     }
 

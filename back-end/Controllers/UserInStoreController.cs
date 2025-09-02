@@ -42,7 +42,7 @@ namespace BackEnd.Controllers
         [HttpGet("store/dish")]
         public async Task<ActionResult<List<MenuResponseDto>>> GetMenu([FromQuery] MenuRequestDto request)
         {
-            if (request.StoreId <= 0 || request.UserId <= 0)
+            if (request.StoreId <= 0)
                 return BadRequest("参数无效");
 
             var result = await _userInStoreService.GetMenuAsync(request);
