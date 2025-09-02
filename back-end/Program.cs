@@ -107,6 +107,7 @@ builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 // 注册 Service 层
 builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IUserCheckoutService, UserCheckoutService>();
+builder.Services.AddScoped<IUserPlaceOrderService, UserPlaceOrderService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();
