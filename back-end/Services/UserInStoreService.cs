@@ -82,7 +82,7 @@ public class UserInStoreService : IUserInStoreService
             Date = c.PostedAt,
             Content = c.Content,
             Avatar = c.Commenter?.User?.Avatar ?? "/images/user/default.png",
-            Images = c.CommentImage // 目前没图片表，可以后续扩展
+            Images = c.CommentImage 
         }).ToList();
     }
 
