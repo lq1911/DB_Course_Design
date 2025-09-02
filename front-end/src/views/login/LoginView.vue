@@ -398,7 +398,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import api from '@/api/api'; // 导入我们的 API 服务
+import api from '@/api/login_api'; // 导入我们的 API 服务
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 

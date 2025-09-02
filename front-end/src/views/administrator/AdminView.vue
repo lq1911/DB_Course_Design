@@ -20,9 +20,9 @@
                     <!-- 【修改】用 v-if 包裹用户信息，防止数据加载完成前出错 -->
                     <div v-if="currentUser" class="flex items-center space-x-3">
                         <!-- 【修改】将头像和名字绑定到动态数据 -->
-                        <img :src="currentUser.avatarUrl" :alt="currentUser.name + '的头像'"
+                        <img :src="currentUser.avatarUrl" :alt="currentUser.username + '的头像'"
                             class="w-8 h-8 rounded-full object-cover">
-                        <span class="text-sm text-gray-700">{{ currentUser.name }}</span>
+                        <span class="text-sm text-gray-700">{{ currentUser.username }}</span>
                     </div>
                     <!-- 【修改】这是现在唯一的一个登出按钮，并绑定了点击事件 -->
                     <button @click="handleLogout" class="text-gray-500 hover:text-gray-700 cursor-pointer">
@@ -549,10 +549,10 @@
                             <div class="max-w-2xl">
                                 <!-- 头像和基本信息 -->
                                 <div class="flex items-center space-x-6 mb-8">
-                                    <img :src="currentUser.avatarUrl" :alt="currentUser.name + '的头像'"
+                                    <img :src="currentUser.avatarUrl" :alt="currentUser.username + '的头像'"
                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100">
                                     <div>
-                                        <h3 class="text-xl font-semibold text-gray-900">{{ currentUser.name }}</h3>
+                                        <h3 class="text-xl font-semibold text-gray-900">{{ currentUser.username }}</h3>
                                         <p class="text-gray-600">{{ currentUser.role }}</p>
                                         <p class="text-sm text-gray-500">注册时间：{{ currentUser.registrationDate }}</p>
                                     </div>
@@ -572,7 +572,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">手机号</label>
-                                        <input type="text" v-model="currentUser.phone"
+                                        <input type="text" :value="currentUser.phone" readonly
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
                                     </div>
                                     <div>
@@ -597,7 +597,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">姓名</label>
-                                        <input type="text" v-model="currentUser.realName"
+                                        <input type="text" :value="currentUser.realName" readonly
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
                                     </div>
                                     <div>
@@ -934,7 +934,7 @@
 // =================================================================
 // 步骤 1: 导入必要的模块
 // =================================================================
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, readonly } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter } from 'vue-router';
 import axios from 'axios'; // 导入axios用于真实API请求
@@ -945,7 +945,6 @@ import axios from 'axios'; // 导入axios用于真实API请求
 interface AdminInfo {
     id: string; // e.g., "ADM001"
     username: string;
-    name: string; // The display name, e.g., "张管理员"
     realName: string; // e.g., "张伟"
     role: string; // e.g., "系统管理员"
     registrationDate: string; // e.g., "2023-01-15"
@@ -1035,7 +1034,6 @@ const mockApi = {
     getAdminInfo: async (): Promise<AdminInfo> => ({
         id: 'ADM001',
         username: 'admin_zhang',
-        name: '张管理员',
         realName: '张伟',
         role: '系统管理员',
         registrationDate: '2023-01-15',
@@ -1083,30 +1081,73 @@ apiClient.interceptors.request.use(
 
 
 
+// 3.2 ----------------- 真实API实现 (修改后) -----------------
+
 const realApi = {
-    // --- 获取列表 (GET请求) ---
-    // 【修改】路径修正为更标准的形式。后端会根据你的Token知道是'mine'。
+    // --- 获取列表 (GET请求) - 这部分保持不变，因为它们返回的是数组 ---
     getAfterSalesList: () => apiClient.get<AfterSaleItem[]>('/admin/after-sales').then(res => res.data),
     getComplaintsList: () => apiClient.get<ComplaintItem[]>('/admin/complaints').then(res => res.data),
     getViolationsList: () => apiClient.get<ViolationItem[]>('/admin/violations').then(res => res.data),
     getReviewsList: () => apiClient.get<ReviewItem[]>('/admin/reviews').then(res => res.data),
-
-    // 这个接口看起来是正确的，保持不变
     getAdminInfo: () => apiClient.get<AdminInfo>('/admin/info').then(res => res.data),
 
     // --- 更新数据 (PUT请求) ---
-    // 【修改】为所有更新接口的路径添加了正确的 '/admin/...' 前缀
-    updateAfterSale: (item: AfterSaleItem) => apiClient.put(`/admin/after-sales/${item.applicationId}`, item).then(res => res.data),
-    updateComplaint: (item: ComplaintItem) => apiClient.put(`/admin/complaints/${item.complaintId}`, item).then(res => res.data),
-    updateViolation: (item: ViolationItem) => apiClient.put(`/admin/violations/${item.punishmentId}`, item).then(res => res.data),
-    updateReview: (item: ReviewItem) => apiClient.put(`/admin/reviews/${item.reviewId}`, item).then(res => res.data),
+    // 【核心修改】将所有更新函数的返回值包装成 { success: boolean, data: T } 的格式
+    
+    updateAfterSale: async (item: AfterSaleItem) => {
+        try {
+            const response = await apiClient.put<AfterSaleItem>(`/admin/after-sales/${item.applicationId}`, item);
+            return { success: true, data: response.data }; // 成功时，包装成礼盒返回
+        } catch (error) {
+            console.error('更新售后失败:', error);
+            // 失败时，也返回一个礼盒，但 success 为 false，data 可以是原始数据或 null
+            return { success: false, data: item }; 
+        }
+    },
 
-    // 这个接口看起来是正确的，保持不变
-    updateAdminInfo: (data: AdminInfo) => apiClient.put<AdminInfo>('/admin/info', data).then(res => res.data),
+    updateComplaint: async (item: ComplaintItem) => {
+        try {
+            const response = await apiClient.put<ComplaintItem>(`/admin/complaints/${item.complaintId}`, item);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error('更新投诉失败:', error);
+            return { success: false, data: item };
+        }
+    },
+
+    updateViolation: async (item: ViolationItem) => {
+        try {
+            const response = await apiClient.put<ViolationItem>(`/admin/violations/${item.punishmentId}`, item);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error('更新违规失败:', error);
+            return { success: false, data: item };
+        }
+    },
+
+    updateReview: async (item: ReviewItem) => {
+        try {
+            const response = await apiClient.put<ReviewItem>(`/admin/reviews/${item.reviewId}`, item);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error('更新评论失败:', error);
+            return { success: false, data: item };
+        }
+    },
+
+    updateAdminInfo: async (data: AdminInfo) => {
+        try {
+            const response = await apiClient.put<AdminInfo>('/admin/info', data);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error('更新管理员信息失败:', error);
+            return { success: false, data: data };
+        }
+    },
 };
 
 // 3.3 ----------------- API切换器 -----------------
-const useMock = false; // 切换为 true 使用模拟API，false 使用真实API
+const useMock = true; // 切换为 true 使用模拟API，false 使用真实API
 const api = useMock ? mockApi : realApi;
 
 
@@ -1230,20 +1271,49 @@ const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item
 
 // 4.4 ----------------- 修改数据处理函数 (全部完成) -----------------
 const handleAfterSaleAction = async () => {
-    if (!afterSaleNote.value.trim() || !selectedPunishment.value || !punishmentReason.value.trim()) return ElMessage.warning('请填写完整的处理信息和处罚原因');
+    if (!afterSaleNote.value.trim() || !selectedPunishment.value || !punishmentReason.value.trim()) {
+        return ElMessage.warning('请填写完整的处理信息和处罚原因');
+    }
     if (!currentAfterSale.value) return;
+
     try {
         await ElMessageBox.confirm('确定要执行选定的处罚措施吗？', '确认操作', { type: 'warning' });
+        
         const punishmentLabel = punishmentOptions.afterSales.find(o => o.value === selectedPunishment.value)?.label || selectedPunishment.value;
-        const updatedItem: AfterSaleItem = { ...currentAfterSale.value, status: '已完成', punishment: punishmentLabel, punishmentReason: punishmentReason.value, processingNote: afterSaleNote.value };
-        await api.updateAfterSale(updatedItem);
-        const index = afterSalesList.value.findIndex(item => item.applicationId === updatedItem.applicationId);
+        const updatedItem: AfterSaleItem = { 
+            ...currentAfterSale.value, 
+            status: '已完成', 
+            punishment: punishmentLabel, 
+            punishmentReason: punishmentReason.value, 
+            processingNote: afterSaleNote.value 
+        };
 
-        if (index !== -1) afterSalesList.value[index] = updatedItem;
-        ElMessage.success('处理完成，处罚措施已执行');
-        showAfterSaleDetail.value = false;
+        // 【核心修改】接收API的返回结果
+        const response = await api.updateAfterSale(updatedItem);
+
+        // 【核心修改】检查返回结果的 success 字段
+        if (response.success) {
+            // 只有在后端确认成功后，才更新前端的UI
+            const index = afterSalesList.value.findIndex(item => item.applicationId === updatedItem.applicationId);
+            if (index !== -1) {
+                // 使用从后端返回的最新数据来更新列表，这是最佳实践
+                afterSalesList.value[index] = response.data; 
+            }
+            ElMessage.success('处理完成，处罚措施已执行');
+            showAfterSaleDetail.value = false;
+        } else {
+            // 如果后端返回失败，则提示用户
+            ElMessage.error('操作失败，数据未能成功保存到服务器');
+        }
+
     } catch (error) {
-        if (error !== 'cancel') ElMessage.error('操作失败');
+        // 这个 catch 现在主要捕获 ElMessageBox 的 "cancel" 行为
+        if (error !== 'cancel') {
+            console.error("处理售后时发生未知错误:", error);
+            ElMessage.error('操作失败');
+        } else {
+            ElMessage.info('操作已取消');
+        }
     }
 };
 
@@ -1251,14 +1321,31 @@ const handleAfterSaleAction = async () => {
 /**
  * 【新增】处理保存修改的函数
  */
+/**
+ * 【新增】处理保存修改的函数
+ */
 const handleSaveChanges = async () => {
     if (!currentUser.value) return;
+    
     isSaving.value = true;
     try {
-        const updatedInfo = await api.updateAdminInfo(currentUser.value);
-        currentUser.value = updatedInfo;
-        originalAdminInfo = JSON.parse(JSON.stringify(updatedInfo)); // 更新备份
-        ElMessage.success('信息更新成功！');
+        // 【核心修改】接收 API 的返回结果
+        const response = await api.updateAdminInfo(currentUser.value);
+
+        // 【核心修改】检查返回结果的 success 字段
+        if (response.success) {
+            // 只有在后端确认成功后，才更新前端的状态
+            
+            // 使用从后端返回的最新数据来更新，这是最佳实践
+            currentUser.value = response.data; 
+            originalAdminInfo = JSON.parse(JSON.stringify(response.data)); // 更新备份
+            
+            ElMessage.success('信息更新成功！');
+        } else {
+            // 如果后端返回失败，则提示用户
+            ElMessage.error('信息更新失败，未能成功保存到服务器');
+        }
+
     } catch (error) {
         console.error('更新失败:', error);
         ElMessage.error('信息更新失败，请稍后再试。');
@@ -1304,64 +1391,152 @@ const handleLogout = () => {
 
 
 const handleComplaintProcess = async () => {
-    if (!complaintNote.value.trim() || !selectedComplaintPunishment.value || !complaintPunishmentReason.value.trim()) return ElMessage.warning('请填写完整的处理信息和处罚原因');
+    if (!complaintNote.value.trim() || !selectedComplaintPunishment.value || !complaintPunishmentReason.value.trim()) {
+        return ElMessage.warning('请填写完整的处理信息和处罚原因');
+    }
     if (!currentComplaint.value) return;
+
     try {
         await ElMessageBox.confirm('确定要处理该投诉吗？', '确认操作', { type: 'warning' });
+
         const punishmentLabel = punishmentOptions.complaints.find(o => o.value === selectedComplaintPunishment.value)?.label || selectedComplaintPunishment.value;
-        const updatedItem: ComplaintItem = { ...currentComplaint.value, status: '已完成', punishment: punishmentLabel, punishmentReason: complaintPunishmentReason.value, processingNote: complaintNote.value };
-        await api.updateComplaint(updatedItem);
+        const updatedItem: ComplaintItem = { 
+            ...currentComplaint.value, 
+            status: '已完成', 
+            punishment: punishmentLabel, 
+            punishmentReason: complaintPunishmentReason.value, 
+            processingNote: complaintNote.value 
+        };
 
-        const index = complaintsList.value.findIndex(item => item.complaintId === updatedItem.complaintId);
+        // 【核心修改】接收API的返回结果
+        const response = await api.updateComplaint(updatedItem);
 
-        if (index !== -1) complaintsList.value[index] = updatedItem;
-        ElMessage.success('投诉已处理完成');
-        showComplaintDetail.value = false;
+        // 【核心修改】检查返回结果的 success 字段
+        if (response.success) {
+            // 只有在后端确认成功后，才更新前端的UI
+            const index = complaintsList.value.findIndex(item => item.complaintId === updatedItem.complaintId);
+            if (index !== -1) {
+                // 使用从后端返回的最新数据来更新列表
+                complaintsList.value[index] = response.data;
+            }
+            ElMessage.success('投诉已处理完成');
+            showComplaintDetail.value = false;
+        } else {
+            // 如果后端返回失败，则提示用户
+            ElMessage.error('操作失败，数据未能成功保存到服务器');
+        }
+
     } catch (error) {
-        if (error !== 'cancel') ElMessage.error('操作失败');
+        // 这个 catch 主要捕获 ElMessageBox 的 "cancel" 行为
+        if (error !== 'cancel') {
+            console.error("处理投诉时发生未知错误:", error);
+            ElMessage.error('操作失败');
+        } else {
+            ElMessage.info('操作已取消');
+        }
     }
 };
 
 const handleViolationAction = async (action: 'process' | 'complete') => {
     if (!currentViolation.value) return;
-    if (action === 'process' && (!selectedMerchantPunishment.value || !selectedStorePunishment.value)) return ElMessage.warning('请选择商家和店铺的处罚措施');
-    if (!violationNote.value.trim()) return ElMessage.warning('请填写处理备注');
+    if (action === 'process' && (!selectedMerchantPunishment.value || !selectedStorePunishment.value)) {
+        return ElMessage.warning('请选择商家和店铺的处罚措施');
+    }
+    if (!violationNote.value.trim()) {
+        return ElMessage.warning('请填写处理备注');
+    }
+
     try {
         await ElMessageBox.confirm(`确定要${action === 'process' ? '开始执行' : '完成执行'}该处罚吗？`, '确认操作', { type: 'warning' });
+        
         let updatedItem: ViolationItem;
         if (action === 'process') {
-            updatedItem = { ...currentViolation.value, status: '执行中', merchantPunishment: selectedMerchantPunishment.value, storePunishment: selectedStorePunishment.value, processingNote: violationNote.value };
-        } else {
-            updatedItem = { ...currentViolation.value, status: '已完成', processingNote: violationNote.value };
+            updatedItem = { 
+                ...currentViolation.value, 
+                status: '执行中', 
+                merchantPunishment: selectedMerchantPunishment.value, 
+                storePunishment: selectedStorePunishment.value, 
+                processingNote: violationNote.value 
+            };
+        } else { // action === 'complete'
+            updatedItem = { 
+                ...currentViolation.value, 
+                status: '已完成', 
+                processingNote: violationNote.value 
+            };
         }
-        await api.updateViolation(updatedItem);
 
-        const index = violationsList.value.findIndex(item => item.punishmentId === updatedItem.punishmentId);
+        // 【核心修改】接收API的返回结果
+        const response = await api.updateViolation(updatedItem);
 
-        if (index !== -1) violationsList.value[index] = updatedItem;
-        ElMessage.success(`处罚已${action === 'process' ? '开始执行' : '执行完成'}`);
-        showViolationDetail.value = false;
+        // 【核心修改】检查返回结果的 success 字段
+        if (response.success) {
+            // 只有在后端确认成功后，才更新前端的UI
+            const index = violationsList.value.findIndex(item => item.punishmentId === updatedItem.punishmentId);
+            if (index !== -1) {
+                // 使用从后端返回的最新数据来更新列表
+                violationsList.value[index] = response.data;
+            }
+            ElMessage.success(`处罚已${action === 'process' ? '开始执行' : '执行完成'}`);
+            showViolationDetail.value = false;
+        } else {
+            // 如果后端返回失败，则提示用户
+            ElMessage.error('操作失败，数据未能成功保存到服务器');
+        }
+
     } catch (error) {
-        if (error !== 'cancel') ElMessage.error('操作失败');
+        if (error !== 'cancel') {
+            console.error("处理违规时发生未知错误:", error);
+            ElMessage.error('操作失败');
+        } else {
+            ElMessage.info('操作已取消');
+        }
     }
 };
 
 const handleReviewAction = async () => {
-    if (!reviewNote.value.trim() || !selectedReviewPunishment.value || !reviewPunishmentReason.value.trim()) return ElMessage.warning('请填写完整的处理信息和处理原因');
+    if (!reviewNote.value.trim() || !selectedReviewPunishment.value || !reviewPunishmentReason.value.trim()) {
+        return ElMessage.warning('请填写完整的处理信息和处理原因');
+    }
     if (!currentReview.value) return;
+
     try {
         await ElMessageBox.confirm('确定要执行选定的处理措施吗？', '确认操作', { type: 'warning' });
+
         const punishmentLabel = punishmentOptions.reviews.find(o => o.value === selectedReviewPunishment.value)?.label || selectedReviewPunishment.value;
-        const updatedItem: ReviewItem = { ...currentReview.value, status: '已完成', punishment: punishmentLabel, punishmentReason: reviewPunishmentReason.value, processingNote: reviewNote.value };
-        await api.updateReview(updatedItem);
+        const updatedItem: ReviewItem = { 
+            ...currentReview.value, 
+            status: '已完成', 
+            punishment: punishmentLabel, 
+            punishmentReason: reviewPunishmentReason.value, 
+            processingNote: reviewNote.value 
+        };
 
-        const index = reviewsList.value.findIndex(item => item.reviewId === updatedItem.reviewId);
+        // 【核心修改】接收API的返回结果
+        const response = await api.updateReview(updatedItem);
 
-        if (index !== -1) reviewsList.value[index] = updatedItem;
-        ElMessage.success('评论处理完成');
-        showReviewDetail.value = false;
+        // 【核心修改】检查返回结果的 success 字段
+        if (response.success) {
+            // 只有在后端确认成功后，才更新前端的UI
+            const index = reviewsList.value.findIndex(item => item.reviewId === updatedItem.reviewId);
+            if (index !== -1) {
+                // 使用从后端返回的最新数据来更新列表
+                reviewsList.value[index] = response.data;
+            }
+            ElMessage.success('评论处理完成');
+            showReviewDetail.value = false;
+        } else {
+            // 如果后端返回失败，则提示用户
+            ElMessage.error('操作失败，数据未能成功保存到服务器');
+        }
+
     } catch (error) {
-        if (error !== 'cancel') ElMessage.error('操作失败');
+        if (error !== 'cancel') {
+            console.error("处理评论时发生未知错误:", error);
+            ElMessage.error('操作失败');
+        } else {
+            ElMessage.info('操作已取消');
+        }
     }
 };
 </script>
