@@ -10,7 +10,7 @@ namespace BackEnd.Dtos.User
     {
 
         [Required]
-        public int StoreId;
+        public int StoreId{ get; set; }
     }
 
     public class StoreResponseDto
@@ -57,9 +57,6 @@ namespace BackEnd.Dtos.User
 
     public class MenuRequestDto
     {
-        [Required]
-        public int UserId { get; set; }
-
         [Required]
         public int StoreId { get; set; }
     }

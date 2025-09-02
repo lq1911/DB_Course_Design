@@ -44,6 +44,16 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(a => a.UserID == id);
         }
 
+        public async Task<IEnumerable<AfterSaleApplication>> GetAfterSaleApplicationsByAdminIdAsync(int adminId)
+        {
+            var applications = await _context.Evaluate_AfterSales
+                                             .Where(eas => eas.AdminID == adminId)
+                                             .Select(eas => eas.Application)
+                                             .ToListAsync();
+
+            return applications;
+        }
+
         public async Task AddAsync(Administrator administrator)
         {
             await _context.Administrators.AddAsync(administrator);

@@ -32,6 +32,5 @@ namespace BackEnd.Models
 
         [NotMapped]
         public bool IsExpired => CouponManager.ValidTo < DateTime.Now;
-
     }
 }

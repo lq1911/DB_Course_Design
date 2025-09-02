@@ -1,3 +1,4 @@
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,6 +20,22 @@ namespace BackEnd.Models
 
         [Required]
         public DateTime ApplicationTime { get; set; }
+
+        // 新增售后申请状态
+        [Required]
+        public AfterSaleState AfterSaleState { get; set; } = AfterSaleState.Pending;
+
+        // 处理措施
+        [StringLength(255)]
+        public string? ProcessingResult { get; set; } = "-";
+
+        // 处理原因
+        [StringLength(255)]
+        public string? ProcessingReason { get; set; }
+
+        // 处理备注
+        [StringLength(255)]
+        public string? ProcessingRemark { get; set; }
 
         [Required]
         public int OrderID { get; set; }

@@ -1,5 +1,6 @@
 using BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
+using BackEnd.Models.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BackEnd.Data.EntityConfigs
@@ -17,6 +18,14 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(asa => asa.Description).HasColumnName("DESCRIPTION").IsRequired().HasMaxLength(255);
 
             builder.Property(asa => asa.ApplicationTime).HasColumnName("APPLICATIONTIME").IsRequired();
+
+            builder.Property(asa => asa.AfterSaleState).HasColumnName("AFTERSALESTATE").IsRequired().HasConversion<string>().HasMaxLength(50).HasDefaultValue(AfterSaleState.Pending); ;
+
+            builder.Property(asa => asa.ProcessingResult).HasColumnName("PROCESSINGRESULT").IsRequired(false).HasMaxLength(255);
+
+            builder.Property(asa => asa.ProcessingReason).HasColumnName("PROCESSINGREASON").IsRequired(false).HasMaxLength(255);
+
+            builder.Property(asa => asa.ProcessingRemark).HasColumnName("PROCESSINGREMARK").IsRequired(false).HasMaxLength(255);
 
             builder.Property(asa => asa.OrderID).HasColumnName("ORDERID").IsRequired();
 

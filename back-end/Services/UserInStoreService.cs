@@ -1,6 +1,5 @@
 using BackEnd.Dtos.User;
 using BackEnd.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 public class UserInStoreService : IUserInStoreService
 {
@@ -83,7 +82,9 @@ public class UserInStoreService : IUserInStoreService
             Date = c.PostedAt,
             Content = c.Content,
             Avatar = c.Commenter?.User?.Avatar ?? "/images/user/default.png",
-            Images = Array.Empty<string>() // 目前没图片表，可以后续扩展
+            Images = string.IsNullOrWhiteSpace(c.CommentImage)
+                    ? Array.Empty<string>()  // 返回一个空数组 []
+                    : c.CommentImage.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
         }).ToList();
     }
 
@@ -97,7 +98,7 @@ public class UserInStoreService : IUserInStoreService
             .Select(c => c.Rating);
 
         int perfect = comments.Count(r => r == 5);
-        int good = comments.Count(r => r == 4 );
+        int good = comments.Count(r => r == 4);
         int normal = comments.Count(r => r == 3);
         int bad = comments.Count(r => r == 2);
         int awful = comments.Count(r => r == 1);
