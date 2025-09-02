@@ -88,4 +88,11 @@ namespace BackEnd.Models.Enums
         Pending = 0,
         Completed = 1
     }
+
+    // 优惠券类型
+    public enum CouponType
+    {
+        Fixed = 0,      // 满减券
+        Discount = 1    // 折扣券
+    }
 }
