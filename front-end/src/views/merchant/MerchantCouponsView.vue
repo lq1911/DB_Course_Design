@@ -422,6 +422,11 @@ import { getMerchantInfo } from '@/services/merchant_api';
 
 import axios from 'axios';
 
+const api = axios.create({
+  baseURL: 'http://localhost:5250/api',
+  timeout: 5000,
+});
+
 const router = useRouter();
 const $route = useRoute();
 const couponFormRef = ref<FormInstance>();

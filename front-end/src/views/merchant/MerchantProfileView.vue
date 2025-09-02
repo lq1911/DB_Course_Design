@@ -131,6 +131,11 @@ import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
+const api = axios.create({
+  baseURL: 'http://localhost:5250/api',
+  timeout: 5000,
+});
+
 const activeMenu = ref('profile');
 const router = useRouter();
 const $route = useRoute();
