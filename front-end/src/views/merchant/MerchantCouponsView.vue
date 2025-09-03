@@ -419,8 +419,7 @@ import {
   Delete,
 } from '@element-plus/icons-vue';
 import { getMerchantInfo } from '@/api/merchant_api';
-
-import axios from 'axios';
+import API from '@/api/index';
 
 const router = useRouter();
 const $route = useRoute();
@@ -541,7 +540,7 @@ const couponRules = reactive<FormRules>({
 const fetchCoupons = async () => {
   try {
     loading.value = true;
-    const response = await axios.get('/api/merchant/coupons', {
+    const response = await API.get('/api/merchant/coupons', {
       params: {
         page: currentPage.value,
         pageSize: pageSize.value,
@@ -564,7 +563,7 @@ const fetchCoupons = async () => {
 // 获取统计数据
 const fetchStats = async () => {
   try {
-    const response = await axios.get('/api/merchant/coupons/stats');
+    const response = await API.get('/api/merchant/coupons/stats');
     Object.assign(stats, response.data.data);
   } catch (error) {
     console.error('获取统计数据失败', error);
@@ -588,7 +587,7 @@ const getStatusTagType = (status: string) => {
     case 'active': return 'success';
     case 'expired': return 'info';
     case 'upcoming': return 'warning';
-    default: return '';
+    default: return 'primary';
   }
 };
 
@@ -636,10 +635,10 @@ const submitCouponForm = async () => {
     };
     
     if (isEditMode.value) {
-      await axios.put(`/api/merchant/coupons/${currentCouponId.value}`, payload);
+      await API.put(`/api/merchant/coupons/${currentCouponId.value}`, payload);
       ElMessage.success('优惠券更新成功');
     } else {
-      await axios.post('/api/merchant/coupons', payload);
+      await API.post('/api/merchant/coupons', payload);
       ElMessage.success('优惠券创建成功');
     }
     
@@ -664,7 +663,7 @@ const handleDelete = async (row: any) => {
       }
     );
     
-    await axios.delete(`/api/merchant/coupons/${row.id}`);
+    await API.delete(`/api/merchant/coupons/${row.id}`);
     ElMessage.success('优惠券删除成功');
     fetchCoupons();
     fetchStats();
@@ -687,7 +686,7 @@ const batchDeleteCoupons = async () => {
       }
     );
     
-    await axios.delete('/api/merchant/coupons/batch', { data: { ids } });
+    await API.delete('/api/merchant/coupons/batch', { data: { ids } });
     ElMessage.success(`成功删除 ${ids.length} 张优惠券`);
     selectedCoupons.value = [];
     fetchCoupons();

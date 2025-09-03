@@ -113,6 +113,14 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();
 builder.Services.AddScoped<IEvaluate_AfterSaleService, Evaluate_AfterSaleService>();
 builder.Services.AddScoped<IMerchantService, MerchantService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<IMerchantInformationService, MerchantInformationService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<IDeliveryTaskService, DeliveryTaskService>();
+builder.Services.AddScoped<IPenaltyService, PenaltyService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IAfterSaleService, AfterSaleService>();
 
 var app = builder.Build();
 
