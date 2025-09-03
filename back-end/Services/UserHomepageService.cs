@@ -19,7 +19,7 @@ namespace BackEnd.Services
         private readonly IUserRepository _userRepository;
         private readonly ICouponRepository _couponRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
-        private readonly IShoppingCartRepository _shoppingCartRepository;   
+        private readonly IShoppingCartRepository _shoppingCartRepository;
 
         public UserHomepageService(
             IStoreRepository storeRepository,
@@ -39,6 +39,7 @@ namespace BackEnd.Services
             _userRepository = userRepository;
             _couponRepository = couponRepository;
             _foodOrderRepository = foodOrderRepository;
+            _shoppingCartRepository = shoppingCartRepository;
         }
 
         public async Task<IEnumerable<HomeRecmDto>> GetRecommendedStoresAsync()
