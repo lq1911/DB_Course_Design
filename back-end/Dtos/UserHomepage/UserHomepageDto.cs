@@ -4,23 +4,11 @@ using BackEnd.Models.Enums;
 
 namespace BackEnd.Dtos.UserHomepage
 {
+
     public class HomeRecmDto
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
-        public string Image { get; set; } = null!;
-
-        [Required]
-        [StringLength(50)]
-        public string Name { get; set; } = null!;
-
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal AverageRating { get; set; } = 0.00m;
-
-        [Required]
-        public int MonthlySales { get; set; }
+        public IEnumerable<ShowStoreDto> RecomStore { get; set; } = Array.Empty<ShowStoreDto>();
     }
 
     public class HomeSearchDto
@@ -79,8 +67,7 @@ namespace BackEnd.Dtos.UserHomepage
         public int DishID { get; set; }
         public string DishName { get; set; } = null!;
         public decimal Price { get; set; }
-
-        //public string? DishImage { get; set; }
+        public string? DishImage { get; set; }
     }
     public class HistoryOrderDto
     {
@@ -150,10 +137,20 @@ namespace BackEnd.Dtos.UserHomepage
     }
     public class ShowStoreDto
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required]
         public string Image { get; set; } = null!;
-        public decimal AverageRating { get; set; }
+
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; } = null!;
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal AverageRating { get; set; } = 0.00m;
+
+        [Required]
         public int MonthlySales { get; set; }
     }
      public class StoresResponseDto

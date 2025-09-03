@@ -42,7 +42,7 @@ namespace BackEnd.Services
             _shoppingCartRepository = shoppingCartRepository;
         }
 
-        public async Task<IEnumerable<HomeRecmDto>> GetRecommendedStoresAsync()
+        public async Task<HomeRecmDto> GetRecommendedStoresAsync()
         {
             var stores = await _storeRepository.GetAllAsync();
 
@@ -56,16 +56,19 @@ namespace BackEnd.Services
             var recommended = topStores
                 .OrderBy(s => random.Next())
                 .Take(4)
-                .Select(s => new HomeRecmDto
+                .Select(s => new ShowStoreDto
                 {
                     Id = s.StoreID,
-                    // Image = s.StoreImage,
+                    Image = s.StoreImage,
                     Name = s.StoreName,
                     AverageRating = s.AverageRating,
                     MonthlySales = s.MonthlySales
                 });
 
-            return recommended;
+            return new HomeRecmDto
+            {
+                RecomStore = recommended
+            };
         }
 
         public async Task<(IEnumerable<HomeSearchGetDto> Stores, IEnumerable<HomeSearchGetDto> Dishes)>
