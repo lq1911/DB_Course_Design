@@ -31,7 +31,7 @@ import { ref, onMounted } from 'vue';
 import type { RecomStore } from '@/api/user_home';
 import { getRecomStore } from '@/api/user_home';
 
-const popularRestaurants = ref<RecomStore>();  
+const popularRestaurants = ref<RecomStore>({ recomStore: [] });
 const showLoading = ref(true); // 控制缓冲图标显示
 
 onMounted(async () => {
