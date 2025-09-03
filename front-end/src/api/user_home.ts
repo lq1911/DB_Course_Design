@@ -13,7 +13,7 @@ export interface RecomStore {
 }
 
 export interface AllStore{
-    allStore: showStore[]
+    allStores: showStore[]
 }
 
 export interface SearchStore {
