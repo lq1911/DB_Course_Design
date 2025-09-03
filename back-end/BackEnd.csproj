@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <RootNamespace>back_end</RootNamespace>
+    <RootNamespace>BackEnd</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,8 +23,8 @@
     </PackageReference>
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.90" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

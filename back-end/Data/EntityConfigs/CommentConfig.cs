@@ -1,4 +1,5 @@
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,21 +25,11 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(c => c.Rating).HasColumnName("RATING").IsRequired(false);
 
-            // ------------------- 这是核心修改部分 -------------------
-            // CommentImage 现在是一个普通的 string 属性，
-            // 我们只需要为它配置列名和最大长度即可。
-            // 之前所有复杂的 HasConversion 和 SetValueComparer 配置都已移除。
-            builder.Property(c => c.CommentImage)
-                   .HasColumnName("COMMENTIMAGE")
-                   .HasMaxLength(1000) // 使用 HasMaxLength 来生成 NVARCHAR2(1000)
-                   .IsRequired(false);
-            // ------------------- 修改结束 -------------------
+            builder.Property(c => c.CommentImage).HasColumnName("COMMENTIMAGE").HasMaxLength(1000).IsRequired(false);
 
-            // 配置评论类型
-            builder.Property(c => c.CommentType)
-                   .HasColumnName("COMMENTTYPE")
-                   .IsRequired()
-                   .HasConversion<int>(); // 枚举存储为整数
+            builder.Property(c => c.CommentType).HasColumnName("COMMENTTYPE").IsRequired().HasConversion<int>();
+
+            builder.Property(c => c.CommentState).HasColumnName("COMMENTSTATE").IsRequired().HasConversion<string>().HasMaxLength(50).HasDefaultValue(CommentState.Pending);
 
             builder.Property(c => c.ReplyToCommentID).HasColumnName("REPLYTOCOMMENTID").IsRequired(false);
 

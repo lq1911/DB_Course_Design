@@ -34,6 +34,9 @@ namespace BackEnd.Models
         [Required]
         public CommentType CommentType { get; set; }
 
+        [Required]
+        public CommentState CommentState { get; set; } = CommentState.Pending;
+
         public int? StoreID { get; set; }
         [ForeignKey("StoreID")]
         public Store? Store { get; set; }

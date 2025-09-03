@@ -88,4 +88,26 @@ namespace BackEnd.Models.Enums
         Pending = 0,
         Completed = 1
     }
+
+    // 配送投诉状态
+    public enum ComplaintState
+    {
+        Pending = 0,
+        Completed = 1
+    }
+
+    // 违规店铺处罚状态
+    public enum ViolationPenaltyState
+    {
+        Pending = 0,
+        Completed = 1
+    }
+
+    // 评论状态
+    public enum CommentState
+    {
+        Pending = 0,
+        Completed = 1,
+        Illegal = 2
+    }
 }

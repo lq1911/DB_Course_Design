@@ -1,4 +1,5 @@
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,14 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(dc => dc.ComplaintReason).HasColumnName("COMPLAINTREASON").IsRequired().HasMaxLength(255);
 
             builder.Property(dc => dc.ComplaintTime).HasColumnName("COMPLAINTTIME").IsRequired();
+
+            builder.Property(asa => asa.ComplaintState).HasColumnName("COMPLAINTSTATE").IsRequired().HasConversion<string>().HasMaxLength(50).HasDefaultValue(ComplaintState.Pending);
+
+            builder.Property(asa => asa.ProcessingResult).HasColumnName("PROCESSINGRESULT").IsRequired(false).HasMaxLength(255);
+
+            builder.Property(asa => asa.ProcessingReason).HasColumnName("PROCESSINGREASON").IsRequired(false).HasMaxLength(255);
+
+            builder.Property(asa => asa.ProcessingRemark).HasColumnName("PROCESSINGREMARK").IsRequired(false).HasMaxLength(255);
 
             builder.Property(dc => dc.CourierID).HasColumnName("COURIERID").IsRequired();
 
