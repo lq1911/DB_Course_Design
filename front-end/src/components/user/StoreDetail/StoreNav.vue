@@ -81,28 +81,23 @@
 import { computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { StoreInfo } from '@/api/user_store_info'
+import type { DeliveryTask, StoreInfo } from '@/api/user_store_info'
 
 const route = useRoute();
 const router = useRouter();
 
 // 从父组件获得信息
 const props = defineProps<{
-    storeInfo: StoreInfo | null;
+    storeInfo: StoreInfo;
+    deliveryTask: DeliveryTask;
     storeID: string;
 }>()
-
-const storeID = computed(() => route.params.id as string);
 
 const tabs = computed( () => [
     { path: `/store/${props.storeID}/order`, label: "点餐" },
     { path: `/store/${props.storeID}/comment`, label: "评价" },
     { path: `/store/${props.storeID}/info`, label: "商家" },
 ]);
-
-//测试使用，最后删除
-import { storeInfo } from '@/api/user_store_info'
-import { deliveryTask } from '@/api/user_store_info'
 
 function goBack() {
     router.push(`/home`);

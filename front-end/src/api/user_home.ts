@@ -1,17 +1,23 @@
 import { getData } from '@/api/multiuse_function'
 
-export interface RecomStore {
+export interface showStore{
     id: number
+    image: string
     averageRating: number
     name: string
     monthlySales: number
 }
 
+export interface RecomStore {
+    recomStore: showStore[]
+}
+
+export interface AllStore{
+    allStores: showStore[]
+}
+
 export interface SearchStore {
-    averageRating: number
-    name: string
-    monthlySales: number
-    storeAddress: string
+    searchStore: showStore[]
 }
 
 export interface OrderInfo {
@@ -23,6 +29,7 @@ export interface OrderInfo {
     storeName: string
     dishImage: string[]
     totalAmount: number
+    orderStatus: number
 }
 
 export interface UserInfo {
@@ -31,12 +38,16 @@ export interface UserInfo {
     image: string
 }
 
+export async function getAllStore() {
+    return getData<AllStore>(`/api/user/home/stores`);
+}
+
 export async function getRecomStore() {
-    return getData<RecomStore[]>(`/api/user/home/recommend`);
+    return getData<RecomStore>(`/api/user/home/recommend`);
 }
 
 export async function getSearchStore(UserID: number, Address: string, Keyword: string) {
-    return getData<SearchStore[]>(`/api/user/home/search`, {
+    return getData<SearchStore>(`/api/user/home/search`, {
         params: {
             userId: UserID,
             address: Address,

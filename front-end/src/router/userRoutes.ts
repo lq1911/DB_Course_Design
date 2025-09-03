@@ -9,7 +9,8 @@ const userRoutes: Array<RouteRecordRaw> = [
     path: '/home',
     redirect: '/home/intro'
   },
-  {
+
+    {
     path: '/home',
     component: HomeLayout,
     children: [

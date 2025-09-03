@@ -1,0 +1,30 @@
+-- 简单的USERS表结构检查
+-- 专门用于检查AdministratorUserID字段是否存在
+
+-- 方法1：直接查询表结构
+DESC USERS;
+
+-- 方法2：查询所有列名
+SELECT COLUMN_NAME 
+FROM USER_TAB_COLUMNS 
+WHERE TABLE_NAME = 'USERS'
+ORDER BY COLUMN_ID;
+
+-- 方法3：检查特定列是否存在
+SELECT 
+    COLUMN_NAME,
+    DATA_TYPE,
+    NULLABLE
+FROM USER_TAB_COLUMNS 
+WHERE TABLE_NAME = 'USERS' 
+AND COLUMN_NAME = 'AdministratorUserID';
+
+-- 方法4：如果上面的查询没有结果，说明列不存在
+-- 可以尝试查询所有包含"ADMIN"的列名
+SELECT 
+    COLUMN_NAME,
+    DATA_TYPE,
+    NULLABLE
+FROM USER_TAB_COLUMNS 
+WHERE TABLE_NAME = 'USERS' 
+AND UPPER(COLUMN_NAME) LIKE '%ADMIN%';
