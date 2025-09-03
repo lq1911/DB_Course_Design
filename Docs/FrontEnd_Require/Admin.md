@@ -1,300 +1,157 @@
-# 外卖管理系统 - 管理员后台页面
+## 管理员后台页面前端API说明文档 (最终完整版)
+### 页面描述
+管理员后台是系统的核心管理界面，用于处理售后申请、用户投诉、违规举报和评论审核，并允许管理员查看和修改自己的个人信息。
+### 页面路径
+`/admin`
+### 页面功能点
 
-## 页面描述
-外卖管理系统的管理员后台页面，用于处理售后申请、投诉举报、违规处理和评论审核等管理功能。管理员可以查看、筛选和处理各类事务，并对相关人员进行处罚措施。页面采用响应式设计，支持实时数据更新和状态管理。
+信息展示: 页面加载时，自动获取并展示当前登录管理员的个人信息、售后列表、投诉列表、违规列表和评论列表。
 
-## 页面路径
-`/admin/dashboard`
+数据筛选与搜索: 对各类列表提供状态筛选和关键词搜索功能。
 
-## 页面功能点
+详情查看与处理: 点击各项记录的“查看详情”按钮，可以弹出模态框进行详细信息查看和处理操作（如执行处罚、审核评论等）。
 
-### Function_1: 售后处理中心
-- 查看所有售后申请列表
-- 按状态筛选售后申请（待处理/已完成）
-- 搜索特定售后申请编号或订单编号
-- 查看售后申请详细信息
-- 执行处罚措施（退款、重新配送等）
-- 添加处理备注和处罚原因
+个人信息修改: 管理员可以在“管理员信息”标签页修改自己的个人资料并保存。
 
-### Function_2: 投诉处理中心
-- 查看所有投诉记录列表
-- 按状态筛选投诉记录（待处理/已完成）
-- 搜索特定投诉编号或投诉对象
-- 查看投诉详细信息和内容
-- 对被投诉对象执行处罚措施
-- 记录处理结果和备注信息
+登出: 点击右上角登出按钮，清除登录状态并返回登录页。
 
-### Function_3: 违规举报处理
-- 查看所有违规举报记录
-- 按处理状态筛选（待处理/执行中/已完成）
-- 搜索店铺名称或处罚编号
-- 查看违规详情和举报原因
-- 制定商家和店铺处罚措施
-- 跟踪处罚执行进度
+### 调用接口
+通用说明: 以下所有接口都需要在请求的 Authorization 头部附带登录时获取的 Bearer Token 进行身份验证。所有请求的 API 基础路径 为 `http://localhost:5250/api`。
 
-### Function_4: 评论审核管理
-- 查看所有待审核评论列表
-- 按审核状态筛选评论
-- 搜索评论内容或用户名
-- 查看评论详情、图片附件
-- 审核通过或拒绝评论
-- 对违规用户执行禁言等处罚
-
-### Function_5: 管理员信息管理
-- 查看和编辑管理员个人信息
-- 更新联系方式和基本资料
-- 设置个人信息公开权限
-- 查看管理绩效评分
-
-## 调用接口
-
-### 1. 获取售后申请列表接口
-
-#### 接口说明
-获取所有售后申请记录，支持状态筛选、关键词搜索和分页查询
-
-#### 输入表单说明
+#### 1. 获取当前管理员信息
+接口说明: 获取当前登录的管理员的详细个人信息。
+请求方式: GET
+请求URL: /api/admin/info
+请求参数说明: 无
+返回参数说明 (data 字段): 直接返回一个 AdminInfo 对象。
 | 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| status | string | 否 | 筛选状态：待处理/已完成，不传则查询全部 |
-| page | int | 否 | 页码，默认为1 |
-| limit | int | 否 | 每页数量，默认为10 |
-| search | string | 否 | 搜索关键词，支持申请编号或订单编号 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| applicationId | 售后申请编号 |
-| orderId | 关联的订单编号 |
-| applicationTime | 申请提交时间 |
-| description | 问题描述详情 |
-| status | 当前处理状态 |
-| punishment | 已执行的处罚措施 |
-
-### 2. 更新售后申请接口
-
-#### 接口说明
-更新售后申请的处理状态，执行处罚措施并记录处理备注
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| applicationId | string | 是 | 售后申请编号 |
-| status | string | 是 | 更新后的状态：已完成 |
-| punishment | string | 是 | 处罚措施内容 |
-| punishmentReason | string | 是 | 处罚原因说明 |
-| processingNote | string | 是 | 处理备注信息 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| success | 操作是否成功 |
-| message | 返回消息 |
-| data | 更新后的售后申请完整信息 |
-
-### 3. 获取投诉列表接口
-
-#### 接口说明
-获取所有投诉记录，支持状态筛选、关键词搜索和分页查询
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| status | string | 否 | 筛选状态：待处理/已完成 |
-| page | int | 否 | 页码，默认为1 |
-| limit | int | 否 | 每页数量，默认为10 |
-| search | string | 否 | 搜索关键词，支持投诉编号或投诉对象 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| complaintId | 投诉编号 |
-| target | 被投诉对象 |
-| content | 投诉内容详情 |
-| applicationTime | 投诉提交时间 |
-| status | 当前处理状态 |
-| punishment | 已执行的处罚措施 |
-
-### 4. 更新投诉处理接口
-
-#### 接口说明
-更新投诉的处理状态，对被投诉对象执行相应处罚措施
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| complaintId | string | 是 | 投诉编号 |
-| status | string | 是 | 更新后的状态：已完成 |
-| punishment | string | 是 | 处罚措施内容 |
-| punishmentReason | string | 是 | 处罚原因说明 |
-| processingNote | string | 是 | 处理备注信息 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| success | 操作是否成功 |
-| message | 返回消息 |
-| data | 更新后的投诉记录完整信息 |
-
-### 5. 获取违规举报列表接口
-
-#### 接口说明
-获取所有违规举报记录，支持按处理状态筛选和关键词搜索
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| status | string | 否 | 筛选状态：待处理/执行中/已完成 |
-| page | int | 否 | 页码，默认为1 |
-| limit | int | 否 | 每页数量，默认为10 |
-| search | string | 否 | 搜索关键词，支持处罚编号或店铺名称 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| punishmentId | 处罚编号 |
-| storeName | 涉事店铺名称 |
-| reason | 违规原因详情 |
-| merchantPunishment | 对商家的处罚措施 |
-| storePunishment | 对店铺的处罚措施 |
-| punishmentTime | 处罚执行时间 |
-| status | 当前执行状态 |
-
-### 6. 更新违规处理接口
-
-#### 接口说明
-更新违规举报的处理状态，制定并执行相应的处罚措施
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| punishmentId | string | 是 | 处罚编号 |
-| status | string | 是 | 更新后的状态：执行中/已完成 |
-| merchantPunishment | string | 是 | 对商家的处罚措施 |
-| storePunishment | string | 是 | 对店铺的处罚措施 |
-| processingNote | string | 是 | 处理备注信息 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| success | 操作是否成功 |
-| message | 返回消息 |
-| data | 更新后的违规处理完整信息 |
-
-### 7. 获取评论列表接口
-
-#### 接口说明
-获取所有待审核的评论记录，支持状态筛选和内容搜索
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| status | string | 否 | 筛选状态：待处理/已完成 |
-| page | int | 否 | 页码，默认为1 |
-| limit | int | 否 | 每页数量，默认为10 |
-| search | string | 否 | 搜索关键词，支持评论内容或用户名 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| reviewId | 评论唯一ID |
-| username | 评论用户名 |
-| storeName | 被评论店铺名称 |
-| content | 评论内容 |
-| rating | 评分（1-5星） |
-| submitTime | 评论提交时间 |
-| status | 审核状态 |
-| punishment | 处理措施 |
-
-### 8. 更新评论审核接口
-
-#### 接口说明
-更新评论的审核状态，执行相应的处理措施（通过、删除、禁言等）
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| reviewId | string | 是 | 评论ID |
-| status | string | 是 | 更新后的状态：已完成 |
-| punishment | string | 是 | 处理措施内容 |
-| punishmentReason | string | 是 | 处理原因说明 |
-| processingNote | string | 是 | 审核备注信息 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| success | 操作是否成功 |
-| message | 返回消息 |
-| data | 更新后的评论完整信息 |
-
-### 9. 获取管理员信息接口
-
-#### 接口说明
-获取当前登录管理员的详细个人信息和权限设置
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| 无 | - | - | 通过Token自动识别管理员身份 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| id | 管理员唯一ID |
-| username | 登录用户名 |
-| name | 显示名称 |
-| realName | 真实姓名 |
-| role | 管理员角色 |
-| phone | 联系电话 |
-| email | 电子邮箱 |
-| avatarUrl | 头像图片地址 |
-| managementScope | 管理范围 |
-| averageRating | 绩效评分 |
-
-### 10. 更新管理员信息接口
-
-#### 接口说明
-更新管理员的个人信息，包括联系方式、基本资料等
-
-#### 输入表单说明
-
-| 字段名 | 类型 | 是否必填 | 说明 |
-|--------|------|----------|------|
-| username | string | 是 | 用户名 |
-| phone | string | 是 | 联系电话 |
+| :--- | :--- | :--- | :--- |
+| id | string | 是 | 管理员ID |
+| username | string | 是 | 用户名 (登录名) |
+| realName| string | 是 | 真实姓名 |
+| role | string | 是 | 角色 |
+| registrationDate| string | 是 | 注册日期 (格式: "YYYY-MM-DD") |
+| avatarUrl | string | 是 | 头像图片的URL |
+| phone | string | 是 | 手机号码 |
 | email | string | 是 | 电子邮箱 |
-| gender | string | 是 | 性别：男/女 |
-| realName | string | 是 | 真实姓名 |
-| birthDate | string | 是 | 出生日期 |
+| gender | string | 是 | 性别 ("男" 或 "女") |
+| birthDate | string | 是 | 生日 (格式: "YYYY-MM-DD") |
+| managementScope| string | 是 | 管理范围描述 |
+| averageRating | number | 是 | 处理事项获评均分 |
 | isPublic | boolean | 是 | 是否公开个人信息 |
-
-#### 获得信息说明
-
-| 字段名 | 说明 |
-|--------|------|
-| success | 更新是否成功 |
-| message | 返回消息 |
-| data | 更新后的管理员完整信息 |
-
-## UI设计稿
-设计链接：Figma - 外卖管理系统管理员后台
-
-## 文档示例
-见 Docs\FrontEnd_Require\Example.md
+#### 2. 更新当前管理员信息
+接口说明: 提交修改后的管理员个人信息以进行更新。
+请求方式: PUT
+请求URL: /api/admin/info
+请求参数说明 (Request Body): 发送一个完整的 AdminInfo JSON对象作为请求体。
+返回参数说明: 返回一个包含操作结果和数据的对象。
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| success | boolean| 是 | true 表示更新成功，false 表示失败。|
+| data | AdminInfo| 是 | 更新成功后，返回最新的 AdminInfo 对象。|
+#### 3. 获取售后申请列表
+接口说明: 获取所有需要当前管理员处理的售后申请列表。
+请求方式: GET
+请求URL: /api/admin/after-sales
+返回参数说明 (data 字段): 直接返回一个 AfterSaleItem 对象数组。数组中每个 AfterSaleItem 对象的结构如下：
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| applicationId| string | 是 | 申请编号 |
+| orderId | string | 是 | 关联的订单编号 |
+| applicationTime| string | 是 | 申请时间 |
+| description | string | 是 | 问题描述 |
+| status | string | 是 | 状态 ("待处理" 或 "已完成") |
+| punishment | string | 是 | 最终处理措施 |
+| punishmentReason| string | 否 | 处罚原因 |
+| processingNote | string | 否 | 处理备注 |
+#### 4. 更新售后申请状态
+接口说明: 管理员对某一个售后申请进行处理和状态更新。
+请求方式: PUT
+请求URL: /api/admin/after-sales/{applicationId}
+请求参数说明 (URL参数): applicationId (string) - 需要更新的售后申请的ID。
+请求参数说明 (Request Body): 发送一个完整的 AfterSaleItem JSON对象作为请求体。
+返回参数说明: 返回一个包含操作结果和数据的对象。
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| success | boolean| 是 | true 表示更新成功，false 表示失败。|
+| data | AfterSaleItem| 是 | 更新成功后，返回最新的 AfterSaleItem 对象。|
+#### 5. 获取投诉列表
+接口说明: 获取所有分配给当前管理员的投诉列表。
+请求方式: GET
+请求URL: /api/admin/complaints
+返回参数说明 (data 字段): 直接返回一个 ComplaintItem 对象数组。数组中每个 ComplaintItem 对象的结构如下：
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| complaintId | string | 是 | 投诉编号 |
+| target | string | 是 | 投诉对象 |
+| content | string | 是 | 投诉内容 |
+| applicationTime| string | 是 | 申请时间 |
+| status | string | 是 | 状态 ("待处理" 或 "已完成") |
+| punishment | string | 是 | 最终处理措施 |
+| punishmentReason| string | 否 | 处罚原因 |
+| processingNote | string | 否 | 处理备注 |
+#### 6. 更新投诉状态
+接口说明: 管理员处理某一个投诉并更新其状态。
+请求方式: PUT
+请求URL: /api/admin/complaints/{complaintId}
+请求参数说明 (URL参数): complaintId (string) - 需要更新的投诉的ID。
+请求参数说明 (Request Body): 发送一个完整的 ComplaintItem JSON对象作为请求体。
+返回参数说明: 返回一个包含操作结果和数据的对象。
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| success | boolean| 是 | true 表示更新成功，false 表示失败。|
+| data | ComplaintItem| 是 | 更新成功后，返回最新的 ComplaintItem 对象。|
+#### 7. 获取违规举报列表
+接口说明: 获取所有需要当前管理员处理的违规举报列表。
+请求方式: GET
+请求URL: /api/admin/violations
+返回参数说明 (data 字段): 直接返回一个 ViolationItem 对象数组。数组中每个 ViolationItem 对象的结构如下：
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| punishmentId | string | 是 | 处罚编号 |
+| storeName | string | 是 | 违规的店铺名称 |
+| reason | string | 是 | 违规原因 |
+| merchantPunishment| string | 是 | 对商家的处罚措施 |
+| storePunishment | string | 是 | 对店铺的处罚措施 |
+| punishmentTime | string | 是 | 处罚时间 |
+| status | string | 是 | 状态 ("待处理", "执行中" 或 "已完成") |
+| processingNote | string | 否 | 处理备注 |
+#### 8. 更新违规举报状态
+接口说明: 管理员处理某个违规举报并更新其状态。
+请求方式: PUT
+请求URL: /api/admin/violations/{punishmentId}
+请求参数说明 (URL参数): punishmentId (string) - 需要更新的违规处罚的ID。
+请求参数说明 (Request Body): 发送一个完整的 ViolationItem JSON对象作为请求体。
+返回参数说明: 返回一个包含操作结果和数据的对象。
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| success | boolean| 是 | true 表示更新成功，false 表示失败。|
+| data | ViolationItem| 是 | 更新成功后，返回最新的 ViolationItem 对象。|
+#### 9. 获取待审核评论列表
+接口说明: 获取所有需要当前管理员审核的评论列表。
+请求方式: GET
+请求URL: /api/admin/reviews
+返回参数说明 (data 字段): 直接返回一个 ReviewItem 对象数组。数组中每个 ReviewItem 对象的结构如下：
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| reviewId | string | 是 | 评论ID |
+| username | string | 是 | 发表评论的用户名 |
+| storeName | string | 是 | 被评论的店铺名称 |
+| content | string | 是 | 评论内容 |
+| rating | number | 是 | 评分 (1-5) |
+| submitTime | string | 是 | 评论提交时间 |
+| status | string | 是 | 状态 ("待处理" 或 "已完成") |
+| punishment | string | 是 | 最终处理措施 |
+| punishmentReason| string | 否 | 处理原因 |
+| processingNote | string | 否 | 处理备注 |
+#### 10. 更新评论审核状态
+接口说明: 管理员审核某条评论并更新其状态。
+请求方式: PUT
+请求URL: /api/admin/reviews/{reviewId}
+请求参数说明 (URL参数): reviewId (string) - 需要审核的评论的ID。
+请求参数说明 (Request Body): 发送一个完整的 ReviewItem JSON对象作为请求体。
+返回参数说明: 返回一个包含操作结果和数据的对象。
+| 字段名 | 类型 | 是否必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| success | boolean| 是 | true 表示更新成功，false 表示失败。|
+| data | ReviewItem| 是 | 更新成功后，返回最新的 ReviewItem 对象。|
