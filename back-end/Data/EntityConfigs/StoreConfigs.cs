@@ -26,7 +26,7 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(s => s.MonthlySales).HasColumnName("MONTHLYSALES").IsRequired();
 
-            builder.Property(s => s.StoreFeatures).HasColumnName("STOREFEATURES").IsRequired().HasMaxLength(500);
+            builder.Property(s => s.StoreFeatures).HasColumnName("STOREFEATURES").IsRequired(false).HasMaxLength(500);
 
             builder.Property(s => s.StoreCreationTime).HasColumnName("STORECREATIONTIME").IsRequired();
 

@@ -6,7 +6,7 @@ namespace BackEnd.Models.Enums
         Customer = 0,
         Courier = 1,
         Administrator = 2,
-        Seller = 3
+        Merchant = 3
     }
 
     // 消费者会员

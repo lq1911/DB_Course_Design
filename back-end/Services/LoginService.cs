@@ -61,7 +61,7 @@ namespace BackEnd.Services
             {
                 { "customer", UserIdentity.Customer },
                 { "rider", UserIdentity.Courier },
-                { "merchant", UserIdentity.Seller },
+                { "merchant", UserIdentity.Merchant },
                 { "admin", UserIdentity.Administrator }
             };
 

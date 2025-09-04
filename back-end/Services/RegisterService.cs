@@ -161,7 +161,7 @@ namespace BackEnd.Services
                 case "admin":
                     return UserIdentity.Administrator;
                 case "merchant":
-                    return UserIdentity.Seller;
+                    return UserIdentity.Merchant;
                 default:
                     throw new ArgumentException($"不支持的角色类型: {roleStr}");
             }
