@@ -32,6 +32,7 @@ namespace BackEnd.Services
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return Fail("手机号或密码错误", 401);
 
+
             // 3. 验证角色
             if (!IsRoleMatch(user.Role, request.Role))
                 return Fail("角色选择错误，请选择正确的登录身份", 403);

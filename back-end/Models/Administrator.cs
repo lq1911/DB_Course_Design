@@ -17,6 +17,10 @@ namespace BackEnd.Models
         public DateTime AdminRegistrationTime { get; set; }
 
         [Required]
+        [StringLength(20)]
+        public string AdminRole { get; set; } = "系统管理员";
+
+        [Required]
         [StringLength(50)]
         public string ManagedEntities { get; set; } = null!;
 

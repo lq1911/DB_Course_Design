@@ -47,14 +47,6 @@ namespace BackEnd.Models.Enums
         Banned = 2  // 封禁
     }
 
-    // 店铺种类
-    public enum StoreCategory
-    {
-        DeliciousFood = 0,
-        SuperMarket = 1,
-        GreenGrocery = 2
-    }
-
     // 商家状态
     public enum SellerState
     {
@@ -87,5 +79,27 @@ namespace BackEnd.Models.Enums
     {
         Pending = 0,
         Completed = 1
+    }
+
+    // 配送投诉状态
+    public enum ComplaintState
+    {
+        Pending = 0,
+        Completed = 1
+    }
+
+    // 违规店铺处罚状态
+    public enum ViolationPenaltyState
+    {
+        Pending = 0,
+        Completed = 1
+    }
+
+    // 评论状态
+    public enum CommentState
+    {
+        Pending = 0,
+        Completed = 1,
+        Illegal = 2
     }
 }
