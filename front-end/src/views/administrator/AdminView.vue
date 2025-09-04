@@ -1147,7 +1147,7 @@ const realApi = {
 };
 
 // 3.3 ----------------- API切换器 -----------------
-const useMock = true; // 切换为 true 使用模拟API，false 使用真实API
+const useMock = false; // 切换为 true 使用模拟API，false 使用真实API
 const api = useMock ? mockApi : realApi;
 
 
