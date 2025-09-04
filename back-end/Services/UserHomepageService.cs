@@ -111,7 +111,7 @@ namespace BackEnd.Services
 
             return (storeResults, dishResults);
         }
-        public async Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId)
+        public async Task<List<HistoryOrderDto>> GetOrderHistoryAsync(int userId)
         {
             // 获取用户的所有订单
             var orders = await _foodOrderRepository.GetOrdersByCustomerIdOrderedByDateAsync(userId);
@@ -164,7 +164,7 @@ namespace BackEnd.Services
                 });
             }
 
-            return new HistoryOrderGetDto { Orders = result };
+            return result;
         }
 
 

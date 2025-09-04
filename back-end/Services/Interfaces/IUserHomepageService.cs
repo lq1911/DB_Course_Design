@@ -12,7 +12,7 @@ namespace BackEnd.Services.Interfaces
         // 搜索商家和菜品
         Task<(IEnumerable<HomeSearchGetDto> Stores, IEnumerable<HomeSearchGetDto> Dishes)>
             SearchAsync(HomeSearchDto searchDto);
-        Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId);
+        Task<List<HistoryOrderDto>> GetOrderHistoryAsync(int userId);
         Task<UserInfoResponse> GetUserInfoAsync(int userId);
 
         // 获取指定用户的优惠券信息

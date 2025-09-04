@@ -74,7 +74,7 @@ import OrderSummary from '@/components/user/Checkout/OrderSummary.vue';
 const route = useRoute();
 const router = useRouter();
 const storeID = route.params.id as string;
-const userID = 0;  // 待添加用户ID
+const userID = 30;  // 待添加用户ID
 
 // 数据
 const menuItems = ref<MenuItem[]>([]);
