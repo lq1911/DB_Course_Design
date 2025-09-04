@@ -1341,9 +1341,11 @@ const handleSaveChanges = async () => {
             originalAdminInfo = JSON.parse(JSON.stringify(response.data)); // 更新备份
             
             ElMessage.success('信息更新成功！');
+            console.log('管理员信息已更新:', response.data);
         } else {
             // 如果后端返回失败，则提示用户
             ElMessage.error('信息更新失败，未能成功保存到服务器');
+            console.error('信息更新失败:', response);
         }
 
     } catch (error) {
