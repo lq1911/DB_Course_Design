@@ -25,7 +25,7 @@
           <!-- 右侧：按钮 -->
           <button
             class="w-30 h-12 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer whitespace-nowrap"
-            @click="goToPage(`/store/${restaurant.id}`)">
+            @click="goToPage(`${restaurant.id}`)">
             进入店铺
           </button>
         </div>
@@ -56,7 +56,7 @@ onMounted(async () => {
   }
 });
 
-function goToPage(path: string) {
-  router.push(path);
+function goToPage(id: number | string) {
+  router.push({ name: 'InStore', params: { id } });
 }
 </script>

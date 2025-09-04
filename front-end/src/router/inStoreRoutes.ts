@@ -7,7 +7,8 @@ import StoreLayout from '@/views/user/StoreDetail/StoreLayout.vue'
 const inStoreRoutes: Array<RouteRecordRaw> = [
     {
         path: '/store/:id',
-        redirect: '/store/:id/order'
+        name: 'InStore',
+        redirect: (to) => `/store/${to.params.id}/order`,
     },
     {
         path: '/store/:id',
@@ -15,16 +16,19 @@ const inStoreRoutes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: 'order',
+                name: 'StoreOrder',
                 component: StoreOrder,
                 meta: {title: '点单'}
             },
             {
                 path: 'comment',
+                name: 'StoreComment',
                 component: StoreComment,
                 meta: {title: '商家评价'}
             },
             {
                 path: 'info',
+                name: 'StoreInfo',
                 component: StoreInfo,
                 meta: {title: '商家信息'}
             },
