@@ -137,7 +137,7 @@
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
                                 </div>
                                 <!-- 新增：真实姓名输入框 (仅当非消费者时显示) -->
-                                <div v-if="selectedRole !== 'consumer'">
+                                <div v-if="selectedRole !== 'customer'">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">真实姓名</label>
                                     <input type="text" v-model="registerForm.realName" placeholder="请输入真实姓名"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
