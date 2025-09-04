@@ -53,9 +53,8 @@ namespace BackEnd.Models
         [Required]
         public int MonthlySales { get; set; }
 
-        [Required]
         [StringLength(500)]
-        public string StoreFeatures { get; set; } = null!;
+        public string? StoreFeatures { get; set; }
 
         [Required]
         public DateTime StoreCreationTime { get; set; }

@@ -127,10 +127,9 @@ namespace BackEnd.Repositories
         {
             var penalties = await _context.Supervise_s
                                           .Where(s => s.AdminID == adminId)
-                                          .Select(s => s.Penalty)
-                                          .Include(p => p.Store)
-                                          .Include(p => p.Store.Seller)
-                                          .Include(p => p.Store.Seller.User)
+                                          .Include(s => s.Penalty)
+                                              .ThenInclude(p => p.Store) // 先Include所有需要的导航属性
+                                          .Select(s => s.Penalty) // 然后再Select
                                           .ToListAsync();
 
             return penalties;
@@ -163,13 +162,11 @@ namespace BackEnd.Repositories
         public async Task<IEnumerable<Comment>> GetReviewCommentsByAdminIdAsync(int adminId)
         {
             var comments = await _context.Review_Comments
-                                         .Where(rc => rc.AdminID == adminId)
-                                         .Select(rc => rc.Comment)
-                                         .Include(c => c.Commenter)
-                                         .Include(c => c.Commenter.User)
-                                         .Include(c => c.Store)
-                                         .Include(c => c.FoodOrder)
-                                         .ToListAsync();
+                                        .Where(rc => rc.AdminID == adminId)
+                                        .Include(rc => rc.Comment)
+                                            .ThenInclude(c => c.Commenter) // 先Include所有需要的导航属性
+                                        .Select(rc => rc.Comment) // 然后再Select
+                                        .ToListAsync();
 
             return comments;
         }

@@ -17,7 +17,7 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(syp => syp.ViolationPenaltyState).HasColumnName("VIOLATIONPENALTYSTATE").IsRequired().HasConversion<string>().HasMaxLength(50).HasDefaultValue(ViolationPenaltyState.Pending);
             builder.Property(svp => svp.PenaltyReason).HasColumnName("PENALTYREASON").IsRequired().HasMaxLength(255);
-            builder.Property(svp => svp.PenaltyNote).HasColumnName("PENALTYNOTE").IsRequired().HasMaxLength(255);
+            builder.Property(svp => svp.PenaltyNote).HasColumnName("PENALTYNOTE").IsRequired(false).HasMaxLength(255);
             builder.Property(svp => svp.PenaltyTime).HasColumnName("PENALTYTIME").IsRequired();
             builder.Property(svp => svp.SellerPenalty).HasColumnName("SELLERPENALTY").HasMaxLength(50);
             builder.Property(svp => svp.StorePenalty).HasColumnName("STOREPENALTY").HasMaxLength(50);

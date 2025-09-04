@@ -1085,10 +1085,10 @@ apiClient.interceptors.request.use(
 
 const realApi = {
     // --- 获取列表 (GET请求) - 这部分保持不变，因为它们返回的是数组 ---
-    getAfterSalesList: () => apiClient.get<AfterSaleItem[]>('/admin/after-sales').then(res => res.data),
-    getComplaintsList: () => apiClient.get<ComplaintItem[]>('/admin/complaints').then(res => res.data),
-    getViolationsList: () => apiClient.get<ViolationItem[]>('/admin/violations').then(res => res.data),
-    getReviewsList: () => apiClient.get<ReviewItem[]>('/admin/reviews').then(res => res.data),
+    getAfterSalesList: () => apiClient.get<AfterSaleItem[]>('/admin/after-sales/mine').then(res => res.data),
+    getComplaintsList: () => apiClient.get<ComplaintItem[]>('/admin/delivery-complaints/mine').then(res => res.data),
+    getViolationsList: () => apiClient.get<ViolationItem[]>('/admin/violation-penalties/mine').then(res => res.data),
+    getReviewsList: () => apiClient.get<ReviewItem[]>('/admin/review-comments/mine').then(res => res.data),
     getAdminInfo: () => apiClient.get<AdminInfo>('/admin/info').then(res => res.data),
 
     // --- 更新数据 (PUT请求) ---
