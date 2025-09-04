@@ -184,10 +184,6 @@ namespace BackEnd.Services
             if (!TimeSpan.TryParse(storeInfo.CloseTime, out var closeTime))
                 throw new ArgumentException("营业结束时间格式错误，请使用 HH:mm 格式");
 
-            // 解析店铺类别
-            if (!Enum.TryParse<StoreCategory>(storeInfo.Category, true, out var category))
-                throw new ArgumentException($"店铺类别无效: {storeInfo.Category}");
-
             // 解析创建日期
             if (!DateTime.TryParse(storeInfo.EstablishmentDate, out var establishmentDate))
                 establishmentDate = DateTime.Now;
@@ -199,7 +195,7 @@ namespace BackEnd.Services
                 OpenTime = openTime,
                 CloseTime = closeTime,
                 StoreCreationTime = establishmentDate,
-                StoreCategory = category,
+                StoreCategory = storeInfo.Category,
                 SellerID = sellerId
             };
 

@@ -32,7 +32,7 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(s => s.StoreState).HasColumnName("STORESTATE").IsRequired().HasConversion<string>().HasMaxLength(20);
 
-            builder.Property(s => s.StoreCategory).HasColumnName("STORECATEGORY").IsRequired().HasConversion<string>().HasMaxLength(20);
+            builder.Property(s => s.StoreCategory).HasColumnName("STORECATEGORY").IsRequired().HasMaxLength(20);
 
             builder.Property(s => s.StoreImage).HasColumnName("STOREIMAGE").HasMaxLength(500).IsRequired(false);
 
