@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackEnd.Dtos.UserHomepage;
+using BackEnd.Dtos.User;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +82,7 @@ namespace BackEnd.Services
                 .Select(s => new HomeSearchGetDto
                 {
                     Id = s.StoreID,
-                    // Image = s.order.Store?.ImageUrl,
+                    Image = s.StoreImage,
                     Name = s.StoreName,
                     AverageRating = s.AverageRating,
                     MonthlySales = s.MonthlySales
@@ -102,7 +102,7 @@ namespace BackEnd.Services
                 .Select(store => new HomeSearchGetDto
                 {
                     Id = store.StoreID,
-                    // Image = store.StoreImage,
+                    Image = store.StoreImage,
                     Name = store.StoreName,
                     AverageRating = store.AverageRating,
                     MonthlySales = store.MonthlySales

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BackEnd.Services.Interfaces;
-using BackEnd.Dtos.UserHomepage;
+using BackEnd.Dtos.User;
 
 namespace BackEnd.Controllers
 {

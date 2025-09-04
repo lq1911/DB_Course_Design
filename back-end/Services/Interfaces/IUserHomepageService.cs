@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BackEnd.Dtos.UserHomepage;
+using BackEnd.Dtos.User;
 
 namespace BackEnd.Services.Interfaces
 {
