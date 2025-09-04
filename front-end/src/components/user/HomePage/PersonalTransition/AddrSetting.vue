@@ -95,7 +95,7 @@ function closeForm() {
 async function saveAddress() {
     try {
         const result = await saveAddressInfo(formData)
-        if (result.success) {
+        if (result) {
             addrInfo.name = formData.name;
             addrInfo.phoneNumber = formData.phoneNumber;
             addrInfo.address = formData.address;
@@ -103,7 +103,7 @@ async function saveAddress() {
             emit("update:address", { ...formData });
             closeForm();
         } else {
-            alert(result.message || '保存失败')
+            alert('保存失败')
         }
     } catch (err) {
         console.error(err)

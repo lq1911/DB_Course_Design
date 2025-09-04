@@ -108,7 +108,7 @@ function closeForm() {
 async function saveAccount() {
     try {
         const result = await saveAccountInfo(formData)
-        if (result.success) {
+        if (result) {
             accountInfo.name = formData.name;
             accountInfo.phoneNumber = formData.phoneNumber;
             accountInfo.image = formData.image;
@@ -117,7 +117,7 @@ async function saveAccount() {
             closeForm()
         }
         else {
-            alert(result.message || '保存失败')
+            alert('保存失败')
         }
     } catch (err) {
         console.error(err)
