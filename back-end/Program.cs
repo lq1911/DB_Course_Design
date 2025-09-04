@@ -109,12 +109,12 @@ builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();
-builder.Services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 builder.Services.AddScoped<IEvaluate_AfterSaleService, Evaluate_AfterSaleService>();
 builder.Services.AddScoped<IEvaluate_DeliveryComplaintService, Evaluate_DeliveryComplaintService>();
 builder.Services.AddScoped<ISupervise_Service, Supervise_Service>();
 builder.Services.AddScoped<IReview_CommentService, Review_CommentService>();
-builder.Services.AddScoped<IMerchantService, MerchantService>();;
+builder.Services.AddScoped<IMerchantService, MerchantService>(); ;
 
 var app = builder.Build();
 
