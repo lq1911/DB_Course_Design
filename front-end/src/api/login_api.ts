@@ -45,7 +45,6 @@ interface StoreInfo {
   address: string;
   businessHours: string;
   establishmentDate: string;
-  businessLicense: File | null;
   category: string;
 }
 

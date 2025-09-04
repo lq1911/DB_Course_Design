@@ -110,7 +110,7 @@ builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();
 builder.Services.AddScoped<IEvaluate_AfterSaleService, Evaluate_AfterSaleService>();
-builder.Services.AddScoped<IMerchantService, MerchantService>()
+builder.Services.AddScoped<IMerchantService, MerchantService>();
 
 var app = builder.Build();
 

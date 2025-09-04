@@ -33,7 +33,8 @@ const routes: Array<RouteRecordRaw> = [
   ...userRoutes,
   ...inStoreRoutes,
   ...checkoutRoutes,
-  ...managerRoutes
+  ...managerRoutes,
+  ...courierRoutes,
 ]
 
 const router = createRouter({
