@@ -61,17 +61,17 @@ export const fetchNewOrder = (notificationId: string) => {
 };
 
 /** 切换工作状态 (上班/下班) */
-export const toggleWorkStatus = (newStatus: boolean) => {
+export const toggleWorkStatusAPI = (newStatus: boolean) => {
     return apiClient.post<{ success: boolean }>('/user/status', { isOnline: newStatus });
 };
 
 /** 接受订单 */
-export const acceptOrder = (orderId: string) => {
+export const acceptOrderAPI = (orderId: string) => {
     return apiClient.post<{ success: boolean }>(`/orders/${orderId}/accept`);
 };
 
 /** 拒绝订单 */
-export const rejectOrder = (orderId: string) => {
+export const rejectOrderAPI = (orderId: string) => {
     return apiClient.post<{ success: boolean }>(`/orders/${orderId}/reject`);
 };
 
