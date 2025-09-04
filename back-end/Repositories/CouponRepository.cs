@@ -33,6 +33,15 @@ namespace BackEnd.Repositories
                                  .Include(c => c.Customer)
                                  .FirstOrDefaultAsync(c => c.CouponID == id);
         }
+        public async Task<IEnumerable<Coupon>> GetByCustomerIdAsync(int customerId)
+        {
+            return await _context.Coupons
+                                 .Include(c => c.CouponManager)
+                                 .Include(c => c.Order)
+                                 .Include(c => c.Customer)
+                                 .Where(c => c.CustomerID == customerId)
+                                 .ToListAsync();
+        }
 
         public async Task AddAsync(Coupon coupon)
         {

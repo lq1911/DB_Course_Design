@@ -131,6 +131,11 @@ import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
+const api = axios.create({
+  baseURL: 'http://localhost:5250/api',
+  timeout: 5000,
+});
+
 const activeMenu = ref('profile');
 const router = useRouter();
 const $route = useRoute();
@@ -177,7 +182,7 @@ const toggleEdit = (field: 'phone' | 'email') => {
 // 获取商家信息
 const fetchMerchantInfo = async () => {
   try {
-    const response = await axios.get('/api/merchant/profile');
+    const response = await api.get('/merchant/profile');
     merchantInfo.value = response.data.data;
   } catch (error) {
     ElMessage.error('获取商家信息失败');
@@ -192,7 +197,7 @@ const saveShopInfo = async () => {
   
   try {
     const { phone, email } = merchantInfo.value;
-    const response = await axios.put('/api/merchant/profile', {
+    const response = await api.put('/merchant/profile', {
       phone,
       email
     });

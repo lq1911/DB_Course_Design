@@ -1,0 +1,94 @@
+### 商家优惠券管理API测试文件
+
+### 1. 获取优惠券列表（分页）
+GET http://localhost:5250/api/merchant/coupons?page=1&pageSize=10
+Content-Type: application/json
+
+### 2. 获取优惠券统计信息
+GET http://localhost:5250/api/merchant/coupons/stats
+Content-Type: application/json
+
+### 3. 创建满减券
+POST http://localhost:5250/api/merchant/coupons
+Content-Type: application/json
+
+{
+  "name": "新用户专享券",
+  "type": "fixed",
+  "value": 10,
+  "minAmount": 50,
+  "totalQuantity": 1000,
+  "startTime": "2024-01-01T00:00:00Z",
+  "endTime": "2024-12-31T23:59:59Z",
+  "description": "新用户专享优惠券，满50减10"
+}
+
+### 4. 创建折扣券
+POST http://localhost:5250/api/merchant/coupons
+Content-Type: application/json
+
+{
+  "name": "会员折扣券",
+  "type": "discount",
+  "value": 0.8,
+  "totalQuantity": 500,
+  "startTime": "2024-01-01T00:00:00Z",
+  "endTime": "2024-12-31T23:59:59Z",
+  "description": "会员专享8折优惠券"
+}
+
+### 5. 更新优惠券（需要先创建优惠券获取ID）
+PUT http://localhost:5250/api/merchant/coupons/1
+Content-Type: application/json
+
+{
+  "name": "更新后的优惠券名称",
+  "type": "fixed",
+  "value": 15,
+  "minAmount": 80,
+  "totalQuantity": 800,
+  "startTime": "2024-01-01T00:00:00Z",
+  "endTime": "2024-12-31T23:59:59Z",
+  "description": "更新后的描述"
+}
+
+### 6. 删除单个优惠券
+DELETE http://localhost:5250/api/merchant/coupons/1
+Content-Type: application/json
+
+### 7. 批量删除优惠券
+DELETE http://localhost:5250/api/merchant/coupons/batch
+Content-Type: application/json
+
+{
+  "ids": [1, 2, 3]
+}
+
+### 8. 测试错误情况 - 创建无效的满减券（优惠金额大于最低消费）
+POST http://localhost:5250/api/merchant/coupons
+Content-Type: application/json
+
+{
+  "name": "无效优惠券",
+  "type": "fixed",
+  "value": 100,
+  "minAmount": 50,
+  "totalQuantity": 100,
+  "startTime": "2024-01-01T00:00:00Z",
+  "endTime": "2024-12-31T23:59:59Z",
+  "description": "这是一个无效的优惠券"
+}
+
+### 9. 测试错误情况 - 创建无效的折扣券（折扣比例不在0-1之间）
+POST http://localhost:5250/api/merchant/coupons
+Content-Type: application/json
+
+{
+  "name": "无效折扣券",
+  "type": "discount",
+  "value": 1.5,
+  "totalQuantity": 100,
+  "startTime": "2024-01-01T00:00:00Z",
+  "endTime": "2024-12-31T23:59:59Z",
+  "description": "这是一个无效的折扣券"
+}

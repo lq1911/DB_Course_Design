@@ -30,6 +30,13 @@ namespace BackEnd.Repositories
                                  .Include(sc => sc.Customer)
                                  .FirstOrDefaultAsync(sc => sc.CartID == id);
         }
+        public async Task<ShoppingCart?> GetByCustomerIdAsync(int customerId)
+        {
+            return await _context.ShoppingCarts
+                .Include(sc => sc.ShoppingCartItems)
+                    .ThenInclude(sci => sci.Dish)
+                .FirstOrDefaultAsync(sc => sc.CustomerID == customerId);
+        }
 
         public async Task AddAsync(ShoppingCart shoppingCart)
         {
