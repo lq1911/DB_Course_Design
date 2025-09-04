@@ -74,14 +74,14 @@ const showLoading = ref(true);
 
 const restaurantList = computed<showStore[]>(() => {
   if (!allRestaurants.value) return [];
-  if ('allStore' in allRestaurants.value) return allRestaurants.value.allStore;
+  if ('allStores' in allRestaurants.value) return allRestaurants.value.allStores;
   if ('searchStore' in allRestaurants.value) return allRestaurants.value.searchStore;
   return [];
 });
 
 onMounted(async () => {
   try {
-    if (query) {
+    if (route.query.keyword) {
       const keyword = route.query.keyword as string;
       const userID = Number(route.query.userID);
       const address = route.query.address as string;
@@ -92,6 +92,7 @@ onMounted(async () => {
     }
 
     showLoading.value = false;
+    console.log(allRestaurants.value)
   } catch (err) {
     alert('获取商家失败');
     console.error('获取商家失败', err);
