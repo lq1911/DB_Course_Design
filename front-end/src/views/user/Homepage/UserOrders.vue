@@ -121,10 +121,12 @@ const getOrderStatusText = (statusNum: number) => {
 const fetchOrders = async () => {
     try {
         // 待添加读取用户ID逻辑
-        const userID = 0;
+        const userID = 30;
         // const userID = getUserId();
         const res: OrderInfo[] = await getOrderInfo(userID); // 返回 OrderInfo[]
         orders.value = res;
+        console.log(orders);
+        
 
         showLoading.value = false;
     } catch (err) {
@@ -135,6 +137,7 @@ const fetchOrders = async () => {
 
 const filteredOrders = computed(() => {
     if (activeOrderStatus.value === "all") {
+        console.log(orders);
         return orders.value;
     } else {
         const statusMap: Record<string, number> = {

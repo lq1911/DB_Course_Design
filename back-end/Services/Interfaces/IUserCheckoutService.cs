@@ -7,8 +7,8 @@ namespace BackEnd.Services.Interfaces
     {
         Task<List<UserCouponDto>> GetUserCouponsAsync(int userId);
         Task<CartResponseDto> GetShoppingCartAsync(int userId, int storeId);
-        Task<CartResponseDto> UpdateCartItemAsync(UpdateCartItemDto Dto, int storeId);
-        Task<CartResponseDto> RemoveCartItemAsync(RemoveCartItemDto Dto, int storeId);
+        Task UpdateCartItemAsync(UpdateCartItemDto Dto);
+        Task RemoveCartItemAsync(RemoveCartItemDto Dto);
     }
 
 }

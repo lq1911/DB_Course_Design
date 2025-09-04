@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackEnd.Dtos.UserHomepage;
+using BackEnd.Dtos.User;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +82,7 @@ namespace BackEnd.Services
                 .Select(s => new HomeSearchGetDto
                 {
                     Id = s.StoreID,
-                    // Image = s.order.Store?.ImageUrl,
+                    Image = s.StoreImage,
                     Name = s.StoreName,
                     AverageRating = s.AverageRating,
                     MonthlySales = s.MonthlySales
@@ -102,7 +102,7 @@ namespace BackEnd.Services
                 .Select(store => new HomeSearchGetDto
                 {
                     Id = store.StoreID,
-                    // Image = store.StoreImage,
+                    Image = store.StoreImage,
                     Name = store.StoreName,
                     AverageRating = store.AverageRating,
                     MonthlySales = store.MonthlySales
@@ -111,7 +111,7 @@ namespace BackEnd.Services
 
             return (storeResults, dishResults);
         }
-        public async Task<HistoryOrderGetDto> GetOrderHistoryAsync(int userId)
+        public async Task<List<HistoryOrderDto>> GetOrderHistoryAsync(int userId)
         {
             // 获取用户的所有订单
             var orders = await _foodOrderRepository.GetOrdersByCustomerIdOrderedByDateAsync(userId);
@@ -164,7 +164,7 @@ namespace BackEnd.Services
                 });
             }
 
-            return new HistoryOrderGetDto { Orders = result };
+            return result;
         }
 
 
@@ -214,7 +214,7 @@ namespace BackEnd.Services
                 .Select(s => new ShowStoreDto
                 {
                     Id = s.StoreID,
-                    //Image = s.StoreImage ?? "",
+                    Image = s.StoreImage ?? "",
                     AverageRating = s.AverageRating,
                     Name = s.StoreName,
                     MonthlySales = s.MonthlySales

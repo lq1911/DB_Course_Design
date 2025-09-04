@@ -44,20 +44,20 @@ import ItemCart from '@/components/user/StoreDetail/OrderView/ItemCart.vue'
 // 路由
 const route = useRoute()
 const storeID = computed(() => route.params.id as string)
-const userID = 0;  // 待添加用户编号
+const userID = 30;  // 待添加用户编号
 
 // 数据
 const storeInfo = ref<StoreInfo>()
 const menuItems = ref<MenuItem[]>([])
 const cart = ref<ShoppingCart>({
-  cartId: 0,
+  cartId: 3,
   totalPrice: 0,
   items: []
 });  // 防止未定义
 
 // 固定分类（可根据需要改成动态生成）
 const categories = [
-  { id: 1, name: "招牌推荐" },
+  { id: 0, name: "招牌推荐" },
   { id: 2, name: "荤菜类" },
   { id: 3, name: "素菜类" },
   { id: 4, name: "丸子类" },
@@ -101,6 +101,7 @@ async function loadCart() {
 async function loadData(storeID: string) {
   storeInfo.value = await getStoreInfo(storeID)
   menuItems.value = await getMenuItem(storeID)
+  console.log(menuItems)
   await loadCart()
 }
 

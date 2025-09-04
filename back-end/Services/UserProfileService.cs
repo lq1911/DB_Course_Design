@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using BackEnd.Repositories.Interfaces;
 namespace BackEnd.Services
 {
-    public class UserService : IUserAdditionService
+    public class UserProfileService : IUserProfileService
     {
         private readonly IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserProfileService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

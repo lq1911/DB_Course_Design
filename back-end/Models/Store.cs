@@ -66,7 +66,7 @@ namespace BackEnd.Models
 
         // 店铺种类
         [Required]
-        public StoreCategory StoreCategory { get; set; }
+        public string StoreCategory { get; set; } = null!;
 
         // 新增店铺图片
         public string? StoreImage { get; set; }

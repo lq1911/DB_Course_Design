@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BackEnd.Models.Enums;
 
-namespace BackEnd.Dtos.UserHomepage
+namespace BackEnd.Dtos.User
 {
 
     public class HomeRecmDto
