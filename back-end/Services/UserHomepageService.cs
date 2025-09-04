@@ -214,7 +214,7 @@ namespace BackEnd.Services
                 .Select(s => new ShowStoreDto
                 {
                     Id = s.StoreID,
-                    //Image = s.StoreImage ?? "",
+                    Image = s.StoreImage ?? "",
                     AverageRating = s.AverageRating,
                     Name = s.StoreName,
                     MonthlySales = s.MonthlySales
