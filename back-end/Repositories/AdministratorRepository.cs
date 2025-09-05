@@ -96,6 +96,7 @@ namespace BackEnd.Repositories
         {
             var complaints = await _context.Evaluate_Complaints
                                            .Where(ec => ec.AdminID == adminId)
+                                           .Include(ec => ec.Complaint)
                                            .Select(ec => ec.Complaint)
                                            .ToListAsync();
 
@@ -165,6 +166,7 @@ namespace BackEnd.Repositories
                                         .Where(rc => rc.AdminID == adminId)
                                         .Include(rc => rc.Comment)
                                             .ThenInclude(c => c.Commenter) // 先Include所有需要的导航属性
+                                                .ThenInclude(customer => customer.User)
                                         .Select(rc => rc.Comment) // 然后再Select
                                         .ToListAsync();
 

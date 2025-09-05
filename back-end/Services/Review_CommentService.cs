@@ -26,7 +26,7 @@ namespace BackEnd.Services
             var commentDtos = commentsFromDb.Select(comment => new GetCommentInfo
             {
                 ReviewId = comment.CommentID.ToString(),
-                Username = comment.Commenter.User.Username,
+                Username = comment.Commenter?.User?.Username ?? "未知用户",
                 Content = comment.Content,
                 Image = comment.CommentImage,
                 Type = GetCommentTypeString(comment.CommentType),

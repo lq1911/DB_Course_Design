@@ -29,7 +29,7 @@ namespace BackEnd.Services
             var complaintDtos = complaintsFromDb.Select(complaint => new GetComplaintInfo
             {
                 ComplaintId = complaint.ComplaintID.ToString(),
-                DeliveryTaskId = complaint.DeliveryTaskID.ToString(),
+                Target = complaint.CourierID.ToString(),
                 ApplicationTime = complaint.ComplaintTime.ToString("yyyy-MM-dd HH:mm"),
                 Content = complaint.ComplaintReason,
                 Status = complaint.ComplaintState == ComplaintState.Pending ? "待处理" : "已完成",
@@ -116,7 +116,7 @@ namespace BackEnd.Services
                 var updatedComplaintDto = new GetComplaintInfo
                 {
                     ComplaintId = existingComplaint.ComplaintID.ToString(),
-                    DeliveryTaskId = existingComplaint.DeliveryTaskID.ToString(),
+                    Target = existingComplaint.CourierID.ToString(),
                     ApplicationTime = existingComplaint.ComplaintTime.ToString("yyyy-MM-dd HH:mm"),
                     Content = existingComplaint.ComplaintReason,
                     Status = "已完成",
