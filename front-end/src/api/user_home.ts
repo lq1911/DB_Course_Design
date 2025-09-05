@@ -17,7 +17,7 @@ export interface AllStore{
 }
 
 export interface SearchStore {
-    searchStore: showStore[]
+    searchStores: showStore[]
 }
 
 export interface OrderInfo {
