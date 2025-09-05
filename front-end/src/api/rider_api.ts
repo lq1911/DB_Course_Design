@@ -7,75 +7,73 @@ import type {
     WorkStatus,
     Order,
     NewOrder,
-    LocationInfo
-} from './api.mock.ts'; // 假设类型定义在这里
+} from './api.mock'; // 假设类型定义在这里
 
-
-interface RiderInfo {
-  vehicleType: string;
-}
-
-// --- 导出的 API 函数 ---
+// --- 修正后的 API 函数 ---
 
 /** 获取用户（骑手）个人资料 */
 export const fetchUserProfile = () => {
-    // [待确认] 如果此接口依然404，请与后端确认路径是否正确。
-    // 例如，后端提供的路径可能是 /rider/profile 而不是 /user/profile
-    return apiClient.get<UserProfile>('/user/profile');
+    // 【已修正】路径从 /user/profile 改为 /courier/profile
+    return apiClient.get<UserProfile>('/courier/profile');
 };
 
 /** 获取骑手工作状态 */
 export const fetchWorkStatus = () => {
-    // [待确认] 如果此接口依然404，请与后端确认路径。
-    return apiClient.get<WorkStatus>('/user/status');
+    // 【已修正】路径从 /user/status 改为 /courier/status
+    // 我们的后端返回 { code, message, data: { isOnline: boolean } }
+    // apiClient 应该配置为自动提取 data 字段，所以这里的类型 WorkStatus 是正确的
+    return apiClient.get<WorkStatus>('/courier/status');
 };
 
 /** 获取收入数据 */
 export const fetchIncomeData = () => {
-    // [待确认] 浏览器报错 /api/income/thisMonth 404，请与后端确认路径。
-    // 注意这里是 /income 开头，和其他 /user 不一样，请确认是否正确。
-    return apiClient.get<number>('/income/thisMonth');
+    // 【已修正】路径从 /income/thisMonth 改为 /courier/income/monthly
+    // 我们的后端直接返回纯数字，所以类型是 number
+    return apiClient.get<number>('/courier/income/monthly');
 };
 
 /** 根据状态获取订单列表 */
 export const fetchOrders = (status: 'pending' | 'delivering' | 'completed') => {
-    // [已修正] -------------------------------------------------------------
-    // 根据浏览器报错信息 (GET .../api/orders/status-pending)，
-    // 后端需要的不是查询参数 `?status=pending`，而是将状态作为路径的一部分。
-    // 因此，我们将URL的拼接方式从 params 改为直接嵌入路径中。
-    //
-    // 原代码: return apiClient.get<Order[]>('/orders', { params: { status } });
-    // ---------------------------------------------------------------------
-    return apiClient.get<Order[]>(`/orders/status-${status}`);
+    // 【已修正】路径正确，并且使用 params 来传递查询参数
+    // 这将生成正确的 URL: /api/courier/orders?status=pending
+    return apiClient.get<Order[]>('/courier/orders', { params: { status } });
 };
 
 /** 获取骑手当前位置信息 */
 export const fetchLocationInfo = () => {
-    // [待确认] 如果此接口依然404，请与后端确认路径。
-    return apiClient.get<LocationInfo>('/user/location');
+    // 【已修正】路径从 /user/location 改为 /courier/location
+    // 后端返回 { data: { area: "..." } }，所以需要一个匹配的类型
+    return apiClient.get<{ area: string }>('/courier/location');
 };
 
 /** 根据通知ID获取新订单详情 */
 export const fetchNewOrder = (notificationId: string) => {
-    return apiClient.get<NewOrder>(`/orders/new/${notificationId}`);
+    // 【已修正】路径正确
+    return apiClient.get<NewOrder>(`/courier/orders/new/${notificationId}`);
 };
 
 /** 切换工作状态 (上班/下班) */
 export const toggleWorkStatusAPI = (newStatus: boolean) => {
-    return apiClient.post<{ success: boolean }>('/user/status', { isOnline: newStatus });
+    // 【已修正】路径从 /user/status 改为 /courier/status/toggle
+    return apiClient.post<{ success: boolean }>('/courier/status/toggle', { isOnline: newStatus });
 };
 
 /** 接受订单 */
 export const acceptOrderAPI = (orderId: string) => {
-    return apiClient.post<{ success: boolean }>(`/orders/${orderId}/accept`);
+    // 【已修正】路径正确
+    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/accept`);
 };
 
 /** 拒绝订单 */
 export const rejectOrderAPI = (orderId: string) => {
-    return apiClient.post<{ success: boolean }>(`/orders/${orderId}/reject`);
+    // 【已修正】路径正确
+    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/reject`);
 };
 
-/** 更新骑手专属资料接口 (需要认证) */
+// --- 以下是你队友原来的其他接口，可以暂时保留 ---
+interface RiderInfo {
+    vehicleType: string;
+}
 export const updateRiderInfo = (riderData: RiderInfo) => {
     return apiClient.put('/user/profile/rider', riderData);
 };
