@@ -75,7 +75,7 @@ const showLoading = ref(true);
 const restaurantList = computed<showStore[]>(() => {
   if (!allRestaurants.value) return [];
   if ('allStores' in allRestaurants.value) return allRestaurants.value.allStores;
-  if ('searchStore' in allRestaurants.value) return allRestaurants.value.searchStore;
+  if ('searchStores' in allRestaurants.value) return allRestaurants.value.searchStores;
   return [];
 });
 
@@ -87,6 +87,7 @@ onMounted(async () => {
       const address = route.query.address as string;
 
       allRestaurants.value = await getSearchStore(userID, address, keyword);
+      console.log('search data', allRestaurants.value);
     } else {
       allRestaurants.value = await getAllStore();
     }
@@ -116,8 +117,6 @@ const pagedRestaurants = computed(() => {
   const end = start + pageSize;
   return restaurantList.value.slice(start, end);
 });
-
-console.log(pagedRestaurants);
 
 function goPage(page: number) {
   if (page >= 1 && page <= totalPages.value) currentPage.value = page;
