@@ -50,7 +50,7 @@ const userID = 30;  // 待添加用户编号
 const storeInfo = ref<StoreInfo>()
 const menuItems = ref<MenuItem[]>([])
 const cart = ref<ShoppingCart>({
-  cartId: 3,
+  cartId: 0,
   totalPrice: 0,
   items: []
 });  // 防止未定义
@@ -66,7 +66,7 @@ const categories = [
   { id: 7, name: "饮品" },
 ]
 
-const activeCategory = ref(1)
+const activeCategory = ref(0)
 
 // 增加数量
 async function increaseQuantity(dish: MenuItem) {
@@ -101,7 +101,6 @@ async function loadCart() {
 async function loadData(storeID: string) {
   storeInfo.value = await getStoreInfo(storeID)
   menuItems.value = await getMenuItem(storeID)
-  console.log(menuItems)
   await loadCart()
 }
 

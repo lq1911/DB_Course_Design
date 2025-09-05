@@ -46,19 +46,18 @@
                 </button>
               </div>
             </div>
+            <div class="border-t p-4">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-lg font-semibold text-gray-900">总计</span>
+                <span class="text-xl font-bold text-[#F9771C]">¥{{ totalPrice.toFixed(2) }}</span>
+              </div>
+              <button
+                class="w-full bg-[#F9771C] text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+                @click="goToChekout">
+                去结算
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div  class="border-t p-4">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-lg font-semibold text-gray-900">总计</span>
-            <span class="text-xl font-bold text-[#F9771C]">¥{{ totalPrice.toFixed(2) }}</span>
-          </div>
-          <button
-            class="w-full bg-[#F9771C] text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-            @click="goToChekout">
-            去结算
-          </button>
         </div>
       </div>
     </div>
