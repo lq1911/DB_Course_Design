@@ -21,7 +21,6 @@ namespace BackEnd.Dtos.Administrator
     {
         public string Username { get; set; } = string.Empty;
         public string ManagementScope { get; set; } = string.Empty;
-        public string AvatarUrl { get; set; } = string.Empty;
         public string BirthDate { get; set; } = string.Empty;
         public bool IsPublic { get; set; }
     }

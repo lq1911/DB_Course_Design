@@ -66,7 +66,6 @@ namespace BackEnd.Services
                 // 更新允许修改的字段
                 existingAdmin.User.Username = request.Username;
                 existingAdmin.ManagedEntities = request.ManagementScope;
-                existingAdmin.User.Avatar = request.AvatarUrl;
                 existingAdmin.User.IsProfilePublic = request.IsPublic ? ProfilePrivacyLevel.Public : ProfilePrivacyLevel.Private;
 
                 // 处理生日

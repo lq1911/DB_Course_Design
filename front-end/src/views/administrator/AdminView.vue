@@ -19,8 +19,8 @@
                 <div class="flex items-center space-x-4">
                     <!-- 【修改】用 v-if 包裹用户信息，防止数据加载完成前出错 -->
                     <div v-if="currentUser" class="flex items-center space-x-3">
-                        <!-- 【修改】将头像和名字绑定到动态数据 -->
-                        <img :src="currentUser.avatarUrl" :alt="currentUser.username + '的头像'"
+                        <img :src="'https://s1.aigei.com/src/img/png/f7/f734d8198b614d0a9356196cd83c6758.png?imageMogr2/auto-orient/thumbnail/!282x282r/gravity/Center/crop/282x282/quality/85/%7CimageView2/2/w/282&e=2051020800&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:FldJin-4wd319skieoNSW_v2zAY='"
+                             :alt="currentUser.username + '的头像'"
                             class="w-8 h-8 rounded-full object-cover">
                         <span class="text-sm text-gray-700">{{ currentUser.username }}</span>
                     </div>
@@ -551,7 +551,7 @@
                             <div class="max-w-2xl">
                                 <!-- 头像和基本信息 -->
                                 <div class="flex items-center space-x-6 mb-8">
-                                    <img :src="currentUser.avatarUrl" :alt="currentUser.username + '的头像'"
+                                    <img :src="'https://s1.aigei.com/src/img/png/f7/f734d8198b614d0a9356196cd83c6758.png?imageMogr2/auto-orient/thumbnail/!282x282r/gravity/Center/crop/282x282/quality/85/%7CimageView2/2/w/282&e=2051020800&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:FldJin-4wd319skieoNSW_v2zAY='"
                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100">
                                     <div>
                                         <h3 class="text-xl font-semibold text-gray-900">{{ currentUser.username }}</h3>
@@ -579,7 +579,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">电子邮箱</label>
-                                        <input type="email" v-model="currentUser.email"
+                                        <input type="email" v-model="currentUser.email" readonly
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
                                     </div>
                                     <div>
@@ -823,7 +823,9 @@
                                 :label="option.label" :value="option.value" />
                         </el-select>
                         <div v-else class="p-4 bg-gray-50 rounded-lg">
-                            <p class="text-gray-900">{{ currentViolation.merchantPunishment }}</p>
+                            <p class="text-gray-900">
+                                {{ punishmentOptions.violations.merchant.find(item => item.value === selectedMerchantPunishment)?.label || selectedMerchantPunishment || '无' }}
+                            </p>
                         </div>
                     </div>
                     <div>
@@ -834,7 +836,9 @@
                                 :label="option.label" :value="option.value" />
                         </el-select>
                         <div v-else class="p-4 bg-gray-50 rounded-lg">
-                            <p class="text-gray-900">{{ currentViolation.storePunishment }}</p>
+                            <p class="text-gray-900">
+                                {{ punishmentOptions.violations.store.find(o => o.value === selectedStorePunishment)?.label || selectedStorePunishment || '无' }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -1278,9 +1282,66 @@ const filteredReviews = computed(() =>
 const getBreadcrumb = () => ({ admin: '管理员信息', afterSales: '售后处理中心', complaints: '投诉处理中心', violations: '违规举报处理', reviews: '评论审核管理' })[activeMenu.value] || '控制台';
 const getStatusClass = (status: string) => ({ '待处理': 'bg-yellow-100 text-yellow-800', '已完成': 'bg-green-100 text-green-800', '执行中': 'bg-blue-100 text-blue-800' })[status] || 'bg-gray-100 text-gray-800';
 
-const openAfterSaleDetail = (item: AfterSaleItem) => { currentAfterSale.value = { ...item }; afterSaleNote.value = ''; selectedPunishment.value = ''; punishmentReason.value = ''; showAfterSaleDetail.value = true; };
-const openComplaintDetail = (item: ComplaintItem) => { currentComplaint.value = { ...item }; complaintNote.value = ''; selectedComplaintPunishment.value = ''; complaintPunishmentReason.value = ''; showComplaintDetail.value = true; };
-const openViolationDetail = (item: ViolationItem) => { currentViolation.value = { ...item }; violationNote.value = ''; selectedMerchantPunishment.value = item.merchantPunishment === '-' ? '' : item.merchantPunishment; selectedStorePunishment.value = item.storePunishment === '-' ? '' : item.storePunishment; showViolationDetail.value = true; };
+const openAfterSaleDetail = (item: AfterSaleItem) => {
+    currentAfterSale.value = { ...item };
+    
+    if (item.status === '待处理') {
+        // 待处理：清空输入框，准备填写
+        afterSaleNote.value = '';
+        selectedPunishment.value = '';
+        punishmentReason.value = '';
+    } else {
+        // 已完成：填充已保存的数据，供查看
+        afterSaleNote.value = item.processingNote || '';
+        selectedPunishment.value = item.punishment || '';
+        punishmentReason.value = item.punishmentReason || '';
+    }
+    
+    showAfterSaleDetail.value = true;
+};
+
+const openComplaintDetail = (item: ComplaintItem) => {
+    currentComplaint.value = { ...item };
+    
+    if (item.status === '待处理') {
+        // 待处理：清空输入框，准备填写
+        complaintNote.value = '';
+        selectedComplaintPunishment.value = '';
+        complaintPunishmentReason.value = '';
+    } else {
+        // 已完成：填充已保存的数据，供查看
+        complaintNote.value = item.processingNote || '';
+        selectedComplaintPunishment.value = item.punishment || '';
+        complaintPunishmentReason.value = item.punishmentReason || '';
+    }
+    
+    showComplaintDetail.value = true;
+};
+
+const openViolationDetail = (item: ViolationItem) => {
+    currentViolation.value = { ...item };
+    
+    if (item.status === '待处理') {
+        // 待处理：清空输入框，准备填写
+        selectedMerchantPunishment.value = '';
+        selectedStorePunishment.value = '';
+        violationNote.value = '';
+        selectedMerchantPunishment.value = '';
+        selectedStorePunishment.value = '';
+    } else {
+        // 已完成：填充已保存的数据，供查看
+        console.log('原始数据:', item);
+        selectedMerchantPunishment.value = item.merchantPunishment === '-' ? '' : item.merchantPunishment;
+        selectedStorePunishment.value = item.storePunishment === '-' ? '' : item.storePunishment;
+        violationNote.value = item.processingNote || '';
+        selectedMerchantPunishment.value = item.merchantPunishment === '-' ? '' : item.merchantPunishment;
+        selectedStorePunishment.value = item.storePunishment === '-' ? '' : item.storePunishment;
+    }
+    
+    showViolationDetail.value = true;
+};
+
+
 const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item }; showReviewDetail.value = true; };
 // 4.4 ----------------- 修改数据处理函数 (全部完成) -----------------
 
