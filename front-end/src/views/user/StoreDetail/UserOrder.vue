@@ -52,7 +52,7 @@ const storeID = computed(() => route.params.id as string)
 const storeInfo = ref<StoreInfo>()
 const menuItems = ref<MenuItem[]>([])
 const cart = ref<ShoppingCart>({
-  cartId: 0,
+  cartId: 3,
   totalPrice: 0,
   items: []
 });  // 防止未定义
