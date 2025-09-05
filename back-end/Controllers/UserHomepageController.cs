@@ -42,7 +42,7 @@ namespace BackEnd.Controllers
         /// GET: /api/user/home/search
         /// </summary>
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromBody] HomeSearchDto searchDto)
+        public async Task<IActionResult> Search([FromQuery] HomeSearchDto searchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -64,13 +64,14 @@ namespace BackEnd.Controllers
                 });
             }
 
+            // 合并商家和菜品到一个数组
+            var showStore = new List<object>();
+            if (stores != null) showStore.AddRange(stores);
+            if (dishes != null) showStore.AddRange(dishes);
+
             return Ok(new
             {
-                showStore = new
-                {
-                    Stores = stores,
-                    Dishes = dishes
-                }
+                showStore
             });
         }
         // 输入：用户id
