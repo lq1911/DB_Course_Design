@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BackEnd.Models.Enums;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BackEnd.Dtos.User
 {
@@ -17,9 +18,12 @@ namespace BackEnd.Dtos.User
         public int UserId { get; set; }
 
         [Required]
-        public Array Address { get; set; } = null!;
+        [FromQuery(Name = "address")]
+
+        public string Address { get; set; } = null!;
 
         [Required]
+        [FromQuery(Name = "keyword")]
         public string Keyword { get; set; } = null!;
     }
 

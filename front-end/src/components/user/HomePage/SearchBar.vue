@@ -16,8 +16,8 @@ const router = useRouter();
 const searchQuery = ref("");
 
 // 等待添加获取用信息接口
-const userID = 0;
-const address = '';
+const userID = 30;
+const address = "沈阳大街";
 
 function handleSearch() {
     const query = searchQuery.value.trim();

@@ -117,6 +117,8 @@ const pagedRestaurants = computed(() => {
   return restaurantList.value.slice(start, end);
 });
 
+console.log(pagedRestaurants);
+
 function goPage(page: number) {
   if (page >= 1 && page <= totalPages.value) currentPage.value = page;
 }
