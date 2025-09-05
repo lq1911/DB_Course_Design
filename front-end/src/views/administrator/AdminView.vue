@@ -1356,21 +1356,18 @@ const handleSaveChanges = async () => {
     
     isSaving.value = true;
     try {
-        // 【核心修改】接收 API 的返回结果
         const response = await api.updateAdminInfo(currentUser.value);
 
-        // 【核心修改】检查返回结果的 success 字段
         if (response.success) {
-            // 只有在后端确认成功后，才更新前端的状态
+            // 【核心修改】使用 Object.assign 来更新现有响应式对象的属性
+            // 这样做可以更稳定地触发视图更新
+            Object.assign(currentUser.value, response.data); 
             
-            // 使用从后端返回的最新数据来更新，这是最佳实践
-            currentUser.value = response.data; 
-            originalAdminInfo = JSON.parse(JSON.stringify(response.data)); // 更新备份
+            originalAdminInfo = JSON.parse(JSON.stringify(response.data)); 
             
             ElMessage.success('信息更新成功！');
             console.log('管理员信息已更新:', response.data);
         } else {
-            // 如果后端返回失败，则提示用户
             ElMessage.error('信息更新失败，未能成功保存到服务器');
             console.error('信息更新失败:', response);
         }
