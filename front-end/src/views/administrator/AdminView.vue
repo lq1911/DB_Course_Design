@@ -1117,7 +1117,7 @@ const realApi = {
 
     updateViolation: async (item: ViolationItem) => {
         try {
-            const response = await apiClient.put<ViolationItem>(`/admin/vviolation-penalties/update`, item);
+            const response = await apiClient.put<ViolationItem>(`/admin/violation-penalties/update`, item);
             return { success: true, data: response.data };
         } catch (error) {
             console.error('更新违规失败:', error);
@@ -1256,10 +1256,37 @@ onMounted(async () => {
 });
 
 // 4.3 ----------------- 计算属性和工具函数 (不变) -----------------
-const filteredAfterSales = computed(() => afterSalesList.value.filter(item => (selectedAfterSalesStatus.value === 'all' || item.status === selectedAfterSalesStatus.value) && (item.applicationId.toLowerCase().includes(searchQuery.value.toLowerCase()) || item.orderId.toLowerCase().includes(searchQuery.value.toLowerCase()))));
-const filteredComplaints = computed(() => complaintsList.value.filter(item => (selectedComplaintStatus.value === 'all' || item.status === selectedComplaintStatus.value) && (item.complaintId.toLowerCase().includes(complaintSearchQuery.value.toLowerCase()) || item.target.toLowerCase().includes(complaintSearchQuery.value.toLowerCase()))));
-const filteredViolations = computed(() => violationsList.value.filter(item => (selectedViolationStatus.value === 'all' || item.status === selectedViolationStatus.value) && (item.punishmentId.toLowerCase().includes(violationSearchQuery.value.toLowerCase()) || item.storeName.toLowerCase().includes(violationSearchQuery.value.toLowerCase()))));
-const filteredReviews = computed(() => reviewsList.value.filter(item => (selectedReviewStatus.value === 'all' || item.status === selectedReviewStatus.value) && (item.content.toLowerCase().includes(reviewSearchQuery.value.toLowerCase()) || item.username.toLowerCase().includes(reviewSearchQuery.value.toLowerCase()))));
+const filteredAfterSales = computed(() => 
+  afterSalesList.value.filter(item => 
+    (selectedAfterSalesStatus.value === 'all' || item.status === selectedAfterSalesStatus.value) && 
+    ((item.applicationId?.toLowerCase() || '').includes((searchQuery.value?.toLowerCase() || '')) || 
+     (item.orderId?.toLowerCase() || '').includes((searchQuery.value?.toLowerCase() || '')))
+  )
+);
+
+const filteredComplaints = computed(() => 
+  complaintsList.value.filter(item => 
+    (selectedComplaintStatus.value === 'all' || item.status === selectedComplaintStatus.value) && 
+    ((item.complaintId?.toLowerCase() || '').includes((complaintSearchQuery.value?.toLowerCase() || '')) || 
+     (item.target?.toLowerCase() || '').includes((complaintSearchQuery.value?.toLowerCase() || '')))
+  )
+);
+
+const filteredViolations = computed(() => 
+  violationsList.value.filter(item => 
+    (selectedViolationStatus.value === 'all' || item.status === selectedViolationStatus.value) && 
+    ((item.punishmentId?.toLowerCase() || '').includes((violationSearchQuery.value?.toLowerCase() || '')) || 
+     (item.storeName?.toLowerCase() || '').includes((violationSearchQuery.value?.toLowerCase() || '')))
+  )
+);
+
+const filteredReviews = computed(() => 
+  reviewsList.value.filter(item => 
+    (selectedReviewStatus.value === 'all' || item.status === selectedReviewStatus.value) && 
+    ((item.content?.toLowerCase() || '').includes((reviewSearchQuery.value?.toLowerCase() || '')) || 
+     (item.username?.toLowerCase() || '').includes((reviewSearchQuery.value?.toLowerCase() || '')))
+  )
+);
 
 const getBreadcrumb = () => ({ admin: '管理员信息', afterSales: '售后处理中心', complaints: '投诉处理中心', violations: '违规举报处理', reviews: '评论审核管理' })[activeMenu.value] || '控制台';
 const getStatusClass = (status: string) => ({ '待处理': 'bg-yellow-100 text-yellow-800', '已完成': 'bg-green-100 text-green-800', '执行中': 'bg-blue-100 text-blue-800' })[status] || 'bg-gray-100 text-gray-800';
