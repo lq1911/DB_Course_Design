@@ -11,12 +11,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 const router = useRouter();
 const searchQuery = ref("");
 
-// 等待添加获取用信息接口
-const userID = 30;
+const userID = userStore.getUserID();
 const address = "沈阳大街";
 
 function handleSearch() {
