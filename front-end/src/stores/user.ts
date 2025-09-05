@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia'
 
 interface UserInfo {
-    userID: number | null;
+    userID: number;
 }
 
 export const useUserStore = defineStore('user', {
     state: (): UserInfo => ({
-        userID: null
+        userID: -1
     }),
     actions: {
         login(id: number) {
             this.userID = id
         },
         logout() {
-            this.userID = null
+            this.userID = -1
         },
         getUserID() {
             return this.userID
