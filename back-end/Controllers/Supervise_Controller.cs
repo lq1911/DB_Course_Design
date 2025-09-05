@@ -43,6 +43,21 @@ namespace BackEnd.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> UpdateViolationPenalty([FromBody] SetViolationPenaltyInfo request)
         {
+            // 添加模型状态检查
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { Field = x.Key, Errors = x.Value.Errors.Select(e => e.ErrorMessage) })
+                    .ToList();
+
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "模型验证失败",
+                    errors = errors
+                });
+            }
             // 验证请求数据
             if (request == null)
             {

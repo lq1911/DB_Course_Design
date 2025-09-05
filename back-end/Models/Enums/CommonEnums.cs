@@ -92,7 +92,8 @@ namespace BackEnd.Models.Enums
     public enum ViolationPenaltyState
     {
         Pending = 0,
-        Completed = 1
+        Processing = 1,
+        Completed = 2
     }
 
     // 评论状态

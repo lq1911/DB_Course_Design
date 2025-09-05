@@ -5,6 +5,6 @@ namespace BackEnd.Services.Interfaces
     public interface IAdministratorService
     {
         Task<GetAdminInfo?> GetAdministratorInfoAsync(int adminId);
-        Task<SetAdminInfoResponse> UpdateAdministratorInfoAsync(int adminId, GetAdminInfo request);
+        Task<SetAdminInfoResponse> UpdateAdministratorInfoAsync(int adminId, SetAdminInfo request);
     }
 }

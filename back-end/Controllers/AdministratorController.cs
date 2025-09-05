@@ -41,7 +41,7 @@ namespace BackEnd.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAdministratorInfo([FromBody] GetAdminInfo request)
+        public async Task<IActionResult> UpdateAdministratorInfo([FromBody] SetAdminInfo request)
         {
             // 验证请求数据
             if (request == null)

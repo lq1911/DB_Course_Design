@@ -73,6 +73,7 @@ namespace BackEnd.Services
                 var newState = request.Status switch
                 {
                     "待处理" => ViolationPenaltyState.Pending,
+                    "执行中" => ViolationPenaltyState.Processing,
                     "已完成" => ViolationPenaltyState.Completed,
                     _ => (ViolationPenaltyState?)null
                 };
