@@ -36,6 +36,7 @@ export interface UserInfo {
     name: string
     phoneNumber: number
     image: string
+    defaultAddress: string
 }
 
 export async function getAllStore() {

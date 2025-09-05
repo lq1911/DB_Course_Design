@@ -57,10 +57,21 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, defineProps, defineEmits, ref, watch } from 'vue'
+import { reactive, defineProps, defineEmits, ref, watch, onMounted } from 'vue'
 
 import type { AccountInfo } from '@/api/user_account';
 import { saveAccountInfo } from '@/api/user_account';
+import { useUserStore } from '@/stores/user';
+import { getAccountInfo } from '@/api/user_account';
+
+const userStore = useUserStore();
+const userID = userStore.getUserID();
+// 用户信息, 测试用
+const accountInfo = ref({
+    name: "张小明",
+    phoneNumber: 1234556,
+    image: "https://i.bobopic.com/small/115698491.jpg"
+});
 
 const props = defineProps<{
     showAccountForm: Boolean;
@@ -71,9 +82,6 @@ const emit = defineEmits<{
     (e: 'update:account', value: AccountInfo): void;
 }>()
 
-// 待添加用户编号
-const userID = 0;
-
 const formData = reactive<AccountInfo>({
     id: userID,
     name: '',
@@ -81,13 +89,17 @@ const formData = reactive<AccountInfo>({
     image: ''
 })
 
+onMounted(async () => {
+    accountInfo.value = await getAccountInfo(userID);
+});
+
 watch(
     () => props.showAccountForm,
     (visible) => {
         if (visible) {
-            formData.name = accountInfo.name;
-            formData.phoneNumber = accountInfo.phoneNumber;
-            formData.image = accountInfo.image;
+            formData.name = accountInfo.value.name;
+            formData.phoneNumber = accountInfo.value.phoneNumber;
+            formData.image = accountInfo.value.image;
         }
     },
 );
@@ -109,9 +121,9 @@ async function saveAccount() {
     try {
         const result = await saveAccountInfo(formData)
         if (result) {
-            accountInfo.name = formData.name;
-            accountInfo.phoneNumber = formData.phoneNumber;
-            accountInfo.image = formData.image;
+            accountInfo.value.name = formData.name;
+            accountInfo.value.phoneNumber = formData.phoneNumber;
+            accountInfo.value.image = formData.image;
 
             emit('update:account', { ...formData })
             closeForm()
@@ -137,11 +149,4 @@ function onAvatarChange(event: Event) {
         reader.readAsDataURL(file)
     }
 }
-
-// 用户信息, 测试用
-const accountInfo = reactive({
-    name: "张小明",
-    phoneNumber: 1234556,
-    image: "https://i.bobopic.com/small/115698491.jpg"
-});
 </script>

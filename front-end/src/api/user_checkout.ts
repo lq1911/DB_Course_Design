@@ -26,6 +26,13 @@ export interface MenuItem {
     isSoldOut: number;
 }
 
+export interface Order{
+    paymentTime: Date;
+    customerID: number;
+    cartID: number;
+    storeID: number;
+}
+
 export async function getMenuItem(StoreID: string) {
     return getData<MenuItem[]>("/api/store/dish", {
         params: {
@@ -49,4 +56,9 @@ export async function addOrUpdateCartItem(cartId: number, dishId: number, quanti
 
 export async function removeCartItem(cartId: number, dishId: number) {
     return deleteData<ShoppingCartItem>('/api/store/cart/remove', { cartId, dishId });
+}
+
+export async function submitOrder(customerId: number, cartId: number, storeId: number) {
+    const paymentTime = new Date();
+    return postData<Order>('/api/store/checkout', {paymentTime, customerId, cartId, storeId} )
 }
