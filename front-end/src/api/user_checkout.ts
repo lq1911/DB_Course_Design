@@ -44,15 +44,9 @@ export async function getShoppingCart(StoreID: string, UserID: number) {
 }
 
 export async function addOrUpdateCartItem(cartId: number, dishId: number, quantity: number) {
-    return postData<ShoppingCartItem>('/api/store/cart/change', {
-        method: 'POST',
-        data: { cartId, dishId, quantity }
-    });
+    return postData<ShoppingCartItem>('/api/store/cart/change', { cartId, dishId, quantity });
 }
 
 export async function removeCartItem(cartId: number, dishId: number) {
-    return deleteData<ShoppingCartItem>('/api/store/cart/remove', {
-        method: 'DELETE',
-        data: { cartId, dishId }
-    });
+    return deleteData<ShoppingCartItem>('/api/store/cart/remove', { cartId, dishId });
 }
