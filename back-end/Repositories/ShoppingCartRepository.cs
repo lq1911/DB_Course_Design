@@ -32,10 +32,15 @@ namespace BackEnd.Repositories
         }
         public async Task<ShoppingCart?> GetByCustomerIdAsync(int customerId)
         {
-            return await _context.ShoppingCarts
+            var shoppingCart = await _context.ShoppingCarts
                 .Include(sc => sc.ShoppingCartItems)
                     .ThenInclude(sci => sci.Dish)
+                        .ThenInclude(d => d.MenuDishes)
+                            .ThenInclude(md => md.Menu)
+                                .ThenInclude(m => m.Store)
                 .FirstOrDefaultAsync(sc => sc.CustomerID == customerId);
+
+            return shoppingCart;
         }
 
         public async Task AddAsync(ShoppingCart shoppingCart)

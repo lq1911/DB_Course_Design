@@ -65,13 +65,14 @@ namespace BackEnd.Controllers
             }
 
             // 合并商家和菜品到一个数组
-            var showStore = new List<object>();
-            if (stores != null) showStore.AddRange(stores);
-            if (dishes != null) showStore.AddRange(dishes);
+            var searchStores = new List<object>();
+            if (stores != null && stores.Any()) searchStores.AddRange(stores);
+            if (dishes != null && dishes.Any()) searchStores.AddRange(dishes);
 
+            // 返回对象里包含 searchStores 属性
             return Ok(new
             {
-                showStore
+                searchStores
             });
         }
         // 输入：用户id

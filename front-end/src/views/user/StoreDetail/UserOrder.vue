@@ -50,7 +50,7 @@ const userID = 30;  // 待添加用户编号
 const storeInfo = ref<StoreInfo>()
 const menuItems = ref<MenuItem[]>([])
 const cart = ref<ShoppingCart>({
-  cartId: 0,
+  cartId: 3,
   totalPrice: 0,
   items: []
 });  // 防止未定义
