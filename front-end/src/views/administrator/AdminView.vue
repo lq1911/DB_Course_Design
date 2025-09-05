@@ -486,7 +486,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.username
                                             }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
-                                            getCommentTypeString(item.commentType)
+                                            item.type
                                             }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ item.content }}
                                         </td>
@@ -880,10 +880,7 @@
                     <div>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">评论类型</h4>
                         <div class="p-4 bg-gray-50 rounded-lg">
-                            <p class="text-gray-900 font-medium">{{ getCommentTypeString(currentReview.commentType) }}
-                            </p>
-                            <p class="text-sm text-gray-600 mt-1">订单编号：{{ 'ORD' +
-                                currentReview.reviewId }}</p>
+                            <p class="text-gray-900 font-medium">{{ currentReview.type }}</p>
                         </div>
                     </div>
                     <div>
@@ -918,7 +915,7 @@
                     <template v-if="currentReview.status === '待处理'">
                         <el-button type="danger" @click="processReview('reject')">判定违规</el-button>
                         <el-button type="success" @click="processReview('approve')">审核通过</el-button>
-                    </template>reviewsList.value[index]
+                    </template>
                 </div>
             </div>
         </el-dialog>
@@ -990,7 +987,7 @@ interface ViolationItem {
 interface ReviewItem {
     reviewId: string;
     username: string;
-    commentType: string;
+    type: string;
     content: string;
     rating: number;
     submitTime: string;
@@ -1020,9 +1017,9 @@ const mockApi = {
         { punishmentId: 'PUN202401003', storeName: '快送外卖', reason: '配送员私自拆开包装', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 12:20', status: '待处理' }
     ]),
     getReviewsList: async (): Promise<ReviewItem[]> => ([
-        { reviewId: 'RV202401001', username: '用户张三', commentType:'普通评论', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
-        { reviewId: 'RV202401002', username: '用户李四', commentType:'普通评论', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
-        { reviewId: 'RV202401003', username: '用户王五', commentType:'普通评论', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
+        { reviewId: 'RV202401001', username: '用户张三', type:'普通评论', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
+        { reviewId: 'RV202401002', username: '用户李四', type:'普通评论', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
+        { reviewId: 'RV202401003', username: '用户王五', type:'普通评论', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
     ]),
     getAdminInfo: async (): Promise<AdminInfo> => ({
         id: 'ADM001',
@@ -1287,22 +1284,6 @@ const openViolationDetail = (item: ViolationItem) => { currentViolation.value = 
 const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item }; showReviewDetail.value = true; };
 // 4.4 ----------------- 修改数据处理函数 (全部完成) -----------------
 
-// 【新增】评论类型转换函数 (正确版本)
-const getCommentTypeString = (type: string) => { // <-- 参数类型已改为 string
-    switch (type) {
-        case 'Comment':
-            return '普通评论';
-        case 'Store':
-            return '店铺评价';
-        case 'FoodOrder':
-            return '商品评价';
-        default:
-            return '未知类型';
-    }
-};
-
-
-
 const handleAfterSaleAction = async () => {
     if (!afterSaleNote.value.trim() || !selectedPunishment.value || !punishmentReason.value.trim()) {
         return ElMessage.warning('请填写完整的处理信息和处罚原因');
@@ -1330,7 +1311,7 @@ const handleAfterSaleAction = async () => {
             const index = afterSalesList.value.findIndex(item => item.applicationId === updatedItem.applicationId);
             if (index !== -1) {
                 // 使用从后端返回的最新数据来更新列表，这是最佳实践
-                afterSalesList.value[index] = response.data;
+                afterSalesList.value[index] = { ...updatedItem, ...response.data };
             }
             ElMessage.success('处理完成，处罚措施已执行');
             showAfterSaleDetail.value = false;
@@ -1449,7 +1430,7 @@ const handleComplaintProcess = async () => {
             const index = complaintsList.value.findIndex(item => item.complaintId === updatedItem.complaintId);
             if (index !== -1) {
                 // 使用从后端返回的最新数据来更新列表
-                complaintsList.value[index] = response.data;
+                complaintsList.value[index] = { ...updatedItem, ...response.data };
             }
             ElMessage.success('投诉已处理完成');
             showComplaintDetail.value = false;
@@ -1507,7 +1488,8 @@ const handleViolationAction = async (action: 'process' | 'complete') => {
             const index = violationsList.value.findIndex(item => item.punishmentId === updatedItem.punishmentId);
             if (index !== -1) {
                 // 使用从后端返回的最新数据来更新列表
-                violationsList.value[index] = response.data;
+                violationsList.value[index] = { ...updatedItem, ...response.data };
+                console.log('更新后的数据:', violationsList.value[index]);
             }
             ElMessage.success(`处罚已${action === 'process' ? '开始执行' : '执行完成'}`);
             showViolationDetail.value = false;

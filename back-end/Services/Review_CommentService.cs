@@ -142,9 +142,9 @@ namespace BackEnd.Services
         {
             return commentType switch
             {
-                CommentType.Comment => "普通评论",
+                CommentType.Comment => "回复评论",
                 CommentType.Store => "店铺评价",
-                CommentType.FoodOrder => "商品评价",
+                CommentType.FoodOrder => "订单评价",
                 _ => "未知类型"
             };
         }
