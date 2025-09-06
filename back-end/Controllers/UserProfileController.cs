@@ -7,9 +7,9 @@ namespace BackEnd.Controllers
     [ApiController]
     public class UserProfileController : ControllerBase
     {
-        private readonly IUserAdditionService _userService;
+        private readonly IUserProfileService _userService;
 
-        public UserProfileController(IUserAdditionService userService)
+        public UserProfileController(IUserProfileService userService)
         {
             _userService = userService;
         }

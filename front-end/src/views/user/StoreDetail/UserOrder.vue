@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 import type { StoreInfo } from '@/api/user_store_info'
 import type { MenuItem, ShoppingCart, ShoppingCartItem } from '@/api/user_checkout'
@@ -43,21 +44,22 @@ import ItemCart from '@/components/user/StoreDetail/OrderView/ItemCart.vue'
 
 // 路由
 const route = useRoute()
+const userStore = useUserStore();
+const userID = userStore.getUserID();
 const storeID = computed(() => route.params.id as string)
-const userID = 0;  // 待添加用户编号
 
 // 数据
 const storeInfo = ref<StoreInfo>()
 const menuItems = ref<MenuItem[]>([])
 const cart = ref<ShoppingCart>({
-  cartId: 0,
+  cartId: 3,
   totalPrice: 0,
   items: []
 });  // 防止未定义
 
 // 固定分类（可根据需要改成动态生成）
 const categories = [
-  { id: 1, name: "招牌推荐" },
+  { id: 0, name: "招牌推荐" },
   { id: 2, name: "荤菜类" },
   { id: 3, name: "素菜类" },
   { id: 4, name: "丸子类" },
@@ -66,7 +68,7 @@ const categories = [
   { id: 7, name: "饮品" },
 ]
 
-const activeCategory = ref(1)
+const activeCategory = ref(0)
 
 // 增加数量
 async function increaseQuantity(dish: MenuItem) {

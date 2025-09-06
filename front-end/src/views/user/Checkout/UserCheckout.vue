@@ -57,12 +57,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
 import type { Address } from '@/api/user_address';
 import type { MenuItem, ShoppingCart } from '@/api/user_checkout';
 import type { CouponInfo } from '@/api/user_coupon';
 import { getAddress } from '@/api/user_address';
 import { getMenuItem, getShoppingCart, addOrUpdateCartItem, removeCartItem } from '@/api/user_checkout';
+import { submitOrder } from '@/api/user_checkout';
 
 import DishCard from '@/components/user/Checkout/DishCard.vue';
 import AddressSelector from '@/components/user/Checkout/AddressSelector.vue';
@@ -73,8 +75,9 @@ import OrderSummary from '@/components/user/Checkout/OrderSummary.vue';
 // 路由参数
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 const storeID = route.params.id as string;
-const userID = 0;  // 待添加用户ID
+const userID = userStore.getUserID();
 
 // 数据
 const menuItems = ref<MenuItem[]>([]);
@@ -137,10 +140,13 @@ async function checkout() {
     return;
   }
 
-  await new Promise(resolve => setTimeout(resolve, 2000)); // 模拟支付
-  alert('支付成功！订单已提交。');
-
-  cart.value.items = [];
+  try {
+    await submitOrder(userID, cart.value.cartId, Number(storeID));
+    cart.value.items = [];
+    goBack();
+  } catch (error) {
+    alert('下单失败，请重试');
+  }
 }
 
 function goBack() {

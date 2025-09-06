@@ -199,7 +199,7 @@ namespace BackEnd.Services
                 OpenTime = openTime,
                 CloseTime = closeTime,
                 StoreCreationTime = establishmentDate,
-                StoreCategory = category,
+                StoreCategory = storeInfo.Category,
                 SellerID = sellerId
             };
 
