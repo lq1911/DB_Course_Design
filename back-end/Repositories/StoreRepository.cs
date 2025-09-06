@@ -43,6 +43,22 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(s => s.StoreID == id);
         }
 
+        public async Task<Store?> GetBySellerIdAsync(int sellerId)
+        {
+            return await _context.Stores
+                                 .Include(s => s.Seller)
+                                 .Include(s => s.FoodOrders)
+                                 .Include(s => s.CouponManagers)
+                                 .Include(s => s.Menus!)
+                                     .ThenInclude(m => m.MenuDishes)
+                                        .ThenInclude(md => md.Dish)
+                                 .Include(s => s.FavoriteItems)
+                                 .Include(s => s.StoreViolationPenalties)
+                                 .Include(s => s.Comments)
+                                 .Include(s => s.DeliveryTasks)
+                                 .FirstOrDefaultAsync(s => s.SellerID == sellerId);
+        }
+
         public async Task AddAsync(Store store)
         {
             await _context.Stores.AddAsync(store);
