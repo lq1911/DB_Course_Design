@@ -42,6 +42,19 @@ namespace BackEnd.Services
 
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
+
+            // 校验该购物车是否已生成订单（CartID 一对一）
+            if (dto.CartId != 0)
+            {
+                var existingOrder = await _foodOrderRepository
+                    .GetByCartIdAsync(dto.CartId);
+
+                if (existingOrder != null)
+                {
+                    throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
+                }
+            }
+            
             // 创建订单实体
             var order = new FoodOrder
             {
