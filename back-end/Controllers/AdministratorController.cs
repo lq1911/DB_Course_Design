@@ -1,4 +1,4 @@
-using BackEnd.Dtos.AfterSaleApplication;
+using BackEnd.Dtos.Administrator;
 using BackEnd.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,19 +7,19 @@ using System.Security.Claims;
 namespace BackEnd.Controllers
 {
     [ApiController]
-    [Route("api/admin/after-sales")]
+    [Route("api/admin/info")]
     [Authorize] // 在控制器级别添加此特性，该控制器下所有方法都需要认证
-    public class Evaluate_AfterSaleController : ControllerBase
+    public class AdminController : ControllerBase
     {
-        private readonly IEvaluate_AfterSaleService _evaluateAfterSaleService;
+        private readonly IAdministratorService _administratorService;
 
-        public Evaluate_AfterSaleController(IEvaluate_AfterSaleService evaluateAfterSaleService)
+        public AdminController(IAdministratorService administratorService)
         {
-            _evaluateAfterSaleService = evaluateAfterSaleService;
+            _administratorService = administratorService;
         }
 
-        [HttpGet("mine")]
-        public async Task<IActionResult> GetAfterSaleApplicationsForAdmin()
+        [HttpGet]
+        public async Task<IActionResult> GetAdministratorInfo()
         {
             // 从 Token 中安全地获取管理员 ID
             var adminIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -29,19 +29,19 @@ namespace BackEnd.Controllers
                 return Unauthorized("无效的Token");
             }
 
-            var applicationDtos = await _evaluateAfterSaleService.GetApplicationsForAdminAsync(adminId);
+            var adminInfo = await _administratorService.GetAdministratorInfoAsync(adminId);
 
-            if (applicationDtos == null)
+            if (adminInfo == null)
             {
                 // 如果找不到资源，按照 RESTful 规范返回 404 Not Found
-                return NotFound();
+                return NotFound("管理员信息未找到");
             }
 
-            return Ok(applicationDtos);
+            return Ok(adminInfo);
         }
 
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateAfterSaleApplication([FromBody] SetAfterSaleApplicationInfo request)
+        [HttpPut]
+        public async Task<IActionResult> UpdateAdministratorInfo([FromBody] SetAdminInfo request)
         {
             // 验证请求数据
             if (request == null)
@@ -53,8 +53,16 @@ namespace BackEnd.Controllers
                 });
             }
 
+            // 从 Token 中安全地获取管理员 ID
+            var adminIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(adminIdString, out int adminId))
+            {
+                return Unauthorized("无效的Token");
+            }
+
             // 调用服务层处理业务逻辑
-            var result = await _evaluateAfterSaleService.UpdateAfterSaleApplicationAsync(request);
+            var result = await _administratorService.UpdateAdministratorInfoAsync(adminId, request);
 
             if (result.Success)
             {
@@ -67,3 +75,4 @@ namespace BackEnd.Controllers
         }
     }
 }
+

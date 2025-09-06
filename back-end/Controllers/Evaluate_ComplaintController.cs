@@ -1,4 +1,4 @@
-using BackEnd.Dtos.AfterSaleApplication;
+using BackEnd.Dtos.DeliveryComplaint;
 using BackEnd.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,19 +7,20 @@ using System.Security.Claims;
 namespace BackEnd.Controllers
 {
     [ApiController]
-    [Route("api/admin/after-sales")]
+    [Route("api/admin/delivery-complaints")]
     [Authorize] // 在控制器级别添加此特性，该控制器下所有方法都需要认证
-    public class Evaluate_AfterSaleController : ControllerBase
+    public class Evaluate_ComplaintController : ControllerBase
     {
-        private readonly IEvaluate_AfterSaleService _evaluateAfterSaleService;
 
-        public Evaluate_AfterSaleController(IEvaluate_AfterSaleService evaluateAfterSaleService)
+        private readonly IEvaluate_DeliveryComplaintService _evaluateDeliveryComplaintService;
+
+        public Evaluate_ComplaintController(IEvaluate_DeliveryComplaintService evaluateDeliveryComplaintService)
         {
-            _evaluateAfterSaleService = evaluateAfterSaleService;
+            _evaluateDeliveryComplaintService = evaluateDeliveryComplaintService;
         }
 
         [HttpGet("mine")]
-        public async Task<IActionResult> GetAfterSaleApplicationsForAdmin()
+        public async Task<IActionResult> GetDeliveryComplaintsForAdmin()
         {
             // 从 Token 中安全地获取管理员 ID
             var adminIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -29,19 +30,19 @@ namespace BackEnd.Controllers
                 return Unauthorized("无效的Token");
             }
 
-            var applicationDtos = await _evaluateAfterSaleService.GetApplicationsForAdminAsync(adminId);
+            var complaintDtos = await _evaluateDeliveryComplaintService.GetComplaintsForAdminAsync(adminId);
 
-            if (applicationDtos == null)
+            if (complaintDtos == null)
             {
                 // 如果找不到资源，按照 RESTful 规范返回 404 Not Found
                 return NotFound();
             }
 
-            return Ok(applicationDtos);
+            return Ok(complaintDtos);
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateAfterSaleApplication([FromBody] SetAfterSaleApplicationInfo request)
+        public async Task<IActionResult> UpdateDeliveryComplaint([FromBody] SetComplaintInfo request)
         {
             // 验证请求数据
             if (request == null)
@@ -54,7 +55,7 @@ namespace BackEnd.Controllers
             }
 
             // 调用服务层处理业务逻辑
-            var result = await _evaluateAfterSaleService.UpdateAfterSaleApplicationAsync(request);
+            var result = await _evaluateDeliveryComplaintService.UpdateComplaintAsync(request);
 
             if (result.Success)
             {
