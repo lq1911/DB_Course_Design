@@ -161,7 +161,7 @@ namespace BackEnd.Services
                 case "admin":
                     return UserIdentity.Administrator;
                 case "merchant":
-                    return UserIdentity.Seller;
+                    return UserIdentity.Merchant;
                 default:
                     throw new ArgumentException($"不支持的角色类型: {roleStr}");
             }
@@ -183,10 +183,6 @@ namespace BackEnd.Services
 
             if (!TimeSpan.TryParse(storeInfo.CloseTime, out var closeTime))
                 throw new ArgumentException("营业结束时间格式错误，请使用 HH:mm 格式");
-
-            // 解析店铺类别
-            if (!Enum.TryParse<StoreCategory>(storeInfo.Category, true, out var category))
-                throw new ArgumentException($"店铺类别无效: {storeInfo.Category}");
 
             // 解析创建日期
             if (!DateTime.TryParse(storeInfo.EstablishmentDate, out var establishmentDate))
