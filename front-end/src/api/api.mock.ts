@@ -60,6 +60,8 @@ export interface NewOrder {
 /** 位置信息 (所有属性均在模板中使用) */
 export interface LocationInfo {
     area: string;
+    longitude: number; // 新增：经度
+    latitude: number;  // 新增：纬度
 }
 
 
@@ -91,7 +93,9 @@ const mockOrders: Order[] = [
 ];
 
 const mockLocationInfo: LocationInfo = {
-    area: '人民广场商圈 (模拟)'
+    area: '人民广场商圈 (模拟)',
+    longitude: 121.4748,
+    latitude: 31.2304
 };
 
 const mockNewOrder: NewOrder = {
