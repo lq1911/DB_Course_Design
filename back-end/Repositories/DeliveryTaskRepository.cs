@@ -36,6 +36,17 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(dt => dt.TaskID == id);
         }
 
+        //新增
+        public async Task<DeliveryTask?> GetByOrderIdAsync(int orderId)
+        {
+            return await _context.DeliveryTasks
+                                 .Include(dt => dt.Customer)
+                                 .Include(dt => dt.Store)
+                                 .Include(dt => dt.Courier)
+                                 .Include(dt => dt.DeliveryComplaints)
+                                 .FirstOrDefaultAsync(dt => dt.OrderID == orderId);
+        }
+
         public async Task AddAsync(DeliveryTask task)
         {
             await _context.DeliveryTasks.AddAsync(task);

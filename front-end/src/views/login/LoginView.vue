@@ -623,6 +623,10 @@ const selectCategory = (category: string) => {
 
 
 // 处理登录
+import { getUserID } from '@/api/user_info'
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 
 const handleLogin = async () => {
     if (!loginForm.account || !loginForm.password) {
@@ -640,6 +644,9 @@ const handleLogin = async () => {
 
         const { token, user, message } = response.data;
         localStorage.setItem('authToken', token);
+
+        const userID = await getUserID(loginForm.account);
+        userStore.login(userID);
 
         // 第1步：我们先在控制台打印日志，确认代码执行到了这里
         console.log("登录成功！用户信息:", user);

@@ -29,6 +29,16 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(sci => sci.ItemID == id);
         }
 
+        //新增
+        public async Task<IEnumerable<ShoppingCartItem>> GetByCartIdAsync(int cartId)
+        {
+            return await _context.ShoppingCartItems
+                                .Include(sci => sci.Cart)
+                                .Include(sci => sci.Dish)
+                                .Where(sci => sci.CartID == cartId)
+                                .ToListAsync();
+        }
+
         public async Task AddAsync(ShoppingCartItem shoppingCartItem)
         {
             await _context.ShoppingCartItems.AddAsync(shoppingCartItem);

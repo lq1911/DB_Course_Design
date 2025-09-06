@@ -103,4 +103,11 @@ namespace BackEnd.Models.Enums
         Completed = 1,
         Illegal = 2
     }
+     
+    // 优惠券类型
+    public enum CouponType
+    {
+        Fixed = 0,      // 满减券
+        Discount = 1    // 折扣券
+    }
 }

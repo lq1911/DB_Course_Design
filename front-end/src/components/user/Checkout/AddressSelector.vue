@@ -74,18 +74,20 @@ import { ref, reactive, onMounted, defineEmits } from 'vue'
 
 import type { Address } from '@/api/user_address'
 import { getAddress } from '@/api/user_address'
+import { useUserStore } from '@/stores/user'
 
+const userStore = useUserStore();
 
 const emit = defineEmits<{
   (e: 'onAddressChange', addr: Address): void
 }>()
 
-// 等待添加用户ID
-const userID = 0;
+const userID = userStore.getUserID();
 const address = ref<Address>()
 const showForm = ref(false)
 
 const formData = reactive({
+  id: -1,
   name: '',
   phoneNumber: 123,
   address: '',

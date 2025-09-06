@@ -93,9 +93,13 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed } from "vue";
+import { useUserStore } from "@/stores/user";
 
 import type { OrderInfo } from "@/api/user_home";
 import { getOrderInfo } from "@/api/user_home";
+
+const userStore = useUserStore();
+const userID = userStore.getUserID();
 
 const orders = ref<OrderInfo[]>([]);
 const activeOrderStatus = ref("all"); // 默认显示全部订单
@@ -120,12 +124,9 @@ const getOrderStatusText = (statusNum: number) => {
 
 const fetchOrders = async () => {
     try {
-        // 待添加读取用户ID逻辑
-        const userID = 0;
-        // const userID = getUserId();
         const res: OrderInfo[] = await getOrderInfo(userID); // 返回 OrderInfo[]
         orders.value = res;
-
+        
         showLoading.value = false;
     } catch (err) {
         alert('获取订单失败');
@@ -135,6 +136,7 @@ const fetchOrders = async () => {
 
 const filteredOrders = computed(() => {
     if (activeOrderStatus.value === "all") {
+        console.log(orders);
         return orders.value;
     } else {
         const statusMap: Record<string, number> = {

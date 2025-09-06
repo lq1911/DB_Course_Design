@@ -110,10 +110,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, defineProps, defineEmits } from 'vue';
+
 import { CouponInfo, getCouponInfo } from '@/api/user_coupon';
+import { useUserStore } from '@/stores/user';
 
 const showSelector = ref(false);
-const userID = 0;  // TODO: 替换成真实用户ID
+const userStore = useUserStore();
+const userID = userStore.getUserID();
 
 const props = defineProps<{
   totalAmount: number;
@@ -127,7 +130,7 @@ const emit = defineEmits<{
 const coupons = ref<CouponInfo[]>([]);
 
 onMounted(async () => {
-  // coupons.value = await getCouponInfo(userID);
+  coupons.value = await getCouponInfo(userID);
 });
 
 // 可用优惠券，选中的放最前面

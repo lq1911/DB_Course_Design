@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "pinia-plugin-persistedstate": "^4.5.0"
+  }
+}
