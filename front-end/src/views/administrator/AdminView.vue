@@ -372,9 +372,11 @@
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ item.reason }}
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{
-                                            item.merchantPunishment }}</td>
+                                            punishmentOptions.violations.merchant.find(option => option.value === item.merchantPunishment)?.label || item.merchantPunishment }}
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{
-                                            item.storePunishment }}</td>
+                                            punishmentOptions.violations.store.find(option => option.value === item.storePunishment)?.label || item.storePunishment }}
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
                                             item.punishmentTime }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
