@@ -8,6 +8,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<Store>> GetAllAsync();
         Task<Store?> GetByIdAsync(int id);
+        Task<Store?> GetBySellerIdAsync(int sellerId);
         Task AddAsync(Store store);
         Task UpdateAsync(Store store);
         Task DeleteAsync(Store store);

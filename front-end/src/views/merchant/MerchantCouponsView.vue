@@ -547,14 +547,27 @@ const fetchCoupons = async () => {
       }
     });
     
-    coupons.value = response.data.data.list.map((item: any) => ({
-      ...item,
-      status: getCouponStatus(item)
-    }));
+    console.log('优惠券API响应:', response.data);
     
-    total.value = response.data.data.total;
+    // 检查响应数据结构
+    if (response.data && response.data.data && response.data.data.list) {
+      coupons.value = response.data.data.list.map((item: any) => ({
+        ...item,
+        status: getCouponStatus(item)
+      }));
+      total.value = response.data.data.total;
+    } else {
+      console.warn('优惠券数据格式不正确:', response.data);
+      coupons.value = [];
+      total.value = 0;
+    }
+    
+    console.log('处理后的优惠券数据:', coupons.value);
   } catch (error) {
+    console.error('获取优惠券列表失败:', error);
     ElMessage.error('获取优惠券列表失败');
+    coupons.value = [];
+    total.value = 0;
   } finally {
     loading.value = false;
   }
@@ -603,7 +616,9 @@ const getStatusText = (status: string) => {
 
 // 处理选择变化
 const handleSelectionChange = (val: any[]) => {
+  console.log('选择变化:', val);
   selectedCoupons.value = val;
+  console.log('当前选中的优惠券数量:', selectedCoupons.value.length);
 };
 
 // 编辑优惠券
