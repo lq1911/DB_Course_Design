@@ -55,6 +55,12 @@ namespace BackEnd.Repositories
                 .ToListAsync();
         }
 
+        public async Task<FoodOrder?> GetByCartIdAsync(int cartId)
+        {
+            return await _context.FoodOrders
+                .FirstOrDefaultAsync(o => o.CartID == cartId);
+        }
+
         public async Task AddAsync(FoodOrder foodOrder)
         {
             await _context.FoodOrders.AddAsync(foodOrder);
