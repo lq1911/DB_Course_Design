@@ -12,11 +12,13 @@ namespace BackEnd.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
+        private readonly IShoppingCartRepository _shoppingCartRepository;
 
-        public UserDebugService(IUserRepository userRepository, IFoodOrderRepository foodOrderRepository)
+        public UserDebugService(IUserRepository userRepository, IFoodOrderRepository foodOrderRepository, IShoppingCartRepository shoppingCartRepository)
         {
             _userRepository = userRepository;
             _foodOrderRepository = foodOrderRepository;
+            _shoppingCartRepository = shoppingCartRepository;
         }
 
         public async Task<UserInfoResponseDto> GetUserInfoAsync(int userId)
@@ -43,18 +45,21 @@ namespace BackEnd.Services
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
 
-            // 校验该购物车是否已生成订单（CartID 一对一）
-            if (dto.CartId != 0)
-            {
-                var existingOrder = await _foodOrderRepository
-                    .GetByCartIdAsync(dto.CartId);
+            if (dto.CustomerId <= 0 || dto.StoreId <= 0)
+                throw new ArgumentException("用户ID或店铺ID不合法");
 
-                if (existingOrder != null)
-                {
-                    throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
-                }
+            // 获取购物车
+            var shoppingCart = await _shoppingCartRepository.GetByIdAsync(dto.CartId);
+            if (shoppingCart == null)
+                throw new KeyNotFoundException("购物车不存在，请先创建购物车");
+
+            // 检查购物车是否已经生成过订单（一对一）
+            var existingOrder = await _foodOrderRepository.GetByCartIdAsync(shoppingCart.CartID);
+            if (existingOrder != null)
+            {
+                throw new InvalidOperationException("该购物车已生成过订单，请重新创建购物车后下单");
             }
-            
+
             // 创建订单实体
             var order = new FoodOrder
             {
@@ -68,6 +73,9 @@ namespace BackEnd.Services
 
             // 保存到数据库
             await _foodOrderRepository.AddAsync(order);
+
+            // 删除购物车（确保下一次购物生成新的）
+            await _shoppingCartRepository.DeleteAsync(shoppingCart);
         }
 
         public async Task<GetUserIdResponseDto> GetUserIdAsync(GetUserIdRequestDto dto)
