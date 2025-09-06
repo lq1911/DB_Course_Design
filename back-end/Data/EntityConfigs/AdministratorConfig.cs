@@ -16,6 +16,8 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(a => a.AdminRegistrationTime).HasColumnName("ADMINREGISTRATIONTIME").IsRequired();
 
+            builder.Property(a => a.AdminRole).HasColumnName("ADMINROLE").IsRequired().HasMaxLength(20);
+
             builder.Property(a => a.ManagedEntities).HasColumnName("MANAGEDENTITIES").IsRequired().HasMaxLength(50);
 
             builder.Property(a => a.IssueHandlingScore).HasColumnName("ISSUEHANDLINGSCORE").HasColumnType("decimal(3,2)").HasDefaultValue(0.00m);

@@ -19,7 +19,7 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(asa => asa.ApplicationTime).HasColumnName("APPLICATIONTIME").IsRequired();
 
-            builder.Property(asa => asa.AfterSaleState).HasColumnName("AFTERSALESTATE").IsRequired().HasConversion<string>().HasMaxLength(50).HasDefaultValue(AfterSaleState.Pending); ;
+            builder.Property(asa => asa.AfterSaleState).HasColumnName("AFTERSALESTATE").IsRequired().HasConversion<string>().HasMaxLength(50).HasDefaultValue(AfterSaleState.Pending);
 
             builder.Property(asa => asa.ProcessingResult).HasColumnName("PROCESSINGRESULT").IsRequired(false).HasMaxLength(255);
 

@@ -250,11 +250,11 @@ import {
 // ===================================================================
 //  数据源切换开关
 // ===================================================================
-const useMockData = true;
+const useMockData = false;
 
 // 动态导入API模块
 // 注意: 我们需要确保真实api.ts也导出了同名函数, 即使它们暂时为空
-import * as RealAPI from '@/api/api';
+import * as RealAPI from '@/api/rider_api';
 import * as MockAPI from '@/api/api.mock';
 
 const api = useMockData ? MockAPI : RealAPI;
@@ -385,12 +385,52 @@ const rejectOrder = async () => {
     }
 };
 
+
+function setupWebSocketListener() {
+    // 这里的URL需要后端提供
+    const socket = new WebSocket('ws://localhost:5200/notifications');
+
+    // 当连接成功建立时
+    socket.onopen = () => {
+        console.log('WebSocket连接已建立，等待新订单推送...');
+    };
+
+    // 当从服务器接收到消息时
+    socket.onmessage = (event) => {
+        try {
+            // 服务器推送的消息通常是JSON字符串，需要解析
+            const notification = JSON.parse(event.data);
+
+            // 假设服务器推送的数据格式是 { type: 'NEW_ORDER', notificationId: 'xyz-123' }
+            if (notification && notification.type === 'NEW_ORDER' && notification.notificationId) {
+                console.log('收到新订单推送:', notification);
+                // 直接调用您已经写好的函数来处理这个推送！
+                handleNewOrderPush({ notificationId: notification.notificationId });
+            }
+        } catch (error) {
+            console.error('处理WebSocket消息失败:', error);
+        }
+    };
+
+    // 处理连接错误
+    socket.onerror = (error) => {
+        console.error('WebSocket 错误:', error);
+    };
+}
+
+
+
 onMounted(() => {
     loadDashboardData();
-    // 模拟收到新订单推送通知
+
+    // 如果不是用模拟数据，就启动WebSocket监听器
+    if (!useMockData) {
+        setupWebSocketListener();
+    }
+
+    // 保留模拟数据时的测试逻辑
     if (useMockData) {
         setTimeout(() => {
-            // 调用新的处理函数，并传递一个模拟的通知ID
             handleNewOrderPush({ notificationId: 'mock-notification-123' });
         }, 5000);
     }

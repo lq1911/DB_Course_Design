@@ -1,30 +1,30 @@
-namespace BackEnd.Dtos.AfterSaleApplication
+namespace BackEnd.Dtos.DeliveryComplaint
 {
-    public class GetAfterSaleApplicationInfo
+    public class GetComplaintInfo
     {
-        public string ApplicationId { get; set; } = string.Empty;
-        public string OrderId { get; set; } = string.Empty;
+        public string ComplaintId { get; set; } = string.Empty;
+        public string Target { get; set; } = string.Empty;
         public string ApplicationTime { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string Punishment { get; set; } = "-";
         public string PunishmentReason { get; set; } = string.Empty;
         public string ProcessingNote { get; set; } = string.Empty;
     }
 
-    public class SetAfterSaleApplicationInfo
+    public class SetComplaintInfo
     {
-        public string ApplicationId { get; set; } = string.Empty;
+        public string ComplaintId { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string Punishment { get; set; } = "-";
         public string PunishmentReason { get; set; } = string.Empty;
         public string ProcessingNote { get; set; } = string.Empty;
     }
 
-    public class SetAfterSaleApplicationResponse
+    public class SetComplaintInfoResponse
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
-        public GetAfterSaleApplicationInfo? Data { get; set; }
+        public GetComplaintInfo? Data { get; set; }
     }
 }
