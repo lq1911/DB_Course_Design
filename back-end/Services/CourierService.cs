@@ -61,23 +61,23 @@ namespace BackEnd.Services
         }
 
         // CourierService.cs
-public async Task<string> GetCurrentLocationAsync(int courierId)
-{
-    // 1. 从数据库中查询骑手信息
-    var courier = await _courierRepository.GetByIdAsync(courierId);
+        public async Task<string> GetCurrentLocationAsync(int courierId)
+        {
+            // 1. 从数据库中查询骑手信息
+            var courier = await _courierRepository.GetByIdAsync(courierId);
 
-    // 2. 检查骑手是否存在，以及是否有坐标信息
-    if (courier == null || !courier.CourierLongitude.HasValue || !courier.CourierLatitude.HasValue)
-    {
-        return "位置信息未提供"; // 返回一个明确的默认值
-    }
+            // 2. 检查骑手是否存在，以及是否有坐标信息
+            if (courier == null || !courier.CourierLongitude.HasValue || !courier.CourierLatitude.HasValue)
+            {
+                return "位置信息未提供"; // 返回一个明确的默认值
+            }
 
-    // 3. 核心模拟逻辑：根据数据库中的经纬度，构造一个用于展示的模拟字符串
-    var simulatedArea = $"模拟位置 (经度: {courier.CourierLongitude.Value:F6}, 纬度: {courier.CourierLatitude.Value:F6})";
+            // 3. 核心模拟逻辑：根据数据库中的经纬度，构造一个用于展示的模拟字符串
+            var simulatedArea = $"模拟位置 (经度: {courier.CourierLongitude.Value:F6}, 纬度: {courier.CourierLatitude.Value:F6})";
 
-    // 4. 使用 Task.FromResult 将字符串包装成异步方法需要的 Task<string> 类型并返回
-    return await Task.FromResult(simulatedArea);
-}
+            // 4. 使用 Task.FromResult 将字符串包装成异步方法需要的 Task<string> 类型并返回
+            return await Task.FromResult(simulatedArea);
+        }
 
         public async Task<bool> ToggleWorkStatusAsync(int courierId, bool isOnline)
         {
@@ -233,5 +233,78 @@ public async Task<string> GetCurrentLocationAsync(int courierId)
                 throw; // 向上抛出异常，让 Controller 层知道操作失败了
             }
         }
+
+        // CourierService.cs
+
+        /// <summary>
+        /// 骑手确认取货
+        /// </summary>
+        public async Task<bool> PickupOrderAsync(int orderId, int courierId)
+        {
+            var task = await _deliveryTaskRepository.GetByIdAsync(orderId);
+
+            // 验证：任务是否存在、是否分配给了当前骑手、状态是否为“待处理”
+            if (task == null || task.CourierID != courierId || task.Status != DeliveryStatus.Pending)
+            {
+                return false;
+            }
+
+            // 更新状态
+            task.Status = DeliveryStatus.Delivering;
+            // (可选) 如果你的模型中有 ActualPickupTime 字段，可以在这里记录
+            // task.ActualPickupTime = DateTime.UtcNow;
+
+            await _deliveryTaskRepository.UpdateAsync(task);
+            await _deliveryTaskRepository.SaveAsync();
+
+            return true;
+        }
+
+        /// <summary>
+        /// 骑手确认送达
+        /// </summary>
+        public async Task<bool> DeliverOrderAsync(int orderId, int courierId)
+        {
+            // 注意：这个方法的逻辑与我们之前写的 MarkTaskAsCompletedAsync 非常相似！
+            // 我们可以直接复用或整合。为了清晰，我们先独立实现。
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var task = await _deliveryTaskRepository.GetByIdAsync(orderId);
+
+                // 验证：任务是否存在、是否分配给了当前骑手、状态是否为“配送中”
+                if (task == null || task.CourierID != courierId || task.Status != DeliveryStatus.Delivering)
+                {
+                    return false;
+                }
+
+                // 更新任务状态
+                task.Status = DeliveryStatus.Completed;
+                task.CompletionTime = DateTime.UtcNow;
+                await _deliveryTaskRepository.UpdateAsync(task);
+
+                // 累加骑手提成
+                var courier = await _courierRepository.GetByIdAsync(courierId);
+                if (courier != null)
+                {
+                    courier.CommissionThisMonth += task.DeliveryFee;
+                    await _courierRepository.UpdateAsync(courier);
+                }
+
+                // 统一保存
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw; // 向上抛出异常
+            }
+        }
+
+
+
     }
 }
