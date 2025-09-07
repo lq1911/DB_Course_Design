@@ -32,7 +32,7 @@ namespace BackEnd.Dtos.Merchant
         /// <summary>
         /// 将CreateCouponRequestDto转换为CouponManager模型
         /// </summary>
-        public static CouponManager ToModel(this CreateCouponRequestDto dto, int sellerId)
+        public static CouponManager ToModel(this CreateCouponRequestDto dto, int sellerId, int storeId)
         {
             var couponType = dto.type == "fixed" ? CouponType.Fixed : CouponType.Discount;
             
@@ -49,7 +49,7 @@ namespace BackEnd.Dtos.Merchant
                 ValidFrom = DateTime.Parse(dto.startTime),
                 ValidTo = DateTime.Parse(dto.endTime),
                 Description = dto.description,
-                StoreID = dto.storeId,
+                StoreID = storeId,  // 使用传入的storeId参数
                 SellerID = sellerId
             };
         }

@@ -109,6 +109,7 @@ builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IUserCheckoutService, UserCheckoutService>();
 builder.Services.AddScoped<IUserHomepageService, UserHomepageService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IUserDebugService, UserDebugService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();

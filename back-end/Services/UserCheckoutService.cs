@@ -79,24 +79,19 @@ namespace BackEnd.Services
                 throw new ValidationException("用户不存在或不是顾客");
             }
 
-            // 尝试将storeId转换为int
-            /*if (!int.TryParse(storeId, out int storeIdInt))
-            {
-                throw new ValidationException("店铺ID格式不正确");
-            }*/
-
             // 获取用户的购物车
             var shoppingCart = await _shoppingCartRepository.GetByCustomerIdAsync(customer.UserID);
 
-            // 如果购物车不存在，返回空购物车
+            // 如果购物车不存在，则新建一个并保存
             if (shoppingCart == null)
             {
-                return new CartResponseDto
+                shoppingCart = new ShoppingCart
                 {
-                    CartId = 0,
-                    TotalPrice = 0,
-                    Items = new List<ShoppingCartItemDto>()
+                    CustomerID = customer.UserID,
+                    ShoppingCartItems = new List<ShoppingCartItem>()
                 };
+
+                await _shoppingCartRepository.AddAsync(shoppingCart);
             }
 
             // 获取购物车项，并筛选出属于指定店铺的商品
