@@ -80,9 +80,9 @@ const userInfo = ref({
   defaultAddress: "同济大学"
 });
 
-onMounted(
-  userInfo.value = await getUserInfo(userID)
-)
+// onMounted(
+//   userInfo.value = await getUserInfo(userID)
+// )
 
 const showUserPanel = ref(false);
 const showAddressForm = ref(false);
