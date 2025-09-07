@@ -107,9 +107,13 @@ builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 // 注册 Service 层
 builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
 builder.Services.AddScoped<IUserCheckoutService, UserCheckoutService>();
+<<<<<<< HEAD
 builder.Services.AddScoped<IUserHomepageService, UserHomepageService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserDebugService, UserDebugService>();
+=======
+builder.Services.AddScoped<IUserPlaceOrderService, UserPlaceOrderService>();
+>>>>>>> 0cd3495ca83ab7fb9bf7f3d5e7db1452c044c38b
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();

@@ -12,10 +12,12 @@ namespace BackEnd.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
 
-        public UserPlaceOrderService(IShoppingCartRepository cartRepository, IFoodOrderRepository foodOrderRepository)
+        public UserPlaceOrderService(IShoppingCartRepository cartRepository, IFoodOrderRepository foodOrderRepository, IUserRepository userRepository, ICustomerRepository customerRepository)
         {
             _cartRepository = cartRepository;
             _foodOrderRepository = foodOrderRepository;
+            _userRepository = userRepository;
+            _customerRepository = customerRepository;
         }
 
         public async Task<ResponseDto> CreateOrderAsync(CreateOrderDto dto)
@@ -51,7 +53,17 @@ namespace BackEnd.Services
             });
         }
         public async Task<ResponseDto> UpdateAccountAsync(UpdateAccountDto dto)
-        {
+        {  
+
+
+            if (dto == null)
+                return new ResponseDto { Success = false, Message = "参数不能为空" };
+        // 检查 _userRepository 是否已注入
+            if (_userRepository == null)
+            {
+            
+                return new ResponseDto { Success = false, Message = "内部错误" };
+            }
             // 查找用户
             var user = await _userRepository.GetByIdAsync(dto.CustomerId);
             if (user == null)
@@ -63,14 +75,16 @@ namespace BackEnd.Services
             user.FullName = dto.Name;
             user.PhoneNumber = dto.PhoneNumber;
             user.Avatar = dto.Image;
-            _userRepository.UpdateAsync(user);
-            await _userRepository.SaveAsync();
+            await _userRepository.UpdateAsync(user);
+            
 
             return new ResponseDto { Success = true, Message = "账户信息更新成功" };
         }
 
         public async Task<ResponseDto> SaveOrUpdateAddressAsync(SaveAddressDto dto)
         {
+            if (dto == null)
+                return new ResponseDto { Success = false, Message = "参数不能为空" };
             // 查找客户
             var customer = await _customerRepository.GetByIdAsync(dto.CustomerId);
             if (customer == null)
@@ -84,8 +98,8 @@ namespace BackEnd.Services
             // 更新默认地址
             customer.DefaultAddress = addressString;
 
-            _customerRepository.UpdateAsync(customer);
-            await _customerRepository.SaveAsync();
+            await _customerRepository.UpdateAsync(customer);
+           
 
             return new ResponseDto { Success = true, Message = "收货地址保存成功" };
         }
