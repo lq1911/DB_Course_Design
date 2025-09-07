@@ -91,7 +91,7 @@ namespace BackEnd.Services
         public async Task<List<CommentResponseDto>> GetCommentListAsync(int storeId)
         {
             var comments = (await _commentRepository.GetAllAsync())
-                .Where(c => c.StoreID == storeId)
+                .Where(c => c.StoreID == storeId && !(c.CommentState == CommentState.Illegal))
                 .OrderByDescending(c => c.PostedAt);
 
             return comments.Select(c => new CommentResponseDto

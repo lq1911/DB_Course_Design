@@ -66,8 +66,8 @@ namespace BackEnd.Controllers
         /// 用户使用优惠券后将其删除
         /// POST /api/user/checkout/coupon
         /// </summary>
-        [HttpPost("checkout/coupon")]
-        [Consumes("user/application/json")]
+        [HttpPost("user/checkout/coupon")]
+        [Consumes("application/json")]
         [ProducesResponseType(typeof(object), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UseCoupon([FromBody] UsedCouponDto dto)

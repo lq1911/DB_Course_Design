@@ -117,7 +117,7 @@ namespace BackEnd.Controllers
         }
 
         // 用户投诉店铺
-        [HttpPost("store/report")]
+        [HttpPost("user/store/report")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
