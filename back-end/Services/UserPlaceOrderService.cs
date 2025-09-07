@@ -65,7 +65,7 @@ namespace BackEnd.Services
                 return new ResponseDto { Success = false, Message = "内部错误" };
             }
             // 查找用户
-            var user = await _userRepository.GetByIdAsync(dto.CustomerId);
+            var user = await _userRepository.GetByIdAsync(dto.Id);
             if (user == null)
             {
                 return new ResponseDto { Success = false, Message = "用户不存在" };
@@ -74,7 +74,9 @@ namespace BackEnd.Services
             // 更新用户信息
             user.FullName = dto.Name;
             user.PhoneNumber = dto.PhoneNumber;
-            user.Avatar = dto.Image;
+            user.Avatar = string.IsNullOrWhiteSpace(dto.Image) 
+                          ? "/images/default-avatar.png" // 默认头像路径，可替换成你项目里的默认图片
+                          : dto.Image;
             await _userRepository.UpdateAsync(user);
             
 
@@ -86,7 +88,7 @@ namespace BackEnd.Services
             if (dto == null)
                 return new ResponseDto { Success = false, Message = "参数不能为空" };
             // 查找客户
-            var customer = await _customerRepository.GetByIdAsync(dto.CustomerId);
+            var customer = await _customerRepository.GetByIdAsync(dto.Id);
             if (customer == null)
             {
                 return new ResponseDto { Success = false, Message = "客户不存在" };
@@ -98,7 +100,8 @@ namespace BackEnd.Services
             // 更新默认地址
             customer.DefaultAddress = addressString;
 
-            await _customerRepository.UpdateAsync(customer);
+            // EF 已跟踪 customer，直接保存即可
+            await _customerRepository.SaveAsync();
            
 
             return new ResponseDto { Success = true, Message = "收货地址保存成功" };
