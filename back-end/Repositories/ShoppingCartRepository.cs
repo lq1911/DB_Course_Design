@@ -1,5 +1,6 @@
 using BackEnd.Data;
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +49,7 @@ namespace BackEnd.Repositories
             return await _context.ShoppingCarts
                 .Include(c => c.ShoppingCartItems)
                     .ThenInclude(i => i.Dish)
-                .Where(c => c.CustomerID == customerId && !c.IsLocked)
+                .Where(c => c.CustomerID == customerId && c.ShoppingCartState == ShoppingCartState.UnCompleted)
                 .OrderByDescending(c => c.LastUpdatedTime) // 如果有多个未锁定，取最近的
                 .FirstOrDefaultAsync();
         }

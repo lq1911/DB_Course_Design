@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -21,7 +22,7 @@ namespace BackEnd.Models
 
         // 是否锁定（下单后不可再修改）
         [Required]
-        public bool IsLocked { get; set; } = false;
+        public ShoppingCartState ShoppingCartState { get; set; } = ShoppingCartState.UnCompleted;
 
         public FoodOrder? Order { get; set; }
 

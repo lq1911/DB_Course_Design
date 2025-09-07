@@ -91,7 +91,7 @@ namespace BackEnd.Services
                     CustomerID = customer.UserID,
                     ShoppingCartItems = new List<ShoppingCartItem>(),
                     LastUpdatedTime = DateTime.UtcNow,
-                    IsLocked = false
+                    ShoppingCartState = ShoppingCartState.UnCompleted
                 };
 
                 await _shoppingCartRepository.AddAsync(shoppingCart);

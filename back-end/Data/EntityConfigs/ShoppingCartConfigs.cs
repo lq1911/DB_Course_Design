@@ -1,4 +1,5 @@
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,6 +20,8 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(sc => sc.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(10,2)").HasDefaultValue(0.00m);
 
             builder.Property(sc => sc.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
+
+            builder.Property(sc => sc.ShoppingCartState).HasColumnName("SHOPPINGCARTSTATE").IsRequired().HasConversion<string>().HasMaxLength(10).HasDefaultValue(ShoppingCartState.UnCompleted);
 
             // ---------------------------------------------------------------
             // 关系配置
