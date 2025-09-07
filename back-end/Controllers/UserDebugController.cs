@@ -18,7 +18,7 @@ namespace BackEnd.Controllers
         }
 
         /// <summary>
-        /// 1. 用户简介接口
+        /// 用户简介接口
         /// 根据用户ID获取个人信息（昵称、电话、头像、默认地址）
         /// </summary>
         /// <param name="userId">用户ID</param>
@@ -32,7 +32,7 @@ namespace BackEnd.Controllers
         }
 
         /// <summary>
-        /// 2. 提交订单接口
+        /// 提交订单接口
         /// 提交购物车生成订单，并记录支付时间、用户信息及店铺信息
         /// </summary>
         /// <param name="dto">订单提交信息</param>
@@ -47,7 +47,7 @@ namespace BackEnd.Controllers
         }
 
         /// <summary>
-        /// 3. 获取用户ID接口
+        /// 获取用户ID接口
         /// 根据手机号或邮箱获取对应的用户ID
         /// </summary>
         /// <param name="dto">包含手机号或邮箱的请求对象</param>
@@ -61,5 +61,23 @@ namespace BackEnd.Controllers
             var result = await _userDebugService.GetUserIdAsync(dto);
             return Ok(result);
         }
+
+        /// <summary>
+        /// 用户使用优惠券后将其删除
+        /// POST /api/user/checkout/coupon
+        /// </summary>
+        [HttpPost("checkout/coupon")]
+        [Consumes("user/application/json")]
+        [ProducesResponseType(typeof(object), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UseCoupon([FromBody] UsedCouponDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _userDebugService.UseCouponAsync(dto.CouponId);
+            return Ok(new { message = "优惠券已使用" });
+        }
     }
 }
+

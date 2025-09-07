@@ -13,12 +13,17 @@ namespace BackEnd.Services
         private readonly IUserRepository _userRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
         private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly ICouponRepository _couponRepository;
 
-        public UserDebugService(IUserRepository userRepository, IFoodOrderRepository foodOrderRepository, IShoppingCartRepository shoppingCartRepository)
+        public UserDebugService(IUserRepository userRepository,
+                                IFoodOrderRepository foodOrderRepository,
+                                IShoppingCartRepository shoppingCartRepository,
+                                ICouponRepository couponRepository)
         {
             _userRepository = userRepository;
             _foodOrderRepository = foodOrderRepository;
             _shoppingCartRepository = shoppingCartRepository;
+            _couponRepository = couponRepository;
         }
 
         public async Task<UserInfoResponseDto> GetUserInfoAsync(int userId)
@@ -68,6 +73,19 @@ namespace BackEnd.Services
             cart.ShoppingCartState = ShoppingCartState.Completed;
             cart.LastUpdatedTime = DateTime.UtcNow;
             await _shoppingCartRepository.UpdateAsync(cart);
+        }
+
+            /// <summary>
+        /// 使用优惠券（直接删除）
+        /// </summary>
+        public async Task UseCouponAsync(int couponId)
+        {
+            var coupon = await _couponRepository.GetByIdAsync(couponId);
+            if (coupon == null)
+                throw new InvalidOperationException("优惠券不存在");
+
+            // 删除优惠券
+            await _couponRepository.DeleteAsync(coupon);
         }
 
         public async Task<GetUserIdResponseDto> GetUserIdAsync(GetUserIdRequestDto dto)
