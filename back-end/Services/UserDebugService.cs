@@ -44,38 +44,33 @@ namespace BackEnd.Services
 
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
+            // 检查购物车
+            var cart = await _shoppingCartRepository.GetByIdAsync(dto.CartId);
+            if (cart == null)
+                throw new InvalidOperationException("购物车不存在");
 
-            if (dto.CustomerId <= 0 || dto.StoreId <= 0)
-                throw new ArgumentException("用户ID或店铺ID不合法");
-
-            // 获取购物车
-            var shoppingCart = await _shoppingCartRepository.GetByIdAsync(dto.CartId);
-            if (shoppingCart == null)
-                throw new KeyNotFoundException("购物车不存在，请先创建购物车");
-
-            // 检查购物车是否已经生成过订单（一对一）
-            var existingOrder = await _foodOrderRepository.GetByCartIdAsync(shoppingCart.CartID);
-            if (existingOrder != null)
+            if (cart.Order != null)
             {
-                throw new InvalidOperationException("该购物车已生成过订单，请重新创建购物车后下单");
+                // 如果已经生成过订单，删除购物车
+                await _shoppingCartRepository.DeleteAsync(cart);
+                throw new InvalidOperationException("该购物车已生成过订单，不能重复下单，请刷新购物车");
             }
 
-            // 创建订单实体
+
+            // 创建订单
             var order = new FoodOrder
             {
-                OrderTime = DateTime.UtcNow,  // 系统生成下单时间
+                OrderTime = DateTime.UtcNow,
                 PaymentTime = dto.PaymentTime,
                 CustomerID = dto.CustomerId,
                 CartID = dto.CartId,
                 StoreID = dto.StoreId,
-                FoodOrderState = FoodOrderState.Pending // 新生成订单等待商家处理
+                FoodOrderState = FoodOrderState.Pending
             };
-
-            // 保存到数据库
             await _foodOrderRepository.AddAsync(order);
 
-            // 删除购物车（确保下一次购物生成新的）
-            await _shoppingCartRepository.DeleteAsync(shoppingCart);
+            // 下单成功后删除购物车
+            await _shoppingCartRepository.DeleteAsync(cart);
         }
 
         public async Task<GetUserIdResponseDto> GetUserIdAsync(GetUserIdRequestDto dto)

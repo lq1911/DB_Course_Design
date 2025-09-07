@@ -6,7 +6,7 @@ using System.Net;
 namespace BackEnd.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api")]
     [Produces("application/json")]
     public class UserDebugController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace BackEnd.Controllers
         /// 根据用户ID获取个人信息（昵称、电话、头像、默认地址）
         /// </summary>
         /// <param name="userId">用户ID</param>
-        [HttpGet("userinfo")]
+        [HttpGet("user/home/userinfo")]
         [ProducesResponseType(typeof(UserInfoResponseDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<UserInfoResponseDto>> GetUserInfo([FromQuery] int userId)
@@ -36,7 +36,7 @@ namespace BackEnd.Controllers
         /// 提交购物车生成订单，并记录支付时间、用户信息及店铺信息
         /// </summary>
         /// <param name="dto">订单提交信息</param>
-        [HttpPost("checkout")]
+        [HttpPost("store/checkout")]
         [Consumes("application/json")]
         [ProducesResponseType(typeof(object), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
