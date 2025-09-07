@@ -2,7 +2,7 @@
 
 ### 调用接口
 
-**1. 用户评价店铺接口**
+**1. 用户投诉店铺接口**
 
 - 输入用户的评价信息。
 
@@ -12,10 +12,9 @@
 | -------- | ------ | -------- | -------- |
 | userId   | number | 是       | 用户编号 |
 | storeId  | number | 是       | 店铺编号 |
-| rating   | number | 是       | 用户评分 |
 | content  | string | 是       | 评论内容 |
 
-- 接口地址: `POST /api/user/comment`
+- 接口地址: `POST /api/user/store/report`
 
 **2. 用户评价骑手接口**
 
@@ -29,16 +28,4 @@
 | orderId  | number | 是       | 订单编号 |
 | content  | string | 是       | 评论内容 |
 
-- 接口地址: `POST /api/user/courier/comment`
-
-**3. 用户使用优惠券接口**
-
-- 根据用户使用消费券的信息，删除使用优惠券。
-
-- 输入表单说明
-
-| 字段名  | 类型          | 是否必填 | 说明       |
-| ------- | ------------- | -------- | ---------- |
-| couponId | number | 是       | 优惠券编号 |
-
-- 接口地址: `POST /api/user/checkout/coupon`
+- 接口地址: `POST /api/user/courier/report`
