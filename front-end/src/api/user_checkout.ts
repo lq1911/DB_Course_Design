@@ -60,5 +60,10 @@ export async function removeCartItem(cartId: number, dishId: number) {
 
 export async function submitOrder(customerId: number, cartId: number, storeId: number) {
     const paymentTime = new Date();
-    return postData<Order>('/api/store/checkout', {paymentTime, customerId, cartId, storeId} )
+    return postData<Order>('/api/store/checkout', { paymentTime, customerId, cartId, storeId });
+}
+
+export async function useCoupon(couponId: number | null) {
+    if (couponId == null) return;
+    return deleteData(`/api/user/checkout/coupon`, { couponId });
 }
