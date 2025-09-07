@@ -3,6 +3,7 @@ import { postData } from '@/api/multiuse_function'
 export interface StoreComment{
     userId: number;
     storeId: number;
+    rating: number;
     content: string;
 }
 
