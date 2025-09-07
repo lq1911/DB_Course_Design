@@ -18,5 +18,5 @@ export async function postStoreComment(userId: number, storeId: number, rating: 
 }
 
 export async function postRiderComment(userId: number, orderId: number, content: string) {
-    return postData<RiderComment>(`/api/user/comment`, {userId, orderId, content})
+    return postData<RiderComment>(`/api/user/courier/comment`, {userId, orderId, content})
 }
