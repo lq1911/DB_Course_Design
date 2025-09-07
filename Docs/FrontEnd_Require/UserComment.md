@@ -12,6 +12,7 @@
 | -------- | ------ | -------- | -------- |
 | userId   | number | 是       | 用户编号 |
 | storeId  | number | 是       | 店铺编号 |
+| rating   | number | 是       | 用户评分 |
 | content  | string | 是       | 评论内容 |
 
 - 接口地址: `POST /api/user/comment`
