@@ -22,7 +22,7 @@ namespace BackEnd.Dtos.User
     public class UpdateAccountDto
     {
         [Required]
-        public int CustomerId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -30,14 +30,13 @@ namespace BackEnd.Dtos.User
         [Required]
         public long PhoneNumber { get; set; } = 0;
 
-        [Required]
-        public string Image { get; set; } = string.Empty;
+        public string? Image { get; set; }
     }
 
     public class SaveAddressDto
     {
         [Required]
-        public int CustomerId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; } = string.Empty;
