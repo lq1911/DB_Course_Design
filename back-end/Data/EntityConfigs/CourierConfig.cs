@@ -37,6 +37,10 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(c => c.LastOnlineTime).HasColumnName("LASTONLINETIME").IsRequired(false);
 
+            builder.Property(c => c.CommissionThisMonth)
+                   .HasColumnName("COMMISSIONTHISMONTH") // <-- 保证列名全大写
+                   .HasColumnType("decimal(10,2)");       // <-- 精确控制类型
+
             // ---------------------------------------------------------------
             // 配置外键关系
             // ---------------------------------------------------------------

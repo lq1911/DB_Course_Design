@@ -7,6 +7,7 @@ import type {
     WorkStatus,
     Order,
     NewOrder,
+    LocationInfo
 } from './api.mock'; // 假设类型定义在这里
 
 // --- 修正后的 API 函数 ---
@@ -43,7 +44,7 @@ export const fetchOrders = (status: 'pending' | 'delivering' | 'completed') => {
 export const fetchLocationInfo = () => {
     // 【已修正】路径从 /user/location 改为 /courier/location
     // 后端返回 { data: { area: "..." } }，所以需要一个匹配的类型
-    return apiClient.get<{ area: string }>('/courier/location');
+    return apiClient.get<LocationInfo>('/courier/location');
 };
 
 /** 根据通知ID获取新订单详情 */

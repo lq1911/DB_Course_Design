@@ -65,20 +65,33 @@ namespace BackEnd.Controllers
             catch (Exception ex) { return StatusCode(500, $"服务器内部错误: {ex.Message}"); }
         }
 
-        [HttpGet("location")]
-        public async Task<IActionResult> GetLocation()
-        {
-            try
-            {
-                var courierId = GetCurrentCourierId();
-                var area = await _courierService.GetCurrentLocationAsync(courierId);
-                // 【已修正】直接返回只包含 area 的对象
-                return Ok(new { area = area });
-            }
-            catch (UnauthorizedAccessException) { return Unauthorized(); }
-            catch (Exception ex) { return StatusCode(500, $"服务器内部错误: {ex.Message}"); }
-        }
 
+       // CourierController.cs
+
+/// <summary>
+/// 获取当前登录骑手的实时位置文本（模拟版）
+/// </summary>
+[HttpGet("location")]
+public async Task<IActionResult> GetLocation()
+{
+    try
+    {
+        var courierId = GetCurrentCourierId();
+        var area = await _courierService.GetCurrentLocationAsync(courierId);
+
+        // 恢复为返回包含 area 字段的匿名对象
+        // 注意：这里我们保留了不带 {code, message} 的新风格
+        return Ok(new { area = area });
+    }
+    catch (UnauthorizedAccessException)
+    {
+        return Unauthorized();
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"服务器内部错误: {ex.Message}");
+    }
+}
         [HttpPost("status/toggle")]
         public async Task<IActionResult> ToggleStatus([FromBody] ToggleStatusRequestDto request)
         {
@@ -168,5 +181,35 @@ namespace BackEnd.Controllers
             throw new UnauthorizedAccessException("无法从认证信息中解析有效的用户ID。");
         }
         #endregion
+
+
+        /// <summary>
+        /// 将指定的配送任务标记为已完成
+        /// </summary>
+        /// <param name="taskId">要完成的任务ID</param>
+        [HttpPost("tasks/{taskId}/complete")] // 对应路由: POST /api/courier/tasks/102/complete
+        public async Task<IActionResult> CompleteTask(int taskId)
+        {
+            try
+            {
+                // 从 Token 中获取当前操作的骑手ID
+                var courierId = GetCurrentCourierId();
+
+                // 调用 Service 层的业务逻辑
+                await _courierService.MarkTaskAsCompletedAsync(taskId, courierId);
+
+                // 操作成功，返回一个标准的成功响应
+                return Ok(new { success = true, message = "订单已成功标记为完成" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                // 如果 Service 层抛出异常，在这里捕获并返回 500 错误
+                return StatusCode(500, $"操作失败: {ex.Message}");
+            }
+        }
     }
 }
