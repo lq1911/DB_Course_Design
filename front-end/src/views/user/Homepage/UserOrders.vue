@@ -74,17 +74,32 @@
                                     </div>
 
                                     <!-- 已完成 -->
-                                    <div v-if="order.orderStatus === 1">
-                                        <button
+                                    <div v-if="order.orderStatus === 1" class="flex gap-1">
+                                        <!-- 举报按钮 -->
+                                        <button @click="openReportWindow(order.orderID)"
+                                            class="relative w-8 h-8 flex items-center justify-center cursor-pointer"
+                                            title="对此订单有意见">
+                                            <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
+                                        </button>
+
+                                        <!--评价按钮-->
+                                        <button @click="openReviewWindow(order.orderID)"
                                             class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
                                             评价
                                         </button>
                                     </div>
+
+                                    <!-- 举报弹窗组件 -->
+                                    <ReportWindow :visible="showReportWindow[order.orderID]" :order="order"
+                                        @close="showReportWindow[order.orderID] = false" />
+
+                                    <!-- 评价弹窗组件 -->
+                                    <ReviewWindow :visible="showReviewWindow[order.orderID]" :order="order"
+                                        @close="showReviewWindow[order.orderID] = false" />
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -93,13 +108,22 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed } from "vue";
+import { useUserStore } from "@/stores/user";
 
 import type { OrderInfo } from "@/api/user_home";
 import { getOrderInfo } from "@/api/user_home";
 
+import ReportWindow from "@/components/user/HomePage/Home/ReportWindow.vue";
+import ReviewWindow from "@/components/user/HomePage/Home/ReviewWindow.vue";
+
+const userStore = useUserStore();
+const userID = userStore.getUserID();
+
 const orders = ref<OrderInfo[]>([]);
 const activeOrderStatus = ref("all"); // 默认显示全部订单
 const showLoading = ref(true);
+const showReviewWindow = ref<Record<number, boolean>>({});
+const showReportWindow = ref<Record<number, boolean>>({});
 const orderStatuses = [
     { key: "all", label: "全部订单" },
     { key: "delivering", label: "配送中" },
@@ -120,9 +144,6 @@ const getOrderStatusText = (statusNum: number) => {
 
 const fetchOrders = async () => {
     try {
-        // 待添加读取用户ID逻辑
-        const userID = 0;
-        // const userID = getUserId();
         const res: OrderInfo[] = await getOrderInfo(userID); // 返回 OrderInfo[]
         orders.value = res;
 
@@ -135,6 +156,7 @@ const fetchOrders = async () => {
 
 const filteredOrders = computed(() => {
     if (activeOrderStatus.value === "all") {
+        console.log(orders);
         return orders.value;
     } else {
         const statusMap: Record<string, number> = {
@@ -145,5 +167,12 @@ const filteredOrders = computed(() => {
         return orders.value.filter(order => order.orderStatus === statusNum);
     }
 });
+
+function openReviewWindow(orderID: number) {
+    showReviewWindow.value[orderID] = true;
+}
+function openReportWindow(orderID: number) {
+    showReportWindow.value[orderID] = true;
+}
 
 </script>

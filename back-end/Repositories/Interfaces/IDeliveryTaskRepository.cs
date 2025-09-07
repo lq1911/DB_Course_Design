@@ -8,6 +8,8 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<DeliveryTask>> GetAllAsync();
         Task<DeliveryTask?> GetByIdAsync(int id);
+         //新增
+        Task<DeliveryTask?> GetByOrderIdAsync(int orderId);
         Task AddAsync(DeliveryTask task);
         Task UpdateAsync(DeliveryTask task);
         Task DeleteAsync(DeliveryTask task);

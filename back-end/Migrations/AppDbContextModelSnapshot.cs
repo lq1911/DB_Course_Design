@@ -32,6 +32,12 @@ namespace BackEnd.Migrations
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("ADMINREGISTRATIONTIME");
 
+                    b.Property<string>("AdminRole")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnName("ADMINROLE");
+
                     b.Property<decimal>("IssueHandlingScore")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(3,2)")
@@ -115,6 +121,14 @@ namespace BackEnd.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("NVARCHAR2(1000)")
                         .HasColumnName("COMMENTIMAGE");
+
+                    b.Property<string>("CommentState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("COMMENTSTATE");
 
                     b.Property<int>("CommentType")
                         .HasColumnType("NUMBER(10)")
@@ -363,6 +377,14 @@ namespace BackEnd.Migrations
                         .HasColumnType("NVARCHAR2(255)")
                         .HasColumnName("COMPLAINTREASON");
 
+                    b.Property<string>("ComplaintState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("COMPLAINTSTATE");
+
                     b.Property<DateTime>("ComplaintTime")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("COMPLAINTTIME");
@@ -378,6 +400,21 @@ namespace BackEnd.Migrations
                     b.Property<int>("DeliveryTaskID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("DELIVERYTASKID");
+
+                    b.Property<string>("ProcessingReason")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGREASON");
+
+                    b.Property<string>("ProcessingRemark")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGREMARK");
+
+                    b.Property<string>("ProcessingResult")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGRESULT");
 
                     b.HasKey("ComplaintID");
 
@@ -871,7 +908,6 @@ namespace BackEnd.Migrations
                         .HasColumnName("STORECREATIONTIME");
 
                     b.Property<string>("StoreFeatures")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("NVARCHAR2(500)")
                         .HasColumnName("STOREFEATURES");
@@ -910,6 +946,11 @@ namespace BackEnd.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PenaltyID"));
 
+                    b.Property<string>("PenaltyNote")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PENALTYNOTE");
+
                     b.Property<string>("PenaltyReason")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -933,6 +974,14 @@ namespace BackEnd.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("STOREPENALTY");
+
+                    b.Property<string>("ViolationPenaltyState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("VIOLATIONPENALTYSTATE");
 
                     b.HasKey("PenaltyID");
 
@@ -1010,10 +1059,8 @@ namespace BackEnd.Migrations
                         .HasColumnType("NVARCHAR2(64)")
                         .HasColumnName("PASSWORD");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)")
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("NUMBER(19)")
                         .HasColumnName("PHONENUMBER");
 
                     b.Property<string>("Role")

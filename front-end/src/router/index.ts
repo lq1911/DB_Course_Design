@@ -31,9 +31,12 @@ const routes: Array<RouteRecordRaw> = [
   
   // 用户路由
   ...userRoutes,
+  ...courierRoutes,
   ...inStoreRoutes,
+  ...merchantRoutes,
   ...checkoutRoutes,
-  ...managerRoutes
+  ...managerRoutes,
+  ...courierRoutes,
 ]
 
 const router = createRouter({

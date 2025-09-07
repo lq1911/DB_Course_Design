@@ -73,16 +73,15 @@ namespace BackEnd.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CartResponseDto>> UpdateCartItem(
-            [FromBody] UpdateCartItemDto dto,
-            [FromQuery][Required] int storeId)
+            [FromBody] UpdateCartItemDto dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var updatedCart = await _userCheckoutService.UpdateCartItemAsync(dto, storeId);
-                return Ok(updatedCart);
+                await _userCheckoutService.UpdateCartItemAsync(dto);
+                return Ok(new { message = "购物车更新成功" });
             }
             catch (ValidationException ex)
             {
@@ -90,7 +89,7 @@ namespace BackEnd.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "更新购物车项时发生错误 (StoreId={StoreId})", storeId);
+                _logger.LogError(ex, "更新购物车项时发生错误 (CartId={CartId}, DishId={DishId})", dto.CartId, dto.DishId);
                 return StatusCode(500, new { message = "更新购物车项时发生错误" });
             }
         }
@@ -101,16 +100,15 @@ namespace BackEnd.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CartResponseDto>> RemoveCartItem(
-            [FromBody] RemoveCartItemDto dto,
-            [FromQuery][Required] int storeId)
+            [FromBody] RemoveCartItemDto dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var updatedCart = await _userCheckoutService.RemoveCartItemAsync(dto, storeId);
-                return Ok(updatedCart);
+                await _userCheckoutService.RemoveCartItemAsync(dto);
+                return Ok(new { message = "购物车项删除成功" });
             }
             catch (ValidationException ex)
             {
@@ -118,7 +116,7 @@ namespace BackEnd.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "删除购物车项时发生错误 (StoreId={StoreId})", storeId);
+                _logger.LogError(ex, "删除购物车项时发生错误 (CartId={CartId}, DishId={DishId})", dto.CartId, dto.DishId);
                 return StatusCode(500, new { message = "删除购物车项时发生错误" });
             }
         }

@@ -51,10 +51,20 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, reactive, watch } from 'vue'
+import { ref, defineProps, defineEmits, reactive, watch, onMounted } from 'vue'
 
 import type { Address } from '@/api/user_address';
 import { saveAddressInfo } from '@/api/user_address';
+import { useUserStore } from '@/stores/user';
+import { getAddress } from '@/api/user_address';
+
+const userStore = useUserStore();
+const userID = userStore.getUserID();
+const addrInfo = ref({
+    name: "张小明",
+    phoneNumber: 1234556,
+    address: "同济大学"
+});
 
 const props = defineProps<{
     showAddressForm: Boolean;
@@ -65,9 +75,6 @@ const emit = defineEmits<{
     (e: "update:address", value: Address): void;
 }>();
 
-// 待添加用户编号
-const userID = 0;
-
 const formData = reactive<Address>({
     id: userID,
     name: '',
@@ -75,13 +82,17 @@ const formData = reactive<Address>({
     address: ''
 });
 
+onMounted(async () => {
+    addrInfo.value = await getAddress(userID);
+})
+
 watch(
     () => props.showAddressForm,
     (visible) => {
         if (visible) {
-            formData.name = addrInfo.name;
-            formData.phoneNumber = addrInfo.phoneNumber;
-            formData.address = addrInfo.address;
+            formData.name = addrInfo.value.name;
+            formData.phoneNumber = addrInfo.value.phoneNumber;
+            formData.address = addrInfo.value.address;
         }
     },
 );
@@ -95,27 +106,20 @@ function closeForm() {
 async function saveAddress() {
     try {
         const result = await saveAddressInfo(formData)
-        if (result.success) {
-            addrInfo.name = formData.name;
-            addrInfo.phoneNumber = formData.phoneNumber;
-            addrInfo.address = formData.address;
+        if (result) {
+            addrInfo.value.name = formData.name;
+            addrInfo.value.phoneNumber = formData.phoneNumber;
+            addrInfo.value.address = formData.address;
 
             emit("update:address", { ...formData });
             closeForm();
         } else {
-            alert(result.message || '保存失败')
+            alert('保存失败')
         }
     } catch (err) {
         console.error(err)
         alert('更新地址信息时出错')
     }
 }
-
-// 用户信息, 测试用
-const addrInfo = reactive({
-    name: "张小明",
-    phoneNumber: 1234556,
-    address: "同济大学"
-});
 
 </script>

@@ -12,6 +12,8 @@ namespace BackEnd.Repositories.Interfaces
         Task<User?> GetByIdAsync(int id);
         // 根据手机号获取用户
         Task<User?> GetByPhoneAsync(long phoneNumber);
+        // 根据邮箱获取用户
+        Task<User?> GetByEmailAsync(string email);
         // 添加一个新用户
         Task AddAsync(User user);
         Task UpdateAsync(User user);

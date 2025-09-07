@@ -1,3 +1,4 @@
+using BackEnd.Dtos.AfterSaleApplication;
 using BackEnd.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,32 @@ namespace BackEnd.Controllers
             }
 
             return Ok(applicationDtos);
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateAfterSaleApplication([FromBody] SetAfterSaleApplicationInfo request)
+        {
+            // 验证请求数据
+            if (request == null)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "请求数据不能为空"
+                });
+            }
+
+            // 调用服务层处理业务逻辑
+            var result = await _evaluateAfterSaleService.UpdateAfterSaleApplicationAsync(request);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
     }
 }

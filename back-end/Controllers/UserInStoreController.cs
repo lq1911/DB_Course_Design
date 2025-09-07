@@ -1,17 +1,22 @@
 using BackEnd.Dtos.User;
 using Microsoft.AspNetCore.Mvc;
+using BackEnd.Services.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace BackEnd.Controllers
 {
     [ApiController]
     [Route("api")]
-    public class UserStoreController : ControllerBase
+    public class UserInStoreController : ControllerBase
     {
         private readonly IUserInStoreService _userInStoreService;
+        private readonly ILogger<UserInStoreController> _logger;
 
-        public UserStoreController(IUserInStoreService userInStoreService)
+
+        public UserInStoreController(IUserInStoreService userInStoreService, ILogger<UserInStoreController> logger)
         {
             _userInStoreService = userInStoreService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -81,5 +86,62 @@ namespace BackEnd.Controllers
 
             return Ok(result);
         }
+
+        /// <summary>
+        /// 用户评价店铺
+        /// POST /api/user/comment
+        /// </summary>
+        [HttpPost("user/comment")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _userInStoreService.SubmitCommentAsync(dto);
+                return Ok(new { message = "评论已提交，等待审核" });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "用户提交评论时发生错误 (UserId={UserId}, StoreId={StoreId})", dto.UserId, dto.StoreId);
+                return StatusCode(500, new { message = "提交评论时发生错误" });
+            }
+        }
+
+        // 用户投诉店铺
+        [HttpPost("user/store/report")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ReportStore([FromBody] UserStoreReportDto dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _userInStoreService.SubmitStoreReportAsync(dto);
+                return Ok(new { message = "投诉已提交，等待管理员审核" });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "用户投诉店铺时发生错误 (UserId={UserId}, StoreId={StoreId})", dto.UserId, dto.StoreId);
+                return StatusCode(500, new { message = "提交投诉时发生错误" });
+            }
+        }
+
+
     }
 }

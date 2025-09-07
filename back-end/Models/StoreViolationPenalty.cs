@@ -1,3 +1,4 @@
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,8 +15,14 @@ namespace BackEnd.Models
         public int PenaltyID { get; set; }
 
         [Required]
+        public ViolationPenaltyState ViolationPenaltyState { get; set; } = ViolationPenaltyState.Pending;
+
+        [Required]
         [StringLength(255)]
         public string PenaltyReason { get; set; } = null!;
+
+        [StringLength(255)]
+        public string? PenaltyNote { get; set; }
 
         [Required]
         public DateTime PenaltyTime { get; set; }

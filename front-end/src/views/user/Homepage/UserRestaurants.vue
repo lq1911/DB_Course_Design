@@ -28,7 +28,7 @@
               <!-- 右侧：按钮 -->
               <button
                 class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer whitespace-nowrap"
-                @click="goToPage(`/store/${restaurant.id}`)">
+                @click="goToPage(`${restaurant.id}`)">
                 进入店铺
               </button>
             </div>
@@ -73,33 +73,41 @@ const query = route.query.q as string | undefined;
 const showLoading = ref(true);
 
 const restaurantList = computed<showStore[]>(() => {
-  if (!allRestaurants.value) return [];
-  if ('allStore' in allRestaurants.value) return allRestaurants.value.allStore;
-  if ('searchStore' in allRestaurants.value) return allRestaurants.value.searchStore;
+  const data = allRestaurants.value;
+  if (!data) return [];
+
+  // 直接访问属性，判断是否是数组
+  if (Array.isArray((data as any).allStores)) return (data as any).allStores;
+  if (Array.isArray((data as any).searchStores)) return (data as any).searchStores;
+
   return [];
 });
 
+console.log(restaurantList);
+
 onMounted(async () => {
   try {
-    if (query) {
+    if (route.query.keyword) {
       const keyword = route.query.keyword as string;
       const userID = Number(route.query.userID);
       const address = route.query.address as string;
 
       allRestaurants.value = await getSearchStore(userID, address, keyword);
+      console.log('search data', allRestaurants.value);
     } else {
       allRestaurants.value = await getAllStore();
     }
 
     showLoading.value = false;
+    console.log(allRestaurants.value)
   } catch (err) {
     alert('获取商家失败');
     console.error('获取商家失败', err);
   }
 });
 
-function goToPage(path: string) {
-  router.push(path);
+function goToPage(id: number | string) {
+  router.push({ name: 'InStore', params: { id } });
 }
 
 // 分页逻辑
