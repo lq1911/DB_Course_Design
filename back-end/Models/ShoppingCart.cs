@@ -19,6 +19,10 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal TotalPrice { get; set; } = 0.00m;
 
+        // 是否锁定（下单后不可再修改）
+        [Required]
+        public bool IsLocked { get; set; } = false;
+
         public FoodOrder? Order { get; set; }
 
         [Required]

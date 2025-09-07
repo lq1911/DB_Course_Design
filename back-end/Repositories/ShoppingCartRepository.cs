@@ -43,6 +43,16 @@ namespace BackEnd.Repositories
             return shoppingCart;
         }
 
+        public async Task<ShoppingCart?> GetActiveCartByCustomerIdAsync(int customerId)
+        {
+            return await _context.ShoppingCarts
+                .Include(c => c.ShoppingCartItems)
+                    .ThenInclude(i => i.Dish)
+                .Where(c => c.CustomerID == customerId && !c.IsLocked)
+                .OrderByDescending(c => c.LastUpdatedTime) // 如果有多个未锁定，取最近的
+                .FirstOrDefaultAsync();
+        }
+
         public async Task AddAsync(ShoppingCart shoppingCart)
         {
             await _context.ShoppingCarts.AddAsync(shoppingCart);

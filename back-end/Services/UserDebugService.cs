@@ -44,18 +44,13 @@ namespace BackEnd.Services
 
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
-            // 检查购物车
-            var cart = await _shoppingCartRepository.GetByIdAsync(dto.CartId);
+            // 找到用户未锁定的购物车
+            var cart = await _shoppingCartRepository.GetActiveCartByCustomerIdAsync(dto.CustomerId);
             if (cart == null)
-                throw new InvalidOperationException("购物车不存在");
+                throw new InvalidOperationException("没有可用的购物车，请先添加商品");
 
-            if (cart.Order != null)
-            {
-                // 如果已经生成过订单，删除购物车
-                await _shoppingCartRepository.DeleteAsync(cart);
-                throw new InvalidOperationException("该购物车已生成过订单，不能重复下单，请刷新购物车");
-            }
-
+            if (cart.Order != null || cart.IsLocked)
+                throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
 
             // 创建订单
             var order = new FoodOrder
@@ -63,14 +58,16 @@ namespace BackEnd.Services
                 OrderTime = DateTime.UtcNow,
                 PaymentTime = dto.PaymentTime,
                 CustomerID = dto.CustomerId,
-                CartID = dto.CartId,
+                CartID = cart.CartID,
                 StoreID = dto.StoreId,
                 FoodOrderState = FoodOrderState.Pending
             };
             await _foodOrderRepository.AddAsync(order);
 
-            // 下单成功后删除购物车
-            await _shoppingCartRepository.DeleteAsync(cart);
+            // 锁定购物车（保留历史记录）
+            cart.IsLocked = true;
+            cart.LastUpdatedTime = DateTime.UtcNow;
+            await _shoppingCartRepository.UpdateAsync(cart);
         }
 
         public async Task<GetUserIdResponseDto> GetUserIdAsync(GetUserIdRequestDto dto)
