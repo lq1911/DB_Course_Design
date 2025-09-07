@@ -623,6 +623,10 @@ const selectCategory = (category: string) => {
 
 
 // 处理登录
+import { getUserIdFromToken, getUserInfoFromToken } from '@/utils/jwt';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 
 const handleLogin = async () => {
     if (!loginForm.account || !loginForm.password) {
@@ -640,6 +644,13 @@ const handleLogin = async () => {
 
         const { token, user, message } = response.data;
         localStorage.setItem('authToken', token);
+
+        // 从token中解析userID，无需额外API调用
+        const userID = getUserIdFromToken(token);
+        if (userID) {
+            const numericUserID = parseInt(userID, 10);
+            userStore.login(numericUserID);
+        }
 
         // 第1步：我们先在控制台打印日志，确认代码执行到了这里
         console.log("登录成功！用户信息:", user);

@@ -2,7 +2,7 @@
   <section class="max-w-screen-xl mx-auto px-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-8 text-left">热门分类</h2>
     <div class="grid grid-cols-8 gap-6">
-      <div v-for="(category, index) in categories" :key="index" class="text-center group cursor-pointer">
+      <div v-for="(category, index) in categories" :key="index" class="text-center group">
         <div
           class="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden group-hover:scale-110 transition-transform"
         >

@@ -419,8 +419,7 @@ import {
   Delete,
 } from '@element-plus/icons-vue';
 import { getMerchantInfo } from '@/api/merchant_api';
-
-import axios from 'axios';
+import API from '@/api/index';
 
 const router = useRouter();
 const $route = useRoute();
@@ -541,21 +540,34 @@ const couponRules = reactive<FormRules>({
 const fetchCoupons = async () => {
   try {
     loading.value = true;
-    const response = await axios.get('/api/merchant/coupons', {
+    const response = await API.get('/api/merchant/coupons', {
       params: {
         page: currentPage.value,
         pageSize: pageSize.value,
       }
     });
     
-    coupons.value = response.data.data.list.map((item: any) => ({
-      ...item,
-      status: getCouponStatus(item)
-    }));
+    console.log('优惠券API响应:', response.data);
     
-    total.value = response.data.data.total;
+    // 检查响应数据结构
+    if (response.data && response.data.data && response.data.data.list) {
+      coupons.value = response.data.data.list.map((item: any) => ({
+        ...item,
+        status: getCouponStatus(item)
+      }));
+      total.value = response.data.data.total;
+    } else {
+      console.warn('优惠券数据格式不正确:', response.data);
+      coupons.value = [];
+      total.value = 0;
+    }
+    
+    console.log('处理后的优惠券数据:', coupons.value);
   } catch (error) {
+    console.error('获取优惠券列表失败:', error);
     ElMessage.error('获取优惠券列表失败');
+    coupons.value = [];
+    total.value = 0;
   } finally {
     loading.value = false;
   }
@@ -564,7 +576,7 @@ const fetchCoupons = async () => {
 // 获取统计数据
 const fetchStats = async () => {
   try {
-    const response = await axios.get('/api/merchant/coupons/stats');
+    const response = await API.get('/api/merchant/coupons/stats');
     Object.assign(stats, response.data.data);
   } catch (error) {
     console.error('获取统计数据失败', error);
@@ -588,7 +600,7 @@ const getStatusTagType = (status: string) => {
     case 'active': return 'success';
     case 'expired': return 'info';
     case 'upcoming': return 'warning';
-    default: return '';
+    default: return 'primary';
   }
 };
 
@@ -604,7 +616,9 @@ const getStatusText = (status: string) => {
 
 // 处理选择变化
 const handleSelectionChange = (val: any[]) => {
+  console.log('选择变化:', val);
   selectedCoupons.value = val;
+  console.log('当前选中的优惠券数量:', selectedCoupons.value.length);
 };
 
 // 编辑优惠券
@@ -636,10 +650,10 @@ const submitCouponForm = async () => {
     };
     
     if (isEditMode.value) {
-      await axios.put(`/api/merchant/coupons/${currentCouponId.value}`, payload);
+      await API.put(`/api/merchant/coupons/${currentCouponId.value}`, payload);
       ElMessage.success('优惠券更新成功');
     } else {
-      await axios.post('/api/merchant/coupons', payload);
+      await API.post('/api/merchant/coupons', payload);
       ElMessage.success('优惠券创建成功');
     }
     
@@ -664,7 +678,7 @@ const handleDelete = async (row: any) => {
       }
     );
     
-    await axios.delete(`/api/merchant/coupons/${row.id}`);
+    await API.delete(`/api/merchant/coupons/${row.id}`);
     ElMessage.success('优惠券删除成功');
     fetchCoupons();
     fetchStats();
@@ -687,7 +701,7 @@ const batchDeleteCoupons = async () => {
       }
     );
     
-    await axios.delete('/api/merchant/coupons/batch', { data: { ids } });
+    await API.delete('/api/merchant/coupons/batch', { data: { ids } });
     ElMessage.success(`成功删除 ${ids.length} 张优惠券`);
     selectedCoupons.value = [];
     fetchCoupons();

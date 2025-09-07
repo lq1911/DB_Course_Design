@@ -97,6 +97,8 @@ namespace BackEnd.Repositories
             var complaints = await _context.Evaluate_Complaints
                                            .Where(ec => ec.AdminID == adminId)
                                            .Include(ec => ec.Complaint)
+                                               .ThenInclude(c => c.Courier)
+                                                   .ThenInclude(courier => courier.User)
                                            .Select(ec => ec.Complaint)
                                            .ToListAsync();
 
@@ -106,6 +108,8 @@ namespace BackEnd.Repositories
         public async Task<DeliveryComplaint?> GetDeliveryComplaintByIdAsync(int complaintId)
         {
             return await _context.DeliveryComplaints
+               .Include(dc => dc.Courier)
+                   .ThenInclude(c => c.User)
                .FirstOrDefaultAsync(dc => dc.ComplaintID == complaintId);
         }
 

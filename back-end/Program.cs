@@ -106,6 +106,10 @@ builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 
 // 注册 Service 层
 builder.Services.AddScoped<IUserInStoreService, UserInStoreService>();
+builder.Services.AddScoped<IUserCheckoutService, UserCheckoutService>();
+builder.Services.AddScoped<IUserHomepageService, UserHomepageService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IUserDebugService, UserDebugService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICourierService, CourierService>();
@@ -116,6 +120,15 @@ builder.Services.AddScoped<ISupervise_Service, Supervise_Service>();
 builder.Services.AddScoped<IReview_CommentService, Review_CommentService>();
 builder.Services.AddScoped<IMerchantService, MerchantService>(); ;
 builder.Services.AddHostedService<MonthlyCommissionResetService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<IMerchantInformationService, MerchantInformationService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<IDeliveryTaskService, DeliveryTaskService>();
+builder.Services.AddScoped<IPenaltyService, PenaltyService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IAfterSaleService, AfterSaleService>();
+
 var app = builder.Build();
 
 // 如果是开发环境，启用 Swagger UI 来浏览 API 接口文档

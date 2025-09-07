@@ -71,6 +71,24 @@ export const rejectOrderAPI = (orderId: string) => {
     return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/reject`);
 };
 
+// 在文件末尾新增这两个函数
+
+/**
+ * 骑手确认取单
+ * @param orderId 订单ID
+ */
+export const pickupOrderAPI = (orderId: string) => {
+    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/pickup`);
+};
+
+/**
+ * 骑手确认送达
+ * @param orderId 订单ID
+ */
+export const deliverOrderAPI = (orderId: string) => {
+    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/deliver`);
+};
+
 // --- 以下是你队友原来的其他接口，可以暂时保留 ---
 interface RiderInfo {
     vehicleType: string;

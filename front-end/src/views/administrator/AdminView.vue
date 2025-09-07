@@ -19,8 +19,8 @@
                 <div class="flex items-center space-x-4">
                     <!-- 【修改】用 v-if 包裹用户信息，防止数据加载完成前出错 -->
                     <div v-if="currentUser" class="flex items-center space-x-3">
-                        <!-- 【修改】将头像和名字绑定到动态数据 -->
-                        <img :src="currentUser.avatarUrl" :alt="currentUser.username + '的头像'"
+                        <img :src="'https://s1.aigei.com/src/img/png/f7/f734d8198b614d0a9356196cd83c6758.png?imageMogr2/auto-orient/thumbnail/!282x282r/gravity/Center/crop/282x282/quality/85/%7CimageView2/2/w/282&e=2051020800&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:FldJin-4wd319skieoNSW_v2zAY='"
+                             :alt="currentUser.username + '的头像'"
                             class="w-8 h-8 rounded-full object-cover">
                         <span class="text-sm text-gray-700">{{ currentUser.username }}</span>
                     </div>
@@ -372,9 +372,11 @@
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ item.reason }}
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{
-                                            item.merchantPunishment }}</td>
+                                            punishmentOptions.violations.merchant.find(option => option.value === item.merchantPunishment)?.label || item.merchantPunishment }}
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{
-                                            item.storePunishment }}</td>
+                                            punishmentOptions.violations.store.find(option => option.value === item.storePunishment)?.label || item.storePunishment }}
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
                                             item.punishmentTime }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -457,7 +459,8 @@
                                             用户名</th>
                                         <th
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            店铺名称</th>
+                                            评论类型 <!-- 【修改】这里由“店铺名称”改为“评论类型” -->
+                                        </th>
                                         <th
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             评论内容</th>
@@ -484,7 +487,8 @@
                                             item.reviewId }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.username
                                             }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.storeName
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{
+                                            item.type
                                             }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ item.content }}
                                         </td>
@@ -549,7 +553,7 @@
                             <div class="max-w-2xl">
                                 <!-- 头像和基本信息 -->
                                 <div class="flex items-center space-x-6 mb-8">
-                                    <img :src="currentUser.avatarUrl" :alt="currentUser.username + '的头像'"
+                                    <img :src="'https://s1.aigei.com/src/img/png/f7/f734d8198b614d0a9356196cd83c6758.png?imageMogr2/auto-orient/thumbnail/!282x282r/gravity/Center/crop/282x282/quality/85/%7CimageView2/2/w/282&e=2051020800&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:FldJin-4wd319skieoNSW_v2zAY='"
                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100">
                                     <div>
                                         <h3 class="text-xl font-semibold text-gray-900">{{ currentUser.username }}</h3>
@@ -577,19 +581,21 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">电子邮箱</label>
-                                        <input type="email" v-model="currentUser.email"
+                                        <input type="email" v-model="currentUser.email" readonly
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">性别</label>
                                         <div class="flex space-x-4">
                                             <label class="flex items-center">
-                                                <input type="radio" name="gender" value="男" v-model="currentUser.gender"
+                                                <!-- 【修改】将 value="男" 修改为 value="M" -->
+                                                <input type="radio" name="gender" value="M" v-model="currentUser.gender"
                                                     class="text-orange-500 focus:ring-orange-500">
                                                 <span class="ml-2 text-sm text-gray-700">男</span>
                                             </label>
                                             <label class="flex items-center">
-                                                <input type="radio" name="gender" value="女" v-model="currentUser.gender"
+                                                <!-- 【修改】将 value="女" 修改为 value="F" (假设女性的代号是'F') -->
+                                                <input type="radio" name="gender" value="F" v-model="currentUser.gender"
                                                     class="text-orange-500 focus:ring-orange-500">
                                                 <span class="ml-2 text-sm text-gray-700">女</span>
                                             </label>
@@ -646,289 +652,281 @@
             </main>
 
         </div>
-                <!-- 售后详情弹窗 -->
-                <el-dialog v-model="showAfterSaleDetail" title="售后详情" width="800px" class="after-sale-detail-dialog">
-                    <div v-if="currentAfterSale" class="after-sale-detail">
-                        <div class="border-b border-gray-200 pb-6 mb-6">
-                            <div class="flex items-start justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-headset text-gray-400"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-gray-900">售后申请编号：{{
-                                            currentAfterSale.applicationId }}
-                                        </h3>
-                                        <p class="text-sm text-gray-500">订单编号：{{ currentAfterSale.orderId }}</p>
-                                    </div>
-                                </div>
-                                <span :class="getStatusClass(currentAfterSale.status)"
-                                    class="px-3 py-1 rounded-full text-sm">
-                                    {{ currentAfterSale.status }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">申请时间</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">{{ currentAfterSale.applicationTime }}</p>
-                                </div>
+        <!-- 售后详情弹窗 -->
+        <el-dialog v-model="showAfterSaleDetail" title="售后详情" width="800px" class="after-sale-detail-dialog">
+            <div v-if="currentAfterSale" class="after-sale-detail">
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-headset text-gray-400"></i>
                             </div>
                             <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">售后类型</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">退款申请</p>
-                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900">售后申请编号：{{
+                                    currentAfterSale.applicationId }}
+                                </h3>
+                                <p class="text-sm text-gray-500">订单编号：{{ currentAfterSale.orderId }}</p>
                             </div>
                         </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">问题描述</h4>
-                            <div class="p-4 bg-gray-50 rounded-lg">
-                                <p class="text-gray-900">{{ currentAfterSale.description }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
-                            <el-input v-model="afterSaleNote" type="textarea" :rows="3" placeholder="请输入处理备注"
-                                maxlength="500" show-word-limit />
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处罚措施</h4>
-                            <el-select v-model="selectedPunishment" class="w-full mb-4" placeholder="请选择处罚措施">
-                                <el-option v-for="option in punishmentOptions.afterSales" :key="option.value"
-                                    :label="option.label" :value="option.value" />
-                            </el-select>
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处罚原因</h4>
-                            <el-input v-model="punishmentReason" type="textarea" :rows="3" placeholder="请输入处罚原因"
-                                maxlength="500" show-word-limit />
-                        </div>
-                        <div class="flex justify-end space-x-4">
-                            <el-button @click="showAfterSaleDetail = false">取消</el-button>
-                            <el-button v-if="currentAfterSale.status === '待处理'" type="primary"
-                                @click="handleAfterSaleAction">
-                                执行处罚
-                            </el-button>
+                        <span :class="getStatusClass(currentAfterSale.status)" class="px-3 py-1 rounded-full text-sm">
+                            {{ currentAfterSale.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">申请时间</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">{{ currentAfterSale.applicationTime }}</p>
                         </div>
                     </div>
-                </el-dialog>
-                <!-- 投诉详情弹窗 -->
-                <el-dialog v-model="showComplaintDetail" title="投诉详情" width="800px" class="complaint-detail-dialog">
-                    <div v-if="currentComplaint" class="complaint-detail">
-                        <div class="border-b border-gray-200 pb-6 mb-6">
-                            <div class="flex items-start justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-user text-gray-400"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-gray-900">投诉编号：{{
-                                            currentComplaint.complaintId }}</h3>
-                                        <p class="text-sm text-gray-500">提交时间：{{ currentComplaint.applicationTime }}</p>
-                                    </div>
-                                </div>
-                                <span :class="getStatusClass(currentComplaint.status)"
-                                    class="px-3 py-1 rounded-full text-sm">
-                                    {{ currentComplaint.status }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">投诉对象</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900 font-medium">{{ currentComplaint.target }}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">投诉类型</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">服务态度问题</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">投诉内容</h4>
-                            <div class="p-4 bg-gray-50 rounded-lg">
-                                <p class="text-gray-900">{{ currentComplaint.content }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处罚措施</h4>
-                            <el-select v-model="selectedComplaintPunishment" class="w-full mb-4" placeholder="请选择处罚措施">
-                                <el-option v-for="option in punishmentOptions.complaints" :key="option.value"
-                                    :label="option.label" :value="option.value" />
-                            </el-select>
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处罚原因</h4>
-                            <el-input v-model="complaintPunishmentReason" type="textarea" :rows="3"
-                                placeholder="请输入处罚原因" maxlength="500" show-word-limit class="mb-4" />
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
-                            <el-input v-model="complaintNote" type="textarea" :rows="3" placeholder="请输入处理备注"
-                                maxlength="500" show-word-limit />
-                        </div>
-                        <div class="flex justify-end space-x-4">
-                            <el-button @click="showComplaintDetail = false">取消</el-button>
-                            <el-button v-if="currentComplaint.status === '待处理'" type="primary"
-                                @click="handleComplaintProcess">执行处罚</el-button>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">售后类型</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">退款申请</p>
                         </div>
                     </div>
-                </el-dialog>
-                <!-- 违规举报详情弹窗 -->
-                <el-dialog v-model="showViolationDetail" title="违规举报详情" width="800px" class="violation-detail-dialog">
-                    <div v-if="currentViolation" class="violation-detail">
-                        <div class="border-b border-gray-200 pb-6 mb-6">
-                            <div class="flex items-start justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-store text-gray-400"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-gray-900">{{ currentViolation.storeName }}
-                                        </h3>
-                                        <p class="text-sm text-gray-500">处罚编号：{{ currentViolation.punishmentId }}</p>
-                                    </div>
-                                </div>
-                                <span :class="getStatusClass(currentViolation.status)"
-                                    class="px-3 py-1 rounded-full text-sm">
-                                    {{ currentViolation.status }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">处罚时间</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">{{ currentViolation.punishmentTime }}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">违规类型</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">食品安全</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">违规原因</h4>
-                            <div class="p-4 bg-gray-50 rounded-lg">
-                                <p class="text-gray-900">{{ currentViolation.reason }}</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">商家处罚措施</h4>
-                                <el-select v-if="currentViolation?.status === '待处理'"
-                                    v-model="selectedMerchantPunishment" class="w-full" placeholder="请选择商家处罚措施">
-                                    <el-option v-for="option in punishmentOptions.violations.merchant"
-                                        :key="option.value" :label="option.label" :value="option.value" />
-                                </el-select>
-                                <div v-else class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">{{ currentViolation.merchantPunishment }}</p>
-                                </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">问题描述</h4>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-gray-900">{{ currentAfterSale.description }}</p>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
+                    <el-input v-model="afterSaleNote" type="textarea" :rows="3" placeholder="请输入处理备注" maxlength="500"
+                        show-word-limit />
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处罚措施</h4>
+                    <el-select v-model="selectedPunishment" class="w-full mb-4" placeholder="请选择处罚措施">
+                        <el-option v-for="option in punishmentOptions.afterSales" :key="option.value"
+                            :label="option.label" :value="option.value" />
+                    </el-select>
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处罚原因</h4>
+                    <el-input v-model="punishmentReason" type="textarea" :rows="3" placeholder="请输入处罚原因" maxlength="500"
+                        show-word-limit />
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <el-button @click="showAfterSaleDetail = false">取消</el-button>
+                    <el-button v-if="currentAfterSale.status === '待处理'" type="primary" @click="handleAfterSaleAction">
+                        执行处罚
+                    </el-button>
+                </div>
+            </div>
+        </el-dialog>
+        <!-- 投诉详情弹窗 -->
+        <el-dialog v-model="showComplaintDetail" title="投诉详情" width="800px" class="complaint-detail-dialog">
+            <div v-if="currentComplaint" class="complaint-detail">
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-400"></i>
                             </div>
                             <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">店铺处罚措施</h4>
-                                <el-select v-if="currentViolation?.status === '待处理'" v-model="selectedStorePunishment"
-                                    class="w-full" placeholder="请选择店铺处罚措施">
-                                    <el-option v-for="option in punishmentOptions.violations.store" :key="option.value"
-                                        :label="option.label" :value="option.value" />
-                                </el-select>
-                                <div v-else class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900">{{ currentViolation.storePunishment }}</p>
-                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900">投诉编号：{{
+                                    currentComplaint.complaintId }}</h3>
+                                <p class="text-sm text-gray-500">提交时间：{{ currentComplaint.applicationTime }}</p>
                             </div>
                         </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
-                            <el-input v-model="violationNote" type="textarea" :rows="3" placeholder="请输入处理备注"
-                                maxlength="500" show-word-limit />
-                        </div>
-                        <div class="flex justify-end space-x-4">
-                            <el-button @click="showViolationDetail = false">取消</el-button>
-                            <el-button v-if="currentViolation.status === '待处理'" type="primary"
-                                @click="handleViolationAction('process')">开始执行</el-button>
-                            <el-button v-if="currentViolation.status === '执行中'" type="success"
-                                @click="handleViolationAction('complete')">完成执行</el-button>
+                        <span :class="getStatusClass(currentComplaint.status)" class="px-3 py-1 rounded-full text-sm">
+                            {{ currentComplaint.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">投诉对象</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900 font-medium">{{ currentComplaint.target }}</p>
                         </div>
                     </div>
-                </el-dialog>
-                <!-- 评论详情弹窗 -->
-                <el-dialog v-model="showReviewDetail" title="评论详情" width="800px" class="review-detail-dialog">
-                    <div v-if="currentReview" class="review-detail">
-                        <div class="border-b border-gray-200 pb-6 mb-6">
-                            <div class="flex items-start justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-user text-gray-400"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-gray-900">{{ currentReview.username }}
-                                        </h3>
-                                        <p class="text-sm text-gray-500">{{ currentReview.submitTime }}</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-1 text-yellow-400">
-                                    <i v-for="star in 5" :key="star"
-                                        :class="star <= currentReview.rating ? 'fas fa-star' : 'far fa-star'"></i>
-                                    <span class="ml-2 text-gray-700">{{ currentReview.rating }} 分</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">店铺信息</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <p class="text-gray-900 font-medium">{{ currentReview.storeName }}</p>
-                                    <p class="text-sm text-gray-600 mt-1">订单编号：{{ currentReview.orderId || 'ORD' +
-                                        currentReview.reviewId }}</p>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-700 mb-2">评论状态</h4>
-                                <div class="p-4 bg-gray-50 rounded-lg">
-                                    <span :class="getStatusClass(currentReview.status)"
-                                        class="inline-block px-3 py-1 rounded-full text-sm">
-                                        {{ currentReview.status }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">评论内容</h4>
-                            <div class="p-4 bg-gray-50 rounded-lg">
-                                <p class="text-gray-900">{{ currentReview.content }}</p>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">图片附件</h4>
-                            <div class="grid grid-cols-4 gap-4">
-                                <div v-for="(image, index) in reviewImages" :key="index" class="relative aspect-square">
-                                    <img :src="image" alt="评论图片" class="w-full h-full object-cover rounded-lg">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处理方式</h4>
-                            <el-select v-model="selectedReviewPunishment" class="w-full mb-4" placeholder="请选择处理方式">
-                                <el-option v-for="option in punishmentOptions.reviews" :key="option.value"
-                                    :label="option.label" :value="option.value" />
-                            </el-select>
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">处理原因</h4>
-                            <el-input v-model="reviewPunishmentReason" type="textarea" :rows="3" placeholder="请输入处理原因"
-                                maxlength="500" show-word-limit class="mb-4" />
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">审核备注</h4>
-                            <el-input v-model="reviewNote" type="textarea" :rows="3" placeholder="请输入审核备注"
-                                maxlength="500" show-word-limit />
-                        </div>
-                        <div class="flex justify-end space-x-4">
-                            <el-button @click="showReviewDetail = false">取消</el-button>
-                            <el-button v-if="currentReview.status === '待处理'" type="primary"
-                                @click="handleReviewAction">执行处理</el-button>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">投诉类型</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">服务态度问题</p>
                         </div>
                     </div>
-                </el-dialog>
-        </div>
-        
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">投诉内容</h4>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-gray-900">{{ currentComplaint.content }}</p>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处罚措施</h4>
+                    <el-select v-model="selectedComplaintPunishment" class="w-full mb-4" placeholder="请选择处罚措施">
+                        <el-option v-for="option in punishmentOptions.complaints" :key="option.value"
+                            :label="option.label" :value="option.value" />
+                    </el-select>
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处罚原因</h4>
+                    <el-input v-model="complaintPunishmentReason" type="textarea" :rows="3" placeholder="请输入处罚原因"
+                        maxlength="500" show-word-limit class="mb-4" />
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
+                    <el-input v-model="complaintNote" type="textarea" :rows="3" placeholder="请输入处理备注" maxlength="500"
+                        show-word-limit />
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <el-button @click="showComplaintDetail = false">取消</el-button>
+                    <el-button v-if="currentComplaint.status === '待处理'" type="primary"
+                        @click="handleComplaintProcess">执行处罚</el-button>
+                </div>
+            </div>
+        </el-dialog>
+        <!-- 违规举报详情弹窗 -->
+        <el-dialog v-model="showViolationDetail" title="违规举报详情" width="800px" class="violation-detail-dialog">
+            <div v-if="currentViolation" class="violation-detail">
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-store text-gray-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ currentViolation.storeName }}
+                                </h3>
+                                <p class="text-sm text-gray-500">处罚编号：{{ currentViolation.punishmentId }}</p>
+                            </div>
+                        </div>
+                        <span :class="getStatusClass(currentViolation.status)" class="px-3 py-1 rounded-full text-sm">
+                            {{ currentViolation.status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">处罚时间</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">{{ currentViolation.punishmentTime }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">违规类型</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">食品安全</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">违规原因</h4>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-gray-900">{{ currentViolation.reason }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">商家处罚措施</h4>
+                        <el-select v-if="currentViolation?.status === '待处理'" v-model="selectedMerchantPunishment"
+                            class="w-full" placeholder="请选择商家处罚措施">
+                            <el-option v-for="option in punishmentOptions.violations.merchant" :key="option.value"
+                                :label="option.label" :value="option.value" />
+                        </el-select>
+                        <div v-else class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">
+                                {{ punishmentOptions.violations.merchant.find(item => item.value === selectedMerchantPunishment)?.label || selectedMerchantPunishment || '无' }}
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">店铺处罚措施</h4>
+                        <el-select v-if="currentViolation?.status === '待处理'" v-model="selectedStorePunishment"
+                            class="w-full" placeholder="请选择店铺处罚措施">
+                            <el-option v-for="option in punishmentOptions.violations.store" :key="option.value"
+                                :label="option.label" :value="option.value" />
+                        </el-select>
+                        <div v-else class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900">
+                                {{ punishmentOptions.violations.store.find(o => o.value === selectedStorePunishment)?.label || selectedStorePunishment || '无' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
+                    <el-input v-model="violationNote" type="textarea" :rows="3" placeholder="请输入处理备注" maxlength="500"
+                        show-word-limit />
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <el-button @click="showViolationDetail = false">取消</el-button>
+                    <el-button v-if="currentViolation.status === '待处理'" type="primary"
+                        @click="handleViolationAction('process')">开始执行</el-button>
+                    <el-button v-if="currentViolation.status === '执行中'" type="success"
+                        @click="handleViolationAction('complete')">完成执行</el-button>
+                </div>
+            </div>
+        </el-dialog>
+        <!-- 评论详情弹窗 -->
+        <el-dialog v-model="showReviewDetail" title="评论详情" width="800px" class="review-detail-dialog">
+            <div v-if="currentReview" class="review-detail">
+                <!-- 用户和评分信息 (这部分不变) -->
+                <div class="border-b border-gray-200 pb-6 mb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ currentReview.username }}
+                                </h3>
+                                <p class="text-sm text-gray-500">{{ currentReview.submitTime }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1 text-yellow-400">
+                            <i v-for="star in 5" :key="star"
+                                :class="star <= currentReview.rating ? 'fas fa-star' : 'far fa-star'"></i>
+                            <span class="ml-2 text-gray-700">{{ currentReview.rating }} 分</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 店铺和评论信息 (这部分不变) -->
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">评论类型</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-900 font-medium">{{ currentReview.type }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">评论状态</h4>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <span :class="getStatusClass(currentReview.status)"
+                                class="inline-block px-3 py-1 rounded-full text-sm">
+                                {{ currentReview.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">评论内容</h4>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-gray-900">{{ currentReview.content }}</p>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">图片附件</h4>
+                    <div class="grid grid-cols-4 gap-4">
+                        <div v-for="(image, index) in reviewImages" :key="index" class="relative aspect-square">
+                            <img :src="image" alt="评论图片" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 【核心修改】将原来的表单替换为新的按钮组 -->
+                <div class="flex justify-end space-x-4">
+                    <el-button @click="showReviewDetail = false">取消</el-button>
+                    <!-- 只在“待处理”状态下显示操作按钮 -->
+                    <template v-if="currentReview.status === '待处理'">
+                        <el-button type="danger" @click="processReview('reject')">判定违规</el-button>
+                        <el-button type="success" @click="processReview('approve')">审核通过</el-button>
+                    </template>
+                </div>
+            </div>
+        </el-dialog>
+    </div>
+
 </template>
 <script lang="ts" setup>
 // =================================================================
@@ -995,14 +993,12 @@ interface ViolationItem {
 interface ReviewItem {
     reviewId: string;
     username: string;
-    storeName: string;
+    type: string;
     content: string;
     rating: number;
     submitTime: string;
     status: '待处理' | '已完成';
     punishment: string;
-    punishmentReason?: string;
-    processingNote?: string;
 }
 
 // =================================================================
@@ -1027,9 +1023,9 @@ const mockApi = {
         { punishmentId: 'PUN202401003', storeName: '快送外卖', reason: '配送员私自拆开包装', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 12:20', status: '待处理' }
     ]),
     getReviewsList: async (): Promise<ReviewItem[]> => ([
-        { reviewId: 'RV202401001', username: '用户张三', storeName: '美味餐厅', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
-        { reviewId: 'RV202401002', username: '用户李四', storeName: '快餐店', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
-        { reviewId: 'RV202401003', username: '用户王五', storeName: '小吃摊', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
+        { reviewId: 'RV202401001', username: '用户张三', type:'普通评论', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
+        { reviewId: 'RV202401002', username: '用户李四', type:'普通评论', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
+        { reviewId: 'RV202401003', username: '用户王五', type:'普通评论', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
     ]),
     getAdminInfo: async (): Promise<AdminInfo> => ({
         id: 'ADM001',
@@ -1093,7 +1089,7 @@ const realApi = {
 
     // --- 更新数据 (PUT请求) ---
     // 【核心修改】将所有更新函数的返回值包装成 { success: boolean, data: T } 的格式
-    
+
     updateAfterSale: async (item: AfterSaleItem) => {
         try {
             const response = await apiClient.put<AfterSaleItem>(`/admin/after-sales/update`, item);
@@ -1101,7 +1097,7 @@ const realApi = {
         } catch (error) {
             console.error('更新售后失败:', error);
             // 失败时，也返回一个礼盒，但 success 为 false，data 可以是原始数据或 null
-            return { success: false, data: item }; 
+            return { success: false, data: item };
         }
     },
 
@@ -1186,7 +1182,6 @@ const currentViolation = ref<ViolationItem | null>(null);
 const violationNote = ref('');
 const showReviewDetail = ref(false);
 const currentReview = ref<ReviewItem | null>(null);
-const reviewNote = ref('');
 const reviewImages = ref([
     'https://readdy.ai/api/search-image?query=delicious%20chinese%20food%20dish%20on%20white%20plate%20with%20garnish%20professional%20food%20photography%20with%20natural%20lighting%20high%20end%20restaurant%20presentation&width=200&height=200&seq=review-img-001&orientation=squarish',
     'https://readdy.ai/api/search-image?query=gourmet%20asian%20cuisine%20plated%20elegantly%20with%20side%20dishes%20professional%20food%20photography%20natural%20lighting%20restaurant%20quality%20presentation&width=200&height=200&seq=review-img-002&orientation=squarish',
@@ -1199,8 +1194,6 @@ const selectedComplaintPunishment = ref('');
 const complaintPunishmentReason = ref('');
 const selectedMerchantPunishment = ref('');
 const selectedStorePunishment = ref('');
-const selectedReviewPunishment = ref('');
-const reviewPunishmentReason = ref('');
 
 
 const router = useRouter(); // 【新增】获取 router 实例
@@ -1256,47 +1249,104 @@ onMounted(async () => {
 });
 
 // 4.3 ----------------- 计算属性和工具函数 (不变) -----------------
-const filteredAfterSales = computed(() => 
-  afterSalesList.value.filter(item => 
-    (selectedAfterSalesStatus.value === 'all' || item.status === selectedAfterSalesStatus.value) && 
-    ((item.applicationId?.toLowerCase() || '').includes((searchQuery.value?.toLowerCase() || '')) || 
-     (item.orderId?.toLowerCase() || '').includes((searchQuery.value?.toLowerCase() || '')))
-  )
+const filteredAfterSales = computed(() =>
+    afterSalesList.value.filter(item =>
+        (selectedAfterSalesStatus.value === 'all' || item.status === selectedAfterSalesStatus.value) &&
+        ((item.applicationId?.toLowerCase() || '').includes((searchQuery.value?.toLowerCase() || '')) ||
+            (item.orderId?.toLowerCase() || '').includes((searchQuery.value?.toLowerCase() || '')))
+    )
 );
 
-const filteredComplaints = computed(() => 
-  complaintsList.value.filter(item => 
-    (selectedComplaintStatus.value === 'all' || item.status === selectedComplaintStatus.value) && 
-    ((item.complaintId?.toLowerCase() || '').includes((complaintSearchQuery.value?.toLowerCase() || '')) || 
-     (item.target?.toLowerCase() || '').includes((complaintSearchQuery.value?.toLowerCase() || '')))
-  )
+const filteredComplaints = computed(() =>
+    complaintsList.value.filter(item =>
+        (selectedComplaintStatus.value === 'all' || item.status === selectedComplaintStatus.value) &&
+        ((item.complaintId?.toLowerCase() || '').includes((complaintSearchQuery.value?.toLowerCase() || '')) ||
+            (item.target?.toLowerCase() || '').includes((complaintSearchQuery.value?.toLowerCase() || '')))
+    )
 );
 
-const filteredViolations = computed(() => 
-  violationsList.value.filter(item => 
-    (selectedViolationStatus.value === 'all' || item.status === selectedViolationStatus.value) && 
-    ((item.punishmentId?.toLowerCase() || '').includes((violationSearchQuery.value?.toLowerCase() || '')) || 
-     (item.storeName?.toLowerCase() || '').includes((violationSearchQuery.value?.toLowerCase() || '')))
-  )
+const filteredViolations = computed(() =>
+    violationsList.value.filter(item =>
+        (selectedViolationStatus.value === 'all' || item.status === selectedViolationStatus.value) &&
+        ((item.punishmentId?.toLowerCase() || '').includes((violationSearchQuery.value?.toLowerCase() || '')) ||
+            (item.storeName?.toLowerCase() || '').includes((violationSearchQuery.value?.toLowerCase() || '')))
+    )
 );
 
-const filteredReviews = computed(() => 
-  reviewsList.value.filter(item => 
-    (selectedReviewStatus.value === 'all' || item.status === selectedReviewStatus.value) && 
-    ((item.content?.toLowerCase() || '').includes((reviewSearchQuery.value?.toLowerCase() || '')) || 
-     (item.username?.toLowerCase() || '').includes((reviewSearchQuery.value?.toLowerCase() || '')))
-  )
+const filteredReviews = computed(() =>
+    reviewsList.value.filter(item =>
+        (selectedReviewStatus.value === 'all' || item.status === selectedReviewStatus.value) &&
+        ((item.content?.toLowerCase() || '').includes((reviewSearchQuery.value?.toLowerCase() || '')) ||
+            (item.username?.toLowerCase() || '').includes((reviewSearchQuery.value?.toLowerCase() || '')))
+    )
 );
 
 const getBreadcrumb = () => ({ admin: '管理员信息', afterSales: '售后处理中心', complaints: '投诉处理中心', violations: '违规举报处理', reviews: '评论审核管理' })[activeMenu.value] || '控制台';
 const getStatusClass = (status: string) => ({ '待处理': 'bg-yellow-100 text-yellow-800', '已完成': 'bg-green-100 text-green-800', '执行中': 'bg-blue-100 text-blue-800' })[status] || 'bg-gray-100 text-gray-800';
 
-const openAfterSaleDetail = (item: AfterSaleItem) => { currentAfterSale.value = { ...item }; afterSaleNote.value = ''; selectedPunishment.value = ''; punishmentReason.value = ''; showAfterSaleDetail.value = true; };
-const openComplaintDetail = (item: ComplaintItem) => { currentComplaint.value = { ...item }; complaintNote.value = ''; selectedComplaintPunishment.value = ''; complaintPunishmentReason.value = ''; showComplaintDetail.value = true; };
-const openViolationDetail = (item: ViolationItem) => { currentViolation.value = { ...item }; violationNote.value = ''; selectedMerchantPunishment.value = item.merchantPunishment === '-' ? '' : item.merchantPunishment; selectedStorePunishment.value = item.storePunishment === '-' ? '' : item.storePunishment; showViolationDetail.value = true; };
-const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item }; reviewNote.value = ''; selectedReviewPunishment.value = ''; reviewPunishmentReason.value = ''; showReviewDetail.value = true; };
+const openAfterSaleDetail = (item: AfterSaleItem) => {
+    currentAfterSale.value = { ...item };
+    
+    if (item.status === '待处理') {
+        // 待处理：清空输入框，准备填写
+        afterSaleNote.value = '';
+        selectedPunishment.value = '';
+        punishmentReason.value = '';
+    } else {
+        // 已完成：填充已保存的数据，供查看
+        afterSaleNote.value = item.processingNote || '';
+        selectedPunishment.value = item.punishment || '';
+        punishmentReason.value = item.punishmentReason || '';
+    }
+    
+    showAfterSaleDetail.value = true;
+};
 
+const openComplaintDetail = (item: ComplaintItem) => {
+    currentComplaint.value = { ...item };
+    
+    if (item.status === '待处理') {
+        // 待处理：清空输入框，准备填写
+        complaintNote.value = '';
+        selectedComplaintPunishment.value = '';
+        complaintPunishmentReason.value = '';
+    } else {
+        // 已完成：填充已保存的数据，供查看
+        complaintNote.value = item.processingNote || '';
+        selectedComplaintPunishment.value = item.punishment || '';
+        complaintPunishmentReason.value = item.punishmentReason || '';
+    }
+    
+    showComplaintDetail.value = true;
+};
+
+const openViolationDetail = (item: ViolationItem) => {
+    currentViolation.value = { ...item };
+    
+    if (item.status === '待处理') {
+        // 待处理：清空输入框，准备填写
+        selectedMerchantPunishment.value = '';
+        selectedStorePunishment.value = '';
+        violationNote.value = '';
+        selectedMerchantPunishment.value = '';
+        selectedStorePunishment.value = '';
+    } else {
+        // 已完成：填充已保存的数据，供查看
+        console.log('原始数据:', item);
+        selectedMerchantPunishment.value = item.merchantPunishment === '-' ? '' : item.merchantPunishment;
+        selectedStorePunishment.value = item.storePunishment === '-' ? '' : item.storePunishment;
+        violationNote.value = item.processingNote || '';
+        selectedMerchantPunishment.value = item.merchantPunishment === '-' ? '' : item.merchantPunishment;
+        selectedStorePunishment.value = item.storePunishment === '-' ? '' : item.storePunishment;
+    }
+    
+    showViolationDetail.value = true;
+};
+
+
+const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item }; showReviewDetail.value = true; };
 // 4.4 ----------------- 修改数据处理函数 (全部完成) -----------------
+
 const handleAfterSaleAction = async () => {
     if (!afterSaleNote.value.trim() || !selectedPunishment.value || !punishmentReason.value.trim()) {
         return ElMessage.warning('请填写完整的处理信息和处罚原因');
@@ -1305,14 +1355,14 @@ const handleAfterSaleAction = async () => {
 
     try {
         await ElMessageBox.confirm('确定要执行选定的处罚措施吗？', '确认操作', { type: 'warning' });
-        
+
         const punishmentLabel = punishmentOptions.afterSales.find(o => o.value === selectedPunishment.value)?.label || selectedPunishment.value;
-        const updatedItem: AfterSaleItem = { 
-            ...currentAfterSale.value, 
-            status: '已完成', 
-            punishment: punishmentLabel, 
-            punishmentReason: punishmentReason.value, 
-            processingNote: afterSaleNote.value 
+        const updatedItem: AfterSaleItem = {
+            ...currentAfterSale.value,
+            status: '已完成',
+            punishment: punishmentLabel,
+            punishmentReason: punishmentReason.value,
+            processingNote: afterSaleNote.value
         };
 
         // 【核心修改】接收API的返回结果
@@ -1324,7 +1374,7 @@ const handleAfterSaleAction = async () => {
             const index = afterSalesList.value.findIndex(item => item.applicationId === updatedItem.applicationId);
             if (index !== -1) {
                 // 使用从后端返回的最新数据来更新列表，这是最佳实践
-                afterSalesList.value[index] = response.data; 
+                afterSalesList.value[index] = { ...updatedItem, ...response.data };
             }
             ElMessage.success('处理完成，处罚措施已执行');
             showAfterSaleDetail.value = false;
@@ -1353,7 +1403,7 @@ const handleAfterSaleAction = async () => {
  */
 const handleSaveChanges = async () => {
     if (!currentUser.value) return;
-    
+
     isSaving.value = true;
     try {
         const response = await api.updateAdminInfo(currentUser.value);
@@ -1361,10 +1411,10 @@ const handleSaveChanges = async () => {
         if (response.success) {
             // 【核心修改】使用 Object.assign 来更新现有响应式对象的属性
             // 这样做可以更稳定地触发视图更新
-            Object.assign(currentUser.value, response.data); 
-            
-            originalAdminInfo = JSON.parse(JSON.stringify(response.data)); 
-            
+            Object.assign(currentUser.value, response.data);
+
+            originalAdminInfo = JSON.parse(JSON.stringify(response.data));
+
             ElMessage.success('信息更新成功！');
             console.log('管理员信息已更新:', response.data);
         } else {
@@ -1426,12 +1476,12 @@ const handleComplaintProcess = async () => {
         await ElMessageBox.confirm('确定要处理该投诉吗？', '确认操作', { type: 'warning' });
 
         const punishmentLabel = punishmentOptions.complaints.find(o => o.value === selectedComplaintPunishment.value)?.label || selectedComplaintPunishment.value;
-        const updatedItem: ComplaintItem = { 
-            ...currentComplaint.value, 
-            status: '已完成', 
-            punishment: punishmentLabel, 
-            punishmentReason: complaintPunishmentReason.value, 
-            processingNote: complaintNote.value 
+        const updatedItem: ComplaintItem = {
+            ...currentComplaint.value,
+            status: '已完成',
+            punishment: punishmentLabel,
+            punishmentReason: complaintPunishmentReason.value,
+            processingNote: complaintNote.value
         };
 
         // 【核心修改】接收API的返回结果
@@ -1443,7 +1493,7 @@ const handleComplaintProcess = async () => {
             const index = complaintsList.value.findIndex(item => item.complaintId === updatedItem.complaintId);
             if (index !== -1) {
                 // 使用从后端返回的最新数据来更新列表
-                complaintsList.value[index] = response.data;
+                complaintsList.value[index] = { ...updatedItem, ...response.data };
             }
             ElMessage.success('投诉已处理完成');
             showComplaintDetail.value = false;
@@ -1474,21 +1524,21 @@ const handleViolationAction = async (action: 'process' | 'complete') => {
 
     try {
         await ElMessageBox.confirm(`确定要${action === 'process' ? '开始执行' : '完成执行'}该处罚吗？`, '确认操作', { type: 'warning' });
-        
+
         let updatedItem: ViolationItem;
         if (action === 'process') {
-            updatedItem = { 
-                ...currentViolation.value, 
-                status: '执行中', 
-                merchantPunishment: selectedMerchantPunishment.value, 
-                storePunishment: selectedStorePunishment.value, 
-                processingNote: violationNote.value 
+            updatedItem = {
+                ...currentViolation.value,
+                status: '执行中',
+                merchantPunishment: selectedMerchantPunishment.value,
+                storePunishment: selectedStorePunishment.value,
+                processingNote: violationNote.value
             };
         } else { // action === 'complete'
-            updatedItem = { 
-                ...currentViolation.value, 
-                status: '已完成', 
-                processingNote: violationNote.value 
+            updatedItem = {
+                ...currentViolation.value,
+                status: '已完成',
+                processingNote: violationNote.value
             };
         }
 
@@ -1501,7 +1551,8 @@ const handleViolationAction = async (action: 'process' | 'complete') => {
             const index = violationsList.value.findIndex(item => item.punishmentId === updatedItem.punishmentId);
             if (index !== -1) {
                 // 使用从后端返回的最新数据来更新列表
-                violationsList.value[index] = response.data;
+                violationsList.value[index] = { ...updatedItem, ...response.data };
+                console.log('更新后的数据:', violationsList.value[index]);
             }
             ElMessage.success(`处罚已${action === 'process' ? '开始执行' : '执行完成'}`);
             showViolationDetail.value = false;
@@ -1520,45 +1571,44 @@ const handleViolationAction = async (action: 'process' | 'complete') => {
     }
 };
 
-const handleReviewAction = async () => {
-    if (!reviewNote.value.trim() || !selectedReviewPunishment.value || !reviewPunishmentReason.value.trim()) {
-        return ElMessage.warning('请填写完整的处理信息和处理原因');
-    }
+const processReview = async (decision: 'approve' | 'reject') => {
     if (!currentReview.value) return;
 
-    try {
-        await ElMessageBox.confirm('确定要执行选定的处理措施吗？', '确认操作', { type: 'warning' });
+    // 根据决定设置提示文字和最终的处罚说明
+    const actionText = decision === 'approve' ? '审核通过' : '判定违规';
+    const punishmentText = decision === 'approve' ? '评论已通过' : '评论内容涉嫌违规';
 
-        const punishmentLabel = punishmentOptions.reviews.find(o => o.value === selectedReviewPunishment.value)?.label || selectedReviewPunishment.value;
-        const updatedItem: ReviewItem = { 
-            ...currentReview.value, 
-            status: '已完成', 
-            punishment: punishmentLabel, 
-            punishmentReason: reviewPunishmentReason.value, 
-            processingNote: reviewNote.value 
+    try {
+        // 弹出确认框
+        await ElMessageBox.confirm(`确定要将此评论标记为“${actionText}”吗？`, '确认操作', { type: 'warning' });
+
+        // 准备要发送到后端的数据
+        const updatedItem: ReviewItem = {
+            ...currentReview.value,
+            status: '已完成',
+            punishment: punishmentText,
+            punishmentReason: '', // 已删除，传空值
+            processingNote: ''    // 已删除，传空值
         };
 
-        // 【核心修改】接收API的返回结果
+        // 调用API
         const response = await api.updateReview(updatedItem);
 
-        // 【核心修改】检查返回结果的 success 字段
+        // 处理API返回结果
         if (response.success) {
-            // 只有在后端确认成功后，才更新前端的UI
             const index = reviewsList.value.findIndex(item => item.reviewId === updatedItem.reviewId);
             if (index !== -1) {
-                // 使用从后端返回的最新数据来更新列表
-                reviewsList.value[index] = response.data;
+                reviewsList.value[index] = { ...updatedItem, ...response.data };
             }
-            ElMessage.success('评论处理完成');
-            showReviewDetail.value = false;
+            ElMessage.success(`操作成功，评论已${actionText}`);
+            showReviewDetail.value = false; // 关闭弹窗
         } else {
-            // 如果后端返回失败，则提示用户
             ElMessage.error('操作失败，数据未能成功保存到服务器');
         }
 
     } catch (error) {
         if (error !== 'cancel') {
-            console.error("处理评论时发生未知错误:", error);
+            console.error(`处理评论(${actionText})时发生未知错误:`, error);
             ElMessage.error('操作失败');
         } else {
             ElMessage.info('操作已取消');

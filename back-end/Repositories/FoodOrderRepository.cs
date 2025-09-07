@@ -24,6 +24,17 @@ namespace BackEnd.Repositories
                                  .Include(fo => fo.Comments)               // 评论
                                  .ToListAsync();
         }
+        public async Task<IEnumerable<FoodOrder>> GetByUserIdAsync(int userId)
+        {
+            return await _context.FoodOrders
+                                 .Where(fo => fo.CustomerID == userId)
+                                 .Include(fo => fo.Customer)
+                                 .Include(fo => fo.Cart)
+                                 .Include(fo => fo.Store)
+                                 .Include(fo => fo.Coupons)
+                                 .Include(fo => fo.AfterSaleApplications)
+                                 .ToListAsync();
+        }
 
         public async Task<FoodOrder?> GetByIdAsync(int id)
         {
@@ -35,6 +46,19 @@ namespace BackEnd.Repositories
                                  .Include(fo => fo.AfterSaleApplications)
                                  .Include(fo => fo.Comments)
                                  .FirstOrDefaultAsync(fo => fo.OrderID == id);
+        }
+        public async Task<List<FoodOrder>> GetOrdersByCustomerIdOrderedByDateAsync(int customerId)
+        {
+            return await _context.FoodOrders
+                .Where(o => o.CustomerID == customerId)
+                .OrderByDescending(o => o.OrderTime)
+                .ToListAsync();
+        }
+
+        public async Task<FoodOrder?> GetByCartIdAsync(int cartId)
+        {
+            return await _context.FoodOrders
+                .FirstOrDefaultAsync(o => o.CartID == cartId);
         }
 
         public async Task AddAsync(FoodOrder foodOrder)
