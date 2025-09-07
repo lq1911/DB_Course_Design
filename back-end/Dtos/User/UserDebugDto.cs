@@ -33,6 +33,12 @@ namespace BackEnd.Dtos.User
         public int StoreId { get; set; }           // 店铺编号
     }
 
+    public class UsedCouponDto
+    {
+        [Required]
+        public int CouponId { get; set; }
+    }
+
     public class GetUserIdRequestDto
     {
         public string Account { get; set; } = string.Empty;  // 用户手机号或邮箱

@@ -39,7 +39,7 @@
           />
           <CouponSelector
             :totalAmount="subtotal"
-            :selectedCoupon="selectedCoupon"
+            v-model:selectedCoupon="selectedCoupon"
             @onCouponChange="selectedCoupon = $event"
           />
           <PaymentSelector v-model:selectedMethod="paymentMethod" />

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -18,6 +19,10 @@ namespace BackEnd.Models
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal TotalPrice { get; set; } = 0.00m;
+
+        // 是否锁定（下单后不可再修改）
+        [Required]
+        public ShoppingCartState ShoppingCartState { get; set; } = ShoppingCartState.UnCompleted;
 
         public FoodOrder? Order { get; set; }
 
