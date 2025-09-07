@@ -1,5 +1,6 @@
 using BackEnd.Dtos.AuthRequest;
 using BackEnd.Dtos.User;
+using BackEnd.Models;
 using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
@@ -29,7 +30,7 @@ namespace BackEnd.Services
                 return Fail("手机号或密码错误", 401);
 
             // 2. 验证密码
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (!await IsPasswordValid(request.Password, user))
                 return Fail("手机号或密码错误", 401);
 
 
@@ -108,6 +109,45 @@ namespace BackEnd.Services
                 Token = null,
                 User = null
             };
+        }
+
+        // 兼容明文密码的验证密码方法
+        private async Task<bool> IsPasswordValid(string inputPassword, Models.User user)
+        {
+            string storedPassword = user.Password;
+
+            // 检查存储的密码是否是BCrypt格式
+            if (storedPassword.StartsWith("$2a$") ||
+                storedPassword.StartsWith("$2b$") ||
+                storedPassword.StartsWith("$2y$"))
+            {
+                // 使用BCrypt验证加密密码
+                return BCrypt.Net.BCrypt.Verify(inputPassword, storedPassword);
+            }
+            else
+            {
+                // 处理明文密码（临时兼容方案）
+                bool isMatch = inputPassword == storedPassword;
+
+                // 如果明文密码匹配，立即升级为加密密码
+                if (isMatch)
+                {
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(inputPassword, 12);
+                    await UpdateUserPasswordAsync(user.UserID, hashedPassword);
+                }
+
+                return isMatch;
+            }
+        }
+
+        private async Task UpdateUserPasswordAsync(int userId, string hashedPassword)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.Password = hashedPassword;
+                await _userRepository.UpdateAsync(user);
+            }
         }
     }
 }
