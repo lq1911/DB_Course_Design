@@ -39,7 +39,7 @@
           />
           <CouponSelector
             :totalAmount="subtotal"
-            :selectedCoupon="selectedCoupon"
+            v-model:selectedCoupon="selectedCoupon"
             @onCouponChange="selectedCoupon = $event"
           />
           <PaymentSelector v-model:selectedMethod="paymentMethod" />
@@ -64,7 +64,7 @@ import type { MenuItem, ShoppingCart } from '@/api/user_checkout';
 import type { CouponInfo } from '@/api/user_coupon';
 import { getAddress } from '@/api/user_address';
 import { getMenuItem, getShoppingCart, addOrUpdateCartItem, removeCartItem } from '@/api/user_checkout';
-import { submitOrder } from '@/api/user_checkout';
+import { submitOrder, useCoupon } from '@/api/user_checkout';
 
 import DishCard from '@/components/user/Checkout/DishCard.vue';
 import AddressSelector from '@/components/user/Checkout/AddressSelector.vue';
@@ -141,6 +141,7 @@ async function checkout() {
   }
 
   try {
+    await useCoupon(selectedCoupon.value?.couponID ?? null) // 未使用时返回空值
     await submitOrder(userID, cart.value.cartId, Number(storeID));
     cart.value.items = [];
     goBack();

@@ -12,11 +12,18 @@ namespace BackEnd.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
+        private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly ICouponRepository _couponRepository;
 
-        public UserDebugService(IUserRepository userRepository, IFoodOrderRepository foodOrderRepository)
+        public UserDebugService(IUserRepository userRepository,
+                                IFoodOrderRepository foodOrderRepository,
+                                IShoppingCartRepository shoppingCartRepository,
+                                ICouponRepository couponRepository)
         {
             _userRepository = userRepository;
             _foodOrderRepository = foodOrderRepository;
+            _shoppingCartRepository = shoppingCartRepository;
+            _couponRepository = couponRepository;
         }
 
         public async Task<UserInfoResponseDto> GetUserInfoAsync(int userId)
@@ -42,32 +49,43 @@ namespace BackEnd.Services
 
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
+            // 找到用户未锁定的购物车
+            var cart = await _shoppingCartRepository.GetActiveCartByCustomerIdAsync(dto.CustomerId);
+            if (cart == null)
+                throw new InvalidOperationException("没有可用的购物车，请先添加商品");
 
-            // 校验该购物车是否已生成订单（CartID 一对一）
-            if (dto.CartId != 0)
-            {
-                var existingOrder = await _foodOrderRepository
-                    .GetByCartIdAsync(dto.CartId);
+            if (cart.Order != null || cart.ShoppingCartState == ShoppingCartState.Completed)
+                throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
 
-                if (existingOrder != null)
-                {
-                    throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
-                }
-            }
-            
-            // 创建订单实体
+            // 创建订单
             var order = new FoodOrder
             {
-                OrderTime = DateTime.UtcNow,  // 系统生成下单时间
+                OrderTime = DateTime.UtcNow,
                 PaymentTime = dto.PaymentTime,
                 CustomerID = dto.CustomerId,
-                CartID = dto.CartId,
+                CartID = cart.CartID,
                 StoreID = dto.StoreId,
-                FoodOrderState = FoodOrderState.Pending // 新生成订单等待商家处理
+                FoodOrderState = FoodOrderState.Pending
             };
-
-            // 保存到数据库
             await _foodOrderRepository.AddAsync(order);
+
+            // 锁定购物车（保留历史记录）
+            cart.ShoppingCartState = ShoppingCartState.Completed;
+            cart.LastUpdatedTime = DateTime.UtcNow;
+            await _shoppingCartRepository.UpdateAsync(cart);
+        }
+
+            /// <summary>
+        /// 使用优惠券（直接删除）
+        /// </summary>
+        public async Task UseCouponAsync(int couponId)
+        {
+            var coupon = await _couponRepository.GetByIdAsync(couponId);
+            if (coupon == null)
+                throw new InvalidOperationException("优惠券不存在");
+
+            // 删除优惠券
+            await _couponRepository.DeleteAsync(coupon);
         }
 
         public async Task<GetUserIdResponseDto> GetUserIdAsync(GetUserIdRequestDto dto)

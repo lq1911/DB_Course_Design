@@ -134,7 +134,7 @@ namespace BackEnd.Services
 
                     if (cart != null && cart.ShoppingCartItems != null)
                     {
-                        // 获取所有菜品图片 - 修正后的逻辑
+                        // 获取所有菜品图片
                 dishImages = cart.ShoppingCartItems
                     .Where(sci => sci.Dish != null && !string.IsNullOrEmpty(sci.Dish.DishImage))
                     .Select(sci => sci.Dish.DishImage)

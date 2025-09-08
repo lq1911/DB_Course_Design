@@ -60,6 +60,8 @@ export interface NewOrder {
 /** 位置信息 (所有属性均在模板中使用) */
 export interface LocationInfo {
     area: string;
+    longitude: number; // 新增：经度
+    latitude: number;  // 新增：纬度
 }
 
 
@@ -84,14 +86,16 @@ const mockIncomeData: IncomeData = {
 };
 
 const mockOrders: Order[] = [
-    { id: 'ORD-MOCK-001', restaurant: '模拟-肯德基', address: '模拟-人民广场1号', fee: '10.00', status: 'pending', statusText: '待取餐' },
-    { id: 'ORD-MOCK-002', restaurant: '模拟-麦当劳', address: '模拟-南京路2号', fee: '8.50', status: 'pending', statusText: '待取餐' },
+    { id: 'ORD-MOCK-001', restaurant: '模拟-肯德基', address: '模拟-人民广场1号', fee: '10.00', status: 'pending', statusText: '待取单' },
+    { id: 'ORD-MOCK-002', restaurant: '模拟-麦当劳', address: '模拟-南京路2号', fee: '8.50', status: 'pending', statusText: '待取单' },
     { id: 'ORD-MOCK-003', restaurant: '模拟-星巴克', address: '模拟-淮海路3号', fee: '15.00', status: 'delivering', statusText: '配送中' },
-    { id: 'ORD-MOCK-004', restaurant: '模拟-必胜客', address: '模拟-西藏中路4号', fee: '12.00', status: 'completed', statusText: '已完成' },
+    { id: 'ORD-MOCK-004', restaurant: '模拟-必胜客', address: '模拟-西藏中路4号', fee: '12.00', status: 'completed', statusText: '已送达' },
 ];
 
 const mockLocationInfo: LocationInfo = {
-    area: '人民广场商圈 (模拟)'
+    area: '人民广场商圈 (模拟)',
+    longitude: 121.4748,
+    latitude: 31.2304
 };
 
 const mockNewOrder: NewOrder = {
@@ -136,5 +140,27 @@ export const acceptOrderAPI = (orderId: string) => {
 
 export const rejectOrderAPI = (orderId: string) => {
     console.log(`[Mock] 拒绝订单: ${orderId}`);
+    return createMockResponse({ success: true });
+};
+
+// 在文件末尾新增这两个函数
+
+/** 模拟骑手取单 */
+export const pickupOrderAPI = (orderId: string) => {
+    console.log(`[Mock] 正在取单: ${orderId}`);
+    const order = mockOrders.find(o => o.id === orderId);
+    if (order) {
+        order.status = 'delivering'; // 核心逻辑：改变状态
+    }
+    return createMockResponse({ success: true });
+};
+
+/** 模拟骑手送达订单 */
+export const deliverOrderAPI = (orderId: string) => {
+    console.log(`[Mock] 确认送达: ${orderId}`);
+    const order = mockOrders.find(o => o.id === orderId);
+    if (order) {
+        order.status = 'completed'; // 核心逻辑：改变状态
+    }
     return createMockResponse({ success: true });
 };

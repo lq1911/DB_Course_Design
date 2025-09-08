@@ -1,9 +1,15 @@
 using BackEnd.Dtos.User;
 
-public interface IUserInStoreService
+namespace BackEnd.Services.Interfaces
 {
-    Task<StoreResponseDto?> GetStoreInfoAsync(StoreRequestDto request);
-    Task<List<MenuResponseDto>> GetMenuAsync(MenuRequestDto request);
-    Task<List<CommentResponseDto>> GetCommentListAsync(int storeId);
-    Task<CommentStateDto> GetCommentStateAsync(int storeId);
+    public interface IUserInStoreService
+    {
+        Task<StoreResponseDto?> GetStoreInfoAsync(StoreRequestDto request);
+        Task<List<MenuResponseDto>> GetMenuAsync(MenuRequestDto request);
+        Task<List<CommentResponseDto>> GetCommentListAsync(int storeId);
+        Task<CommentStateDto> GetCommentStateAsync(int storeId);
+        Task SubmitCommentAsync(CreateCommentDto dto);
+        Task SubmitStoreReportAsync(UserStoreReportDto dto);
+
+    }
 }

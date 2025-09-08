@@ -7,6 +7,7 @@ import type {
     WorkStatus,
     Order,
     NewOrder,
+    LocationInfo
 } from './api.mock'; // 假设类型定义在这里
 
 // --- 修正后的 API 函数 ---
@@ -43,7 +44,7 @@ export const fetchOrders = (status: 'pending' | 'delivering' | 'completed') => {
 export const fetchLocationInfo = () => {
     // 【已修正】路径从 /user/location 改为 /courier/location
     // 后端返回 { data: { area: "..." } }，所以需要一个匹配的类型
-    return apiClient.get<{ area: string }>('/courier/location');
+    return apiClient.get< LocationInfo >('/courier/location');
 };
 
 /** 根据通知ID获取新订单详情 */
@@ -68,6 +69,24 @@ export const acceptOrderAPI = (orderId: string) => {
 export const rejectOrderAPI = (orderId: string) => {
     // 【已修正】路径正确
     return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/reject`);
+};
+
+// 在文件末尾新增这两个函数
+
+/**
+ * 骑手确认取单
+ * @param orderId 订单ID
+ */
+export const pickupOrderAPI = (orderId: string) => {
+    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/pickup`);
+};
+
+/**
+ * 骑手确认送达
+ * @param orderId 订单ID
+ */
+export const deliverOrderAPI = (orderId: string) => {
+    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/deliver`);
 };
 
 // --- 以下是你队友原来的其他接口，可以暂时保留 ---

@@ -157,4 +157,6 @@ function formatDate(dateStr: string) {
   const date = new Date(dateStr);
   return `${date.getMonth() + 1}月${date.getDate()}日`;
 }
+
+console.log(props);
 </script>
