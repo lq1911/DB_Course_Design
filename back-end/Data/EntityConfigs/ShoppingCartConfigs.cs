@@ -19,7 +19,7 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(sc => sc.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(10,2)").HasDefaultValue(0.00m);
 
-            builder.Property(sc => sc.ShoppingCartState).HasColumnName("SHOPPINGCARTSTATE").IsRequired(false).HasConversion<string>().HasMaxLength(10);
+            builder.Property(sc => sc.ShoppingCartState).HasColumnName("SHOPPINGCARTSTATE").IsRequired(false).HasConversion<string>().HasMaxLength(20);
 
             builder.Property(sc => sc.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
 

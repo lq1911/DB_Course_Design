@@ -1,12 +1,9 @@
-using BackEnd.Models;
 using BackEnd.Dtos.User;
+using BackEnd.Models;
 using BackEnd.Models.Enums;
+using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using BackEnd.Repositories.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackEnd.Services
 {
@@ -70,6 +67,7 @@ namespace BackEnd.Services
 
             return coupon.CouponState;
         }
+
         public async Task<CartResponseDto> GetShoppingCartAsync(int userId, int storeId)
         {
             // 验证用户是否存在
@@ -81,7 +79,7 @@ namespace BackEnd.Services
 
             // 查找该用户未锁定的购物车
             var shoppingCart = await _shoppingCartRepository
-                .GetActiveCartByCustomerIdAsync(customer.UserID); // 自定义方法：查找 IsLocked == false 的购物车
+                .GetActiveCartWithStoreFilterAsync(customer.UserID, storeId);
 
             // 如果没有未锁定的购物车，就新建一个
             if (shoppingCart == null)
@@ -91,16 +89,23 @@ namespace BackEnd.Services
                     CustomerID = customer.UserID,
                     ShoppingCartItems = new List<ShoppingCartItem>(),
                     LastUpdatedTime = DateTime.UtcNow,
-                    ShoppingCartState = ShoppingCartState.UnCompleted
+                    ShoppingCartState = ShoppingCartState.Active,
+                    StoreID = storeId,
+                    TotalPrice = 0
                 };
 
                 await _shoppingCartRepository.AddAsync(shoppingCart);
+
+                return new CartResponseDto
+                {
+                    CartId = shoppingCart.CartID,
+                    TotalPrice = 0,
+                    Items = new List<ShoppingCartItemDto>()
+                };
             }
 
             // 获取购物车项（只取该店铺的）
-            var cartItems = shoppingCart.ShoppingCartItems?
-                .Where(item => item.Dish.MenuDishes.Any(md => md.Menu.Store.StoreID == storeId))
-                .ToList() ?? new List<ShoppingCartItem>();
+            var cartItems = shoppingCart.ShoppingCartItems ?? new List<ShoppingCartItem>();
 
             // 计算总价
             var filteredTotalPrice = cartItems.Sum(item => item.TotalPrice);
@@ -119,7 +124,6 @@ namespace BackEnd.Services
                 }).ToList()
             };
         }
-
 
         public async Task UpdateCartItemAsync(UpdateCartItemDto dto)
         {
@@ -144,7 +148,7 @@ namespace BackEnd.Services
                 {
                     DishID = dto.DishId,
                     Quantity = dto.Quantity,
-                    TotalPrice = dish.Price * dto.Quantity,
+                    TotalPrice = dish!.Price * dto.Quantity,
                     CartID = shoppingCart.CartID
                 };
                 await _shoppingCartItemRepository.AddAsync(cartItem);
@@ -153,16 +157,12 @@ namespace BackEnd.Services
             {
                 // 更新购物车项
                 cartItem.Quantity = dto.Quantity;
-                cartItem.TotalPrice = dish.Price * dto.Quantity;
+                cartItem.TotalPrice = dish!.Price * dto.Quantity;
                 await _shoppingCartItemRepository.UpdateAsync(cartItem);
             }
 
             // 4. 更新购物车总价（只算该店铺的商品）
-            shoppingCart.TotalPrice = shoppingCart.ShoppingCartItems?
-                .Sum(item => item.TotalPrice) ?? 0;
-
-            shoppingCart.LastUpdatedTime = DateTime.UtcNow;
-            await _shoppingCartRepository.UpdateAsync(shoppingCart);
+            await UpdateCartTotalPriceAsync(shoppingCart);
         }
 
         public async Task RemoveCartItemAsync(RemoveCartItemDto dto)
@@ -187,12 +187,16 @@ namespace BackEnd.Services
             await _shoppingCartItemRepository.DeleteAsync(cartItem);
 
             // 4. 更新购物车总价（只算该店铺的商品）
-            shoppingCart.TotalPrice = shoppingCart.ShoppingCartItems?
-                .Sum(item => item.TotalPrice) ?? 0;
+            await UpdateCartTotalPriceAsync(shoppingCart);
+        }
 
-            shoppingCart.LastUpdatedTime = DateTime.UtcNow;
-            await _shoppingCartRepository.UpdateAsync(shoppingCart);
+        private async Task UpdateCartTotalPriceAsync(ShoppingCart cart)
+        {
+            var cartItems = await _shoppingCartItemRepository.GetByCartIdAsync(cart.CartID);
+
+            cart.TotalPrice = cartItems.Sum(item => item.TotalPrice);
+            cart.LastUpdatedTime = DateTime.UtcNow;
+            await _shoppingCartRepository.UpdateAsync(cart);
         }
     }
-
 }

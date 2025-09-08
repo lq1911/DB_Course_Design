@@ -17,10 +17,7 @@ namespace BackEnd.Repositories
         public async Task<IEnumerable<ShoppingCart>> GetAllAsync()
         {
             return await _context.ShoppingCarts
-                                 .Include(sc => sc.Order)             // 关联订单
                                  .Include(sc => sc.ShoppingCartItems) // 购物车项
-                                 .Include(sc => sc.Customer)          // 购物车的消费者
-                                 .Include(sc => sc.Store)             // 购物车关联的店铺
                                  .ToListAsync();
         }
 
@@ -33,6 +30,19 @@ namespace BackEnd.Repositories
                                  .Include(sc => sc.Store)
                                  .FirstOrDefaultAsync(sc => sc.CartID == id);
         }
+
+        public async Task<ShoppingCart?> GetActiveCartWithStoreFilterAsync(int customerId, int storeId)
+        {
+            return await _context.ShoppingCarts
+                .AsNoTracking()
+                .Include(c => c.ShoppingCartItems!)
+                    .ThenInclude(i => i.Dish)
+                .Where(c => c.CustomerID == customerId &&
+                        c.ShoppingCartState == ShoppingCartState.Active &&
+                        c.StoreID == storeId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<ShoppingCart?> GetByCustomerIdAsync(int customerId)
         {
             var shoppingCart = await _context.ShoppingCarts
@@ -49,9 +59,9 @@ namespace BackEnd.Repositories
         public async Task<ShoppingCart?> GetActiveCartByCustomerIdAsync(int customerId)
         {
             return await _context.ShoppingCarts
-                .Include(c => c.ShoppingCartItems)
+                .Include(c => c.ShoppingCartItems!)
                     .ThenInclude(i => i.Dish)
-                .Where(c => c.CustomerID == customerId && c.ShoppingCartState == ShoppingCartState.UnCompleted)
+                .Where(c => c.CustomerID == customerId && c.ShoppingCartState == ShoppingCartState.Active)
                 .OrderByDescending(c => c.LastUpdatedTime) // 如果有多个未锁定，取最近的
                 .FirstOrDefaultAsync();
         }
