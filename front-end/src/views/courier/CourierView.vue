@@ -288,11 +288,86 @@
                         </div>
                     </div>
 
+                    <!-- 投诉页面 -->
+                    <div v-if="currentTab === 'complaints'" class="mx-4 mt-4">
+                        <!-- 顶部统计 -->
+                        <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-gray-900">
+                                    {{ complaints.length }}
+                                </div>
+                                <div class="text-sm text-gray-500">总投诉数</div>
+                            </div>
+                        </div>
 
+                        <!-- 投诉记录列表 -->
+                        <div class="bg-white rounded-lg shadow-sm">
+                            <!-- ▼▼▼ 新增的子导航栏 ▼▼▼ -->
+                            <div class="flex border-b">
+                                <div v-for="tab in complaintTabs" :key="tab.key"
+                                    class="flex-1 py-3 text-center cursor-pointer text-sm font-medium" :class="{
+                                        'text-orange-500 border-b-2 border-orange-500': activeComplaintTab === tab.key,
+                                        'text-gray-600': activeComplaintTab !== tab.key
+                                    }" @click="activeComplaintTab = tab.key">
+                                    {{ tab.label }}
+                                </div>
+                            </div>
+
+                            <!-- 列表内容 -->
+                            <div class="p-4 space-y-4">
+                                <!-- ▼▼▼ 修改点：v-for 循环现在使用 filteredComplaints ▼▼▼ -->
+                                <div v-for="complaint in filteredComplaints" :key="complaint.ComplaintID"
+                                    class="border rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="text-sm font-medium text-red-500">
+                                            #{{ complaint.ComplaintID }}
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            {{ complaint.ComplaintTime }}
+                                        </div>
+                                    </div>
+                                    <div class="text-sm text-gray-900 mb-2">
+                                        订单号：{{ complaint.DeliveryTaskID }}
+                                    </div>
+                                    <div class="bg-red-50 rounded-lg p-3 mb-3">
+                                        <div class="text-sm text-gray-700">
+                                            {{ complaint.ComplaintReason }}
+                                        </div>
+                                    </div>
+                                    <div v-if="complaint.punishment"
+                                        class="bg-orange-50 rounded-lg p-3 border border-orange-100">
+                                        <div class="flex items-center mb-2">
+                                            <el-icon class="text-orange-500 mr-2">
+                                                <Warning />
+                                            </el-icon>
+                                            <span class="text-sm font-medium text-orange-500">{{
+                                                complaint.punishment.type }}</span>
+                                        </div>
+                                        <div class="text-sm text-gray-600">
+                                            {{ complaint.punishment.description }}
+                                        </div>
+                                        <div v-if="complaint.punishment.duration" class="text-xs text-orange-500 mt-1">
+                                            处罚时长：{{ complaint.punishment.duration }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ▼▼▼ 新增：当筛选后列表为空时的提示 ▼▼▼ -->
+                                <div v-if="filteredComplaints.length === 0" class="text-center text-gray-400 py-12">
+                                    <el-icon class="text-4xl mb-2">
+                                        <DocumentCopy />
+                                    </el-icon>
+                                    <p>当前分类下没有记录</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
 
 
                     <!-- 个人中心页面 -->
                     <div v-if="currentTab === 'profile' && userProfile" class="mx-4 mt-4">
+                        <!-- 个人资料卡片 -->
                         <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
                             <div class="flex items-center space-x-4 mb-4">
                                 <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
@@ -306,7 +381,7 @@
                                     <div class="text-xs text-gray-400">注册时间: {{ userProfile.registerDate }}</div>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-3 gap-4">
                                 <div class="bg-gray-50 rounded-lg p-3 text-center">
                                     <div class="text-lg font-semibold text-gray-900">{{ userProfile.rating }}</div>
                                     <div class="text-xs text-gray-500">获评均分</div>
@@ -316,16 +391,16 @@
                                     <div class="text-xs text-gray-500">信誉积分</div>
                                 </div>
                                 <div class="bg-gray-50 rounded-lg p-3 text-center">
-                                    <div class="text-lg font-semibold text-gray-900">{{ income }}</div>
-                                    <div class="text-xs text-gray-500">薪资</div>
+                                    <div class="text-lg font-semibold text-gray-900">¥{{ income.toFixed(2) }}</div>
+                                    <div class="text-xs text-gray-500">本月收入</div>
                                 </div>
                             </div>
                         </div>
 
-
                         <!-- 设置菜单 -->
                         <div class="bg-white rounded-lg shadow-sm">
-                            <div class="p-4 space-y-1">
+                            <div class="p-4 space-y-1 divide-y divide-gray-100">
+                                <!-- 账号与资料设置 -->
                                 <router-link :to="{ name: 'AccountSettings' }"
                                     class="flex items-center justify-between cursor-pointer py-3 no-underline text-gray-900">
                                     <div class="flex items-center space-x-3">
@@ -338,63 +413,78 @@
                                         <ArrowRight />
                                     </el-icon>
                                 </router-link>
+
+                                <!-- 投诉与处罚菜单项 -->
+                                <div @click="currentTab = 'complaints'"
+                                    class="flex items-center justify-between cursor-pointer py-3 text-gray-900">
+                                    <div class="flex items-center space-x-3">
+                                        <el-icon class="text-gray-400">
+                                            <Warning />
+                                        </el-icon>
+                                        <span>投诉与处罚</span>
+                                    </div>
+                                    <el-icon class="text-gray-400">
+                                        <ArrowRight />
+                                    </el-icon>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 底部导航栏 -->
+                    <div
+                        class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2">
+                        <div v-for="tab in tabs" :key="tab.key"
+                            class="flex flex-col items-center justify-center py-2 cursor-pointer w-full"
+                            :class="{ 'text-orange-500': currentTab === tab.key }" @click="currentTab = tab.key">
+                            <el-icon class="text-xl mb-1">
+                                <component :is="tab.icon" />
+                            </el-icon>
+                            <span class="text-xs">{{ tab.label }}</span>
                         </div>
                     </div>
                 </div>
-
-
-
-                <!-- 底部导航栏 -->
-                <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2">
-                    <div v-for="tab in tabs" :key="tab.key"
-                        class="flex flex-col items-center justify-center py-2 cursor-pointer"
-                        :class="{ 'text-orange-500': currentTab === tab.key }" @click="currentTab = tab.key">
-                        <el-icon class="text-xl mb-1">
-                            <component :is="tab.icon" />
-                        </el-icon>
-                        <span class="text-xs">{{ tab.label }}</span>
-                    </div>
-                </div>
-            </div>
-            <!-- 导航弹窗 -->
-            <div v-if="showNavigationModal"
-                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div class="bg-white rounded-lg w-full max-w-sm">
-                    <div class="p-4 border-b flex items-center justify-between">
-                        <div class="text-lg font-semibold text-gray-900">
-                            导航路线
+                <!-- 导航弹窗 -->
+                <div v-if="showNavigationModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg w-full max-w-sm">
+                        <div class="p-4 border-b flex items-center justify-between">
+                            <div class="text-lg font-semibold text-gray-900">
+                                导航路线
+                            </div>
+                            <el-icon class="text-gray-400 cursor-pointer" @click="closeNavigation">
+                                <Close />
+                            </el-icon>
                         </div>
-                        <el-icon class="text-gray-400 cursor-pointer" @click="closeNavigation">
-                            <Close />
-                        </el-icon>
-                    </div>
-                    <div class="p-4">
-                        <img :src="'https://readdy.ai/api/search-image?query=Detailed%20navigation%20route%20map%20with%20turn%20by%20turn%20directions%2C%20showing%20current%20location%20and%20destination%20with%20clear%20path%20markers%2C%20real%20time%20traffic%20information%2C%20estimated%20arrival%20time%20display%2C%20professional%20navigation%20interface&width=280&height=400&seq=nav001&orientation=portrait'"
-                            alt="导航路线" class="w-full h-64 object-cover rounded-lg mb-4" />
-                        <div class="space-y-3 mb-4">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
-                                <!-- 数据绑定到 selectedOrder -->
-                                <div class="text-sm text-gray-900">
-                                    {{ selectedOrder?.restaurant }}
+                        <div class="p-4">
+                            <img :src="'https://readdy.ai/api/search-image?query=Detailed%20navigation%20route%20map%20with%20turn%20by%20turn%20directions%2C%20showing%20current%20location%20and%20destination%20with%20clear%20path%20markers%2C%20real%20time%20traffic%20information%2C%20estimated%20arrival%20time%20display%2C%20professional%20navigation%20interface&width=280&height=400&seq=nav001&orientation=portrait'"
+                                alt="导航路线" class="w-full h-64 object-cover rounded-lg mb-4" />
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                                    <!-- 数据绑定到 selectedOrder -->
+                                    <div class="text-sm text-gray-900">
+                                        {{ selectedOrder?.restaurant }}
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <!-- 数据绑定到 selectedOrder -->
+                                    <div class="text-sm text-gray-900">
+                                        {{ selectedOrder?.deliveryAddress }}
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    预计送达时间：15分钟
                                 </div>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                                <!-- 数据绑定到 selectedOrder -->
-                                <div class="text-sm text-gray-900">
-                                    {{ selectedOrder?.deliveryAddress }}
-                                </div>
-                            </div>
-                            <div class="text-sm text-gray-500">
-                                预计送达时间：15分钟
-                            </div>
+                            <button class="w-full bg-orange-500 text-white py-3 rounded-lg font-medium !rounded-button"
+                                @click="startNavigation">
+                                开始导航
+                            </button>
                         </div>
-                        <button class="w-full bg-orange-500 text-white py-3 rounded-lg font-medium !rounded-button"
-                            @click="startNavigation">
-                            开始导航
-                        </button>
                     </div>
                 </div>
             </div>
@@ -408,8 +498,9 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import {
     User, Bell, Switch, Location, CircleCloseFilled,
-    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List,Refresh
+    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit
 } from '@element-plus/icons-vue';
+import { useRouter } from 'vue-router';
 
 // ===================================================================
 //  数据源切换开关
@@ -422,6 +513,8 @@ import * as RealAPI from '@/api/rider_api';
 import * as MockAPI from '@/api/api.mock';
 
 const api = useMockData ? MockAPI : RealAPI;
+
+const router = useRouter();
 
 // --- 接口定义 ---
 interface UserProfile { name: string; id: string; registerDate: string; rating: number; creditScore: number; }
@@ -437,6 +530,17 @@ interface Order {
     time: string;            // 预计时间
 }
 
+interface Complaint {
+    ComplaintID: string;
+    DeliveryTaskID: string;
+    ComplaintTime: string;
+    ComplaintReason: string;
+    punishment?: { // punishment 是可选的
+        type: string;
+        description: string;
+        duration?: string; // duration 也是可选的
+    };
+}
 
 // --- 状态定义 ---
 // 新增一个类型别名，让代码更清晰
@@ -455,6 +559,16 @@ const activeOrderTab = ref<OrderStatus>('pending');
 // 在 ref 定义区域添加
 const availableOrders = ref<Order[]>([]);
 
+const complaints = ref<Complaint[]>([]);
+
+
+
+const activeComplaintTab = ref<'all' | 'punished'>('all');
+
+const complaintTabs = [
+    { key: 'all', label: '全部投诉' },
+    { key: 'punished', label: '含处罚记录' }
+] as const;
 
 const pendingOrderCount = ref(0);
 const deliveringOrderCount = ref(0);
@@ -470,6 +584,7 @@ const tabs = [
     { key: 'home', label: '工作台', icon: HomeFilled },
     { key: 'available', label: '可接订单', icon: List },
     { key: 'orders', label: '订单', icon: DocumentCopy },
+    { key: 'complaints', label: '投诉', icon: Warning },
     { key: 'profile', label: '我的', icon: UserFilled }
 ];
 // 修改 orderTabs 的 label
@@ -480,6 +595,20 @@ const orderTabs = [
 ] as const;
 
 // --- API 调用逻辑 ---
+
+const filteredComplaints = computed(() => {
+    // 如果原始数据还没加载，返回空数组
+    if (!complaints.value) return [];
+
+    // 如果当前选择的是“含处罚记录”
+    if (activeComplaintTab.value === 'punished') {
+        // 则只返回那些 punishment 字段存在的投诉
+        return complaints.value.filter(c => c.punishment);
+    }
+
+    // 否则（选择的是'all'），返回全部投诉
+    return complaints.value;
+});
 
 const todayIncome = computed(() => {
     // 如果月收入还没加载出来，就显示0
@@ -585,7 +714,8 @@ const loadDashboardData = async () => {
             deliveringOrdersRes,  // 获取配送中列表
             completedOrdersRes,   // 获取已送达列表
             locationRes,
-            availableOrdersRes
+            availableOrdersRes,
+            complaintsRes
         ] = (await Promise.all([
             api.fetchUserProfile(),
             api.fetchWorkStatus(),
@@ -595,6 +725,7 @@ const loadDashboardData = async () => {
             api.fetchOrders('completed'),   // API 调用 3
             api.fetchLocationInfo(),
             api.fetchOrders('to_be_take'),
+            (api as typeof MockAPI).fetchComplaints() // <-- 新增 API 调用
         ])) as [
                 { data: any },         // 1. 对应 profileRes
                 { data: any },         // 2. 对应 statusRes
@@ -603,7 +734,8 @@ const loadDashboardData = async () => {
                 { data: any[] },       // 5. 对应 deliveringOrdersRes
                 { data: any[] },       // 6. 对应 completedOrdersRes
                 { data: any },         // 7. 对应 locationRes
-                { data: Order[] }      // 8. 对应 availableOrdersRes (类型精确)
+                { data: Order[] },      // 8. 对应 availableOrdersRes (类型精确)
+                { data: Complaint[] }
             ];
         // ▲▲▲ 修改结束 ▲▲▲
 
@@ -624,6 +756,7 @@ const loadDashboardData = async () => {
 
         // 保持原有逻辑：页面首次加载时，订单列表默认显示“待取单”的内容
         orders.value = pendingOrdersRes.data;
+        complaints.value = (complaintsRes as { data: any[] }).data;
 
     } catch (error) {
         console.error("加载数据失败:", error);

@@ -8,7 +8,8 @@ import type {
     Order,
     NewOrder,
     OrderStatus,
-    LocationInfo
+    LocationInfo,
+    Complaint
 } from './api.mock'; // 假设类型定义在这里
 
 // --- 修正后的 API 函数 ---
@@ -103,4 +104,13 @@ export const updateUserProfile = (profileData: UserProfile) => {
     // 请求的 URL 通常是该资源的路径，例如 /courier/profile
     // 第二个参数 profileData 是要发送到服务器的请求体 (request body)
     return apiClient.put<{ success: boolean; message: string }>('/courier/profile', profileData);
+};
+
+/**
+ * 获取骑手的投诉记录列表
+ */
+export const fetchComplaints = () => {
+    // 假设后端提供的获取投诉列表的路径是 /courier/complaints
+    // 请务必与后端开发人员确认此路径
+    return apiClient.get<Complaint[]>('/courier/complaints');
 };

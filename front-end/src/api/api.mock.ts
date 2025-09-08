@@ -11,6 +11,32 @@ export interface UserProfile {
     creditScore: number;
 }
 
+// ▼▼▼ 在其他 interface 定义的旁边，添加下面这个 ▼▼▼
+export interface Complaint {
+  ComplaintID: string;
+  DeliveryTaskID: string;
+  ComplaintTime: string;
+  ComplaintReason: string;
+  punishment?: { // punishment 是可选的
+    type: string;
+    description: string;
+    duration?: string; // duration 也是可选的
+  };
+}
+
+// ▼▼▼ 在其他 interface 定义的旁边，添加下面这个 ▼▼▼
+export interface Complaint {
+  ComplaintID: string;
+  DeliveryTaskID: string;
+  ComplaintTime: string;
+  ComplaintReason: string;
+  punishment?: { // punishment 是可选的
+    type: string;
+    description: string;
+    duration?: string; // duration 也是可选的
+  };
+}
+
 /** 
  * 工作状态详情 
  * @description 只保留了模板中用于判断和切换状态的 isOnline 属性。
@@ -122,6 +148,38 @@ const mockOrders: Order[] = [
     },
 ];
 
+
+// ▼▼▼ 在 mockOrders, mockLocationInfo 等数据的旁边，添加下面这个 ▼▼▼
+const mockComplaints: Complaint[] = [
+    {
+        ComplaintID: 'CPL-001',
+        DeliveryTaskID: 'ORD-MOCK-003',
+        ComplaintTime: '2024-08-21 14:30',
+        ComplaintReason: '送达时间过长，比预计晚了20分钟。',
+        punishment: {
+            type: '超时罚款',
+            description: '因严重超时导致客户投诉，罚款20元。',
+        }
+    },
+    {
+        ComplaintID: 'CPL-002',
+        DeliveryTaskID: 'ORD-MOCK-004',
+        ComplaintTime: '2024-08-22 19:00',
+        ComplaintReason: '餐品有少量泼洒。',
+    },
+    {
+        ComplaintID: 'CPL-003',
+        DeliveryTaskID: 'ORD-MOCK-001',
+        ComplaintTime: '2024-08-23 12:15',
+        ComplaintReason: '骑手态度不佳。',
+        punishment: {
+            type: '服务警告',
+            description: '因服务态度问题收到警告一次，请注意改善服务质量。',
+            duration: '7天'
+        }
+    },
+];
+
 const mockLocationInfo: LocationInfo = {
     area: '人民广场商圈 (模拟)',
 };
@@ -211,3 +269,7 @@ export const updateUserProfile = (profileData: any) => {
     // 返回一个成功的模拟响应
     return createMockResponse({ success: true, message: '用户信息更新成功' });
 };
+
+
+// ▼▼▼ 在其他 export const 函数的末尾，添加下面这个 ▼▼▼
+export const fetchComplaints = () => createMockResponse(mockComplaints);
