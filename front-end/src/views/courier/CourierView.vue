@@ -63,6 +63,7 @@
                 <div class="pt-24 pb-20">
                     <!-- 工作台页面 -->
                     <div v-if="currentTab === 'home'">
+                        <!-- 工作状态卡片 -->
                         <div v-if="workStatus" class="bg-white mx-4 mt-6 rounded-2xl shadow-lg p-5">
                             <div class="flex items-center justify-between mb-5">
                                 <div class="flex items-center space-x-3">
@@ -91,34 +92,28 @@
                                 </div>
                             </div>
                             <div class="grid grid-cols-3 gap-4 text-center">
-
-                                <!-- 2. 这是第一个子项: 待取单 -->
                                 <div class="bg-orange-50 rounded-2xl p-3">
                                     <div class="text-xl font-semibold text-orange-500 mb-1">
                                         {{ pendingOrderCount }}
                                     </div>
                                     <div class="text-xs text-gray-500">待取单</div>
                                 </div>
-
-                                <!-- 3. 这是第二个子项: 配送中 -->
                                 <div class="bg-blue-50 rounded-2xl p-3">
                                     <div class="text-xl font-semibold text-blue-500 mb-1">
                                         {{ deliveringOrderCount }}
                                     </div>
                                     <div class="text-xs text-gray-500">配送中</div>
                                 </div>
-
-                                <!-- 4. 这是第三个子项: 已送达 -->
                                 <div class="bg-green-50 rounded-2xl p-3">
                                     <div class="text-xl font-semibold text-green-500 mb-1">
                                         {{ completedOrderCount }}
                                     </div>
                                     <div class="text-xs text-gray-500">已送达</div>
                                 </div>
-
                             </div>
                         </div>
 
+                        <!-- 地图卡片 -->
                         <div v-if="locationInfo" class="mx-4 mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
                             <div class="h-64 relative">
                                 <img src="https://readdy.ai/api/search-image?query=Urban%20delivery%20map%20interface%20showing%20rider%20location%20with%20orange%20markers%20and%20navigation%20routes%2C%20clean%20modern%20GPS%20interface%20design%2C%20realistic%20mobile%20map%20view%20with%20clear%20street%20layout%2C%20professional%20delivery%20app%20aesthetic%2C%20bright%20daylight%20view&width=343&height=256&seq=map001&orientation=landscape"
@@ -137,6 +132,75 @@
                         </div>
                     </div>
 
+                    <!-- 可接订单页面 -->
+                    <div v-if="currentTab === 'available'" class="mx-4 mt-4 space-y-3">
+                        <!-- 有订单时显示列表 -->
+                        <div v-if="availableOrders.length > 0">
+                            <div v-for="order in availableOrders" :key="order.id"
+                                class="bg-white border rounded-lg p-3 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-sm font-medium text-gray-900">#{{ order.id }}</div>
+                                    <div class="text-sm font-medium text-orange-500">¥{{ order.fee }}</div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-start space-x-3">
+                                        <div
+                                            class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                                            <el-icon>
+                                                <Shop />
+                                            </el-icon>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-gray-900">{{ order.restaurant }}</div>
+                                            <div class="text-sm text-gray-500">{{ order.pickupAddress }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start space-x-3">
+                                        <div
+                                            class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-white">
+                                            <el-icon>
+                                                <User />
+                                            </el-icon>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-gray-900">{{ order.customer }}</div>
+                                            <div class="text-sm text-gray-500">{{ order.deliveryAddress }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-center text-xs text-gray-500">
+                                    <div class="bg-orange-50 rounded-lg p-2">
+                                        <div class="text-orange-500 font-medium text-sm">{{ order.distance }}km</div>
+                                        <div>配送距离</div>
+                                    </div>
+                                    <div class="bg-blue-50 rounded-lg p-2">
+                                        <div class="text-blue-500 font-medium text-sm">{{ order.time }}分钟</div>
+                                        <div>预计送达</div>
+                                    </div>
+                                </div>
+                                <button @click="acceptAvailableOrder(order)"
+                                    class="w-full bg-orange-500 text-white py-2 rounded-lg font-medium hover:bg-orange-600 transition-all">
+                                    接单
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 没有订单时显示提示 -->
+                        <div v-else class="text-center text-gray-400 py-24">
+                            <el-icon class="text-5xl mb-2">
+                                <Bell />
+                            </el-icon>
+                            <p>当前没有可接的订单</p>
+                        </div>
+
+                        <!-- ▼▼▼ 新增的悬浮刷新按钮 ▼▼▼ -->
+                        <button @click="refreshAvailableOrders"
+                            class="fixed bottom-24 right-5 w-14 h-14 bg-orange-500 text-white rounded-full shadow-lg flex items-center justify-center transition-transform transform hover:scale-110">
+                            <el-icon class="text-2xl" :class="{ 'is-loading': isRefreshing }">
+                                <Refresh />
+                            </el-icon>
+                        </button>
+                    </div>
+
                     <!-- 订单列表页面 -->
                     <div v-if="currentTab === 'orders'" class="mx-4 mt-4 order-list-container">
                         <div class="bg-white rounded-lg shadow-sm">
@@ -153,22 +217,45 @@
                                     </el-icon>
                                     <p>当前分类下没有订单哦</p>
                                 </div>
-                                <!-- 找到并替换为这个新版本 -->
                                 <div v-else v-for="order in filteredOrders" :key="order.id"
                                     class="border rounded-lg p-3 space-y-3">
                                     <div class="flex items-center justify-between">
                                         <div class="text-sm font-medium text-gray-900">#{{ order.id }}</div>
-                                        <!-- 修改点: 使用新函数生成状态文本 -->
                                         <div class="text-xs px-2 py-1 rounded-full"
                                             :class="getOrderStatusClass(order.status)">
                                             {{ getOrderStatusText(order.status) }}
                                         </div>
                                     </div>
-                                    <div class="text-sm text-gray-900">{{ order.restaurant }}</div>
-                                    <div class="text-xs text-gray-500 mb-1">{{ order.address }}</div>
-                                    <div class="flex items-center justify-between">
+                                    <div class="space-y-2">
+                                        <div class="flex items-start space-x-3">
+                                            <div
+                                                class="mt-1 flex-shrink-0 w-5 h-5 flex items-center justify-center bg-orange-500 rounded-full text-white">
+                                                <el-icon :size="12">
+                                                    <Shop />
+                                                </el-icon>
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-sm text-gray-900">{{ order.restaurant }}
+                                                </div>
+                                                <div class="text-xs text-gray-500">{{ order.pickupAddress }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start space-x-3">
+                                            <div
+                                                class="mt-1 flex-shrink-0 w-5 h-5 flex items-center justify-center bg-green-500 rounded-full text-white">
+                                                <el-icon :size="12">
+                                                    <User />
+                                                </el-icon>
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-sm text-gray-900">{{ order.customer }}
+                                                </div>
+                                                <div class="text-xs text-gray-500">{{ order.deliveryAddress }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-2">
                                         <div class="text-sm font-medium text-orange-500">¥{{ order.fee }}</div>
-                                        <!-- 新增点: 根据状态显示操作按钮 -->
                                         <div class="flex space-x-2">
                                             <button v-if="order.status === 'pending'"
                                                 @click="handlePickupOrder(order.id)"
@@ -182,7 +269,6 @@
                                             </button>
                                         </div>
                                     </div>
-
                                     <div v-if="order.status === 'pending' || order.status === 'delivering'"
                                         class="mt-3">
                                         <div class="relative">
@@ -197,11 +283,11 @@
                                             </button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
 
 
@@ -257,74 +343,8 @@
                     </div>
                 </div>
 
-                <!-- 新订单弹窗 -->
-                <div v-if="showNewOrder"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div class="bg-white rounded-lg w-full max-w-sm">
-                        <div class="p-4 border-b">
-                            <div class="flex items-center justify-between">
-                                <div class="text-lg font-semibold text-gray-900">新订单</div>
-                                <div class="text-sm text-orange-500">{{ countdown }}s</div>
-                            </div>
-                        </div>
 
-                        <!-- 核心修改: v-if="newOrderInfo" 确保在详情加载后才显示内容 -->
-                        <div v-if="newOrderInfo" class="p-4">
-                            <div class="mb-4">
-                                <!-- 数据绑定: 地图图片 -->
-                                <img :src="newOrderInfo.mapImageUrl" alt="订单地图"
-                                    class="w-full h-32 object-cover rounded-lg" />
-                            </div>
-                            <div class="space-y-3 mb-4">
-                                <div>
-                                    <!-- 数据绑定: 餐厅名和地址 -->
-                                    <div class="text-sm font-medium text-gray-900">{{ newOrderInfo.restaurantName }}
-                                    </div>
-                                    <div class="text-xs text-gray-500">{{ newOrderInfo.restaurantAddress }}</div>
-                                </div>
-                                <div>
-                                    <!-- 数据绑定: 顾客名和地址 -->
-                                    <div class="text-sm font-medium text-gray-900">送至：{{ newOrderInfo.customerName }}
-                                    </div>
-                                    <div class="text-xs text-gray-500">{{ newOrderInfo.customerAddress }}</div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 mb-4 text-center">
-                                <div>
-                                    <!-- 数据绑定: 配送距离 -->
-                                    <div class="text-sm font-semibold text-gray-900">{{ newOrderInfo.distance }}</div>
-                                    <div class="text-xs text-gray-500">配送距离</div>
-                                </div>
-                                <div>
-                                    <!-- 数据绑定: 配送费 -->
-                                    <div class="text-sm font-semibold text-orange-500">¥{{ newOrderInfo.fee.toFixed(2)
-                                    }}
-                                    </div>
-                                    <div class="text-xs text-gray-500">配送费</div>
-                                </div>
-                            </div>
-                            <div class="flex space-x-3">
-                                <button
-                                    class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium cursor-pointer !rounded-button"
-                                    @click="rejectOrder">
-                                    拒绝
-                                </button>
-                                <button
-                                    class="flex-1 bg-orange-500 text-white py-3 rounded-lg font-medium cursor-pointer !rounded-button"
-                                    @click="acceptOrder">
-                                    接受
-                                </button>
-                            </div>
-                        </div>
 
-                        <!-- 如果订单详情还在加载中，可以显示一个加载提示 -->
-                        <div v-else class="p-4 text-center text-gray-500">
-                            正在获取订单详情...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 底部导航栏 -->
                 <!-- 底部导航栏 -->
                 <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2">
                     <div v-for="tab in tabs" :key="tab.key"
@@ -364,7 +384,7 @@
                                 <div class="w-2 h-2 bg-green-500 rounded-full"></div>
                                 <!-- 数据绑定到 selectedOrder -->
                                 <div class="text-sm text-gray-900">
-                                    {{ selectedOrder?.address }}
+                                    {{ selectedOrder?.deliveryAddress }}
                                 </div>
                             </div>
                             <div class="text-sm text-gray-500">
@@ -380,6 +400,7 @@
             </div>
         </div>
     </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -387,13 +408,13 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import {
     User, Bell, Switch, Location, CircleCloseFilled,
-    HomeFilled, DocumentCopy, Coin, UserFilled,Close
+    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List,Refresh
 } from '@element-plus/icons-vue';
 
 // ===================================================================
 //  数据源切换开关
 // ===================================================================
-const useMockData = false;
+const useMockData = true;
 
 // 动态导入API模块
 // 注意: 我们需要确保真实api.ts也导出了同名函数, 即使它们暂时为空
@@ -404,21 +425,22 @@ const api = useMockData ? MockAPI : RealAPI;
 
 // --- 接口定义 ---
 interface UserProfile { name: string; id: string; registerDate: string; rating: number; creditScore: number; }
-interface Order { id: string; status: string; restaurant: string; address: string; fee: string; time: string; statusText: string; }
-interface NewOrder {
+interface Order {
     id: string;
-    restaurantName: string;
-    restaurantAddress: string;
-    customerName: string;
-    customerAddress: string;
-    distance: string;
-    fee: number;
-    mapImageUrl: string;
+    status: OrderStatus; // 使用我们更精确的类型
+    restaurant: string;
+    pickupAddress: string;   // 取餐地址interface NewOrder
+    deliveryAddress: string; // 送达地址
+    customer: string;        // 顾客姓名
+    fee: string;
+    distance: string;        // 配送距离
+    time: string;            // 预计时间
 }
+
 
 // --- 状态定义 ---
 // 新增一个类型别名，让代码更清晰
-type OrderStatus = 'pending' | 'delivering' | 'completed';
+type OrderStatus = 'to_be_take' | 'pending' | 'delivering' | 'completed';
 const userProfile = ref<UserProfile | null>(null);
 const locationInfo = ref<any | null>(null);
 const orders = ref<Order[]>([]);
@@ -430,11 +452,10 @@ const errorState = ref<string | null>(null);
 
 const currentTab = ref('home');
 const activeOrderTab = ref<OrderStatus>('pending');
+// 在 ref 定义区域添加
+const availableOrders = ref<Order[]>([]);
 
-const showNewOrder = ref(false);
-const newOrderInfo = ref<NewOrder | null>(null);
-const countdown = ref(30);
-let countdownTimer: number | null = null;
+
 const pendingOrderCount = ref(0);
 const deliveringOrderCount = ref(0);
 const completedOrderCount = ref(0);
@@ -442,9 +463,12 @@ const completedOrderCount = ref(0);
 const showNavigationModal = ref(false);
 const selectedOrder = ref<Order | null>(null); // Order 是您已有的订单接口类型
 
+const isRefreshing = ref(false); // 用于控制刷新按钮的加载状态
+
 // --- 静态数据 ---
 const tabs = [
     { key: 'home', label: '工作台', icon: HomeFilled },
+    { key: 'available', label: '可接订单', icon: List },
     { key: 'orders', label: '订单', icon: DocumentCopy },
     { key: 'profile', label: '我的', icon: UserFilled }
 ];
@@ -505,6 +529,27 @@ const handleDeliverOrder = async (orderId: string) => {
 };
 
 
+const refreshAvailableOrders = async () => {
+    // 如果正在刷新，则阻止重复点击
+    if (isRefreshing.value) return;
+
+    isRefreshing.value = true;
+    ElMessage.info('正在刷新订单...'); // 给出提示
+
+    try {
+        // 专门只调用获取可接订单的 API
+        const res = await api.fetchOrders('to_be_take') as { data: Order[] };
+        availableOrders.value = res.data;
+        ElMessage.success('订单列表已更新！');
+    } catch (error) {
+        console.error("刷新可接订单失败:", error);
+        ElMessage.error('刷新失败，请稍后重试');
+    } finally {
+        // 无论成功还是失败，最后都要结束刷新状态
+        isRefreshing.value = false;
+    }
+};
+
 
 // 新增导航相关函数
 const showNavigation = (order: Order) => {
@@ -539,7 +584,8 @@ const loadDashboardData = async () => {
             pendingOrdersRes,     // 获取待取单列表
             deliveringOrdersRes,  // 获取配送中列表
             completedOrdersRes,   // 获取已送达列表
-            locationRes
+            locationRes,
+            availableOrdersRes
         ] = (await Promise.all([
             api.fetchUserProfile(),
             api.fetchWorkStatus(),
@@ -547,13 +593,25 @@ const loadDashboardData = async () => {
             api.fetchOrders('pending'),     // API 调用 1
             api.fetchOrders('delivering'),  // API 调用 2
             api.fetchOrders('completed'),   // API 调用 3
-            api.fetchLocationInfo()
-        ])) as [{ data: any }, { data: any }, { data: any }, { data: any[] }, { data: any[] }, { data: any[] }, { data: any }];
+            api.fetchLocationInfo(),
+            api.fetchOrders('to_be_take'),
+        ])) as [
+                { data: any },         // 1. 对应 profileRes
+                { data: any },         // 2. 对应 statusRes
+                { data: any },         // 3. 对应 incomeRes
+                { data: any[] },       // 4. 对应 pendingOrdersRes
+                { data: any[] },       // 5. 对应 deliveringOrdersRes
+                { data: any[] },       // 6. 对应 completedOrdersRes
+                { data: any },         // 7. 对应 locationRes
+                { data: Order[] }      // 8. 对应 availableOrdersRes (类型精确)
+            ];
         // ▲▲▲ 修改结束 ▲▲▲
 
         // --- 赋值 ---
         userProfile.value = profileRes.data;
         workStatus.value = statusRes.data;
+        locationInfo.value = locationRes.data;
+        availableOrders.value = availableOrdersRes.data;
         // income.value = incomeRes.data; 
         income.value = incomeRes.data;
         locationInfo.value = locationRes.data;
@@ -598,62 +656,10 @@ const toggleWorkStatus = async () => {
         ElMessage.error("状态切换失败，请重试");
     }
 };
-const acceptOrder = async () => {
-    if (!newOrderInfo.value) return;
-    try {
-        await api.acceptOrderAPI(newOrderInfo.value.id);
-        closeOrderModal(); // 使用新的关闭函数
-        ElMessage.success('订单已接受！');
-        const res = await api.fetchOrders(activeOrderTab.value) as { data: any[] };
-        orders.value = res.data;
-    } catch (error) {
-        ElMessage.error('接受订单失败');
-    }
-};
-
-const rejectOrder = async () => {
-    if (!newOrderInfo.value) return;
-    try {
-        await api.rejectOrderAPI(newOrderInfo.value.id);
-        closeOrderModal(); // 使用新的关闭函数
-        ElMessage.info('已拒绝该订单');
-    } catch (error) {
-        ElMessage.error('操作失败');
-    }
-};
 
 
-function setupWebSocketListener() {
-    // 这里的URL需要后端提供
-    const socket = new WebSocket('ws://localhost:5200/notifications');
 
-    // 当连接成功建立时
-    socket.onopen = () => {
-        console.log('WebSocket连接已建立，等待新订单推送...');
-    };
 
-    // 当从服务器接收到消息时
-    socket.onmessage = (event) => {
-        try {
-            // 服务器推送的消息通常是JSON字符串，需要解析
-            const notification = JSON.parse(event.data);
-
-            // 假设服务器推送的数据格式是 { type: 'NEW_ORDER', notificationId: 'xyz-123' }
-            if (notification && notification.type === 'NEW_ORDER' && notification.notificationId) {
-                console.log('收到新订单推送:', notification);
-                // 直接调用您已经写好的函数来处理这个推送！
-                handleNewOrderPush({ notificationId: notification.notificationId });
-            }
-        } catch (error) {
-            console.error('处理WebSocket消息失败:', error);
-        }
-    };
-
-    // 处理连接错误
-    socket.onerror = (error) => {
-        console.error('WebSocket 错误:', error);
-    };
-}
 
 
 
@@ -661,56 +667,10 @@ onMounted(() => {
     loadDashboardData();
 
     // 如果不是用模拟数据，就启动WebSocket监听器
-    if (!useMockData) {
-        setupWebSocketListener();
-    }
 
-    // 保留模拟数据时的测试逻辑
-    if (useMockData) {
-        setTimeout(() => {
-            handleNewOrderPush({ notificationId: 'mock-notification-123' });
-        }, 5000);
-    }
 });
 
-// 函数1: 处理新订单推送的函数
-const handleNewOrderPush = async (notification: { notificationId: string }) => {
-    showNewOrder.value = true;
-    newOrderInfo.value = null; // 先清空旧数据，弹窗会显示“加载中”
 
-    try {
-        // 调用API获取订单详情
-        const res = await api.fetchNewOrder(notification.notificationId) as { data: NewOrder };
-        newOrderInfo.value = res.data;
-
-        // 成功获取数据后，开始倒计时
-        startCountdown();
-
-    } catch (error) {
-        ElMessage.error('获取新订单详情失败');
-        showNewOrder.value = false; // 获取失败则直接关闭弹窗
-    }
-};
-
-// 函数2: 倒计时逻辑
-const startCountdown = () => {
-    countdown.value = 30; // 每次都重置为30秒
-    if (countdownTimer) clearInterval(countdownTimer); // 清除可能存在的旧计时器
-
-    countdownTimer = setInterval(() => {
-        countdown.value--;
-        if (countdown.value <= 0) {
-            clearInterval(countdownTimer!);
-            showNewOrder.value = false; // 时间到了自动关闭弹窗
-        }
-    }, 1000);
-};
-
-// 函数3: 统一的关闭弹窗逻辑
-const closeOrderModal = () => {
-    showNewOrder.value = false;
-    if (countdownTimer) clearInterval(countdownTimer); // 关闭弹窗时，必须停止倒计时
-};
 
 // --- 监听器 ---
 // 找到这个 watch
@@ -741,6 +701,30 @@ const getOrderStatusText = (status: string) => {
         case 'delivering': return '配送中';
         case 'completed': return '已送达';
         default: return '未知状态';
+    }
+};
+/**
+ * 接受一个在列表中展示的“可接订单”
+ */
+const acceptAvailableOrder = async (order: Order) => {
+    try {
+        await api.acceptAvailableOrderAPI(order.id);
+        ElMessage.success(`订单 #${order.id} 已接受！将移至“待取单”`);
+
+        // --- 实时更新UI ---
+        // 1. 从“可接订单”列表中移除
+        availableOrders.value = availableOrders.value.filter(o => o.id !== order.id);
+
+        // 2. 将“待取单”的数量加 1
+        pendingOrderCount.value++;
+
+        // 3. 【新增修复】手动将这个订单添加到“订单”页面的数据列表中
+        const newlyAcceptedOrder = { ...order, status: 'pending' as OrderStatus };
+        orders.value.unshift(newlyAcceptedOrder);
+
+    } catch (error) {
+        console.error("接单失败:", error);
+        ElMessage.error("接单失败，可能已被他人抢走，请刷新");
     }
 };
 

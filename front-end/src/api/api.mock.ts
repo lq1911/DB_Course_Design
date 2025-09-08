@@ -1,8 +1,6 @@
 // src/api/api.mock.ts
 
-// ===================================================================
-//  1. 精简后的接口定义 (Streamlined Interfaces)
-// ===================================================================
+export type OrderStatus = 'to_be_take' | 'pending' | 'delivering' | 'completed';
 
 /** 用户个人资料 (所有属性均在模板中使用) */
 export interface UserProfile {
@@ -36,14 +34,19 @@ export interface IncomeData {
  * @description 移除了模板中未显示的 time 属性。
  * @removed time
  */
+// ▼▼▼ 将旧的 Order 接口替换为这个 ▼▼▼
 export interface Order {
-    id: string;
-    status: 'pending' | 'delivering' | 'completed';
-    restaurant: string;
-    address: string;
-    fee: string;
-    statusText: string;
+  id: string;
+  status: OrderStatus; // 使用我们统一的、更精确的类型
+  restaurant: string;
+  pickupAddress: string;   // 取餐地址
+  deliveryAddress: string; // 送达地址
+  customer: string;        // 顾客姓名
+  fee: string;
+  distance: string;        // 配送距离
+  time: string;            // 预计时间
 }
+// ▲▲▲ 替换结束 ▲▲▲
 
 /** 新订单详情 (所有属性均在模板或逻辑中使用) */
 export interface NewOrder {
@@ -84,10 +87,39 @@ const mockIncomeData: IncomeData = {
 };
 
 const mockOrders: Order[] = [
-    { id: 'ORD-MOCK-001', restaurant: '模拟-肯德基', address: '模拟-人民广场1号', fee: '10.00', status: 'pending', statusText: '待取单' },
-    { id: 'ORD-MOCK-002', restaurant: '模拟-麦当劳', address: '模拟-南京路2号', fee: '8.50', status: 'pending', statusText: '待取单' },
-    { id: 'ORD-MOCK-003', restaurant: '模拟-星巴克', address: '模拟-淮海路3号', fee: '15.00', status: 'delivering', statusText: '配送中' },
-    { id: 'ORD-MOCK-004', restaurant: '模拟-必胜客', address: '模拟-西藏中路4号', fee: '12.00', status: 'completed', statusText: '已送达' },
+    // 您的 to_be_take 订单 (这些是正确的，保留)
+    {
+        id: 'AVAIL-001', status: 'to_be_take', restaurant: '模拟-一点点奶茶',
+        pickupAddress: '模拟-科技园路1号', deliveryAddress: '模拟-软件大厦A座 10楼',
+        customer: '李先生', fee: '15.00', distance: '1.5', time: '10'
+    },
+    {
+        id: 'AVAIL-002', status: 'to_be_take', restaurant: '模拟-肯德基宅急送',
+        pickupAddress: '模拟-人民广场1号', deliveryAddress: '模拟-市政府大楼 3楼',
+        customer: '王女士', fee: '12.50', distance: '2.3', time: '18'
+    },
+
+    // --- 以下是修正后的旧订单 ---
+    {
+        id: 'ORD-MOCK-001', status: 'pending', restaurant: '模拟-肯德基',
+        pickupAddress: '模拟-人民广场1号', deliveryAddress: '模拟-客户家A',
+        customer: '客户A', fee: '10.00', distance: '2.0', time: '15'
+    },
+    {
+        id: 'ORD-MOCK-002', status: 'pending', restaurant: '模拟-麦当劳',
+        pickupAddress: '模拟-南京路2号', deliveryAddress: '模拟-客户家B',
+        customer: '客户B', fee: '8.50', distance: '1.2', time: '10'
+    },
+    {
+        id: 'ORD-MOCK-003', status: 'delivering', restaurant: '模拟-星巴克',
+        pickupAddress: '模拟-淮海路3号', deliveryAddress: '模拟-客户家C',
+        customer: '客户C', fee: '15.00', distance: '3.1', time: '20'
+    },
+    {
+        id: 'ORD-MOCK-004', status: 'completed', restaurant: '模拟-必胜客',
+        pickupAddress: '模拟-西藏中路4号', deliveryAddress: '模拟-客户家D',
+        customer: '客户D', fee: '12.00', distance: '2.5', time: '18'
+    },
 ];
 
 const mockLocationInfo: LocationInfo = {
@@ -119,9 +151,8 @@ function createMockResponse<T>(data: T, delay = 300) {
 export const fetchUserProfile = () => createMockResponse(mockUserProfile);
 export const fetchWorkStatus = () => createMockResponse(mockWorkStatus);
 export const fetchIncomeData = () => createMockResponse(mockIncomeData.thisMonth);
-export const fetchOrders = (status: string) => createMockResponse(mockOrders.filter(o => o.status === status));
+export const fetchOrders = (status: OrderStatus) => createMockResponse(mockOrders.filter(o => o.status === status));
 export const fetchLocationInfo = () => createMockResponse(mockLocationInfo);
-export const fetchNewOrder = () => createMockResponse(mockNewOrder);
 
 export const toggleWorkStatusAPI = (newStatus: boolean) => {
     mockWorkStatus.isOnline = newStatus;
@@ -129,15 +160,7 @@ export const toggleWorkStatusAPI = (newStatus: boolean) => {
     return createMockResponse({ success: true });
 };
 
-export const acceptOrderAPI = (orderId: string) => {
-    console.log(`[Mock] 接受订单: ${orderId}`);
-    return createMockResponse({ success: true });
-};
 
-export const rejectOrderAPI = (orderId: string) => {
-    console.log(`[Mock] 拒绝订单: ${orderId}`);
-    return createMockResponse({ success: true });
-};
 
 // 在文件末尾新增这两个函数
 
@@ -157,6 +180,15 @@ export const deliverOrderAPI = (orderId: string) => {
     const order = mockOrders.find(o => o.id === orderId);
     if (order) {
         order.status = 'completed'; // 核心逻辑：改变状态
+    }
+    return createMockResponse({ success: true });
+};
+
+export const acceptAvailableOrderAPI = (orderId: string) => {
+    console.log(`[Mock] 正在接受订单: ${orderId}`);
+    const order = mockOrders.find(o => o.id === orderId);
+    if (order && order.status === 'to_be_take') {
+        order.status = 'pending';
     }
     return createMockResponse({ success: true });
 };
