@@ -8,6 +8,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<ShoppingCart>> GetAllAsync();
         Task<ShoppingCart?> GetByIdAsync(int id);
+        Task<ShoppingCart?> GetActiveCartWithStoreFilterAsync(int customerId, int storeId);
         Task<ShoppingCart?> GetByCustomerIdAsync(int customerId);
         Task<ShoppingCart?> GetActiveCartByCustomerIdAsync(int customerId);
         Task AddAsync(ShoppingCart shoppingcart);

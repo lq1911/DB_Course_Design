@@ -54,7 +54,7 @@ namespace BackEnd.Services
             if (cart == null)
                 throw new InvalidOperationException("没有可用的购物车，请先添加商品");
 
-            if (cart.Order != null || cart.ShoppingCartState == ShoppingCartState.Completed)
+            if (cart.Order != null || cart.ShoppingCartState == ShoppingCartState.Done)
                 throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
 
             // 创建订单
@@ -70,12 +70,12 @@ namespace BackEnd.Services
             await _foodOrderRepository.AddAsync(order);
 
             // 锁定购物车（保留历史记录）
-            cart.ShoppingCartState = ShoppingCartState.Completed;
+            cart.ShoppingCartState = ShoppingCartState.Done;
             cart.LastUpdatedTime = DateTime.UtcNow;
             await _shoppingCartRepository.UpdateAsync(cart);
         }
 
-            /// <summary>
+        /// <summary>
         /// 使用优惠券（直接删除）
         /// </summary>
         public async Task UseCouponAsync(int couponId)
