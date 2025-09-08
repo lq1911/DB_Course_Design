@@ -81,7 +81,7 @@ namespace BackEnd.Services
 
             // 查找该用户未锁定的购物车
             var shoppingCart = await _shoppingCartRepository
-                .GetActiveCartByCustomerIdAsync(customer.UserID); // 自定义方法：查找 IsLocked == false 的购物车
+                .GetActiveCartByCustomerIdAsync(customer.UserID);
 
             // 如果没有未锁定的购物车，就新建一个
             if (shoppingCart == null)
