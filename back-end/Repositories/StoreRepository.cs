@@ -24,6 +24,7 @@ namespace BackEnd.Repositories
                                  .Include(s => s.StoreViolationPenalties)
                                  .Include(s => s.Comments)
                                  .Include(s => s.DeliveryTasks)
+                                 .Include(s => s.ShoppingCarts)
                                  .ToListAsync();
         }
 
@@ -40,6 +41,7 @@ namespace BackEnd.Repositories
                                  .Include(s => s.StoreViolationPenalties)
                                  .Include(s => s.Comments)
                                  .Include(s => s.DeliveryTasks)
+                                 .Include(s => s.ShoppingCarts)
                                  .FirstOrDefaultAsync(s => s.StoreID == id);
         }
 

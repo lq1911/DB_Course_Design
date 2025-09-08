@@ -127,6 +127,8 @@ builder.Services.AddScoped<IDeliveryTaskService, DeliveryTaskService>();
 builder.Services.AddScoped<IPenaltyService, PenaltyService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAfterSaleService, AfterSaleService>();
+builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
+builder.Services.AddScoped<ICreateComplaintService, CreateComplaintService>();
 
 var app = builder.Build();
 

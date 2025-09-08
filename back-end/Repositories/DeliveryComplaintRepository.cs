@@ -38,6 +38,17 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(dc => dc.ComplaintID == id);
         }
 
+        public async Task<IEnumerable<DeliveryComplaint>> GetByDeliveryTaskIdAsync(int deliveryTaskId)
+        {
+            return await _context.DeliveryComplaints
+                .Where(c => c.DeliveryTaskID == deliveryTaskId)
+                .Include(c => c.Customer)
+                .Include(c => c.Courier)
+                .Include(c => c.DeliveryTask)
+                .OrderByDescending(c => c.ComplaintTime)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(DeliveryComplaint complaint)
         {
             await _context.DeliveryComplaints.AddAsync(complaint);

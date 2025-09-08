@@ -6,6 +6,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<AfterSaleApplication>> GetAllAsync();
         Task<AfterSaleApplication?> GetByIdAsync(int id);
+        Task<IEnumerable<AfterSaleApplication>> GetByOrderIdAsync(int orderId);
         Task AddAsync(AfterSaleApplication application);
         Task UpdateAsync(AfterSaleApplication application);
         Task DeleteAsync(AfterSaleApplication application);
