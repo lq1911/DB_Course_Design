@@ -93,3 +93,14 @@ export const acceptAvailableOrderAPI = (orderId: string) => {
     // 根据后端约定，这里我们假设路径是 /accept
     return apiClient.post<{ success: true }>(`/courier/orders/${orderId}/accept`);
 };
+
+/**
+ * 更新用户（骑手）的个人资料
+ * @param profileData 包含更新信息的用户对象
+ */
+export const updateUserProfile = (profileData: UserProfile) => {
+    // 根据 RESTful 规范，更新一个已存在的资源通常使用 PUT 方法
+    // 请求的 URL 通常是该资源的路径，例如 /courier/profile
+    // 第二个参数 profileData 是要发送到服务器的请求体 (request body)
+    return apiClient.put<{ success: boolean; message: string }>('/courier/profile', profileData);
+};

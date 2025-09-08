@@ -192,3 +192,22 @@ export const acceptAvailableOrderAPI = (orderId: string) => {
     }
     return createMockResponse({ success: true });
 };
+
+/**
+ * 模拟更新用户个人资料
+ * @param profileData 用户提交的新资料
+ */
+export const updateUserProfile = (profileData: any) => {
+    // 打印到控制台，方便调试，看看前端发了什么数据
+    console.log('[Mock] 正在更新用户资料:', profileData);
+
+    // 可选：在内存中更新 mockUserProfile 的数据，这样模拟更真实
+    // 如果重新加载这个页面，数据会保持最新状态（直到刷新浏览器）
+    if (profileData.name) {
+        mockUserProfile.name = profileData.name;
+    }
+    // 你也可以在这里添加对 gender 和 birthday 的更新逻辑
+    
+    // 返回一个成功的模拟响应
+    return createMockResponse({ success: true, message: '用户信息更新成功' });
+};

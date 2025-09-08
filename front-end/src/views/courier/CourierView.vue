@@ -477,7 +477,7 @@ const orderTabs = [
     { key: 'pending', label: '待取单' },
     { key: 'delivering', label: '配送中' },
     { key: 'completed', label: '已送达' }
-];
+] as const;
 
 // --- API 调用逻辑 ---
 
