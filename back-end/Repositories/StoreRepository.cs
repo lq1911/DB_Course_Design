@@ -1,5 +1,7 @@
 using BackEnd.Data;
+using BackEnd.Dtos.User;
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,6 +63,26 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(s => s.SellerID == sellerId);
         }
 
+        public async Task<Store?> GetStoreInfoForUserAsync(int storeId)
+        {
+            // 这个查询非常简单和快速，因为它没有加载任何关联数据
+            return await _context.Stores
+                                 .AsNoTracking()
+                                 .FirstOrDefaultAsync(s => s.StoreID == storeId);
+        }
+
+        public async Task<IEnumerable<Dish>> GetDishesByStoreIdAsync(int storeId)
+        {
+            // 高效的投影查询，直接从数据库获取菜品列表
+            return await _context.Menus
+                .Where(m => m.StoreID == storeId)
+                .SelectMany(m => m.MenuDishes)
+                .Select(md => md.Dish)
+                .Distinct()
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task AddAsync(Store store)
         {
             await _context.Stores.AddAsync(store);
@@ -82,6 +104,74 @@ namespace BackEnd.Repositories
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ShowStoreDto>> GetTopRatedStoresForHomepageAsync(int takeCount)
+        {
+            return await _context.Stores
+                .AsNoTracking() // 提高只读查询性能
+                .OrderByDescending(s => s.AverageRating)
+                .Take(takeCount)
+                .Select(s => new ShowStoreDto // 直接投影到 DTO
+                {
+                    Id = s.StoreID,
+                    Image = s.StoreImage,
+                    Name = s.StoreName,
+                    AverageRating = s.AverageRating,
+                    MonthlySales = s.MonthlySales
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<HomeSearchGetDto>> SearchStoresByNameAsync(string keyword)
+        {
+            return await _context.Stores
+                .AsNoTracking()
+                .Where(s => s.StoreName.Contains(keyword)) // 在数据库中过滤
+                .Select(s => new HomeSearchGetDto // 直接投影
+                {
+                    Id = s.StoreID,
+                    Image = s.StoreImage,
+                    Name = s.StoreName,
+                    AverageRating = s.AverageRating,
+                    MonthlySales = s.MonthlySales
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<HomeSearchGetDto>> SearchStoresByDishNameAsync(string keyword)
+        {
+            // 这个查询会找到所有菜品名包含关键字的店铺，且不重复
+            return await _context.Dishes
+                .AsNoTracking()
+                .Where(d => d.DishName.Contains(keyword))
+                .SelectMany(d => d.MenuDishes.Select(md => md.Menu.Store))
+                .Distinct() // 关键：去重
+                .Select(store => new HomeSearchGetDto
+                {
+                    Id = store.StoreID,
+                    Image = store.StoreImage,
+                    Name = store.StoreName,
+                    AverageRating = store.AverageRating,
+                    MonthlySales = store.MonthlySales
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ShowStoreDto>> GetOperationalStoresAsync()
+        {
+            return await _context.Stores
+                .AsNoTracking()
+                .Where(s => s.StoreState == StoreState.IsOperation) // 在数据库中过滤
+                .Select(s => new ShowStoreDto
+                {
+                    Id = s.StoreID,
+                    Image = s.StoreImage ?? "",
+                    AverageRating = s.AverageRating,
+                    Name = s.StoreName,
+                    MonthlySales = s.MonthlySales
+                })
+                .ToListAsync();
         }
     }
 }

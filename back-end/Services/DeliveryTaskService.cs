@@ -24,10 +24,10 @@ namespace BackEnd.Services
             PublishDeliveryTaskDto dto, int sellerId)
         {
             // 验证订单存在且属于当前商家
-            var order = await _orderRepo.GetByIdAsync(dto.OrderId) 
+            var order = await _orderRepo.GetByIdAsync(dto.OrderId)
                 ?? throw new KeyNotFoundException("订单不存在");
-            
-            var store = await _storeRepo.GetByIdAsync(order.StoreID);
+
+            var store = await _storeRepo.GetStoreInfoForUserAsync(order.StoreID);
             if (store?.SellerID != sellerId)
                 throw new UnauthorizedAccessException("无权操作此订单");
 
@@ -63,13 +63,13 @@ namespace BackEnd.Services
 
         public async Task<OrderDeliveryInfoDto> GetOrderDeliveryInfoAsync(int orderId)
         {
-            var task = await _deliveryRepo.GetByOrderIdAsync(orderId); 
+            var task = await _deliveryRepo.GetByOrderIdAsync(orderId);
             if (task == null)
                 return new OrderDeliveryInfoDto();
 
             var courier = task.Courier;
             var courierUser = courier?.User;
-            
+
             return new OrderDeliveryInfoDto
             {
                 DeliveryTask = new DeliveryTaskDto
@@ -82,7 +82,7 @@ namespace BackEnd.Services
                 },
                 Publish = new PublishTaskDto
                 {
-                    SellerId = task.Store.SellerID, 
+                    SellerId = task.Store.SellerID,
                     DeliveryTaskId = task.TaskID,
                     PublishTime = task.PublishTime.ToString("o")
                 },

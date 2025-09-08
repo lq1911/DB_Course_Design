@@ -6,7 +6,7 @@ using BackEnd.Services.Interfaces;
 
 namespace BackEnd.Services
 {
-    
+
     public class UserInStoreService : IUserInStoreService
     {
         private readonly IStoreRepository _storeRepository;
@@ -39,7 +39,7 @@ namespace BackEnd.Services
         /// </summary>
         public async Task<StoreResponseDto?> GetStoreInfoAsync(StoreRequestDto request)
         {
-            var store = await _storeRepository.GetByIdAsync(request.StoreId);
+            var store = await _storeRepository.GetStoreInfoForUserAsync(request.StoreId);
 
             if (store == null) return null;
 
@@ -64,14 +64,9 @@ namespace BackEnd.Services
         /// </summary>
         public async Task<List<MenuResponseDto>> GetMenuAsync(MenuRequestDto request)
         {
-            var store = await _storeRepository.GetByIdAsync(request.StoreId);
+            var dishes = await _storeRepository.GetDishesByStoreIdAsync(request.StoreId);
 
-            if (store == null || store.Menus == null) return new List<MenuResponseDto>();
-
-            // 拉平所有 Dish（去重，避免同一个菜品在多个菜单版本出现）
-            var dishes = store.Menus
-                .SelectMany(m => m.MenuDishes.Select(md => md.Dish))
-                .Distinct();
+            if (dishes == null || !dishes.Any()) return new List<MenuResponseDto>();
 
             return dishes.Select(d => new MenuResponseDto
             {
