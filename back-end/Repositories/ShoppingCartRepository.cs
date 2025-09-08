@@ -20,6 +20,7 @@ namespace BackEnd.Repositories
                                  .Include(sc => sc.Order)             // 关联订单
                                  .Include(sc => sc.ShoppingCartItems) // 购物车项
                                  .Include(sc => sc.Customer)          // 购物车的消费者
+                                 .Include(sc => sc.Store)             // 购物车关联的店铺
                                  .ToListAsync();
         }
 
@@ -29,12 +30,13 @@ namespace BackEnd.Repositories
                                  .Include(sc => sc.Order)
                                  .Include(sc => sc.ShoppingCartItems)
                                  .Include(sc => sc.Customer)
+                                 .Include(sc => sc.Store)
                                  .FirstOrDefaultAsync(sc => sc.CartID == id);
         }
         public async Task<ShoppingCart?> GetByCustomerIdAsync(int customerId)
         {
             var shoppingCart = await _context.ShoppingCarts
-                .Include(sc => sc.ShoppingCartItems)
+                .Include(sc => sc.ShoppingCartItems!)
                     .ThenInclude(sci => sci.Dish)
                         .ThenInclude(d => d.MenuDishes)
                             .ThenInclude(md => md.Menu)

@@ -96,5 +96,8 @@ namespace BackEnd.Models
 
         // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
+
+        // 购物车
+        public ICollection<ShoppingCart>? ShoppingCarts { get; set; }
     }
 }

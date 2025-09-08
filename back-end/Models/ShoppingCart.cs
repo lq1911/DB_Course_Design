@@ -20,11 +20,14 @@ namespace BackEnd.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal TotalPrice { get; set; } = 0.00m;
 
-        // 是否锁定（下单后不可再修改）
-        [Required]
-        public ShoppingCartState ShoppingCartState { get; set; } = ShoppingCartState.UnCompleted;
+        public ShoppingCartState? ShoppingCartState { get; set; }
 
         public FoodOrder? Order { get; set; }
+
+        // 新增：直接关联店铺ID，便于快速查询
+        public int? StoreID { get; set; }
+        [ForeignKey("StoreID")]
+        public Store? Store { get; set; }
 
         [Required]
         public int CustomerID { get; set; }

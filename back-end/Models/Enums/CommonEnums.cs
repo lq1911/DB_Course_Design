@@ -113,7 +113,7 @@ namespace BackEnd.Models.Enums
 
     public enum ShoppingCartState
     {
-        Completed = 0,
-        UnCompleted = 1
+        UnCompleted = 0,
+        Completed = 1
     }
 }
