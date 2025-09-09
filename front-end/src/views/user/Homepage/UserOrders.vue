@@ -67,7 +67,7 @@
                                             title="联系骑手">
                                             <i class="fas fa-motorcycle"></i>
                                         </button>
-                                        <button
+                                        <button @click="openRevealDelivery()"
                                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
                                             查看物流
                                         </button>
@@ -88,6 +88,10 @@
                                             评价
                                         </button>
                                     </div>
+
+                                    <!--显示物流弹窗-->
+                                    <RevealDelivery :visible="showRevealDelivery"
+                                        @close="showRevealDelivery = false" />
 
                                     <!-- 举报弹窗组件 -->
                                     <ReportWindow :visible="showReportWindow[order.orderID]" :order="order"
@@ -115,6 +119,7 @@ import { getOrderInfo } from "@/api/user_home";
 
 import ReportWindow from "@/components/user/HomePage/Home/ReportWindow.vue";
 import ReviewWindow from "@/components/user/HomePage/Home/ReviewWindow.vue";
+import RevealDelivery from "@/components/user/HomePage/Home/RevealDelivery.vue";
 
 const userStore = useUserStore();
 const userID = userStore.getUserID();
@@ -124,6 +129,7 @@ const activeOrderStatus = ref("all"); // 默认显示全部订单
 const showLoading = ref(true);
 const showReviewWindow = ref<Record<number, boolean>>({});
 const showReportWindow = ref<Record<number, boolean>>({});
+const showRevealDelivery = ref(false);
 const orderStatuses = [
     { key: "all", label: "全部订单" },
     { key: "delivering", label: "配送中" },
@@ -173,6 +179,10 @@ function openReviewWindow(orderID: number) {
 }
 function openReportWindow(orderID: number) {
     showReportWindow.value[orderID] = true;
+}
+
+function openRevealDelivery() {
+    showRevealDelivery.value = true;
 }
 
 </script>
