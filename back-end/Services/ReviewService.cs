@@ -46,14 +46,10 @@ namespace BackEnd.Services
                 OrderNo = $"ORD{c.StoreID}",  //对店铺评论，这里使用店铺ID
                 User = new RUserInfoDto
                 {
-                    //Name = c.Commenter.User.Username,
-                    //Phone = c.Commenter.User.PhoneNumber.ToString(),
-                    //Avatar = c.Commenter.User.Avatar
                     Name = c.Commenter?.User?.Username ?? "未知用户",
                     Phone = c.Commenter?.User?.PhoneNumber.ToString() ?? "未知电话",
                     Avatar = c.Commenter?.User?.Avatar ?? "" 
                 },
-                //Content = c.Content,
                 Content = c.Content ?? "无评论内容",
                 CreatedAt = c.PostedAt.ToString("yyyy-MM-dd HH:mm:ss")
             }).ToList();
@@ -76,17 +72,6 @@ namespace BackEnd.Services
                     Message = "评论不存在"
                 };
             }
-
-            // 创建回复评论,这里进行模拟
-            //var replyComment = new Comment
-            //{
-                //Content = replyDto.Content,
-                //PostedAt = DateTime.Now,
-                //ReplyToCommentID = id,
-                //StoreID = comment.StoreID,
-            //};
-
-            //await _commentRepository.AddAsync(replyComment);
             
             // 更新原评论的回复数
             comment.Replies++;

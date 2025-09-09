@@ -21,9 +21,9 @@ namespace BackEnd.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> FetchMerchantInfo()
         {
-            // 从认证信息中获取商家ID,临时写死为3
-            var userId = 3;
-            
+
+            var userId = 3; //临时为3
+
             var result = await _merchantInformationService.GetMerchantInfoAsync(userId);
             if (!result.Success)
                 return BadRequest(new { code = 400, success = false, message = result.Message });
@@ -35,19 +35,19 @@ namespace BackEnd.Controllers
         [HttpPut("profile")]
         public async Task<IActionResult> SaveShopInfo([FromBody] UpdateMerchantProfileDto dto)
         {
-            // 从认证信息中获取商家ID,临时写死为3
-            var userId = 3;
-            
+
+            var userId = 3; //临时为3
+
             var result = await _merchantInformationService.UpdateMerchantInfoAsync(userId, dto);
             if (!result.Success)
                 return BadRequest(new { code = 400, success = false, message = result.Message });
 
-            return Ok(new 
+            return Ok(new
             {
                 code = 200,
-                success = true, 
-                message = result.Message, 
-                data = result.Data 
+                success = true,
+                message = result.Message,
+                data = result.Data
             });
         }
     }
