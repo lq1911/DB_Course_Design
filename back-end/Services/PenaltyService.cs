@@ -76,7 +76,7 @@ namespace BackEnd.Services
             {
                 return null;
             }
-            // 这里简化处理，直接返回成功
+            
             return new AppealResponseDto
             {
                 Success = true,

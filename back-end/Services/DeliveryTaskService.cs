@@ -1,5 +1,6 @@
 using BackEnd.Dtos.Delivery;
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 
@@ -38,7 +39,8 @@ namespace BackEnd.Services
                 EstimatedArrivalTime = DateTime.Parse(dto.EstimatedArrivalTime),
                 EstimatedDeliveryTime = DateTime.Parse(dto.EstimatedDeliveryTime),
                 CustomerID = order.CustomerID,
-                StoreID = order.StoreID
+                StoreID = order.StoreID,
+                Status = DeliveryStatus.To_Be_Taken
             };
 
             await _deliveryRepo.AddAsync(task);
