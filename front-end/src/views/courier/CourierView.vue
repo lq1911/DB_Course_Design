@@ -495,7 +495,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import { ElMessage, ElLoading } from 'element-plus';
+import { ElMessage, ElLoading ,ElMessageBox} from 'element-plus';
 import {
     User, Bell, Switch, Location, CircleCloseFilled,
     HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit
@@ -544,7 +544,7 @@ interface Complaint {
 
 // --- 状态定义 ---
 // 新增一个类型别名，让代码更清晰
-type OrderStatus = 'to_be_take' | 'pending' | 'delivering' | 'completed';
+type OrderStatus = 'to_be_taken' | 'pending' | 'delivering' | 'completed' | 'cancelled';
 const userProfile = ref<UserProfile | null>(null);
 const locationInfo = ref<any | null>(null);
 const orders = ref<Order[]>([]);
@@ -561,7 +561,7 @@ const availableOrders = ref<Order[]>([]);
 
 const complaints = ref<Complaint[]>([]);
 
-
+const cancelledOrderInfo = ref<{ id: string; restaurant: string } | null>(null);
 
 const activeComplaintTab = ref<'all' | 'punished'>('all');
 
@@ -591,7 +591,8 @@ const tabs = [
 const orderTabs = [
     { key: 'pending', label: '待取单' },
     { key: 'delivering', label: '配送中' },
-    { key: 'completed', label: '已送达' }
+    { key: 'completed', label: '已送达' },
+    { key: 'cancelled', label: '已取消' } 
 ] as const;
 
 // --- API 调用逻辑 ---
@@ -635,6 +636,47 @@ const refreshOrderList = async () => {
     }
 };
 
+
+
+
+/**
+ * 【核心】处理接收到的“订单被取消”通知
+ * 在真实项目中，这个函数会被 WebSocket 推送调用
+ * @param orderId 被取消的订单ID
+ */
+const handleOrderCancelled = async (orderId: string) => {
+    // 1. 在当前的前端订单列表中，找到这个订单的信息，主要是为了获取餐厅名用于弹窗显示
+    const orderToCancel = orders.value.find(o => o.id === orderId);
+
+    // 如果在当前列表（比如“待取单”）中找不到这个订单，可能是因为骑手正在看其他页面。
+    // 即使找不到，我们依然应该弹窗提示，但内容可以通用一些。
+    const restaurantName = orderToCancel ? `【${orderToCancel.restaurant}】的` : '';
+
+    // 2. 弹出UI提示，告知骑手这个事实
+    await ElMessageBox.alert(
+        `您有一个订单（${restaurantName}订单号: #${orderId}）已被用户取消。`, // 弹窗内容
+        '订单取消通知', // 弹窗标题
+        {
+            confirmButtonText: '我知道了',
+            type: 'warning', // 警告类型图标
+            callback: () => {
+                // 3. 用户点击“我知道了”之后，刷新当前订单列表以同步最新状态
+                ElMessage.info('正在刷新订单列表...');
+                refreshOrderList(); // 调用您已有的刷新函数
+            },
+        }
+    );
+    
+    // 【重要】在模拟模式下，为了让刷新有效，我们必须手动修改模拟数据源的状态。
+    // 这段代码模仿了“后端数据状态已经被改变”这个事实。
+    if (useMockData) {
+        const orderInMock = MockAPI.mockOrders.find(o => o.id === orderId);
+        if (orderInMock) {
+            orderInMock.status = 'cancelled';
+        }
+    }
+};
+
 /** 处理“取单”操作 */
 const handlePickupOrder = async (orderId: string) => {
     try {
@@ -667,7 +709,7 @@ const refreshAvailableOrders = async () => {
 
     try {
         // 专门只调用获取可接订单的 API
-        const res = await api.fetchOrders('to_be_take') as { data: Order[] };
+        const res = await (api as any).fetchAvailableOrders() as { data: Order[] }; 
         availableOrders.value = res.data;
         ElMessage.success('订单列表已更新！');
     } catch (error) {
@@ -714,7 +756,6 @@ const loadDashboardData = async () => {
             deliveringOrdersRes,  // 获取配送中列表
             completedOrdersRes,   // 获取已送达列表
             locationRes,
-            availableOrdersRes,
             complaintsRes
         ] = (await Promise.all([
             api.fetchUserProfile(),
@@ -724,7 +765,6 @@ const loadDashboardData = async () => {
             api.fetchOrders('delivering'),  // API 调用 2
             api.fetchOrders('completed'),   // API 调用 3
             api.fetchLocationInfo(),
-            api.fetchOrders('to_be_take'),
             (api as typeof MockAPI).fetchComplaints() // <-- 新增 API 调用
         ])) as [
                 { data: any },         // 1. 对应 profileRes
@@ -734,7 +774,6 @@ const loadDashboardData = async () => {
                 { data: any[] },       // 5. 对应 deliveringOrdersRes
                 { data: any[] },       // 6. 对应 completedOrdersRes
                 { data: any },         // 7. 对应 locationRes
-                { data: Order[] },      // 8. 对应 availableOrdersRes (类型精确)
                 { data: Complaint[] }
             ];
         // ▲▲▲ 修改结束 ▲▲▲
@@ -743,7 +782,6 @@ const loadDashboardData = async () => {
         userProfile.value = profileRes.data;
         workStatus.value = statusRes.data;
         locationInfo.value = locationRes.data;
-        availableOrders.value = availableOrdersRes.data;
         // income.value = incomeRes.data; 
         income.value = incomeRes.data;
         locationInfo.value = locationRes.data;
@@ -812,6 +850,16 @@ watch(activeOrderTab, async (newStatus) => {
     await refreshOrderList();
 });
 
+watch(currentTab, (newTab) => {
+    // 当用户切换到“可接订单”页面时
+    if (newTab === 'available') {
+        // 如果列表是空的，就自动刷新一次
+        if (availableOrders.value.length === 0) {
+            refreshAvailableOrders();
+        }
+    }
+}, { immediate: true });
+
 // --- 计算属性和工具函数 ---
 const filteredOrders = computed(() => {
     if (!orders.value) return [];
@@ -823,6 +871,7 @@ const getOrderStatusClass = (status: string) => {
         case 'pending': return 'bg-orange-100 text-orange-600';
         case 'delivering': return 'bg-blue-100 text-blue-600';
         case 'completed': return 'bg-green-100 text-green-600';
+        case 'cancelled': return 'bg-gray-200 text-gray-500';
         default: return 'bg-gray-100 text-gray-600';
     }
 };
@@ -833,6 +882,7 @@ const getOrderStatusText = (status: string) => {
         case 'pending': return '待取单';
         case 'delivering': return '配送中';
         case 'completed': return '已送达';
+        case 'cancelled': return '已取消';
         default: return '未知状态';
     }
 };

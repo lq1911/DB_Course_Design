@@ -114,3 +114,11 @@ export const fetchComplaints = () => {
     // 请务必与后端开发人员确认此路径
     return apiClient.get<Complaint[]>('/courier/complaints');
 };
+
+/**
+ * 获取当前骑手附近的可接订单列表
+ */
+export const fetchAvailableOrders = () => {
+    // 调用后端为我们准备的新接口
+    return apiClient.get<Order[]>('/courier/orders/available');
+};
