@@ -1,5 +1,4 @@
 using BackEnd.Dtos.User;
-using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 namespace BackEnd.Services
@@ -7,9 +6,6 @@ namespace BackEnd.Services
     public class UserHomepageService : IUserHomepageService
     {
         private readonly IStoreRepository _storeRepository;
-        private readonly IDishRepository _dishRepository;
-        private readonly IMenuRepository _menuRepository;
-        private readonly IMenu_DishRepository _menuDishRepository;
         private readonly IUserRepository _userRepository;
         private readonly ICouponRepository _couponRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
@@ -17,9 +13,6 @@ namespace BackEnd.Services
 
         public UserHomepageService(
             IStoreRepository storeRepository,
-            IDishRepository dishRepository,
-            IMenuRepository menuRepository,
-            IMenu_DishRepository menuDishRepository,
             IUserRepository userRepository,
             ICouponRepository couponRepository,
             IFoodOrderRepository foodOrderRepository,
@@ -27,9 +20,6 @@ namespace BackEnd.Services
             )
         {
             _storeRepository = storeRepository;
-            _dishRepository = dishRepository;
-            _menuRepository = menuRepository;
-            _menuDishRepository = menuDishRepository;
             _userRepository = userRepository;
             _couponRepository = couponRepository;
             _foodOrderRepository = foodOrderRepository;

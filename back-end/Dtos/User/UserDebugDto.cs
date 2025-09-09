@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace BackEnd.Dtos.User
@@ -21,7 +20,7 @@ namespace BackEnd.Dtos.User
     public class SubmitOrderRequestDto
     {
         [Required]
-        public DateTime PaymentTime { get; set; }  // 支付时间
+        public string PaymentTime { get; set; } = null!;  // 支付时间
 
         [Required]
         public int CustomerId { get; set; }        // 用户编号

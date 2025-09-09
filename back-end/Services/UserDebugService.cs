@@ -49,19 +49,40 @@ namespace BackEnd.Services
 
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
-            // 找到用户未锁定的购物车
-            var cart = await _shoppingCartRepository.GetActiveCartByCustomerIdAsync(dto.CustomerId);
-            if (cart == null)
-                throw new InvalidOperationException("没有可用的购物车，请先添加商品");
+            Console.WriteLine(">>>>>> SUCCESS: NOW RUNNING THE CORRECT CODE (GetByIdAsync) <<<<<<");
 
+            // 找到用户未锁定的购物车
+            var cart = await _shoppingCartRepository.GetByIdAsync(dto.CartId);
+
+            if (cart == null)
+            {
+                Console.WriteLine("[SubmitOrderAsync] CRITICAL: Shopping cart query returned NULL.");
+                throw new InvalidOperationException("没有可用的购物车，请先添加商品");
+            }
+            else
+            {
+                Console.WriteLine($"[SubmitOrderAsync] Cart found! CartID: {cart.CartID}, State: {cart.ShoppingCartState}, Belongs to StoreID: {cart.StoreID}");
+            }
+
+            // 检查购物车状态
             if (cart.Order != null || cart.ShoppingCartState == ShoppingCartState.Done)
+            {
+                Console.WriteLine($"[SubmitOrderAsync] CRITICAL: Cart is already processed. State: {cart.ShoppingCartState}");
                 throw new InvalidOperationException("该购物车已生成过订单，不能重复下单");
+            }
+
+            // 解析时间
+            if (!DateTime.TryParse(dto.PaymentTime, out DateTime paymentTime))
+            {
+                Console.WriteLine($"[SubmitOrderAsync] CRITICAL: Invalid PaymentTime format received: {dto.PaymentTime}");
+                throw new ArgumentException("PaymentTime 格式无效", nameof(dto.PaymentTime));
+            }
 
             // 创建订单
             var order = new FoodOrder
             {
                 OrderTime = DateTime.UtcNow,
-                PaymentTime = dto.PaymentTime,
+                PaymentTime = paymentTime.ToUniversalTime(),
                 CustomerID = dto.CustomerId,
                 CartID = cart.CartID,
                 StoreID = dto.StoreId,
