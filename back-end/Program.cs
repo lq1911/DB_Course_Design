@@ -131,7 +131,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAfterSaleService, AfterSaleService>();
 builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
 builder.Services.AddScoped<ICreateComplaintService, CreateComplaintService>();
-
+builder.Services.AddScoped<IGeoHelper, GeoHelper>();
 var app = builder.Build();
 
 // 如果是开发环境，启用 Swagger UI 来浏览 API 接口文档

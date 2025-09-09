@@ -18,18 +18,21 @@ namespace BackEnd.Services
         private readonly ICourierRepository _courierRepository;
         private readonly IDeliveryTaskRepository _deliveryTaskRepository;
         private readonly AppDbContext _context; // 【新增】用于数据库事务的上下文
+        private readonly IGeoHelper _geoHelper; // <-- 新增这一行
 
         // 【已修正】构造函数，增加了 AppDbContext 的注入
         public CourierService(
             IUserRepository userRepository,
             ICourierRepository courierRepository,
             IDeliveryTaskRepository deliveryTaskRepository,
-            AppDbContext context) // <-- 新增参数
+            AppDbContext context,
+            IGeoHelper geoHelper) // <-- 新增参数
         {
             _userRepository = userRepository;
             _courierRepository = courierRepository;
             _deliveryTaskRepository = deliveryTaskRepository;
             _context = context; // <-- 新增赋值
+            _geoHelper = geoHelper;
         }
 
         public async Task<CourierProfileDto?> GetProfileAsync(int courierId)
@@ -303,6 +306,99 @@ namespace BackEnd.Services
                 throw; // 向上抛出异常
             }
         }
+
+
+        // 在 CourierService.cs 中添加这个完整的方法
+        public async Task<IEnumerable<AvailableOrderDto>> GetAvailableOrdersAsync(int courierId, decimal latitude, decimal longitude, decimal maxDistance)
+        {
+            var tasksQuery = _context.DeliveryTasks
+                .Where(task => task.Status == DeliveryStatus.To_Be_Taken)
+                .Include(task => task.Store)
+                .Include(task => task.Order)
+                    .ThenInclude(order => order.Customer)
+                        .ThenInclude(customer => customer.User);
+
+            var allTasks = await tasksQuery.ToListAsync();
+
+            var nearbyTasks = new List<DeliveryTask>();
+            foreach (var task in allTasks)
+            {
+                if (task.Store?.Latitude.HasValue == true && task.Store?.Longitude.HasValue == true)
+                {
+                    // 使用注入的 _geoHelper 服务进行计算
+                    var distanceToStore = _geoHelper.CalculateDistance(
+                        latitude, longitude,
+                        task.Store.Latitude.Value, task.Store.Longitude.Value
+                    );
+
+                    if (distanceToStore <= (double)maxDistance)
+                    {
+                        nearbyTasks.Add(task);
+                    }
+                }
+            }
+
+            var resultDtos = nearbyTasks.Select(task => new AvailableOrderDto
+            {
+                Id = task.TaskID.ToString(),
+                Status = "to_be_taken",
+                Restaurant = task.Store.StoreName,
+                PickupAddress = task.Store.StoreAddress,
+                Customer = task.Order.Customer.User.Username,
+                Fee = task.DeliveryFee.ToString("F2"),
+                DeliveryAddress = "接单后可见详细地址", // 占位符
+                Distance = "2.5",                   // 占位符
+                Time = "15"                         // 占位符
+            }).ToList();
+
+            return resultDtos;
+        }
+
+
+        public async Task<IEnumerable<ComplaintDto>> GetComplaintsAsync(int courierId)
+        {
+            // 1. 直接从 DeliveryComplaints 表查询，因为 CourierID 已是该表的列
+            var complaints = await _context.DeliveryComplaints
+                .Where(c => c.CourierID == courierId) // 直接根据骑手ID筛选，确保只能看自己的
+                .OrderByDescending(c => c.ComplaintTime) // 按投诉时间降序排列
+                .ToListAsync();
+
+            // 2. 将数据库实体映射为 DTO，严格遵循前端 TS 格式
+            var complaintDtos = complaints.Select(complaint =>
+            {
+                PunishmentDto? punishmentDto = null;
+
+                // 逻辑：如果存在处理结果（ProcessingResult 不为空或"-")，
+                // 则我们认为这是一个 "处罚" 或 "处理决定"。
+                if (!string.IsNullOrEmpty(complaint.ProcessingResult) && complaint.ProcessingResult != "-")
+                {
+                    punishmentDto = new PunishmentDto
+                    {
+                        // 将 ProcessingResult 用作 'description'，因为它是最详细的信息
+                        Description = complaint.ProcessingResult,
+
+                        // 模型中没有单独的 'type' 和 'duration' 字段，
+                        // 我们设定一个通用的类型，并将 duration 留空 (null)
+                        Type = "官方处理结果",
+                        Duration = null
+                    };
+                }
+
+                return new ComplaintDto
+                {
+                    ComplaintID = complaint.ComplaintID.ToString(),
+                    DeliveryTaskID = complaint.DeliveryTaskID.ToString(),
+                    ComplaintTime = complaint.ComplaintTime.ToString("yyyy-MM-dd HH:mm"), // 格式化为前端需要的字符串
+                    ComplaintReason = complaint.ComplaintReason,
+                    Punishment = punishmentDto // 赋值我们刚刚构建的 punishmentDto 对象
+                };
+            }).ToList();
+
+            return complaintDtos;
+        }
+
+
+
 
 
 

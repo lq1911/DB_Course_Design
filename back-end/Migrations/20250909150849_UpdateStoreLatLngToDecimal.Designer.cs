@@ -3,6 +3,7 @@ using System;
 using BackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace BackEnd.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250909150849_UpdateStoreLatLngToDecimal")]
+    partial class UpdateStoreLatLngToDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -925,12 +928,10 @@ namespace BackEnd.Migrations
                         .HasColumnName("CLOSETIME");
 
                     b.Property<decimal?>("Latitude")
-                        .HasColumnType("decimal(10,6)")
-                        .HasColumnName("LATITUDE");
+                        .HasColumnType("decimal(10,6)");
 
                     b.Property<decimal?>("Longitude")
-                        .HasColumnType("decimal(10,6)")
-                        .HasColumnName("LONGITUDE");
+                        .HasColumnType("decimal(10,6)");
 
                     b.Property<int>("MonthlySales")
                         .HasColumnType("NUMBER(10)")

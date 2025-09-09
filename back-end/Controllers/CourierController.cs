@@ -267,5 +267,43 @@ namespace BackEnd.Controllers
                 return StatusCode(500, $"服务器内部错误: {ex.Message}");
             }
         }
+
+
+        [HttpGet("orders/available")]
+        public async Task<ActionResult<IEnumerable<AvailableOrderDto>>> GetAvailableOrders(
+            [FromQuery] decimal latitude,
+            [FromQuery] decimal longitude,
+            [FromQuery] decimal maxDistance = 3.0m)
+        {
+            try
+            {
+                var courierId = GetCurrentCourierId();
+                var availableOrders = await _courierService.GetAvailableOrdersAsync(courierId, latitude, longitude, maxDistance);
+                return Ok(availableOrders);
+            }
+            catch (UnauthorizedAccessException) { return Unauthorized(); }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (Exception ex) { return StatusCode(500, $"服务器内部错误: {ex.Message}"); }
+        }
+
+
+        [HttpGet("complaints")] // 对应前端 API: GET /api/courier/complaints
+        public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetComplaints()
+        {
+            try
+            {
+                var courierId = GetCurrentCourierId();
+                var complaints = await _courierService.GetComplaintsAsync(courierId);
+                return Ok(complaints);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"服务器内部错误: {ex.Message}");
+            }
+        }
     }
 }
