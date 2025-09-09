@@ -53,9 +53,8 @@ namespace BackEnd.Models
         [Required]
         public int MonthlySales { get; set; }
 
-        [Required]
         [StringLength(500)]
-        public string StoreFeatures { get; set; } = null!;
+        public string? StoreFeatures { get; set; }
 
         [Required]
         public DateTime StoreCreationTime { get; set; }
@@ -66,7 +65,7 @@ namespace BackEnd.Models
 
         // 店铺种类
         [Required]
-        public StoreCategory StoreCategory { get; set; }
+        public string StoreCategory { get; set; } = null!;
 
         // 新增店铺图片
         public string? StoreImage { get; set; }
@@ -97,5 +96,8 @@ namespace BackEnd.Models
 
         // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
+
+        // 购物车
+        public ICollection<ShoppingCart>? ShoppingCarts { get; set; }
     }
 }

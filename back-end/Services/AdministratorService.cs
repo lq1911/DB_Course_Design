@@ -49,7 +49,7 @@ namespace BackEnd.Services
             }
         }
 
-        public async Task<SetAdminInfoResponse> UpdateAdministratorInfoAsync(int adminId, GetAdminInfo request)
+        public async Task<SetAdminInfoResponse> UpdateAdministratorInfoAsync(int adminId, SetAdminInfo request)
         {
             try
             {
@@ -65,8 +65,7 @@ namespace BackEnd.Services
 
                 // 更新允许修改的字段
                 existingAdmin.User.Username = request.Username;
-                existingAdmin.AdminRole = request.Role;
-                existingAdmin.User.Avatar = request.AvatarUrl;
+                existingAdmin.ManagedEntities = request.ManagementScope;
                 existingAdmin.User.IsProfilePublic = request.IsPublic ? ProfilePrivacyLevel.Public : ProfilePrivacyLevel.Private;
 
                 // 处理生日

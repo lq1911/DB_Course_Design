@@ -89,16 +89,33 @@
                                 </el-icon>
                                 <p>当前分类下没有订单哦</p>
                             </div>
-                            <div v-else v-for="order in filteredOrders" :key="order.id" class="border rounded-lg p-3">
-                                <div class="flex items-center justify-between mb-2">
+                            <!-- 找到并替换为这个新版本 -->
+                            <div v-else v-for="order in filteredOrders" :key="order.id"
+                                class="border rounded-lg p-3 space-y-3">
+                                <div class="flex items-center justify-between">
                                     <div class="text-sm font-medium text-gray-900">#{{ order.id }}</div>
+                                    <!-- 修改点: 使用新函数生成状态文本 -->
                                     <div class="text-xs px-2 py-1 rounded-full"
-                                        :class="getOrderStatusClass(order.status)">{{ order.statusText }}</div>
+                                        :class="getOrderStatusClass(order.status)">
+                                        {{ getOrderStatusText(order.status) }}
+                                    </div>
                                 </div>
-                                <div class="text-sm text-gray-900 mb-1">{{ order.restaurant }}</div>
-                                <div class="text-xs text-gray-500 mb-2">{{ order.address }}</div>
+                                <div class="text-sm text-gray-900">{{ order.restaurant }}</div>
+                                <div class="text-xs text-gray-500 mb-1">{{ order.address }}</div>
                                 <div class="flex items-center justify-between">
                                     <div class="text-sm font-medium text-orange-500">¥{{ order.fee }}</div>
+                                    <!-- 新增点: 根据状态显示操作按钮 -->
+                                    <div class="flex space-x-2">
+                                        <button v-if="order.status === 'pending'" @click="handlePickupOrder(order.id)"
+                                            class="bg-orange-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-orange-600">
+                                            取单
+                                        </button>
+                                        <button v-if="order.status === 'delivering'"
+                                            @click="handleDeliverOrder(order.id)"
+                                            class="bg-green-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-green-600">
+                                            已送达
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -131,10 +148,10 @@
                                 <div class="text-lg font-semibold text-gray-900">{{ userProfile.creditScore }}</div>
                                 <div class="text-xs text-gray-500">信誉积分</div>
                             </div>
-                             <div class="bg-gray-50 rounded-lg p-3 text-center">
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
                                 <div class="text-lg font-semibold text-gray-900">{{ income }}</div>
                                 <div class="text-xs text-gray-500">薪资</div>
-                            </div>                           
+                            </div>
                         </div>
                     </div>
 
@@ -250,7 +267,7 @@ import {
 // ===================================================================
 //  数据源切换开关
 // ===================================================================
-const useMockData = true;
+const useMockData = false;
 
 // 动态导入API模块
 // 注意: 我们需要确保真实api.ts也导出了同名函数, 即使它们暂时为空
@@ -277,7 +294,7 @@ interface NewOrder {
 const userProfile = ref<UserProfile | null>(null);
 const locationInfo = ref<any | null>(null);
 const orders = ref<Order[]>([]);
-const income=ref<number>(0);
+const income = ref<number>(0);
 const workStatus = ref<{ isOnline: boolean } | null>(null);
 
 const isLoading = ref(true);
@@ -297,13 +314,53 @@ const tabs = [
     { key: 'orders', label: '订单', icon: DocumentCopy },
     { key: 'profile', label: '我的', icon: UserFilled }
 ];
+// 修改 orderTabs 的 label
 const orderTabs = [
-    { key: 'pending', label: '待处理' },
+    { key: 'pending', label: '待取单' },
     { key: 'delivering', label: '配送中' },
-    { key: 'completed', label: '已完成' }
+    { key: 'completed', label: '已送达' }
 ];
 
 // --- API 调用逻辑 ---
+
+// 新增以下三个函数
+
+/** 刷新当前标签页的订单列表 */
+const refreshOrderList = async () => {
+    const loadingInstance = ElLoading.service({ target: '.order-list-container', text: '刷新中...' });
+    try {
+        const res = await api.fetchOrders(activeOrderTab.value) as { data: Order[] };
+        orders.value = res.data;
+    } catch (error) {
+        ElMessage.error("订单列表刷新失败");
+    } finally {
+        loadingInstance.close();
+    }
+};
+
+/** 处理“取单”操作 */
+const handlePickupOrder = async (orderId: string) => {
+    try {
+        await api.pickupOrderAPI(orderId);
+        ElMessage.success('取单成功！订单已移至“配送中”');
+        await refreshOrderList(); // 操作成功后刷新列表
+    } catch (error) {
+        ElMessage.error("取单操作失败，请重试");
+    }
+};
+
+/** 处理“已送达”操作 */
+const handleDeliverOrder = async (orderId: string) => {
+    try {
+        await api.deliverOrderAPI(orderId);
+        ElMessage.success('操作成功！订单已完成');
+        await refreshOrderList(); // 操作成功后刷新列表
+    } catch (error) {
+        ElMessage.error("确认送达操作失败，请重试");
+    }
+};
+
+
 const loadDashboardData = async () => {
     isLoading.value = true;
     errorState.value = null;
@@ -385,12 +442,52 @@ const rejectOrder = async () => {
     }
 };
 
+
+function setupWebSocketListener() {
+    // 这里的URL需要后端提供
+    const socket = new WebSocket('ws://localhost:5200/notifications');
+
+    // 当连接成功建立时
+    socket.onopen = () => {
+        console.log('WebSocket连接已建立，等待新订单推送...');
+    };
+
+    // 当从服务器接收到消息时
+    socket.onmessage = (event) => {
+        try {
+            // 服务器推送的消息通常是JSON字符串，需要解析
+            const notification = JSON.parse(event.data);
+
+            // 假设服务器推送的数据格式是 { type: 'NEW_ORDER', notificationId: 'xyz-123' }
+            if (notification && notification.type === 'NEW_ORDER' && notification.notificationId) {
+                console.log('收到新订单推送:', notification);
+                // 直接调用您已经写好的函数来处理这个推送！
+                handleNewOrderPush({ notificationId: notification.notificationId });
+            }
+        } catch (error) {
+            console.error('处理WebSocket消息失败:', error);
+        }
+    };
+
+    // 处理连接错误
+    socket.onerror = (error) => {
+        console.error('WebSocket 错误:', error);
+    };
+}
+
+
+
 onMounted(() => {
     loadDashboardData();
-    // 模拟收到新订单推送通知
+
+    // 如果不是用模拟数据，就启动WebSocket监听器
+    if (!useMockData) {
+        setupWebSocketListener();
+    }
+
+    // 保留模拟数据时的测试逻辑
     if (useMockData) {
         setTimeout(() => {
-            // 调用新的处理函数，并传递一个模拟的通知ID
             handleNewOrderPush({ notificationId: 'mock-notification-123' });
         }, 5000);
     }
@@ -436,16 +533,10 @@ const closeOrderModal = () => {
 };
 
 // --- 监听器 ---
+// 找到这个 watch
 watch(activeOrderTab, async (newStatus) => {
-    const loadingInstance = ElLoading.service({ target: '.order-list-container', text: '加载中...' });
-    try {
-        const res = await api.fetchOrders(newStatus) as { data: any[] };
-        orders.value = res.data;
-    } catch (error) {
-        ElMessage.error("订单列表加载失败");
-    } finally {
-        loadingInstance.close();
-    }
+    // 将其内部逻辑替换为下面这一行
+    await refreshOrderList();
 });
 
 // --- 计算属性和工具函数 ---
@@ -462,6 +553,17 @@ const getOrderStatusClass = (status: string) => {
         default: return 'bg-gray-100 text-gray-600';
     }
 };
+
+// 新增这个函数
+const getOrderStatusText = (status: string) => {
+    switch (status) {
+        case 'pending': return '待取单';
+        case 'delivering': return '配送中';
+        case 'completed': return '已送达';
+        default: return '未知状态';
+    }
+};
+
 </script>
 
 <style scoped>

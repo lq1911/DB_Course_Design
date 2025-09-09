@@ -120,8 +120,8 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';   
 
 // 使用组件内的API切换开关
-const useMockData = true; 
-import * as RealAPI from '@/api/api';
+const useMockData = false; 
+import * as RealAPI from '@/api/rider_api';
 import * as MockAPI from '@/api/api.mock';
 const api = useMockData ? MockAPI : RealAPI;
 const fileInput = ref<HTMLInputElement>();

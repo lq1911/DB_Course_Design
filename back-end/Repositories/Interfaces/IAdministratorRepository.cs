@@ -6,6 +6,8 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<Administrator>> GetAllAsync();
         Task<Administrator?> GetByIdAsync(int id);
+        // 根据管理对象查找
+        Task<IEnumerable<Administrator>> GetAdministratorsByManagedEntityAsync(string managedEntity);
         // 更新管理员信息
         Task<bool> UpdateAdministratorAsync(Administrator administrator);
         // 根据管理员ID，获取所有相关的售后申请实体

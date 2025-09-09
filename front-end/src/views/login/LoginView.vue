@@ -137,7 +137,7 @@
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
                                 </div>
                                 <!-- 新增：真实姓名输入框 (仅当非消费者时显示) -->
-                                <div v-if="selectedRole !== 'consumer'">
+                                <div v-if="selectedRole !== 'customer'">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">真实姓名</label>
                                     <input type="text" v-model="registerForm.realName" placeholder="请输入真实姓名"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
@@ -223,22 +223,30 @@
                                 <div v-if="selectedRole === 'admin'" class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">管理对象</label>
-                                        <select v-model="adminInfo.managementObject"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
-                                            <option value="">请选择管理对象</option>
-                                            <option value="riders">骑手管理</option>
-                                            <option value="comments">评论审核</option>
-                                            <option value="reports">举报处理</option>
-                                            <option value="aftersales">售后服务</option>
-                                        </select>
+                                        <div class="relative">
+                                            <button type="button" @click="showManagementDropdown = !showManagementDropdown"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm text-left bg-white cursor-pointer flex items-center justify-between">
+                                                <span :class="{ 'text-gray-400': !adminInfo.managementObject }">
+                                                    {{ getManagementLabel() || '请选择管理对象' }}
+                                                </span>
+                                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                            </button>
+                                            <div v-if="showManagementDropdown"
+                                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                <div @click="selectManagementObject('riders')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">售后处理</div>
+                                                <div @click="selectManagementObject('comments')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">配送投诉</div>
+                                                <div @click="selectManagementObject('reports')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">商家举报</div>
+                                                <div @click="selectManagementObject('aftersales')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">评论审核</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">处理事项说明</label>
-                                        <textarea v-model="adminInfo.handledItems" placeholder="请简要说明您将负责处理的主要事项"
-                                            rows="3"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none"></textarea>
-                                    </div>
+                                    <!-- 处理事项说明保持不变 -->
                                 </div>
+
 
 
                                 <!-- 商家特殊信息 -->
@@ -292,16 +300,6 @@
                                         <textarea v-model="storeInfo.address" placeholder="请输入详细店铺地址" rows="3"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none">
                                         </textarea>
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">营业执照</label>
-                                        <div
-                                            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors duration-200">
-                                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm text-gray-600">点击或拖拽上传营业执照</p>
-                                            <p class="text-xs text-gray-500 mt-1">支持 JPG、PNG 格式，文件大小不超过 5MB</p>
-                                            <input type="file" class="hidden" accept="image/*" />
-                                        </div>
                                     </div>
                                 </div>
 
@@ -465,7 +463,6 @@ const storeInfo = reactive({
     closingTime: '', // <-- 新增
     businessHours: '', // 营业时间
     establishmentDate: '', // 店铺建立时间
-    businessLicense: null,
     category: ''// 经营类别
 });
 
@@ -634,6 +631,10 @@ const selectCategory = (category: string) => {
 
 
 // 处理登录
+import { getUserIdFromToken, getUserInfoFromToken } from '@/utils/jwt';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 
 const handleLogin = async () => {
     if (!loginForm.account || !loginForm.password) {
@@ -651,6 +652,13 @@ const handleLogin = async () => {
 
         const { token, user, message } = response.data;
         localStorage.setItem('authToken', token);
+
+        // 从token中解析userID，无需额外API调用
+        const userID = getUserIdFromToken(token);
+        if (userID) {
+            const numericUserID = parseInt(userID, 10);
+            userStore.login(numericUserID);
+        }
 
         // 第1步：我们先在控制台打印日志，确认代码执行到了这里
         console.log("登录成功！用户信息:", user);
@@ -700,77 +708,59 @@ const handleLogin = async () => {
 
 
 
-// 【修改后】的 handleRegister 完整函数
 const handleRegister = async () => {
     if (!agreeTerms.value) {
-        alert('请先阅读并同意用户协议和隐私政策');
-        return;
+        return alert('请先阅读并同意用户协议和隐私政策');
     }
-    // 您可以在此添加更详细的表单验证
     isLoading.value = true;
 
     try {
-        let response;
         const role = selectedRole.value;
 
-        // 根据后端文档，商家注册需要使用 FormData，其他角色使用 JSON
-        if (role === 'merchant') {
-            const formData = new FormData();
-            // 添加基础字段
-            formData.append("nickname", registerForm.nickname);
-            formData.append("password", registerForm.password);
-            formData.append("confirmPassword", registerForm.confirmPassword);
-            formData.append("phone", registerForm.phone);
-            formData.append("email", registerForm.email);
-            formData.append("gender", registerForm.gender);
-            formData.append("birthday", registerForm.birthday);
-            formData.append("verificationCode", registerForm.verificationCode);
-            formData.append("role", role);
-            formData.append("isPublic", "1");
+        // 步骤1：构建一个所有角色通用的基础 payload (JSON 对象)
+        const payload: any = {
+            nickname: registerForm.nickname,
+            password: registerForm.password,
+            confirmPassword: registerForm.confirmPassword,
+            phone: registerForm.phone,
+            email: registerForm.email,
+            gender: registerForm.gender,
+            birthday: registerForm.birthday,
+            verificationCode: registerForm.verificationCode,
+            role: role,
+            isPublic: 1, // 假设默认公开
+        };
 
-            // 添加带 "storeInfo." 前缀的商家信息
-            formData.append("storeInfo.SellerName", registerForm.realName);
-            formData.append("storeInfo.StoreName", storeInfo.name);
-            formData.append("storeInfo.Address", storeInfo.address);
-            formData.append("storeInfo.OpenTime", storeInfo.openingTime);
-            formData.append("storeInfo.CloseTime", storeInfo.closingTime);
-            formData.append("storeInfo.EstablishmentDate", storeInfo.establishmentDate);
-            formData.append("storeInfo.Category", storeInfo.category);
-            
-            response = await api.register(formData);
-
-        } else {
-            // 对于 Customer, Rider, Admin, 构建 JSON 对象
-            const payload: any = {
-                nickname: registerForm.nickname,
-                password: registerForm.password,
-                confirmPassword: registerForm.confirmPassword,
-                phone: registerForm.phone,
-                email: registerForm.email,
-                gender: registerForm.gender,
-                birthday: registerForm.birthday,
-                verificationCode: registerForm.verificationCode,
-                role: role,
-                isPublic: 1,
+        // 步骤2：根据选择的角色，向 payload 中添加特定的信息
+        if (role === 'rider') {
+            payload.riderInfo = {
+                vehicleType: riderInfo.vehicleType,
+                name: registerForm.realName
             };
-
-            // 【关键修改】根据角色动态添加嵌套对象
-            if (role === 'rider') {
-                payload.riderInfo = {
-                    vehicleType: riderInfo.vehicleType,
-                    name: registerForm.realName // 将 realName 映射到后端需要的 name 字段
-                };
-            } else if (role === 'admin') {
-                payload.adminInfo = {
-                    managementObject: adminInfo.managementObject,
-                    name: registerForm.realName // 将 realName 映射到后端需要的 name 字段
-                };
-            }
-            
-            response = await api.register(payload);
+        } else if (role === 'admin') {
+            // 这是您这次测试的分支
+            payload.adminInfo = {
+                managementObject: adminInfo.managementObject,
+                name: registerForm.realName,
+                // 【注意】确保 adminInfo 里的字段和后端 DTO 匹配
+                handledItems: adminInfo.handledItems
+            };
+        } else if (role === 'merchant') {
+            payload.storeInfo = {
+                SellerName: registerForm.realName,
+                StoreName: storeInfo.name,
+                Address: storeInfo.address,
+                OpenTime: storeInfo.openingTime,
+                CloseTime: storeInfo.closingTime,
+                EstablishmentDate: storeInfo.establishmentDate,
+                Category: storeInfo.category
+            };
         }
+        
+        // 步骤3：发送统一的 JSON 请求
+        const response = await api.register(payload);
 
-        // 统一处理成功响应
+        // 处理成功响应...
         alert(response.data.message || '注册成功！现在请登录。');
         activeTab.value = 'login';
         loginForm.account = registerForm.phone;
@@ -778,10 +768,10 @@ const handleRegister = async () => {
 
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            // 【关键修改】根据后端文档，失败信息在 error.response.data.message
-            alert(error.response?.data?.message || '注册失败，服务器返回未知错误。');
+            const errorMsg = error.response?.data?.message || `注册失败，服务器返回错误代码: ${error.response?.status}`;
+            alert(errorMsg);
         } else {
-            console.error('An unexpected error occurred:', error);
+            console.error('注册时发生未知错误:', error);
             alert('发生未知错误，请稍后再试。');
         }
     } finally {
@@ -903,6 +893,24 @@ const validateRoleSpecificInfo = () => {
     }
     return true;
 };
+
+const showManagementDropdown = ref(false);
+
+const selectManagementObject = (value: string) => {
+    adminInfo.managementObject = value;
+    showManagementDropdown.value = false;
+};
+
+const getManagementLabel = () => {
+    const labels: { [key: string]: string } = {
+        'riders': '售后处理',
+        'comments': '配送投诉', 
+        'reports': '商家举报',
+        'aftersales': '评论审核'
+    };
+    return labels[adminInfo.managementObject];
+};
+
 </script>
 
 

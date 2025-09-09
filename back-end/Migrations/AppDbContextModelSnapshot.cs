@@ -32,6 +32,12 @@ namespace BackEnd.Migrations
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("ADMINREGISTRATIONTIME");
 
+                    b.Property<string>("AdminRole")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnName("ADMINROLE");
+
                     b.Property<decimal>("IssueHandlingScore")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(3,2)")
@@ -115,6 +121,14 @@ namespace BackEnd.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("NVARCHAR2(1000)")
                         .HasColumnName("COMMENTIMAGE");
+
+                    b.Property<string>("CommentState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("COMMENTSTATE");
 
                     b.Property<int>("CommentType")
                         .HasColumnType("NUMBER(10)")
@@ -216,23 +230,51 @@ namespace BackEnd.Migrations
             modelBuilder.Entity("BackEnd.Models.CouponManager", b =>
                 {
                     b.Property<int>("CouponManagerID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("COUPONMANAGERID");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CouponManagerID"));
+                    b.Property<string>("CouponName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)")
+                        .HasColumnName("COUPONNAME");
+
+                    b.Property<int>("CouponType")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("COUPONTYPE");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)")
+                        .HasColumnName("DESCRIPTION");
 
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("DISCOUNTAMOUNT");
 
+                    b.Property<decimal?>("DiscountRate")
+                        .HasColumnType("decimal(3,2)")
+                        .HasColumnName("DISCOUNTRATE");
+
                     b.Property<decimal>("MinimumSpend")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("MINIMUMSPEND");
 
+                    b.Property<int>("SellerID")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("SELLERID");
+
                     b.Property<int>("StoreID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("STOREID");
+
+                    b.Property<int>("TotalQuantity")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("TOTALQUANTITY");
+
+                    b.Property<int>("UsedQuantity")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("USEDQUANTITY");
 
                     b.Property<DateTime>("ValidFrom")
                         .HasColumnType("TIMESTAMP(7)")
@@ -243,6 +285,8 @@ namespace BackEnd.Migrations
                         .HasColumnName("VALIDTO");
 
                     b.HasKey("CouponManagerID");
+
+                    b.HasIndex("SellerID");
 
                     b.HasIndex("StoreID");
 
@@ -363,6 +407,14 @@ namespace BackEnd.Migrations
                         .HasColumnType("NVARCHAR2(255)")
                         .HasColumnName("COMPLAINTREASON");
 
+                    b.Property<string>("ComplaintState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("COMPLAINTSTATE");
+
                     b.Property<DateTime>("ComplaintTime")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("COMPLAINTTIME");
@@ -378,6 +430,21 @@ namespace BackEnd.Migrations
                     b.Property<int>("DeliveryTaskID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("DELIVERYTASKID");
+
+                    b.Property<string>("ProcessingReason")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGREASON");
+
+                    b.Property<string>("ProcessingRemark")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGREMARK");
+
+                    b.Property<string>("ProcessingResult")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PROCESSINGRESULT");
 
                     b.HasKey("ComplaintID");
 
@@ -776,6 +843,15 @@ namespace BackEnd.Migrations
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("LASTUPDATEDTIME");
 
+                    b.Property<string>("ShoppingCartState")
+                        .HasMaxLength(10)
+                        .HasColumnType("NVARCHAR2(10)")
+                        .HasColumnName("SHOPPINGCARTSTATE");
+
+                    b.Property<int?>("StoreID")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("STOREID");
+
                     b.Property<decimal>("TotalPrice")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(10,2)")
@@ -785,6 +861,8 @@ namespace BackEnd.Migrations
                     b.HasKey("CartID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("StoreID");
 
                     b.ToTable("SHOPPING_CARTS", (string)null);
                 });
@@ -871,7 +949,6 @@ namespace BackEnd.Migrations
                         .HasColumnName("STORECREATIONTIME");
 
                     b.Property<string>("StoreFeatures")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("NVARCHAR2(500)")
                         .HasColumnName("STOREFEATURES");
@@ -910,6 +987,11 @@ namespace BackEnd.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PenaltyID"));
 
+                    b.Property<string>("PenaltyNote")
+                        .HasMaxLength(255)
+                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnName("PENALTYNOTE");
+
                     b.Property<string>("PenaltyReason")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -933,6 +1015,14 @@ namespace BackEnd.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("STOREPENALTY");
+
+                    b.Property<string>("ViolationPenaltyState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("VIOLATIONPENALTYSTATE");
 
                     b.HasKey("PenaltyID");
 
@@ -974,8 +1064,8 @@ namespace BackEnd.Migrations
                         .HasColumnName("ACCOUNTCREATIONTIME");
 
                     b.Property<string>("Avatar")
-                        .HasMaxLength(255)
-                        .HasColumnType("NVARCHAR2(255)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)")
                         .HasColumnName("AVATAR");
 
                     b.Property<DateTime?>("Birthday")
@@ -1010,10 +1100,8 @@ namespace BackEnd.Migrations
                         .HasColumnType("NVARCHAR2(64)")
                         .HasColumnName("PASSWORD");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)")
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("NUMBER(19)")
                         .HasColumnName("PHONENUMBER");
 
                     b.Property<string>("Role")
@@ -1115,11 +1203,19 @@ namespace BackEnd.Migrations
 
             modelBuilder.Entity("BackEnd.Models.CouponManager", b =>
                 {
+                    b.HasOne("BackEnd.Models.Seller", "Seller")
+                        .WithMany()
+                        .HasForeignKey("SellerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BackEnd.Models.Store", "Store")
                         .WithMany("CouponManagers")
                         .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Seller");
 
                     b.Navigation("Store");
                 });
@@ -1370,7 +1466,14 @@ namespace BackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BackEnd.Models.Store", "Store")
+                        .WithMany("ShoppingCarts")
+                        .HasForeignKey("StoreID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("BackEnd.Models.ShoppingCartItem", b =>
@@ -1544,6 +1647,8 @@ namespace BackEnd.Migrations
                     b.Navigation("FoodOrders");
 
                     b.Navigation("Menus");
+
+                    b.Navigation("ShoppingCarts");
 
                     b.Navigation("StoreViolationPenalties");
                 });

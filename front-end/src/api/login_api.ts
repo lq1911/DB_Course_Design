@@ -21,12 +21,6 @@ interface RegistrationData {
   role: string;
 }
 
-// 更新用户通用资料 (真实姓名等)
-interface UserProfileData {
-  realName: string;
-  // 如果未来还有其他通用信息，比如个人简介，可以在此添加
-  // bio?: string;
-}
 
 // 更新骑手特定信息
 interface RiderInfo {
@@ -45,7 +39,6 @@ interface StoreInfo {
   address: string;
   businessHours: string;
   establishmentDate: string;
-  businessLicense: File | null;
   category: string;
 }
 

@@ -46,6 +46,14 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(a => a.UserID == id);
         }
 
+        public async Task<IEnumerable<Administrator>> GetAdministratorsByManagedEntityAsync(string managedEntity)
+        {
+            return await _context.Administrators
+                .Include(a => a.User)
+                .Where(a => a.ManagedEntities.Contains(managedEntity))
+                .ToListAsync();
+        }
+
         public async Task<bool> UpdateAdministratorAsync(Administrator administrator)
         {
             try
@@ -96,6 +104,9 @@ namespace BackEnd.Repositories
         {
             var complaints = await _context.Evaluate_Complaints
                                            .Where(ec => ec.AdminID == adminId)
+                                           .Include(ec => ec.Complaint)
+                                               .ThenInclude(c => c.Courier)
+                                                   .ThenInclude(courier => courier.User)
                                            .Select(ec => ec.Complaint)
                                            .ToListAsync();
 
@@ -105,6 +116,8 @@ namespace BackEnd.Repositories
         public async Task<DeliveryComplaint?> GetDeliveryComplaintByIdAsync(int complaintId)
         {
             return await _context.DeliveryComplaints
+               .Include(dc => dc.Courier)
+                   .ThenInclude(c => c.User)
                .FirstOrDefaultAsync(dc => dc.ComplaintID == complaintId);
         }
 
@@ -127,10 +140,9 @@ namespace BackEnd.Repositories
         {
             var penalties = await _context.Supervise_s
                                           .Where(s => s.AdminID == adminId)
-                                          .Select(s => s.Penalty)
-                                          .Include(p => p.Store)
-                                          .Include(p => p.Store.Seller)
-                                          .Include(p => p.Store.Seller.User)
+                                          .Include(s => s.Penalty)
+                                              .ThenInclude(p => p.Store) // 先Include所有需要的导航属性
+                                          .Select(s => s.Penalty) // 然后再Select
                                           .ToListAsync();
 
             return penalties;
@@ -163,13 +175,12 @@ namespace BackEnd.Repositories
         public async Task<IEnumerable<Comment>> GetReviewCommentsByAdminIdAsync(int adminId)
         {
             var comments = await _context.Review_Comments
-                                         .Where(rc => rc.AdminID == adminId)
-                                         .Select(rc => rc.Comment)
-                                         .Include(c => c.Commenter)
-                                         .Include(c => c.Commenter.User)
-                                         .Include(c => c.Store)
-                                         .Include(c => c.FoodOrder)
-                                         .ToListAsync();
+                                        .Where(rc => rc.AdminID == adminId)
+                                        .Include(rc => rc.Comment)
+                                            .ThenInclude(c => c.Commenter) // 先Include所有需要的导航属性
+                                                .ThenInclude(customer => customer.User)
+                                        .Select(rc => rc.Comment) // 然后再Select
+                                        .ToListAsync();
 
             return comments;
         }

@@ -37,10 +37,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, reactive } from 'vue'
+import { defineProps, defineEmits, ref, reactive, onMounted } from 'vue'
 
-import type { UserInfo } from '@/api/user_home';
 import type { CouponInfo } from '@/api/user_coupon';
+import { useUserStore } from '@/stores/user';
+import { getCouponInfo } from '@/api/user_coupon';
+
+const userStore = useUserStore();
+const userID = userStore.getUserID();
+const coupons = ref<CouponInfo[]>([]);
 
 const props = defineProps<{
     showCouponForm: Boolean;
@@ -56,11 +61,8 @@ function closeForm() {
     console.log('已关闭');
 }
 
-// 模拟数据，完成后删除
-const coupons = reactive<CouponInfo[]>([
-  { couponID: 1, couponState: 0, orderID: 0, couponManagerID: 101, minimumSpend: 50, discountAmount: 10, validTo: '2025-12-31' },
-  { couponID: 2, couponState: 0, orderID: 0, couponManagerID: 102, minimumSpend: 100, discountAmount: 20, validTo: '2025-08-31' },
-  { couponID: 3, couponState: 0, orderID: 0, couponManagerID: 103, minimumSpend: 200, discountAmount: 50, validTo: '2026-01-31' },
-]);
+onMounted(async () => {
+  coupons.value = await getCouponInfo(userID);
+})
 
 </script>

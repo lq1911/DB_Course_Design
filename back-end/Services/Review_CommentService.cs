@@ -26,7 +26,7 @@ namespace BackEnd.Services
             var commentDtos = commentsFromDb.Select(comment => new GetCommentInfo
             {
                 ReviewId = comment.CommentID.ToString(),
-                Username = comment.Commenter.User.Username,
+                Username = comment.Commenter?.User?.Username ?? "未知用户",
                 Content = comment.Content,
                 Image = comment.CommentImage,
                 Type = GetCommentTypeString(comment.CommentType),
@@ -142,9 +142,9 @@ namespace BackEnd.Services
         {
             return commentType switch
             {
-                CommentType.Comment => "普通评论",
+                CommentType.Comment => "回复评论",
                 CommentType.Store => "店铺评价",
-                CommentType.FoodOrder => "商品评价",
+                CommentType.FoodOrder => "订单评价",
                 _ => "未知类型"
             };
         }

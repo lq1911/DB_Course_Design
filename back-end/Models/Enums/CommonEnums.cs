@@ -6,7 +6,7 @@ namespace BackEnd.Models.Enums
         Customer = 0,
         Courier = 1,
         Administrator = 2,
-        Seller = 3
+        Merchant = 3
     }
 
     // 消费者会员
@@ -47,14 +47,6 @@ namespace BackEnd.Models.Enums
         Banned = 2  // 封禁
     }
 
-    // 店铺种类
-    public enum StoreCategory
-    {
-        DeliciousFood = 0,
-        SuperMarket = 1,
-        GreenGrocery = 2
-    }
-
     // 商家状态
     public enum SellerState
     {
@@ -89,10 +81,39 @@ namespace BackEnd.Models.Enums
         Completed = 1
     }
 
+    // 配送投诉状态
+    public enum ComplaintState
+    {
+        Pending = 0,
+        Completed = 1
+    }
+
+    // 违规店铺处罚状态
+    public enum ViolationPenaltyState
+    {
+        Pending = 0,
+        Processing = 1,
+        Completed = 2
+    }
+
+    // 评论状态
+    public enum CommentState
+    {
+        Pending = 0,
+        Completed = 1,
+        Illegal = 2
+    }
+
     // 优惠券类型
     public enum CouponType
     {
         Fixed = 0,      // 满减券
         Discount = 1    // 折扣券
+    }
+
+    public enum ShoppingCartState
+    {
+        Active = 0,
+        Done = 1
     }
 }

@@ -28,7 +28,7 @@ namespace BackEnd.Data.EntityConfigs
             // 修正：与模型 [MaxLength(6)] 保持一致
             builder.Property(u => u.FullName).HasColumnName("FULLNAME").HasMaxLength(6);
 
-            builder.Property(u => u.Avatar).HasColumnName("AVATAR").HasMaxLength(255);
+            builder.Property(u => u.Avatar).HasColumnName("AVATAR").HasMaxLength(1000);
             builder.Property(u => u.Birthday).HasColumnName("BIRTHDAY");
             builder.Property(u => u.AccountCreationTime).HasColumnName("ACCOUNTCREATIONTIME").IsRequired();
 
@@ -40,10 +40,10 @@ namespace BackEnd.Data.EntityConfigs
             // ---------------------------------------------------------------
             // 关系配置
             // ---------------------------------------------------------------
-            
+
             // 配置一对一关系 - 这些关系不需要在USERS表中添加外键列
             // 因为Customer、Courier、Administrator、Seller表都使用UserID作为主键
-            
+
             // 配置与Customer的一对一关系
             builder.HasOne(u => u.Customer)
                    .WithOne(c => c.User)

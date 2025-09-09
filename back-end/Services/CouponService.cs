@@ -12,11 +12,13 @@ namespace BackEnd.Services
     public class CouponService : ICouponService
     {
         private readonly ICouponManagerRepository _couponRepository;
+        private readonly IStoreRepository _storeRepository;
         private readonly ILogger<CouponService> _logger;
 
-        public CouponService(ICouponManagerRepository couponRepository, ILogger<CouponService> logger)
+        public CouponService(ICouponManagerRepository couponRepository, IStoreRepository storeRepository, ILogger<CouponService> logger)
         {
             _couponRepository = couponRepository;
+            _storeRepository = storeRepository;
             _logger = logger;
         }
 
@@ -86,8 +88,12 @@ namespace BackEnd.Services
                 // 验证请求数据
                 ValidateCouponRequest(request);
 
-                // 创建优惠券模型（现在直接从请求中获取storeId）
-                var coupon = request.ToModel(sellerId);
+                // 获取商家默认店铺ID
+                var storeId = await GetDefaultStoreIdForSeller(sellerId);
+                _logger.LogInformation("商家 {SellerId} 的店铺ID: {StoreId}", sellerId, storeId);
+
+                // 创建优惠券模型（使用自动获取的storeId）
+                var coupon = request.ToModel(sellerId, storeId);
                 
                 // 主键将由Oracle Identity列自动生成，不需要手动设置
 
@@ -200,6 +206,20 @@ namespace BackEnd.Services
         }
 
         /// <summary>
+        /// 获取商家默认店铺ID
+        /// </summary>
+        private async Task<int> GetDefaultStoreIdForSeller(int sellerId)
+        {
+            // 通过商家ID查找店铺ID
+            var store = await _storeRepository.GetBySellerIdAsync(sellerId);
+            if (store == null)
+            {
+                throw new ArgumentException($"商家 {sellerId} 没有关联的店铺");
+            }
+            return store.StoreID;
+        }
+
+        /// <summary>
         /// 验证优惠券请求数据
         /// </summary>
         private void ValidateCouponRequest(CreateCouponRequestDto request)
@@ -235,15 +255,5 @@ namespace BackEnd.Services
                 throw new ArgumentException("结束时间必须晚于开始时间");
         }
 
-        /// <summary>
-        /// 获取商家的默认店铺ID（临时方案）
-        /// </summary>
-        private async Task<int> GetDefaultStoreIdForSeller(int sellerId)
-        {
-            // TODO: 这里应该从数据库查询商家的店铺
-            // 临时返回一个默认值，后续需要实现真正的逻辑
-            _logger.LogWarning("使用临时默认店铺ID，商家ID: {SellerId}", sellerId);
-            return 101; // 临时默认店铺ID
-        }
     }
 }

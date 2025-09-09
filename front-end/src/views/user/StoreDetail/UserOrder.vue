@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 import type { StoreInfo } from '@/api/user_store_info'
 import type { MenuItem, ShoppingCart, ShoppingCartItem } from '@/api/user_checkout'
@@ -43,21 +44,22 @@ import ItemCart from '@/components/user/StoreDetail/OrderView/ItemCart.vue'
 
 // 路由
 const route = useRoute()
+const userStore = useUserStore();
+const userID = userStore.getUserID();
 const storeID = computed(() => route.params.id as string)
-const userID = 0;  // 待添加用户编号
 
 // 数据
 const storeInfo = ref<StoreInfo>()
 const menuItems = ref<MenuItem[]>([])
 const cart = ref<ShoppingCart>({
-  cartId: 0,
+  cartId: 3,
   totalPrice: 0,
   items: []
 });  // 防止未定义
 
 // 固定分类（可根据需要改成动态生成）
 const categories = [
-  { id: 1, name: "招牌推荐" },
+  { id: 0, name: "招牌推荐" },
   { id: 2, name: "荤菜类" },
   { id: 3, name: "素菜类" },
   { id: 4, name: "丸子类" },
@@ -66,7 +68,7 @@ const categories = [
   { id: 7, name: "饮品" },
 ]
 
-const activeCategory = ref(1)
+const activeCategory = ref(0)
 
 // 增加数量
 async function increaseQuantity(dish: MenuItem) {
@@ -105,9 +107,25 @@ async function loadData(storeID: string) {
 }
 
 // 生命周期
+/*
 onMounted(() => loadData(storeID.value))
 watch(storeID, (newID, oldID) => {
   if (newID !== oldID) loadData(newID)
 })
+*/
 
+// 【新的代码】使用 watch 来代替 onMounted 和旧的 watch
+watch(
+  storeID, // 第一个参数：要监听的源
+  (newID) => { // 第二个参数：回调函数
+    console.log('StoreID 变化或初始化:', newID); // 添加日志用于调试
+    // 只有当 newID 是一个有效的、非空字符串时才加载数据
+    if (newID) {
+      loadData(newID);
+    }
+  },
+  {
+    immediate: true // 第三个参数：配置项，立即执行一次回调
+  }
+);
 </script>

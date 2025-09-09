@@ -20,9 +20,11 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
-
 import { useRouter } from 'vue-router'
 
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 const router = useRouter();
 
 const props = defineProps<{
@@ -38,7 +40,7 @@ function cancel() {
 }
 
 function ExitAccount(path: string) {
-    // 待添加清除后台储存信息逻辑
+    userStore.logout();
     router.push(path);
 }
 

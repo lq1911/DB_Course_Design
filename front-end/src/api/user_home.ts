@@ -17,7 +17,7 @@ export interface AllStore{
 }
 
 export interface SearchStore {
-    searchStore: showStore[]
+    searchStores: showStore[]
 }
 
 export interface OrderInfo {
@@ -36,6 +36,7 @@ export interface UserInfo {
     name: string
     phoneNumber: number
     image: string
+    defaultAddress: string
 }
 
 export async function getAllStore() {

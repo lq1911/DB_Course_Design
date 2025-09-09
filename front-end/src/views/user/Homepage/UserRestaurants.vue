@@ -73,11 +73,17 @@ const query = route.query.q as string | undefined;
 const showLoading = ref(true);
 
 const restaurantList = computed<showStore[]>(() => {
-  if (!allRestaurants.value) return [];
-  if ('allStores' in allRestaurants.value) return allRestaurants.value.allStores;
-  if ('searchStore' in allRestaurants.value) return allRestaurants.value.searchStore;
+  const data = allRestaurants.value;
+  if (!data) return [];
+
+  // 直接访问属性，判断是否是数组
+  if (Array.isArray((data as any).allStores)) return (data as any).allStores;
+  if (Array.isArray((data as any).searchStores)) return (data as any).searchStores;
+
   return [];
 });
+
+console.log(restaurantList);
 
 onMounted(async () => {
   try {
@@ -87,6 +93,7 @@ onMounted(async () => {
       const address = route.query.address as string;
 
       allRestaurants.value = await getSearchStore(userID, address, keyword);
+      console.log('search data', allRestaurants.value);
     } else {
       allRestaurants.value = await getAllStore();
     }

@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "element-plus/global" // 添加 Element Plus 全局类型
+      "element-plus/global", // 添加 Element Plus 全局类型
+      "pinia-plugin-persistedstate"
     ],
     "paths": {
       "@/*": [

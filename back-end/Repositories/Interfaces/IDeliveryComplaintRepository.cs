@@ -8,6 +8,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<DeliveryComplaint>> GetAllAsync();
         Task<DeliveryComplaint?> GetByIdAsync(int id);
+        Task<IEnumerable<DeliveryComplaint>> GetByDeliveryTaskIdAsync(int deliveryTaskId);
         Task AddAsync(DeliveryComplaint complaint);
         Task UpdateAsync(DeliveryComplaint complaint);
         Task DeleteAsync(DeliveryComplaint complaint);

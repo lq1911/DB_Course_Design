@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BackEnd.Services.Interfaces;
-using BackEnd.Dtos.UserHomepage;
+using BackEnd.Dtos.User;
 
 namespace BackEnd.Controllers
 {
@@ -42,7 +42,7 @@ namespace BackEnd.Controllers
         /// GET: /api/user/home/search
         /// </summary>
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromBody] HomeSearchDto searchDto)
+        public async Task<IActionResult> Search([FromQuery] HomeSearchDto searchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -64,13 +64,15 @@ namespace BackEnd.Controllers
                 });
             }
 
+            // 合并商家和菜品到一个数组
+            var searchStores = new List<object>();
+            if (stores != null && stores.Any()) searchStores.AddRange(stores);
+            if (dishes != null && dishes.Any()) searchStores.AddRange(dishes);
+
+            // 返回对象里包含 searchStores 属性
             return Ok(new
             {
-                showStore = new
-                {
-                    Stores = stores,
-                    Dishes = dishes
-                }
+                searchStores
             });
         }
         // 输入：用户id
