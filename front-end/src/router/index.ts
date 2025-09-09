@@ -13,12 +13,7 @@ import managerRoutes from './adminRoute'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    // 根据实际需求设置默认重定向
     redirect: '/login' // 默认进入登录页
-    // redirect: '/home' // 测试用户首页
-    // redirect: '/courier' // 测试骑手页面
-    // redirect: '/MerchantHome' // 测试商家主页
-    // 或者根据用户角色动态重定向
   },
   {
     path: '/login',
