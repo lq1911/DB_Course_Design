@@ -223,22 +223,30 @@
                                 <div v-if="selectedRole === 'admin'" class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">管理对象</label>
-                                        <select v-model="adminInfo.managementObject"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
-                                            <option value="">请选择管理对象</option>
-                                            <option value="riders">骑手管理</option>
-                                            <option value="comments">评论审核</option>
-                                            <option value="reports">举报处理</option>
-                                            <option value="aftersales">售后服务</option>
-                                        </select>
+                                        <div class="relative">
+                                            <button type="button" @click="showManagementDropdown = !showManagementDropdown"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm text-left bg-white cursor-pointer flex items-center justify-between">
+                                                <span :class="{ 'text-gray-400': !adminInfo.managementObject }">
+                                                    {{ getManagementLabel() || '请选择管理对象' }}
+                                                </span>
+                                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                            </button>
+                                            <div v-if="showManagementDropdown"
+                                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                <div @click="selectManagementObject('riders')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">售后处理</div>
+                                                <div @click="selectManagementObject('comments')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">配送投诉</div>
+                                                <div @click="selectManagementObject('reports')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">商家举报</div>
+                                                <div @click="selectManagementObject('aftersales')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">评论审核</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">处理事项说明</label>
-                                        <textarea v-model="adminInfo.handledItems" placeholder="请简要说明您将负责处理的主要事项"
-                                            rows="3"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none"></textarea>
-                                    </div>
+                                    <!-- 处理事项说明保持不变 -->
                                 </div>
+
 
 
                                 <!-- 商家特殊信息 -->
@@ -885,6 +893,24 @@ const validateRoleSpecificInfo = () => {
     }
     return true;
 };
+
+const showManagementDropdown = ref(false);
+
+const selectManagementObject = (value: string) => {
+    adminInfo.managementObject = value;
+    showManagementDropdown.value = false;
+};
+
+const getManagementLabel = () => {
+    const labels: { [key: string]: string } = {
+        'riders': '售后处理',
+        'comments': '配送投诉', 
+        'reports': '商家举报',
+        'aftersales': '评论审核'
+    };
+    return labels[adminInfo.managementObject];
+};
+
 </script>
 
 

@@ -613,9 +613,35 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">管理对象</label>
-                                        <input type="text" v-model="currentUser.managementScope"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
+                                        <div class="relative">
+                                            <!-- 点击的文本框 -->
+                                            <div @click="toggleDropdown" 
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm bg-white cursor-pointer flex justify-between items-center">
+                                                <span class="text-gray-700">
+                                                    {{ getSelectedText() }}
+                                                </span>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </div>
+                                            
+                                            <!-- 下拉选项 -->
+                                            <div v-show="dropdownVisible" 
+                                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                <div v-for="option in managementOptions" 
+                                                    :key="option"
+                                                    @click="toggleOption(option)"
+                                                    class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                                    <input type="checkbox" 
+                                                        :checked="isSelected(option)"
+                                                        class="text-orange-500 focus:ring-orange-500 mr-2" readonly>
+                                                    <span class="text-sm text-gray-700">{{ option }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
+
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">处理事项获评均分</label>
                                         <div class="flex items-center space-x-2">
@@ -1345,6 +1371,53 @@ const openViolationDetail = (item: ViolationItem) => {
 
 
 const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item }; showReviewDetail.value = true; };
+
+// 下拉框相关的数据和方法
+const dropdownVisible = ref(false)
+const managementOptions = ['售后处理', '配送投诉', '商家举报', '评论审核']
+
+const toggleDropdown = () => {
+  dropdownVisible.value = !dropdownVisible.value
+}
+
+const getSelectedText = () => {
+  if (!currentUser.value?.managementScope) return '请选择管理对象'
+  
+  // 将用户的管理范围按分隔符拆分
+  const userSelections = currentUser.value.managementScope.split('、')
+  
+  // 只保留在当前选项列表中的项目
+  const validSelections = userSelections.filter(selection => 
+    managementOptions.includes(selection)
+  )
+  
+  // 如果没有有效选项，显示默认文本
+  if (validSelections.length === 0) return '请选择管理对象'
+  
+  // 返回有效的选项，用顿号连接
+  return validSelections.join('、')
+}
+
+const isSelected = (option: string) => {
+  if (!currentUser.value?.managementScope) return false
+  return currentUser.value.managementScope.split('、').includes(option)
+}
+
+const toggleOption = (option: string) => {
+  if (!currentUser.value) return
+  
+  let selected = currentUser.value.managementScope ? currentUser.value.managementScope.split('、') : []
+  const index = selected.indexOf(option)
+  
+  if (index > -1) {
+    selected.splice(index, 1)
+  } else {
+    selected.push(option)
+  }
+  
+  currentUser.value.managementScope = selected.join('、')
+}
+
 // 4.4 ----------------- 修改数据处理函数 (全部完成) -----------------
 
 const handleAfterSaleAction = async () => {

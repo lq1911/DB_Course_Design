@@ -1,9 +1,8 @@
 using BackEnd.Dtos.User;
-using BackEnd.Repositories.Interfaces;
-using BackEnd.Services.Interfaces;
 using BackEnd.Models;
 using BackEnd.Models.Enums;
-using Microsoft.EntityFrameworkCore;
+using BackEnd.Repositories.Interfaces;
+using BackEnd.Services.Interfaces;
 using System.Text.RegularExpressions;
 
 namespace BackEnd.Services
@@ -40,8 +39,8 @@ namespace BackEnd.Services
             {
                 Name = user.Username,
                 PhoneNumber = user.PhoneNumber,
-                Image = user.Avatar,
-                DefaultAddress = user.Customer?.DefaultAddress // Customer 导航属性里的地址
+                Image = user.Avatar!,
+                DefaultAddress = user.Customer?.DefaultAddress! // Customer 导航属性里的地址
             };
 
             return dto;
@@ -49,8 +48,6 @@ namespace BackEnd.Services
 
         public async Task SubmitOrderAsync(SubmitOrderRequestDto dto)
         {
-            Console.WriteLine(">>>>>> SUCCESS: NOW RUNNING THE CORRECT CODE (GetByIdAsync) <<<<<<");
-
             // 找到用户未锁定的购物车
             var cart = await _shoppingCartRepository.GetByIdAsync(dto.CartId);
 

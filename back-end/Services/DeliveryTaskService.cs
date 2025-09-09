@@ -40,7 +40,7 @@ namespace BackEnd.Services
                 EstimatedDeliveryTime = DateTime.Parse(dto.EstimatedDeliveryTime),
                 CustomerID = order.CustomerID,
                 StoreID = order.StoreID,
-                Status = DeliveryStatus.To_Be_Taken
+                Status = DeliveryStatus.Pending
             };
 
             await _deliveryRepo.AddAsync(task);
