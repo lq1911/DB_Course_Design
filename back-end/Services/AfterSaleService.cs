@@ -85,15 +85,11 @@ namespace BackEnd.Services
                 OrderNo = $"ORD{app.OrderID}",
                 User = new AUserInfoDto
                 {
-                    //Name = app.Order.Customer.User.Username,
-                    //Phone = app.Order.Customer.User.PhoneNumber.ToString(),
-                    //Avatar = app.Order.Customer.User.Avatar
                     Name = app.Order?.Customer?.User?.Username ?? "未知用户",
                     Phone = app.Order?.Customer?.User?.PhoneNumber.ToString() ?? "未知电话",
                     Avatar = app.Order?.Customer?.User?.Avatar ?? "" // 头像为null时返回空字符串（前端可显示默认头像）
                 },
-                //Reason = app.Description,
-                 Reason = app.Description ?? "无售后原因描述",
+                Reason = app.Description ?? "无售后原因描述",
                 CreatedAt = app.ApplicationTime.ToString("yyyy-MM-dd HH:mm:ss")
             };
         }
@@ -110,7 +106,6 @@ namespace BackEnd.Services
                 };
             }
 
-            //相关字段不存在，这里默认处理成功
             return new ProcessResponseDto
             {
                 Success = true,
