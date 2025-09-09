@@ -15,5 +15,8 @@ namespace BackEnd.Services.Interfaces
         Task<bool> AcceptOrderAsync(int courierId, int orderId);
         Task<bool> RejectOrderAsync(int orderId);
         Task<decimal> GetMonthlyIncomeAsync(int courierId);
+        Task MarkTaskAsCompletedAsync(int taskId, int courierId); // 增加 courierId 用于权限验证
+        Task<bool> PickupOrderAsync(int orderId, int courierId);
+        Task<bool> DeliverOrderAsync(int orderId, int courierId);
     }
 }

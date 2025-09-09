@@ -42,6 +42,10 @@ namespace BackEnd.Models
 
         public DateTime? LastOnlineTime { get; set; }
 
+        // --- 新增这个属性 ---
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal CommissionThisMonth { get; set; } = 0.00m;//本月总工资
+
         // 一对多导航属性
         // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
