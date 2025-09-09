@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="visible"
-    class="fixed border-2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-6 bg-white rounded-xl shadow-xl z-50"
+    class="fixed border-2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-6 bg-white rounded-xl shadow-xl z-50"
   >
     <!-- 关闭按钮 -->
     <button
@@ -17,11 +17,9 @@
     <!-- Google Map 嵌入 -->
     <iframe
       v-else
-      class="w-full h-80 rounded-lg"
+      class="w-full h-[60vh] rounded-lg"
       frameborder="0"
       style="border:0"
-      allowfullscreen
-      loading="lazy"
       :src="mapUrl"
     ></iframe>
   </div>
