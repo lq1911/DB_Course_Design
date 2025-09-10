@@ -23,6 +23,10 @@ namespace BackEnd.Models
         public string? Remarks { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(5,2)")] // 精确定义数据库类型，最大值为 999.99
+        public decimal DeliveryFee { get; set; } = 0.00m; // 默认为 0
+
+        [Required]
         public FoodOrderState FoodOrderState { get; set; } = FoodOrderState.Pending;
 
         // 新增配送任务的导航属性

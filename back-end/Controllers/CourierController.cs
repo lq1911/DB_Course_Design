@@ -273,7 +273,7 @@ namespace BackEnd.Controllers
         public async Task<ActionResult<IEnumerable<AvailableOrderDto>>> GetAvailableOrders(
             [FromQuery] decimal latitude,
             [FromQuery] decimal longitude,
-            [FromQuery] decimal maxDistance = 3.0m)
+            [FromQuery] decimal maxDistance = 100000.0m)
         {
             try
             {
