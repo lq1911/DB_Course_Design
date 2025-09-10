@@ -75,11 +75,18 @@
 
                                     <!-- 已完成 -->
                                     <div v-if="order.orderStatus === 1" class="flex gap-1">
+                                        <!-- 售后按钮 -->
+                                        <button @click="openAfterSale(order.orderID)"
+                                            class="relative w-8 h-8 flex items-center justify-center cursor-pointer"
+                                            title="提起售后">
+                                            <i class="fas fa-headset text-orange-500 hover:text-orange-600 text-2xl"></i>
+                                        </button>
+
                                         <!-- 举报按钮 -->
                                         <button @click="openReportWindow(order.orderID)"
                                             class="relative w-8 h-8 flex items-center justify-center cursor-pointer"
                                             title="对此订单有意见">
-                                            <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
+                                            <i class="fas fa-exclamation-circle text-orange-500 hover:text-orange-600 text-2xl"></i>
                                         </button>
 
                                         <!--评价按钮-->
@@ -90,8 +97,11 @@
                                     </div>
 
                                     <!--显示物流弹窗-->
-                                    <RevealDelivery :visible="showRevealDelivery"
-                                        @close="showRevealDelivery = false" />
+                                    <RevealDelivery :visible="showRevealDelivery" @close="showRevealDelivery = false" />
+
+                                    <!-- 举报弹窗组件 -->
+                                    <AfterSaleWindow :visible="showAfterSale[order.orderID]" :order="order"
+                                        @close="showAfterSale[order.orderID] = false" />
 
                                     <!-- 举报弹窗组件 -->
                                     <ReportWindow :visible="showReportWindow[order.orderID]" :order="order"
@@ -119,6 +129,7 @@ import { getOrderInfo } from "@/api/user_home";
 
 import ReportWindow from "@/components/user/HomePage/Home/ReportWindow.vue";
 import ReviewWindow from "@/components/user/HomePage/Home/ReviewWindow.vue";
+import AfterSaleWindow from "@/components/user/HomePage/Home/AfterSaleWindow.vue";
 import RevealDelivery from "@/components/user/HomePage/Home/RevealDelivery.vue";
 
 const userStore = useUserStore();
@@ -129,6 +140,7 @@ const activeOrderStatus = ref("all"); // 默认显示全部订单
 const showLoading = ref(true);
 const showReviewWindow = ref<Record<number, boolean>>({});
 const showReportWindow = ref<Record<number, boolean>>({});
+const showAfterSale = ref<Record<number, boolean>>({});
 const showRevealDelivery = ref(false);
 const orderStatuses = [
     { key: "all", label: "全部订单" },
@@ -179,6 +191,10 @@ function openReviewWindow(orderID: number) {
 }
 function openReportWindow(orderID: number) {
     showReportWindow.value[orderID] = true;
+}
+
+function openAfterSale(orderID: number) {
+    showAfterSale.value[orderID] = true;
 }
 
 function openRevealDelivery() {
