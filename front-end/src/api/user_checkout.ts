@@ -31,6 +31,7 @@ export interface Order{
     customerID: number;
     cartID: number;
     storeID: number;
+    deliveryFee: number;
 }
 
 export async function getMenuItem(StoreID: string) {
@@ -58,22 +59,17 @@ export async function removeCartItem(cartId: number, dishId: number) {
     return deleteData<ShoppingCartItem>('/api/store/cart/remove', { cartId, dishId });
 }
 
-export async function submitOrder(customerId: number, cartId: number, storeId: number) {
-    // 1. 创建 Date 对象，并立即转换为标准的 ISO 8601 字符串
-    const paymentTimeString = new Date().toISOString(); // 例如 "2025-09-09T08:00:00.123Z"
+export async function submitOrder(customerId: number, cartId: number, storeId: number, deliveryFee: number) {
+    const paymentTimeString = new Date().toISOString();
 
-    // 2. 构建请求体，字段名与后端 DTO 保持一致
     const requestBody = {
-        PaymentTime: paymentTimeString, // 【确认】发送的是字符串
+        PaymentTime: paymentTimeString,
         CustomerId: customerId,
         CartId: cartId,
-        StoreId: storeId
+        StoreId: storeId,
+        DeliveryFee: deliveryFee
     };
 
-    // 3. 打印日志用于调试
-    console.log("正在提交订单 (使用字符串格式)，请求体:", requestBody);
-
-    // 4. 发送请求
     return postData<Order>('/api/store/checkout', requestBody);
 }
 
