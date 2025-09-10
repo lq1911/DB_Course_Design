@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Dtos.User
 {
@@ -30,6 +31,10 @@ namespace BackEnd.Dtos.User
 
         [Required]
         public int StoreId { get; set; }           // 店铺编号
+
+        [Required]
+        [Column(TypeName = "decimal(5,2)")] // 精确定义数据库类型，最大值为 999.99
+        public decimal DeliveryFee { get; set; } = 0.00m; // 默认为 0
     }
 
     public class UsedCouponDto

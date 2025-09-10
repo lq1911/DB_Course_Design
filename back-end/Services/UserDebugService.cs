@@ -83,6 +83,7 @@ namespace BackEnd.Services
                 CustomerID = dto.CustomerId,
                 CartID = cart.CartID,
                 StoreID = dto.StoreId,
+                DeliveryFee = dto.DeliveryFee,
                 FoodOrderState = FoodOrderState.Pending
             };
             await _foodOrderRepository.AddAsync(order);

@@ -48,6 +48,8 @@ const props = defineProps<{
   deliveryFee: number;
 }>();
 
+console.log(props);
+
 const emit = defineEmits<{
   (e: 'checkout'): void;
 }>();

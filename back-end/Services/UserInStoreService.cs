@@ -54,8 +54,8 @@ namespace BackEnd.Services
                 BusinessHours = $"{store.OpenTime:hh\\:mm}-{store.CloseTime:hh\\:mm}",
                 Rating = store.AverageRating,
                 MonthlySales = store.MonthlySales,
-                Discription = store.StoreFeatures,
-                CreationTime = store.StoreCreationTime
+                Description = store.StoreFeatures,
+                CreateTime = store.StoreCreationTime
             };
         }
 
@@ -143,7 +143,7 @@ namespace BackEnd.Services
             await _commentRepository.AddAsync(comment);
 
             // 自动分配管理员
-            var admin = await PickAdminAsync();
+            var admin = await PickCommentAdminAsync();
             if (admin == null)
                 throw new InvalidOperationException("没有可用的管理员");
 
@@ -172,7 +172,7 @@ namespace BackEnd.Services
             await _penaltyRepository.AddAsync(penalty);
 
             // 自动分配管理员
-            var admin = await PickAdminAsync();
+            var admin = await PickStoreAdminAsync();
             if (admin == null)
                 throw new InvalidOperationException("没有可用的管理员");
 
@@ -185,15 +185,30 @@ namespace BackEnd.Services
         }
 
         /// <summary>
-        /// 选择一个管理员（这里写了随机，可以换成轮询或负载最小）
+        /// 选择一个评论管理员（这里写了随机，可以换成轮询或负载最小）
         /// </summary>
-        private async Task<Administrator?> PickAdminAsync()
+        private async Task<Administrator?> PickCommentAdminAsync()
         {
-            var admins = await _adminRepository.GetAllAsync();
+            var admins = await _adminRepository.GetAdministratorsByManagedEntityAsync("评论审核");
             if (admins == null || !admins.Any())
                 return null;
 
             var random = new Random();
+
+            return admins.ElementAt(random.Next(admins.Count()));
+        }
+
+        /// <summary>
+        /// 选择一个店铺管理员（这里写了随机，可以换成轮询或负载最小）
+        /// </summary>
+        private async Task<Administrator?> PickStoreAdminAsync()
+        {
+            var admins = await _adminRepository.GetAdministratorsByManagedEntityAsync("店铺举报");
+            if (admins == null || !admins.Any())
+                return null;
+
+            var random = new Random();
+
             return admins.ElementAt(random.Next(admins.Count()));
         }
     }

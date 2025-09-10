@@ -24,6 +24,8 @@ onMounted(async () => {
     storeInfo.value = await getStoreInfo(storeID.value);
 })
 
+console.log(storeInfo);
+
 watch(storeID, async (newID, oldID) => {
     if (newID != oldID) {
         storeInfo.value = await getStoreInfo(storeID.value);

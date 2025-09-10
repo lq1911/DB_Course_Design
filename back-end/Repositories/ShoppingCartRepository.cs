@@ -26,6 +26,7 @@ namespace BackEnd.Repositories
             return await _context.ShoppingCarts
                                  .Include(sc => sc.Order)
                                  .Include(sc => sc.ShoppingCartItems)
+                                     .ThenInclude(sci => sci.Dish)
                                  .Include(sc => sc.Customer)
                                  .Include(sc => sc.Store)
                                  .FirstOrDefaultAsync(sc => sc.CartID == id);

@@ -37,6 +37,7 @@ namespace BackEnd.Services
                 CustomerID = dto.CustomerId,
                 CartID = dto.CartId,
                 StoreID = dto.StoreId,
+                DeliveryFee = dto.DeliveryFee,
                 OrderTime = DateTime.Now,
                 PaymentTime = dto.PaymentTime,   // 下单时传入
                 Remarks = dto.Remarks,
@@ -94,8 +95,8 @@ namespace BackEnd.Services
                 return new ResponseDto { Success = false, Message = "客户不存在" };
             }
 
-            // 构建地址字符串 (格式: 收件人姓名,手机号,详细地址)
-            string addressString = $"{dto.Name},{dto.PhoneNumber},{dto.Address}";
+            // 构建地址字符串 (详细地址)
+            string addressString = dto.Address;
             
             // 更新默认地址
             customer.DefaultAddress = addressString;

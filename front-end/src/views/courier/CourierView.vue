@@ -318,22 +318,22 @@
                             <!-- 列表内容 -->
                             <div class="p-4 space-y-4">
                                 <!-- ▼▼▼ 修改点：v-for 循环现在使用 filteredComplaints ▼▼▼ -->
-                                <div v-for="complaint in filteredComplaints" :key="complaint.ComplaintID"
+                                <div v-for="complaint in filteredComplaints" :key="complaint.complaintID"
                                     class="border rounded-lg p-4">
                                     <div class="flex items-center justify-between mb-2">
                                         <div class="text-sm font-medium text-red-500">
-                                            #{{ complaint.ComplaintID }}
+                                            #{{ complaint.complaintID }}
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            {{ complaint.ComplaintTime }}
+                                            {{ complaint.complaintTime }}
                                         </div>
                                     </div>
                                     <div class="text-sm text-gray-900 mb-2">
-                                        订单号：{{ complaint.DeliveryTaskID }}
+                                        订单号：{{ complaint.deliveryTaskID }}
                                     </div>
                                     <div class="bg-red-50 rounded-lg p-3 mb-3">
                                         <div class="text-sm text-gray-700">
-                                            {{ complaint.ComplaintReason }}
+                                            {{ complaint.complaintReason }}
                                         </div>
                                     </div>
                                     <div v-if="complaint.punishment"
@@ -534,10 +534,10 @@ interface Order {
 }
 
 interface Complaint {
-    ComplaintID: string;
-    DeliveryTaskID: string;
-    ComplaintTime: string;
-    ComplaintReason: string;
+    complaintID: string;
+    deliveryTaskID: string;
+    complaintTime: string;
+    complaintReason: string;
     punishment?: { // punishment 是可选的
         type: string;
         description: string;
@@ -672,12 +672,12 @@ const handleOrderCancelled = async (orderId: string) => {
     
     // 【重要】在模拟模式下，为了让刷新有效，我们必须手动修改模拟数据源的状态。
     // 这段代码模仿了“后端数据状态已经被改变”这个事实。
-    if (useMockData) {
+    /*if (useMockData) {
         const orderInMock = MockAPI.mockOrders.find(o => o.id === orderId);
         if (orderInMock) {
             orderInMock.status = 'cancelled';
         }
-    }
+    }*/
 };
 
 /** 处理“取单”操作 */
