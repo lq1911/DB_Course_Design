@@ -54,8 +54,8 @@ namespace BackEnd.Services
                 BusinessHours = $"{store.OpenTime:hh\\:mm}-{store.CloseTime:hh\\:mm}",
                 Rating = store.AverageRating,
                 MonthlySales = store.MonthlySales,
-                Discription = store.StoreFeatures,
-                CreationTime = store.StoreCreationTime
+                Description = store.StoreFeatures,
+                CreateTime = store.StoreCreationTime
             };
         }
 

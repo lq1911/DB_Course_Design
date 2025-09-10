@@ -44,9 +44,9 @@
           />
           <PaymentSelector v-model:selectedMethod="paymentMethod" />
           <OrderSummary
-            :subtotal="subtotal"
+            v-model:subtotal="subtotal"
             :selectedCoupon="selectedCoupon"
-            :deliveryFee="deliveryFee"
+            v-model:deliveryFee="deliveryFee"
             @checkout="checkout"
           />
         </div>
@@ -181,6 +181,8 @@ async function checkout() {
     alert('下单失败，请重试');
   }
 }
+
+console.log(deliveryFee);
 
 function goBack() {
   router.back();

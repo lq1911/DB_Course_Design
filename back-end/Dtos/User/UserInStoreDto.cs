@@ -49,10 +49,10 @@ namespace BackEnd.Dtos.User
 
         [Required]
         [StringLength(500)]
-        public string Discription { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         [Required]
-        public DateTime CreationTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 
     public class MenuRequestDto
