@@ -37,6 +37,7 @@ namespace BackEnd.Services
                 CustomerID = dto.CustomerId,
                 CartID = dto.CartId,
                 StoreID = dto.StoreId,
+                DeliveryFee = dto.DeliveryFee,
                 OrderTime = DateTime.Now,
                 PaymentTime = dto.PaymentTime,   // 下单时传入
                 Remarks = dto.Remarks,

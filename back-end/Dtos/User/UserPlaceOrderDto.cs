@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BackEnd.Dtos.User
 {
@@ -15,6 +17,11 @@ namespace BackEnd.Dtos.User
 
         [Required]
         public DateTime PaymentTime { get; set; }  // 支付时间
+
+        [Required]
+        [Column(TypeName = "decimal(5,2)")] // 精确定义数据库类型，最大值为 999.99
+        [JsonPropertyName("deliveryFee")]
+        public decimal DeliveryFee { get; set; } = 0.00m; // 默认为 0
 
         public string? Remarks { get; set; }    // 订单备注（可空）
     }
@@ -42,7 +49,7 @@ namespace BackEnd.Dtos.User
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public long PhoneNumber { get; set; }
 
         [Required]
         public string Address { get; set; } = string.Empty;
