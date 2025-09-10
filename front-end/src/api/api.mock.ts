@@ -14,10 +14,10 @@ export interface UserProfile {
 
 // ▼▼▼ 在其他 interface 定义的旁边，添加下面这个 ▼▼▼
 export interface Complaint {
-  ComplaintID: string;
-  DeliveryTaskID: string;
-  ComplaintTime: string;
-  ComplaintReason: string;
+  complaintID: string;
+  deliveryTaskID: string;
+  complaintTime: string;
+  complaintReason: string;
   punishment?: { // punishment 是可选的
     type: string;
     description: string;
@@ -151,26 +151,26 @@ const mockOrders: Order[] = [
 // ▼▼▼ 在 mockOrders, mockLocationInfo 等数据的旁边，添加下面这个 ▼▼▼
 const mockComplaints: Complaint[] = [
     {
-        ComplaintID: 'CPL-001',
-        DeliveryTaskID: 'ORD-MOCK-003',
-        ComplaintTime: '2024-08-21 14:30',
-        ComplaintReason: '送达时间过长，比预计晚了20分钟。',
+        complaintID: 'CPL-001',
+        deliveryTaskID: 'ORD-MOCK-003',
+        complaintTime: '2024-08-21 14:30',
+        complaintReason: '送达时间过长，比预计晚了20分钟。',
         punishment: {
             type: '超时罚款',
             description: '因严重超时导致客户投诉，罚款20元。',
         }
     },
     {
-        ComplaintID: 'CPL-002',
-        DeliveryTaskID: 'ORD-MOCK-004',
-        ComplaintTime: '2024-08-22 19:00',
-        ComplaintReason: '餐品有少量泼洒。',
+        complaintID: 'CPL-002',
+        deliveryTaskID: 'ORD-MOCK-004',
+        complaintTime: '2024-08-22 19:00',
+        complaintReason: '餐品有少量泼洒。',
     },
     {
-        ComplaintID: 'CPL-003',
-        DeliveryTaskID: 'ORD-MOCK-001',
-        ComplaintTime: '2024-08-23 12:15',
-        ComplaintReason: '骑手态度不佳。',
+        complaintID: 'CPL-003',
+        deliveryTaskID: 'ORD-MOCK-001',
+        complaintTime: '2024-08-23 12:15',
+        complaintReason: '骑手态度不佳。',
         punishment: {
             type: '服务警告',
             description: '因服务态度问题收到警告一次，请注意改善服务质量。',
