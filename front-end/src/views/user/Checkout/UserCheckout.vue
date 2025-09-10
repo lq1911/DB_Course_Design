@@ -46,6 +46,7 @@
           <OrderSummary
             :subtotal="subtotal"
             :selectedCoupon="selectedCoupon"
+            :deliveryFee="deliveryFee"
             @checkout="checkout"
           />
         </div>
@@ -65,6 +66,7 @@ import type { CouponInfo } from '@/api/user_coupon';
 import { getAddress } from '@/api/user_address';
 import { getMenuItem, getShoppingCart, addOrUpdateCartItem, removeCartItem } from '@/api/user_checkout';
 import { submitOrder, useCoupon } from '@/api/user_checkout';
+import { getDeliveryTasks } from '@/api/user_store_info';
 
 import DishCard from '@/components/user/Checkout/DishCard.vue';
 import AddressSelector from '@/components/user/Checkout/AddressSelector.vue';
@@ -78,6 +80,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const userID = userStore.getUserID();
 const storeID = computed(() => route.params.id as string);
+const deliveryFee = getDeliveryTasks().deliveryFee;
 
 // 数据
 const menuItems = ref<MenuItem[]>([]);
@@ -171,7 +174,7 @@ async function checkout() {
 
   try {
     await useCoupon(selectedCoupon.value?.couponID ?? null) // 未使用时返回空值
-    await submitOrder(userID, cart.value.cartId, Number(storeID.value));
+    await submitOrder(userID, cart.value.cartId, Number(storeID.value), deliveryFee);
     cart.value.items = [];
     goBack();
   } catch (error) {
@@ -183,7 +186,4 @@ function goBack() {
   router.back();
 }
 
-/*
-onMounted(loadData);
-*/
 </script>
