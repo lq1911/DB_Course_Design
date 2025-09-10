@@ -30,6 +30,7 @@
 import { ref, defineProps, defineEmits } from "vue";
 import { useUserStore } from "@/stores/user";
 
+import { postAfterSaleApplication } from "@/api/user_home";
 import type { OrderInfo } from "@/api/user_home";
 
 const userStore = useUserStore();
@@ -64,7 +65,7 @@ async function submit() {
             errorMsg.value = '请输入售后内容'
         }
 
-        // 待添加接口
+        await postAfterSaleApplication(userId, props.order.orderID, afterSaleReport.value);
 
         submitting.value = true;
         close();
