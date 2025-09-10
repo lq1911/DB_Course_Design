@@ -1,7 +1,7 @@
 // BackEnd/DTOs/Courier/ToggleStatusRequestDto.cs
 using System.ComponentModel.DataAnnotations;
 
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     public class ToggleStatusRequestDto
     {

@@ -122,3 +122,14 @@ export const fetchAvailableOrders = () => {
     // 调用后端为我们准备的新接口
     return apiClient.get<Order[]>('/courier/orders/available');
 };
+
+
+/**
+ * 更新骑手在服务器上的位置信息
+ * @param latitude 纬度
+ * @param longitude 经度
+ */
+export const updateCourierLocationAPI = (latitude: number, longitude: number) => {
+    // 调用我们刚刚在后端创建的 POST /api/courier/location/update 接口
+    return apiClient.post('/courier/location/update', { latitude, longitude });
+};

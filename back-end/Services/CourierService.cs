@@ -1,5 +1,5 @@
 using BackEnd.Data; // 【新增】引入 AppDbContext 所在的命名空间
-using BackEnd.DTOs.Courier;
+using BackEnd.Dtos.Courier;
 using BackEnd.Models; // 【新增】引入 Models 命名空间
 using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
@@ -155,18 +155,30 @@ namespace BackEnd.Services
             return orderDetailsDto;
         }
 
-        public async Task<bool> AcceptOrderAsync(int courierId, int orderId)
+
+        public async Task<bool> AcceptOrderAsync(int courierId, int taskId)
         {
-            var task = await _deliveryTaskRepository.GetByIdAsync(orderId);
-            if (task == null || task.Status != DeliveryStatus.Pending)
+            // 步骤 1: 使用 FindAsync 直接、高效地查找任务实体
+            // 这种方式不会生成不必要的 INNER JOIN
+            var taskToAccept = await _context.DeliveryTasks.FindAsync(taskId);
+
+            // 步骤 2: 验证订单是否存在，以及状态是否正确
+            // 必须是存在的、并且状态是 "To_Be_Taken" 的订单才能被接受
+            if (taskToAccept == null || taskToAccept.Status != DeliveryStatus.To_Be_Taken)
             {
+                // 如果订单不存在，或已被其他人接受，或状态不正确，则返回失败
                 return false;
             }
-            task.Status = DeliveryStatus.Delivering;
-            task.CourierID = courierId;
-            task.AcceptTime = DateTime.UtcNow;
-            await _deliveryTaskRepository.UpdateAsync(task);
-            await _deliveryTaskRepository.SaveAsync();
+
+            // 步骤 3: 更新订单状态和信息
+            taskToAccept.CourierID = courierId; // 将当前骑手ID分配给这个任务
+            taskToAccept.Status = DeliveryStatus.Pending; // 将状态更新为 "Pending" (待取件)
+            taskToAccept.AcceptTime = DateTime.UtcNow; // 记录接单时间 (使用 UTC 时间是好习惯)
+
+            // 步骤 4: 保存更改到数据库
+            await _context.SaveChangesAsync();
+
+            // 返回成功
             return true;
         }
 
@@ -395,6 +407,30 @@ namespace BackEnd.Services
             }).ToList();
 
             return complaintDtos;
+        }
+
+
+        public async Task<bool> UpdateCourierLocationAsync(int courierId, decimal latitude, decimal longitude)
+        {
+            // 1. 根据 courierId 查找骑手实体
+            var courier = await _context.Couriers.FirstOrDefaultAsync(c => c.UserID == courierId);
+
+            // 2. 如果找不到骑手，操作失败
+            if (courier == null)
+            {
+                return false;
+            }
+
+            // 3. 更新骑手的经纬度属性
+            // 注意：这里的属性名 CourierLatitude 和 CourierLongitude 必须与你的 Courier.cs 模型文件中的完全一致
+            courier.CourierLatitude = latitude;
+            courier.CourierLongitude = longitude;
+
+            // 4. 保存更改到数据库
+            await _context.SaveChangesAsync();
+
+            // 5. 操作成功
+            return true;
         }
 
 

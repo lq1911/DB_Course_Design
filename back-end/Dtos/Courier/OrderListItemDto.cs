@@ -1,5 +1,5 @@
 // BackEnd/DTOs/Courier/OrderListItemDto.cs
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     public class OrderListItemDto
     {
