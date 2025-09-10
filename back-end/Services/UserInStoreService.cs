@@ -189,7 +189,7 @@ namespace BackEnd.Services
         /// </summary>
         private async Task<Administrator?> PickAdminAsync()
         {
-            var admins = await _adminRepository.GetAllAsync();
+            var admins = await _adminRepository.GetAdministratorsByManagedEntityAsync("评论审核");
             if (admins == null || !admins.Any())
                 return null;
 
