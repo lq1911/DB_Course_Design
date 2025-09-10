@@ -3,6 +3,7 @@ using System;
 using BackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace BackEnd.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250909171104_Fine")]
+    partial class Fine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,10 +313,6 @@ namespace BackEnd.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValue(0)
                         .HasColumnName("AVGDELIVERYTIME");
-
-                    b.Property<decimal>("CommissionThisMonth")
-                        .HasColumnType("decimal(10,2)")
-                        .HasColumnName("COMMISSIONTHISMONTH");
 
                     b.Property<decimal?>("CourierLatitude")
                         .HasColumnType("decimal(10,6)")
@@ -927,14 +926,6 @@ namespace BackEnd.Migrations
                     b.Property<TimeSpan>("CloseTime")
                         .HasColumnType("INTERVAL DAY(8) TO SECOND(7)")
                         .HasColumnName("CLOSETIME");
-
-                    b.Property<decimal?>("Latitude")
-                        .HasColumnType("decimal(10,6)")
-                        .HasColumnName("LATITUDE");
-
-                    b.Property<decimal?>("Longitude")
-                        .HasColumnType("decimal(10,6)")
-                        .HasColumnName("LONGITUDE");
 
                     b.Property<int>("MonthlySales")
                         .HasColumnType("NUMBER(10)")

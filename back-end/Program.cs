@@ -120,6 +120,7 @@ builder.Services.AddScoped<IEvaluate_DeliveryComplaintService, Evaluate_Delivery
 builder.Services.AddScoped<ISupervise_Service, Supervise_Service>();
 builder.Services.AddScoped<IReview_CommentService, Review_CommentService>();
 builder.Services.AddScoped<IMerchantService, MerchantService>(); ;
+builder.Services.AddHostedService<MonthlyCommissionResetService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMerchantInformationService, MerchantInformationService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -130,7 +131,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAfterSaleService, AfterSaleService>();
 builder.Services.AddScoped<ICreateApplicationService, CreateApplicationService>();
 builder.Services.AddScoped<ICreateComplaintService, CreateComplaintService>();
-
+builder.Services.AddScoped<IGeoHelper, GeoHelper>();
 var app = builder.Build();
 
 // 如果是开发环境，启用 Swagger UI 来浏览 API 接口文档

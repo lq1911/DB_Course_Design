@@ -37,6 +37,9 @@ namespace BackEnd.Models
         [StringLength(255)]
         public string? ProcessingRemark { get; set; }
 
+        // 罚金
+        public decimal? FineAmount { get; set; }
+
         [Required]
         public int CourierID { get; set; }
         [ForeignKey("CourierID")]

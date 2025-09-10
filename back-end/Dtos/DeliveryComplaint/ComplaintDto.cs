@@ -10,6 +10,7 @@ namespace BackEnd.Dtos.DeliveryComplaint
         public string Punishment { get; set; } = "-";
         public string PunishmentReason { get; set; } = string.Empty;
         public string ProcessingNote { get; set; } = string.Empty;
+        public string Fine { get; set; } = string.Empty;
     }
 
     public class SetComplaintInfo
@@ -19,6 +20,7 @@ namespace BackEnd.Dtos.DeliveryComplaint
         public string Punishment { get; set; } = "-";
         public string PunishmentReason { get; set; } = string.Empty;
         public string ProcessingNote { get; set; } = string.Empty;
+        public string Fine { get; set; } = string.Empty;
     }
 
     public class SetComplaintInfoResponse
