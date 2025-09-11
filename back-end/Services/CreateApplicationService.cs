@@ -44,14 +44,7 @@ namespace BackEnd.Services
                     return Fail("无权对此订单申请售后");
                 }
 
-                // 3. 检查是否已有待处理的售后申请
-                var existingApplications = await _applicationRepository.GetByOrderIdAsync(request.OrderId);
-                if (existingApplications.Any(a => a.AfterSaleState == AfterSaleState.Pending))
-                {
-                    return Fail("该订单已有待处理的售后申请");
-                }
-
-                // 4. 创建售后申请
+                // 3. 创建售后申请
                 var application = new AfterSaleApplication
                 {
                     OrderID = request.OrderId,
@@ -63,7 +56,7 @@ namespace BackEnd.Services
                 await _applicationRepository.AddAsync(application);
                 await _applicationRepository.SaveAsync();
 
-                // 5. 分配给有"售后处理"权限的管理员
+                // 4. 分配给有"售后处理"权限的管理员
                 var availableAdmins = await _administratorRepository.GetAdministratorsByManagedEntityAsync("售后处理");
 
                 if (!availableAdmins.Any())
