@@ -31,7 +31,7 @@ namespace BackEnd.Models
         //8.13
         // 1. 任务的当前状态
         [Required]
-        public DeliveryStatus Status { get; set; } = DeliveryStatus.Pending; // 默认为配送中
+        public DeliveryStatus Status { get; set; } = DeliveryStatus.To_Be_Taken;
 
         // 2. 任务实际完成的时间
         public DateTime? CompletionTime { get; set; } // 可为空，因为未完成时没有完成时间
@@ -51,10 +51,9 @@ namespace BackEnd.Models
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
 
-        [Required]
-        public int CourierID { get; set; }
+        public int? CourierID { get; set; }
         [ForeignKey("CourierID")]
-        public Courier Courier { get; set; } = null!;
+        public Courier? Courier { get; set; } = null!;
 
         [Required]
         public int OrderID { get; set; }

@@ -40,11 +40,11 @@ namespace BackEnd.Services
                 EstimatedDeliveryTime = DateTime.Parse(dto.EstimatedDeliveryTime),
                 CustomerID = order.CustomerID,
                 StoreID = order.StoreID,
-                Status = DeliveryStatus.Pending,
+                Status = DeliveryStatus.To_Be_Taken,
                 DeliveryFee = order.DeliveryFee
-
             };
 
+            Console.WriteLine("Status before saving: " + task.Status);
             await _deliveryRepo.AddAsync(task);
 
             // 创建发布记录
@@ -67,14 +67,35 @@ namespace BackEnd.Services
 
         public async Task<OrderDeliveryInfoDto> GetOrderDeliveryInfoAsync(int orderId)
         {
+            // 开始调试输出：记录请求的订单ID
+            Console.WriteLine($"[DEBUG] 获取订单配送信息，订单ID: {orderId}");
+
             var task = await _deliveryRepo.GetByOrderIdAsync(orderId);
             if (task == null)
+            {
+                // 记录找不到任务的情况
+                Console.WriteLine($"[DEBUG] 未找到订单的配送任务，订单ID: {orderId}");
                 return new OrderDeliveryInfoDto();
+            }
+
+            // 输出任务相关信息
+            Console.WriteLine($"[DEBUG] 找到配送任务，任务ID: {task.TaskID}, 客户ID: {task.CustomerID}, 商店ID: {task.StoreID}");
 
             var courier = task.Courier;
             var courierUser = courier?.User;
 
-            return new OrderDeliveryInfoDto
+            // 输出是否存在骑手信息
+            if (courier != null)
+            {
+                Console.WriteLine($"[DEBUG] 配送任务的骑手信息: 用户ID: {courier.UserID}, 姓名: {courierUser?.FullName}, 车类型: {courier.VehicleType}");
+            }
+            else
+            {
+                Console.WriteLine("[DEBUG] 配送任务没有分配骑手信息");
+            }
+
+            // 构建返回数据
+            var result = new OrderDeliveryInfoDto
             {
                 DeliveryTask = new DeliveryTaskDto
                 {
@@ -90,12 +111,14 @@ namespace BackEnd.Services
                     DeliveryTaskId = task.TaskID,
                     PublishTime = task.PublishTime.ToString("o")
                 },
-                Accept = new AcceptTaskDto
-                {
-                    CourierId = task.CourierID,
-                    DeliveryTaskId = task.TaskID,
-                    AcceptTime = task.AcceptTime.ToString("o")
-                },
+                Accept = task.CourierID.HasValue
+                    ? new AcceptTaskDto
+                    {
+                        CourierId = task.CourierID,
+                        DeliveryTaskId = task.TaskID,
+                        AcceptTime = task.AcceptTime.ToString("o")
+                    }
+                    : null,
                 Courier = courier == null ? null : new CourierSummaryDto
                 {
                     UserId = courier.UserID,
@@ -110,6 +133,14 @@ namespace BackEnd.Services
                     PhoneNumber = courierUser?.PhoneNumber
                 }
             };
+
+            // 输出返回的配送任务信息
+            Console.WriteLine("[DEBUG] 配送任务信息构建完成");
+            Console.WriteLine($"[DEBUG] 配送任务ID: {result.DeliveryTask?.TaskId}, 发布任务ID: {result.Publish?.DeliveryTaskId}");
+
+            // 返回结果
+            return result;
         }
+
     }
 }

@@ -121,7 +121,8 @@ namespace BackEnd.Services
         {
             switch (status)
             {
-                case DeliveryStatus.Pending: return "待处理";
+                case DeliveryStatus.To_Be_Taken: return "待处理";
+                case DeliveryStatus.Pending: return "待取餐";
                 case DeliveryStatus.Delivering: return "配送中";
                 case DeliveryStatus.Completed: return "已完成";
                 case DeliveryStatus.Cancelled: return "已取消";
@@ -227,7 +228,7 @@ namespace BackEnd.Services
                 await _deliveryTaskRepository.UpdateAsync(task); // <-- 已添加 await
 
                 // 3. 找到对应的骑手
-                var courier = await _courierRepository.GetByIdAsync(task.CourierID);
+                var courier = await _courierRepository.GetByIdAsync(task.CourierID!.Value);
                 if (courier != null)
                 {
                     // 4. 为骑手累加本月提成
