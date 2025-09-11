@@ -1,4 +1,4 @@
-using BackEnd.DTOs.Courier;
+using BackEnd.Dtos.Courier;
 using BackEnd.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -305,5 +305,34 @@ namespace BackEnd.Controllers
                 return StatusCode(500, $"服务器内部错误: {ex.Message}");
             }
         }
+
+
+        [HttpPost("location/update")] // 定义路由为 POST /api/courier/location/update
+        public async Task<IActionResult> UpdateLocation([FromBody] UpdateLocationDto locationDto)
+        {
+            try
+            {
+                var courierId = GetCurrentCourierId();
+                var success = await _courierService.UpdateCourierLocationAsync(courierId, locationDto.Latitude, locationDto.Longitude);
+
+                if (!success)
+                {
+                    return NotFound(new { message = "骑手未找到，无法更新位置。" });
+                }
+
+                return Ok(new { message = "位置更新成功。" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"服务器内部错误: {ex.Message}");
+            }
+        }
+
+
+        
     }
 }

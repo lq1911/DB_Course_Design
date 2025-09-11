@@ -1,4 +1,4 @@
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     // 这个类严格匹配前端 Complaint 接口中的 'punishment' 对象
     public class PunishmentDto

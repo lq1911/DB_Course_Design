@@ -1,4 +1,4 @@
-using BackEnd.DTOs.Courier; // 假设所有 DTO 都放在这里
+using BackEnd.Dtos.Courier; // 假设所有 DTO 都放在这里
 
 namespace BackEnd.Services.Interfaces
 {
@@ -20,6 +20,9 @@ namespace BackEnd.Services.Interfaces
         Task<bool> DeliverOrderAsync(int orderId, int courierId);
         // 在 ICourierService.cs 接口定义中添加此行
         Task<IEnumerable<ComplaintDto>> GetComplaintsAsync(int courierId);
+
+        // 在 ICourierService.cs 接口中添加此行
+        Task<bool> UpdateCourierLocationAsync(int courierId, decimal latitude, decimal longitude);
 
         // 在 ICourierService.cs 接口中添加或替换为这个版本
         Task<IEnumerable<AvailableOrderDto>> GetAvailableOrdersAsync(int courierId, decimal latitude, decimal longitude, decimal maxDistance);
