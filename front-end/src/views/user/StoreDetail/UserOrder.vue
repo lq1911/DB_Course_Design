@@ -60,12 +60,12 @@ const cart = ref<ShoppingCart>({
 // 固定分类（可根据需要改成动态生成）
 const categories = [
   { id: 0, name: "招牌推荐" },
-  { id: 2, name: "荤菜类" },
-  { id: 3, name: "素菜类" },
-  { id: 4, name: "丸子类" },
-  { id: 5, name: "豆制品" },
-  { id: 6, name: "主食类" },
-  { id: 7, name: "饮品" },
+  { id: 1, name: "荤菜类" },
+  { id: 2, name: "素菜类" },
+  { id: 3, name: "丸子类" },
+  { id: 4, name: "豆制品" },
+  { id: 5, name: "主食类" },
+  { id: 6, name: "饮品" },
 ]
 
 const activeCategory = ref(0)
