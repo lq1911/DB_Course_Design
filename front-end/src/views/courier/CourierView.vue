@@ -248,7 +248,7 @@
                                                 <el-icon :size="12">
                                                     <User />
                                                 </el-icon>
-                                            </div> 
+                                            </div>
                                             <div class="flex-1">
                                                 <div class="font-medium text-sm text-gray-900">{{ order.customer }}
                                                 </div>
@@ -438,6 +438,21 @@
                                         <ArrowRight />
                                     </el-icon>
                                 </div>
+
+                                <div @click="handleLogout"
+                                    class="flex items-center justify-between cursor-pointer py-3 text-red-500">
+                                    <div class="flex items-center space-x-3">
+                                        <el-icon class="text-red-400">
+                                            <SwitchButton />
+                                        </el-icon>
+                                        <span class="font-semibold">退出登录</span>
+                                    </div>
+                                    <el-icon class="text-red-400">
+                                        <ArrowRight />
+                                    </el-icon>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -513,7 +528,8 @@ import {
     HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit
 } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
-
+import loginApi from '@/api/login_api';      // 导入我们定义好的通用认证API
+import { removeToken } from '@/utils/jwt'; 
 // ===================================================================
 //  数据源切换开关
 // ===================================================================
@@ -935,6 +951,46 @@ const acceptAvailableOrder = async (order: Order) => {
         ElMessage.error("接单失败，可能已被他人抢走，请刷新");
     }
 };
+
+async function handleLogout() {
+    try {
+        // 1. 弹出确认框，提供更好的用户体验
+        await ElMessageBox.confirm(
+            '您确定要退出当前账号吗？',
+            '退出登录',
+            {
+                confirmButtonText: '确定退出',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        );
+
+        // 2. (推荐) 调用后端登出接口，通知服务器
+        await loginApi.logout();
+
+        // 3. (核心) 从本地存储中删除 Token，清除登录状态
+        removeToken();
+
+        ElMessage.success('您已成功退出登录');
+
+        // 4. 重定向到登录页面
+        // 使用 replace 而不是 push，这样用户无法通过浏览器“后退”按钮回到之前的页面
+        router.replace('/login'); // <-- 请确保 '/login' 是你登录页面的正确路由
+
+    } catch (error: any) {
+        // 如果用户点击了“取消”，或者API调用失败
+        if (error === 'cancel') { 
+            ElMessage.info('已取消退出操作');
+        } else {
+            console.error('登出时发生错误:', error);
+            // 即便通知后端失败，也要强制执行前端登出
+            ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+            removeToken();
+            router.replace('/login');
+        }
+    }
+}
+
 
 </script>
 
