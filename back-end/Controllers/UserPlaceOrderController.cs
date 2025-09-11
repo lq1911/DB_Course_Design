@@ -72,6 +72,32 @@ namespace BackEnd.Controllers
                 return StatusCode(500, new ResponseDto { Success = false, Message = "服务器内部错误，更新账户信息失败" });
             }
         }
+        [HttpPost("account/avatar/{userId}")]
+        public async Task<ActionResult<ResponseDto>> UploadAvatar(
+            int userId,
+            IFormFile file)
+        {
+            try
+            {
+                var relativeUrl = await _orderService.UpdateUserAvatarAsync(userId, file);
+                return Ok(new ResponseDto { Success = true, Message = relativeUrl });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new ResponseDto { Success = false, Message = ex.Message });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ResponseDto { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "上传头像失败");
+                return StatusCode(500, new ResponseDto { Success = false, Message = "服务器错误" });
+            }
+        }
+
+
 
         /// <summary>
         /// 新增或更新收货地址
