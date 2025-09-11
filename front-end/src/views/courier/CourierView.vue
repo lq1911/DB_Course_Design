@@ -497,7 +497,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import CourierLocationMap from '@/components/user/CourierLocationMap.vue';
+import CourierLocationMap from '@/components/courier/CourierLocationMap.vue';
 import { ElMessage, ElLoading ,ElMessageBox} from 'element-plus';
 import {
     User, Bell, Switch, Location, CircleCloseFilled,
