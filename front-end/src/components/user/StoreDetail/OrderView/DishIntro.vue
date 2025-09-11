@@ -8,7 +8,7 @@
                     </div>
                     <div class="p-4">
                         <h4 class="font-semibold text-gray-900 mb-2">{{ item.name }}</h4>
-                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ item.description }}</p>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2 h-10">{{ item.description }}</p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2">
                                 <span class="text-lg font-bold text-[#F9771C]">¥{{ item.price }}</span>
