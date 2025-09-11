@@ -116,4 +116,14 @@ namespace BackEnd.Models.Enums
         Active = 0,
         Done = 1
     }
+    public enum DishTypes
+    {
+        SignatureRecommendation = 0,
+        Meat = 1,
+        Vegetable = 2,
+        MeatBall = 3,
+        Soy = 4,
+        StapleFood = 5,
+        Beverage = 6
+    }
 }

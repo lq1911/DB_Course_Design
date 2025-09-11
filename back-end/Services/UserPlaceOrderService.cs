@@ -11,13 +11,17 @@ namespace BackEnd.Services
         private readonly IUserRepository _userRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IFoodOrderRepository _foodOrderRepository;
+        private readonly string _avatarFolder;
 
-        public UserPlaceOrderService(IShoppingCartRepository cartRepository, IFoodOrderRepository foodOrderRepository, IUserRepository userRepository, ICustomerRepository customerRepository)
+        public UserPlaceOrderService(IShoppingCartRepository cartRepository, IFoodOrderRepository foodOrderRepository, IUserRepository userRepository, ICustomerRepository customerRepository,IWebHostEnvironment env)
         {
             _cartRepository = cartRepository;
             _foodOrderRepository = foodOrderRepository;
             _userRepository = userRepository;
             _customerRepository = customerRepository;
+            _avatarFolder = Path.Combine(env.WebRootPath, "avatars");
+            Directory.CreateDirectory(_avatarFolder);
+
         }
 
         public async Task<ResponseDto> CreateOrderAsync(CreateOrderDto dto)
@@ -83,6 +87,32 @@ namespace BackEnd.Services
 
             return new ResponseDto { Success = true, Message = "账户信息更新成功" };
         }
+         public async Task<string> UpdateUserAvatarAsync(int userId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                throw new ArgumentException("文件不能为空");
+
+            var ext = Path.GetExtension(file.FileName);
+            var fileName = $"{userId}{ext}";
+            var filePath = Path.Combine(_avatarFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // 更新数据库
+            var relativeUrl = $"/avatars/{fileName}";
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("用户不存在");
+
+            user.Avatar = relativeUrl;
+            await _userRepository.UpdateAsync(user);
+
+            return relativeUrl;
+        }
+        
 
         public async Task<ResponseDto> SaveOrUpdateAddressAsync(SaveAddressDto dto)
         {
@@ -97,13 +127,13 @@ namespace BackEnd.Services
 
             // 构建地址字符串 (详细地址)
             string addressString = dto.Address;
-            
+
             // 更新默认地址
             customer.DefaultAddress = addressString;
 
             // EF 已跟踪 customer，直接保存即可
             await _customerRepository.SaveAsync();
-           
+
 
             return new ResponseDto { Success = true, Message = "收货地址保存成功" };
         }

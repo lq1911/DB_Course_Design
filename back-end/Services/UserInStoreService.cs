@@ -71,7 +71,7 @@ namespace BackEnd.Services
             return dishes.Select(d => new MenuResponseDto
             {
                 Id = d.DishID,
-                CategoryId = 0, // 目前 Dish 没有分类字段，可以扩展
+                CategoryId = d.Type,// 目前 Dish 没有分类字段，可以扩展
                 Name = d.DishName,
                 Description = d.Description,
                 Price = d.Price,

@@ -576,6 +576,14 @@ namespace BackEnd.Migrations
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("PRICE");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR2(30)")
+                        .HasDefaultValue("SignatureRecommendation")
+                        .HasColumnName("TYPE");
+
                     b.HasKey("DishID");
 
                     b.ToTable("DISHES", (string)null);

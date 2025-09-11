@@ -60,12 +60,12 @@ const cart = ref<ShoppingCart>({
 // 固定分类（可根据需要改成动态生成）
 const categories = [
   { id: 0, name: "招牌推荐" },
-  { id: 2, name: "荤菜类" },
-  { id: 3, name: "素菜类" },
-  { id: 4, name: "丸子类" },
-  { id: 5, name: "豆制品" },
-  { id: 6, name: "主食类" },
-  { id: 7, name: "饮品" },
+  { id: 1, name: "荤菜类" },
+  { id: 2, name: "素菜类" },
+  { id: 3, name: "丸子类" },
+  { id: 4, name: "豆制品" },
+  { id: 5, name: "主食类" },
+  { id: 6, name: "饮品" },
 ]
 
 const activeCategory = ref(0)
@@ -107,25 +107,16 @@ async function loadData(storeID: string) {
 }
 
 // 生命周期
-/*
 onMounted(() => loadData(storeID.value))
-watch(storeID, (newID, oldID) => {
-  if (newID !== oldID) loadData(newID)
-})
-*/
-
-// 【新的代码】使用 watch 来代替 onMounted 和旧的 watch
 watch(
-  storeID, // 第一个参数：要监听的源
-  (newID) => { // 第二个参数：回调函数
-    console.log('StoreID 变化或初始化:', newID); // 添加日志用于调试
-    // 只有当 newID 是一个有效的、非空字符串时才加载数据
+  storeID, 
+  (newID) => {
     if (newID) {
       loadData(newID);
     }
   },
   {
-    immediate: true // 第三个参数：配置项，立即执行一次回调
+    immediate: true
   }
 );
 </script>

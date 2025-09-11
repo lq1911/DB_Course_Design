@@ -66,7 +66,7 @@ namespace BackEnd.Dtos.User
         [Required]
         public int Id { get; set; }
 
-        public int CategoryId { get; set; }
+        public DishTypes CategoryId { get; set; }
 
         [Required]
         [StringLength(50)]

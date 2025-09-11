@@ -83,6 +83,9 @@
                                         <ReplyDialog v-model="dialogVisibleRider" title="联系骑手" identity="user"
                                             :chatMessages="riderChat" :quickPhrases="['请尽快送达哦', '麻烦放到门口，谢谢']"
                                             :emojis="['🚴', '🙏', '😁', '👌']" @submit="handleRiderReply" />
+
+                                        <!--显示物流弹窗-->
+                                        <RevealDelivery :visible="showRevealDelivery" @close="showRevealDelivery = false" />
                                     </div>
                                 </div>
 
@@ -108,9 +111,6 @@
                                         class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
                                         评价
                                     </button>
-
-                                    <!--显示物流弹窗-->
-                                    <RevealDelivery :visible="showRevealDelivery" @close="showRevealDelivery = false" />
 
                                     <!-- 举报弹窗组件 -->
                                     <AfterSaleWindow :visible="showAfterSale[order.orderID]" :order="order"

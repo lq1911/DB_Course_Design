@@ -18,7 +18,7 @@
             <div class="flex items-center justify-between text-sm text-gray-600">
               <span class="flex items-center">
                 <i class="fas fa-star text-yellow-400 mr-1"></i>
-                {{ restaurant.averageRating }}
+                {{ restaurant.averageRating > 0 ? restaurant.averageRating.toFixed(1) : '暂无评分' }}
               </span>
             </div>
           </div>

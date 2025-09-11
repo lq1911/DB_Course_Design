@@ -4,8 +4,8 @@ namespace BackEnd.Dtos.DeliveryComplaint
 {
     public class CreateComplaintDto
     {
-        [Required(ErrorMessage = "配送任务ID不能为空")]
-        public string DeliveryTaskId { get; set; } = null!;
+        public int? OrderId { get; set; }   // 新增：订单编号
+        public int? DeliveryTaskId { get; set; }   // 仍然支持任务编号
 
         [Required(ErrorMessage = "投诉原因不能为空")]
         [StringLength(255, ErrorMessage = "投诉原因不能超过255个字符")]
