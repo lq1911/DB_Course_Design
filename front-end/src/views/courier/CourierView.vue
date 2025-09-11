@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                         </div> -->
-                          <CourierLocationMap /> 
+                        <CourierLocationMap />
 
                     </div>
 
@@ -262,12 +262,12 @@
                                             <button v-if="order.status === 'pending'"
                                                 @click="handlePickupOrder(order.id)"
                                                 class="bg-orange-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-orange-600">
-                                                取单
+                                                我已到店
                                             </button>
                                             <button v-if="order.status === 'delivering'"
                                                 @click="handleDeliverOrder(order.id)"
                                                 class="bg-green-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-green-600">
-                                                已送达
+                                                我已送达
                                             </button>
                                         </div>
                                     </div>
@@ -369,14 +369,24 @@
 
                     <!-- 个人中心页面 -->
                     <div v-if="currentTab === 'profile' && userProfile" class="mx-4 mt-4">
-                        <!-- 个人资料卡片 -->
+                        <!-- 个人资料卡片 (仅更新头像显示) -->
                         <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
                             <div class="flex items-center space-x-4 mb-4">
-                                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-                                    <el-icon class="text-white text-2xl">
+
+                                <!-- ▼▼▼ 这是唯一需要修改的部分 ▼▼▼ -->
+                                <div
+                                    class="w-16 h-16 rounded-full flex items-center justify-center bg-gray-200 overflow-hidden">
+                                    <!-- 如果 userProfile.avatar 存在 (是一个有效的URL)，就显示图片 -->
+                                    <img v-if="userProfile.avatar" :src="userProfile.avatar" alt="用户头像"
+                                        class="w-full h-full object-cover" />
+                                    <!-- 否则，显示一个默认的 Element Plus 用户图标 -->
+                                    <el-icon v-else class="text-gray-500 text-3xl">
                                         <User />
                                     </el-icon>
                                 </div>
+                                <!-- ▲▲▲ 修改结束 ▲▲▲ -->
+
+                                <!-- 其他部分保持完全不变 -->
                                 <div>
                                     <div class="text-lg font-semibold text-gray-900">{{ userProfile.name }}</div>
                                     <div class="text-sm text-gray-500">ID: {{ userProfile.id }}</div>
@@ -398,7 +408,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- 设置菜单 -->
                         <div class="bg-white rounded-lg shadow-sm">
                             <div class="p-4 space-y-1 divide-y divide-gray-100">
@@ -429,6 +438,21 @@
                                         <ArrowRight />
                                     </el-icon>
                                 </div>
+
+                                <div @click="handleLogout"
+                                    class="flex items-center justify-between cursor-pointer py-3 text-red-500">
+                                    <div class="flex items-center space-x-3">
+                                        <el-icon class="text-red-400">
+                                            <SwitchButton />
+                                        </el-icon>
+                                        <span class="font-semibold">退出登录</span>
+                                    </div>
+                                    <el-icon class="text-red-400">
+                                        <ArrowRight />
+                                    </el-icon>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -504,7 +528,8 @@ import {
     HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit
 } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
-
+import loginApi from '@/api/login_api';      // 导入我们定义好的通用认证API
+import { removeToken } from '@/utils/jwt'; 
 // ===================================================================
 //  数据源切换开关
 // ===================================================================
@@ -520,7 +545,20 @@ const api = useMockData ? MockAPI : RealAPI;
 const router = useRouter();
 
 // --- 接口定义 ---
-interface UserProfile { name: string; id: string; registerDate: string; rating: number; creditScore: number; }
+export interface UserProfile {
+    name: string;
+    id: string;
+    registerDate: string;
+    rating: number;
+    creditScore: number;
+
+    // --- 新增的可选属性 ---
+    gender?: string;
+    birthday?: string; // 通常是 ISO 格式的日期字符串，如 '2024-01-15T00:00:00'
+    avatar?: string;   // 头像的 URL
+    vehicleType?: string;
+    // -----------------------
+}
 interface Order {
     id: string;
     status: OrderStatus; // 使用我们更精确的类型
@@ -913,6 +951,46 @@ const acceptAvailableOrder = async (order: Order) => {
         ElMessage.error("接单失败，可能已被他人抢走，请刷新");
     }
 };
+
+async function handleLogout() {
+    try {
+        // 1. 弹出确认框，提供更好的用户体验
+        await ElMessageBox.confirm(
+            '您确定要退出当前账号吗？',
+            '退出登录',
+            {
+                confirmButtonText: '确定退出',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        );
+
+        // 2. (推荐) 调用后端登出接口，通知服务器
+        await loginApi.logout();
+
+        // 3. (核心) 从本地存储中删除 Token，清除登录状态
+        removeToken();
+
+        ElMessage.success('您已成功退出登录');
+
+        // 4. 重定向到登录页面
+        // 使用 replace 而不是 push，这样用户无法通过浏览器“后退”按钮回到之前的页面
+        router.replace('/login'); // <-- 请确保 '/login' 是你登录页面的正确路由
+
+    } catch (error: any) {
+        // 如果用户点击了“取消”，或者API调用失败
+        if (error === 'cancel') { 
+            ElMessage.info('已取消退出操作');
+        } else {
+            console.error('登出时发生错误:', error);
+            // 即便通知后端失败，也要强制执行前端登出
+            ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+            removeToken();
+            router.replace('/login');
+        }
+    }
+}
+
 
 </script>
 

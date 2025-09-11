@@ -22,7 +22,7 @@ namespace BackEnd.Services
 
         private static double ToRadians(double angle)
         {
-            return Math.PI * angle / 180.0;
+            return Math.PI * angle / 180.0;  
         }
     }
 }

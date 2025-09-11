@@ -37,19 +37,29 @@ namespace BackEnd.Services
 
         public async Task<CourierProfileDto?> GetProfileAsync(int courierId)
         {
-            var courier = await _courierRepository.GetByIdAsync(courierId);
-            if (courier == null) return null;
-            var user = await _userRepository.GetByIdAsync(courierId);
-            if (user == null) return null;
-            var profileDto = new CourierProfileDto
+            // 依然使用 AsNoTracking() 来避免缓存问题
+            var user = await _context.Users
+                .AsNoTracking()
+                .Include(u => u.Courier)
+                .FirstOrDefaultAsync(u => u.UserID == courierId);
+
+            if (user == null)
             {
-                Id = courier.UserID.ToString(),
-                Name = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Username,
-                RegisterDate = courier.CourierRegistrationTime.ToString("yyyy-MM-dd"),
-                Rating = courier.AverageRating,
-                CreditScore = courier.ReputationPoints
+                return null;
+            }
+
+            return new CourierProfileDto
+            {
+                Id = user.UserID.ToString(),
+                Name = user.Username,
+                RegisterDate = user.AccountCreationTime.ToString("yyyy-MM-dd"),
+                Rating = user.Courier?.AverageRating ?? 0,
+                CreditScore = user.Courier?.ReputationPoints ?? 0,
+
+                // --- 关键修正：把 Avatar 的值也映射过来 ---
+                Avatar = user.Avatar
+                // ---------------------------------------------
             };
-            return profileDto;
         }
 
         public async Task<WorkStatusDto?> GetWorkStatusAsync(int courierId)
@@ -76,7 +86,7 @@ namespace BackEnd.Services
             }
 
             // 3. 核心模拟逻辑：根据数据库中的经纬度，构造一个用于展示的模拟字符串
-            var simulatedArea = $"模拟位置 (经度: {courier.CourierLongitude.Value:F6}, 纬度: {courier.CourierLatitude.Value:F6})";
+            var simulatedArea = $"(经度: {courier.CourierLongitude.Value:F6}, 纬度: {courier.CourierLatitude.Value:F6})";
 
             // 4. 使用 Task.FromResult 将字符串包装成异步方法需要的 Task<string> 类型并返回
             return await Task.FromResult(simulatedArea);
@@ -321,7 +331,7 @@ namespace BackEnd.Services
         }
 
 
-        // 在 CourierService.cs 中添加这个完整的方法
+
         public async Task<IEnumerable<AvailableOrderDto>> GetAvailableOrdersAsync(int courierId, decimal latitude, decimal longitude, decimal maxDistance)
         {
             var tasksQuery = _context.DeliveryTasks
@@ -432,6 +442,71 @@ namespace BackEnd.Services
 
             // 5. 操作成功
             return true;
+        }
+
+
+        public async Task<bool> UpdateProfileAsync(int courierId, UpdateProfileDto profileDto)
+        {
+            // --- 步骤 1: 更新 User 表 ---
+            var userToUpdate = await _context.Users.FindAsync(courierId);
+            if (userToUpdate == null)
+            {
+                // 如果连用户基础信息都找不到，直接返回失败
+                return false;
+            }
+
+            // 将 DTO 中的数据赋值给 User 实体
+            userToUpdate.Username = profileDto.Name;
+            userToUpdate.Gender = profileDto.Gender;
+            userToUpdate.Birthday = profileDto.Birthday;
+            userToUpdate.Avatar = profileDto.Avatar;
+
+            // 标记 User 实体为已修改状态
+            _context.Users.Update(userToUpdate);
+
+            // --- 步骤 2: 更新 Courier 表 ---
+            var courierToUpdate = await _context.Couriers.FindAsync(courierId);
+            if (courierToUpdate == null)
+            {
+                // 如果骑手专属信息找不到，也返回失败（理论上不应发生）
+                return false;
+            }
+
+            // 将 DTO 中的数据赋值给 Courier 实体
+            courierToUpdate.VehicleType = profileDto.VehicleType;
+
+            // 标记 Courier 实体为已修改状态
+            _context.Couriers.Update(courierToUpdate);
+
+            // --- 步骤 3: 一次性将所有更改保存到数据库 ---
+            // SaveChangesAsync 会在一个事务中执行所有更新操作
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+
+        public async Task<UpdateProfileDto?> GetProfileForEditAsync(int courierId)
+        {
+            var user = await _context.Users
+                .AsNoTracking() // 确保从数据库读取最新数据
+                .Include(u => u.Courier)
+                .FirstOrDefaultAsync(u => u.UserID == courierId);
+
+            if (user == null || user.Courier == null)
+            {
+                return null;
+            }
+
+            // 直接创建并返回一个 UpdateProfileDto 对象
+            return new UpdateProfileDto
+            {
+                Name = user.Username,
+                Gender = user.Gender,
+                Birthday = user.Birthday, // 直接返回 DateTime? 类型
+                Avatar = user.Avatar,
+                VehicleType = user.Courier.VehicleType
+            };
         }
 
 

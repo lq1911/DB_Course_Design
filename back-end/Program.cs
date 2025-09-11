@@ -140,7 +140,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
 // 启用 CORS
 app.UseCors("AllowAll");
 

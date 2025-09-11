@@ -2,6 +2,7 @@ using BackEnd.Dtos.Courier;
 using BackEnd.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace BackEnd.Controllers
         }
 
         [HttpGet("profile")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult<CourierProfileDto>> GetProfile()
         {
             try
@@ -333,6 +335,67 @@ namespace BackEnd.Controllers
         }
 
 
-        
+
+        [HttpPut("profile")] // 对应 PUT /api/courier/profile
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto profileDto)
+        {
+            // 检查模型验证是否通过 (例如 DTO 中的 [Required] 属性)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var courierId = GetCurrentCourierId();
+                var success = await _courierService.UpdateProfileAsync(courierId, profileDto);
+
+                if (!success)
+                {
+                    return NotFound(new { success = false, message = "用户未找到，更新失败。" });
+                }
+
+                return Ok(new { success = true, message = "用户信息更新成功" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            // 添加对数据库更新异常的捕获，这能提供更明确的错误信息
+            catch (DbUpdateException ex)
+            {
+                // 记录内部异常，以便调试
+                Console.WriteLine(ex.InnerException?.Message);
+                return StatusCode(500, new { success = false, message = "数据库更新失败，请检查提交的数据是否符合约束。" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"服务器内部错误: {ex.Message}" });
+            }
+        }
+
+
+        [HttpGet("profile/for-edit")]
+        public async Task<ActionResult<UpdateProfileDto>> GetProfileForEdit()
+        {
+            try
+            {
+                var courierId = GetCurrentCourierId();
+                // 正确调用 Service 层的方法
+                var profileData = await _courierService.GetProfileForEditAsync(courierId);
+                if (profileData == null)
+                {
+                    return NotFound("无法获取用于编辑的用户资料。");
+                }
+                return Ok(profileData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"服务器内部错误: {ex.Message}");
+            }
+        }
+
+
+
     }
 }
