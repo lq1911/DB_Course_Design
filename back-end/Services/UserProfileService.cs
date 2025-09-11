@@ -38,7 +38,7 @@ namespace BackEnd.Services
             var customer = userWithCustomer.Customer;
             
             // 检查默认地址是否存在
-            if (string.IsNullOrEmpty(customer.DefaultAddress))
+            if (customer.DefaultAddress == null)
             {
                 return null;
             }
