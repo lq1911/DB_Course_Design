@@ -9,5 +9,6 @@ namespace BackEnd.Services.Interfaces
         Task SubmitOrderAsync(SubmitOrderRequestDto dto);
 
         Task<GetUserIdResponseDto> GetUserIdAsync(GetUserIdRequestDto dto);
+        Task UseCouponAsync(int couponId);
     }
 }

@@ -1,4 +1,5 @@
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +19,11 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(sc => sc.TotalPrice).HasColumnName("TOTALPRICE").HasColumnType("decimal(10,2)").HasDefaultValue(0.00m);
 
+            builder.Property(sc => sc.ShoppingCartState).HasColumnName("SHOPPINGCARTSTATE").IsRequired(false).HasConversion<string>().HasMaxLength(20);
+
             builder.Property(sc => sc.CustomerID).HasColumnName("CUSTOMERID").IsRequired();
+
+            builder.Property(sc => sc.StoreID).HasColumnName("STOREID");
 
             // ---------------------------------------------------------------
             // 关系配置
@@ -29,6 +34,12 @@ namespace BackEnd.Data.EntityConfigs
                    .WithMany(cu => cu.ShoppingCarts)
                    .HasForeignKey(sc => sc.CustomerID)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            // 关系二: ShoppingCart -> Store (多对一)
+            builder.HasOne(sc => sc.Store)
+                   .WithMany(s => s.ShoppingCarts)
+                   .HasForeignKey(sc => sc.StoreID)
+                   .OnDelete(DeleteBehavior.SetNull); // 店铺删除时设置为 null，而不是删除购物车
         }
     }
 }

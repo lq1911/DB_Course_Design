@@ -29,6 +29,12 @@ namespace BackEnd.Models
         [Required]
         public TimeSpan CloseTime { get; set; } = TimeSpan.FromHours(22); // 22:00
 
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? Latitude { get; set; }
+
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? Longitude { get; set; }
+
         [NotMapped]  // 表示该属性不会映射到数据库表中
         public bool IsOpen
         {
@@ -96,5 +102,8 @@ namespace BackEnd.Models
 
         // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
+
+        // 购物车
+        public ICollection<ShoppingCart>? ShoppingCarts { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace BackEnd.Dtos.User
     {
 
         [Required]
-        public int StoreId{ get; set; }
+        public int StoreId { get; set; }
     }
 
     public class StoreResponseDto
@@ -49,10 +49,10 @@ namespace BackEnd.Dtos.User
 
         [Required]
         [StringLength(500)]
-        public string Discription { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         [Required]
-        public DateTime CreationTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 
     public class MenuRequestDto
@@ -95,7 +95,7 @@ namespace BackEnd.Dtos.User
         [Required]
         public string Username { get; set; } = string.Empty;
 
-        [Range(1,5)]
+        [Range(1, 5)]
         public int? Rating { get; set; }
 
         [Required]
@@ -113,7 +113,38 @@ namespace BackEnd.Dtos.User
 
     public class CommentStateDto
     {
-        public IEnumerable<int> Status { get; set; } = new List<int>(); 
+        public IEnumerable<int> Status { get; set; } = new List<int>();
         // [好评数, 中评数, 差评数]
+    }
+
+    public class CreateCommentDto
+    {
+        [Required]
+        public int UserId { get; set; }
+
+        [Required]
+        public int StoreId { get; set; }
+
+        [Required]
+        [Range(1, 5, ErrorMessage = "评分必须在 1 到 5 之间")]
+        public int Rating { get; set; }
+
+        [Required]
+        [MaxLength(500, ErrorMessage = "评论内容不能超过 500 字")]
+
+        public string Content { get; set; } = string.Empty;
+    }
+
+    public class UserStoreReportDto
+    {
+        [Required]
+        public int UserId { get; set; }
+
+        [Required]
+        public int StoreId { get; set; }
+
+        [Required]
+        [MaxLength(500, ErrorMessage = "投诉内容不能超过 500 字")]
+        public string Content { get; set; } = string.Empty;
     }
 }

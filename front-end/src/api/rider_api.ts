@@ -7,7 +7,9 @@ import type {
     WorkStatus,
     Order,
     NewOrder,
-    LocationInfo
+    OrderStatus,
+    LocationInfo,
+    Complaint
 } from './api.mock'; // 假设类型定义在这里
 
 // --- 修正后的 API 函数 ---
@@ -34,7 +36,7 @@ export const fetchIncomeData = () => {
 };
 
 /** 根据状态获取订单列表 */
-export const fetchOrders = (status: 'pending' | 'delivering' | 'completed') => {
+export const fetchOrders = (status:  OrderStatus) => {
     // 【已修正】路径正确，并且使用 params 来传递查询参数
     // 这将生成正确的 URL: /api/courier/orders?status=pending
     return apiClient.get<Order[]>('/courier/orders', { params: { status } });
@@ -44,14 +46,10 @@ export const fetchOrders = (status: 'pending' | 'delivering' | 'completed') => {
 export const fetchLocationInfo = () => {
     // 【已修正】路径从 /user/location 改为 /courier/location
     // 后端返回 { data: { area: "..." } }，所以需要一个匹配的类型
-    return apiClient.get< LocationInfo >('/courier/location');
+    return apiClient.get<LocationInfo>('/courier/location');
 };
 
-/** 根据通知ID获取新订单详情 */
-export const fetchNewOrder = (notificationId: string) => {
-    // 【已修正】路径正确
-    return apiClient.get<NewOrder>(`/courier/orders/new/${notificationId}`);
-};
+
 
 /** 切换工作状态 (上班/下班) */
 export const toggleWorkStatusAPI = (newStatus: boolean) => {
@@ -59,17 +57,7 @@ export const toggleWorkStatusAPI = (newStatus: boolean) => {
     return apiClient.post<{ success: boolean }>('/courier/status/toggle', { isOnline: newStatus });
 };
 
-/** 接受订单 */
-export const acceptOrderAPI = (orderId: string) => {
-    // 【已修正】路径正确
-    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/accept`);
-};
 
-/** 拒绝订单 */
-export const rejectOrderAPI = (orderId: string) => {
-    // 【已修正】路径正确
-    return apiClient.post<{ success: boolean }>(`/courier/orders/${orderId}/reject`);
-};
 
 // 在文件末尾新增这两个函数
 
@@ -95,4 +83,53 @@ interface RiderInfo {
 }
 export const updateRiderInfo = (riderData: RiderInfo) => {
     return apiClient.put('/user/profile/rider', riderData);
+};
+
+/**
+ * 骑手接受一个可接订单 (抢单)
+ * @param orderId 订单ID
+ */
+export const acceptAvailableOrderAPI = (orderId: string) => {
+    // 这个接口和之前弹窗的 acceptOrderAPI 路径可能一样，也可能不一样
+    // 根据后端约定，这里我们假设路径是 /accept
+    return apiClient.post<{ success: true }>(`/courier/orders/${orderId}/accept`);
+};
+
+/**
+ * 更新用户（骑手）的个人资料
+ * @param profileData 包含更新信息的用户对象
+ */
+export const updateUserProfile = (profileData: UserProfile) => {
+    // 根据 RESTful 规范，更新一个已存在的资源通常使用 PUT 方法
+    // 请求的 URL 通常是该资源的路径，例如 /courier/profile
+    // 第二个参数 profileData 是要发送到服务器的请求体 (request body)
+    return apiClient.put<{ success: boolean; message: string }>('/courier/profile', profileData);
+};
+
+/**
+ * 获取骑手的投诉记录列表
+ */
+export const fetchComplaints = () => {
+    // 假设后端提供的获取投诉列表的路径是 /courier/complaints
+    // 请务必与后端开发人员确认此路径
+    return apiClient.get<Complaint[]>('/courier/complaints');
+};
+
+/**
+ * 获取当前骑手附近的可接订单列表
+ */
+export const fetchAvailableOrders = () => {
+    // 调用后端为我们准备的新接口
+    return apiClient.get<Order[]>('/courier/orders/available');
+};
+
+
+/**
+ * 更新骑手在服务器上的位置信息
+ * @param latitude 纬度
+ * @param longitude 经度
+ */
+export const updateCourierLocationAPI = (latitude: number, longitude: number) => {
+    // 调用我们刚刚在后端创建的 POST /api/courier/location/update 接口
+    return apiClient.post('/courier/location/update', { latitude, longitude });
 };

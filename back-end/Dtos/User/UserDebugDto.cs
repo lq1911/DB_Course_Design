@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackEnd.Dtos.User
 {
@@ -21,7 +21,7 @@ namespace BackEnd.Dtos.User
     public class SubmitOrderRequestDto
     {
         [Required]
-        public DateTime PaymentTime { get; set; }  // 支付时间
+        public string PaymentTime { get; set; } = null!;  // 支付时间
 
         [Required]
         public int CustomerId { get; set; }        // 用户编号
@@ -31,6 +31,16 @@ namespace BackEnd.Dtos.User
 
         [Required]
         public int StoreId { get; set; }           // 店铺编号
+
+        [Required]
+        [Column(TypeName = "decimal(5,2)")] // 精确定义数据库类型，最大值为 999.99
+        public decimal DeliveryFee { get; set; } = 0.00m; // 默认为 0
+    }
+
+    public class UsedCouponDto
+    {
+        [Required]
+        public int CouponId { get; set; }
     }
 
     public class GetUserIdRequestDto

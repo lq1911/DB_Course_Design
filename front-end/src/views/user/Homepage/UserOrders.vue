@@ -58,35 +58,71 @@
                                     <!-- 配送中 -->
                                     <div v-if="order.orderStatus === 0" class="flex items-center justify-center gap-2">
                                         <button
+                                            @click="dialogVisibleMerchant=true"
                                             class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full text-sm transition-colors cursor-pointer"
                                             title="联系商家">
                                             <i class="fas fa-store"></i>
                                         </button>
                                         <button
+                                            @click="dialogVisibleRider=true"
                                             class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full text-sm transition-colors cursor-pointer"
                                             title="联系骑手">
                                             <i class="fas fa-motorcycle"></i>
                                         </button>
-                                        <button
+                                        <button @click="openRevealDelivery()"
                                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
                                             查看物流
                                         </button>
-                                    </div>
 
-                                    <!-- 已完成 -->
-                                    <div v-if="order.orderStatus === 1">
-                                        <button
-                                            @click="openReviewWindow(order.orderID)"
-                                            class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
-                                            评价
-                                        </button>
+                                        <!-- 联系商家 -->
+                                        <ReplyDialog v-model="dialogVisibleMerchant" title="联系商家" identity="user"
+                                            :chatMessages="merchantChat" :quickPhrases="['您好，有什么能帮您？', '请稍等一下']"
+                                            :emojis="['😊', '👍', '❤️', '🎉']" @submit="handleMerchantReply" />
+
+                                        <!-- 联系骑手 -->
+                                        <ReplyDialog v-model="dialogVisibleRider" title="联系骑手" identity="user"
+                                            :chatMessages="riderChat" :quickPhrases="['请尽快送达哦', '麻烦放到门口，谢谢']"
+                                            :emojis="['🚴', '🙏', '😁', '👌']" @submit="handleRiderReply" />
                                     </div>
+                                </div>
+
+                                <!-- 已完成 -->
+                                <div v-if="order.orderStatus === 1" class="flex gap-1">
+                                    <!-- 售后按钮 -->
+                                    <button @click="openAfterSale(order.orderID)"
+                                        class="relative w-8 h-8 flex items-center justify-center cursor-pointer"
+                                        title="提起售后">
+                                        <i class="fas fa-headset text-orange-500 hover:text-orange-600 text-2xl"></i>
+                                    </button>
+
+                                    <!-- 举报按钮 -->
+                                    <button @click="openReportWindow(order.orderID)"
+                                        class="relative w-8 h-8 flex items-center justify-center cursor-pointer"
+                                        title="对此订单有意见">
+                                        <i
+                                            class="fas fa-exclamation-circle text-orange-500 hover:text-orange-600 text-2xl"></i>
+                                    </button>
+
+                                    <!--评价按钮-->
+                                    <button @click="openReviewWindow(order.orderID)"
+                                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded text-sm transition-colors cursor-pointer whitespace-nowrap">
+                                        评价
+                                    </button>
+
+                                    <!--显示物流弹窗-->
+                                    <RevealDelivery :visible="showRevealDelivery" @close="showRevealDelivery = false" />
+
+                                    <!-- 举报弹窗组件 -->
+                                    <AfterSaleWindow :visible="showAfterSale[order.orderID]" :order="order"
+                                        @close="showAfterSale[order.orderID] = false" />
+
+                                    <!-- 举报弹窗组件 -->
+                                    <ReportWindow :visible="showReportWindow[order.orderID]" :order="order"
+                                        @close="showReportWindow[order.orderID] = false" />
 
                                     <!-- 评价弹窗组件 -->
-                                    <ReviewWindow 
-                                    :visible="showReviewWindow[order.orderID]" 
-                                    :order="order"
-                                    @close="showReviewWindow[order.orderID] = false" />
+                                    <ReviewWindow :visible="showReviewWindow[order.orderID]" :order="order"
+                                        @close="showReviewWindow[order.orderID] = false" />
                                 </div>
                             </div>
                         </div>
@@ -104,7 +140,11 @@ import { useUserStore } from "@/stores/user";
 import type { OrderInfo } from "@/api/user_home";
 import { getOrderInfo } from "@/api/user_home";
 
+import ReportWindow from "@/components/user/HomePage/Home/ReportWindow.vue";
 import ReviewWindow from "@/components/user/HomePage/Home/ReviewWindow.vue";
+import AfterSaleWindow from "@/components/user/HomePage/Home/AfterSaleWindow.vue";
+import RevealDelivery from "@/components/user/HomePage/Home/RevealDelivery.vue";
+import ReplyDialog from "@/components/user/HomePage/Home/ReplyDialog.vue";
 
 const userStore = useUserStore();
 const userID = userStore.getUserID();
@@ -113,6 +153,9 @@ const orders = ref<OrderInfo[]>([]);
 const activeOrderStatus = ref("all"); // 默认显示全部订单
 const showLoading = ref(true);
 const showReviewWindow = ref<Record<number, boolean>>({});
+const showReportWindow = ref<Record<number, boolean>>({});
+const showAfterSale = ref<Record<number, boolean>>({});
+const showRevealDelivery = ref(false);
 const orderStatuses = [
     { key: "all", label: "全部订单" },
     { key: "delivering", label: "配送中" },
@@ -159,6 +202,46 @@ const filteredOrders = computed(() => {
 
 function openReviewWindow(orderID: number) {
     showReviewWindow.value[orderID] = true;
+}
+function openReportWindow(orderID: number) {
+    showReportWindow.value[orderID] = true;
+}
+
+function openAfterSale(orderID: number) {
+    showAfterSale.value[orderID] = true;
+}
+
+function openRevealDelivery() {
+    showRevealDelivery.value = true;
+}
+
+const dialogVisibleMerchant = ref(false);
+const dialogVisibleRider = ref(false);
+
+const merchantChat = ref([
+    { sender: "user", content: "你好，有优惠吗？", time: "14:00" },
+    { sender: "merchant", content: "有的，满50减10", time: "14:01" }
+]);
+
+const riderChat = ref([
+    { sender: "user", content: "请放门口，谢谢", time: "14:02" },
+    { sender: "rider", content: "好的，马上到", time: "14:03" }
+]);
+
+function handleMerchantReply(content: string) {
+    merchantChat.value.push({
+        sender: "user",
+        content,
+        time: new Date().toLocaleTimeString()
+    });
+}
+
+function handleRiderReply(content: string) {
+    riderChat.value.push({
+        sender: "user",
+        content,
+        time: new Date().toLocaleTimeString()
+    });
 }
 
 </script>

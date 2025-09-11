@@ -26,9 +26,11 @@ namespace BackEnd.Data.EntityConfigs
             builder.Property(fo => fo.CartID).HasColumnName("CARTID").IsRequired(false);
 
             builder.Property(fo => fo.StoreID).HasColumnName("STOREID").IsRequired();
+            
+              builder.Property(fo => fo.DeliveryFee).HasColumnName("DELIVERYFEE").IsRequired();
 
             // 在 CartID 列上创建一个唯一索引
-            builder.HasIndex(fo => fo.CartID)
+                     builder.HasIndex(fo => fo.CartID)
                    .IsUnique();
 
             // ---------------------------------------------------------------

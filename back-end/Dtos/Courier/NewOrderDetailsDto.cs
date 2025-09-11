@@ -1,4 +1,4 @@
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     public class NewOrderDetailsDto
     {

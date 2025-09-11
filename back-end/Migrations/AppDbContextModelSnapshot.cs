@@ -230,23 +230,51 @@ namespace BackEnd.Migrations
             modelBuilder.Entity("BackEnd.Models.CouponManager", b =>
                 {
                     b.Property<int>("CouponManagerID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("COUPONMANAGERID");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CouponManagerID"));
+                    b.Property<string>("CouponName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)")
+                        .HasColumnName("COUPONNAME");
+
+                    b.Property<int>("CouponType")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("COUPONTYPE");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)")
+                        .HasColumnName("DESCRIPTION");
 
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("DISCOUNTAMOUNT");
 
+                    b.Property<decimal?>("DiscountRate")
+                        .HasColumnType("decimal(3,2)")
+                        .HasColumnName("DISCOUNTRATE");
+
                     b.Property<decimal>("MinimumSpend")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("MINIMUMSPEND");
 
+                    b.Property<int>("SellerID")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("SELLERID");
+
                     b.Property<int>("StoreID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("STOREID");
+
+                    b.Property<int>("TotalQuantity")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("TOTALQUANTITY");
+
+                    b.Property<int>("UsedQuantity")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("USEDQUANTITY");
 
                     b.Property<DateTime>("ValidFrom")
                         .HasColumnType("TIMESTAMP(7)")
@@ -257,6 +285,8 @@ namespace BackEnd.Migrations
                         .HasColumnName("VALIDTO");
 
                     b.HasKey("CouponManagerID");
+
+                    b.HasIndex("SellerID");
 
                     b.HasIndex("StoreID");
 
@@ -280,6 +310,10 @@ namespace BackEnd.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValue(0)
                         .HasColumnName("AVGDELIVERYTIME");
+
+                    b.Property<decimal>("CommissionThisMonth")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("COMMISSIONTHISMONTH");
 
                     b.Property<decimal?>("CourierLatitude")
                         .HasColumnType("decimal(10,6)")
@@ -400,6 +434,10 @@ namespace BackEnd.Migrations
                     b.Property<int>("DeliveryTaskID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("DELIVERYTASKID");
+
+                    b.Property<decimal?>("FineAmount")
+                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnName("FINEAMOUNT");
 
                     b.Property<string>("ProcessingReason")
                         .HasMaxLength(255)
@@ -660,6 +698,10 @@ namespace BackEnd.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("CUSTOMERID");
 
+                    b.Property<decimal>("DeliveryFee")
+                        .HasColumnType("decimal(5,2)")
+                        .HasColumnName("DELIVERYFEE");
+
                     b.Property<string>("FoodOrderState")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -813,6 +855,15 @@ namespace BackEnd.Migrations
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("LASTUPDATEDTIME");
 
+                    b.Property<string>("ShoppingCartState")
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnName("SHOPPINGCARTSTATE");
+
+                    b.Property<int?>("StoreID")
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("STOREID");
+
                     b.Property<decimal>("TotalPrice")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(10,2)")
@@ -822,6 +873,8 @@ namespace BackEnd.Migrations
                     b.HasKey("CartID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("StoreID");
 
                     b.ToTable("SHOPPING_CARTS", (string)null);
                 });
@@ -878,6 +931,14 @@ namespace BackEnd.Migrations
                     b.Property<TimeSpan>("CloseTime")
                         .HasColumnType("INTERVAL DAY(8) TO SECOND(7)")
                         .HasColumnName("CLOSETIME");
+
+                    b.Property<decimal?>("Latitude")
+                        .HasColumnType("decimal(10,6)")
+                        .HasColumnName("LATITUDE");
+
+                    b.Property<decimal?>("Longitude")
+                        .HasColumnType("decimal(10,6)")
+                        .HasColumnName("LONGITUDE");
 
                     b.Property<int>("MonthlySales")
                         .HasColumnType("NUMBER(10)")
@@ -1023,8 +1084,8 @@ namespace BackEnd.Migrations
                         .HasColumnName("ACCOUNTCREATIONTIME");
 
                     b.Property<string>("Avatar")
-                        .HasMaxLength(255)
-                        .HasColumnType("NVARCHAR2(255)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)")
                         .HasColumnName("AVATAR");
 
                     b.Property<DateTime?>("Birthday")
@@ -1162,11 +1223,19 @@ namespace BackEnd.Migrations
 
             modelBuilder.Entity("BackEnd.Models.CouponManager", b =>
                 {
+                    b.HasOne("BackEnd.Models.Seller", "Seller")
+                        .WithMany()
+                        .HasForeignKey("SellerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BackEnd.Models.Store", "Store")
                         .WithMany("CouponManagers")
                         .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Seller");
 
                     b.Navigation("Store");
                 });
@@ -1417,7 +1486,14 @@ namespace BackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BackEnd.Models.Store", "Store")
+                        .WithMany("ShoppingCarts")
+                        .HasForeignKey("StoreID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("BackEnd.Models.ShoppingCartItem", b =>
@@ -1591,6 +1667,8 @@ namespace BackEnd.Migrations
                     b.Navigation("FoodOrders");
 
                     b.Navigation("Menus");
+
+                    b.Navigation("ShoppingCarts");
 
                     b.Navigation("StoreViolationPenalties");
                 });

@@ -41,18 +41,19 @@
 import { computed, defineProps, defineEmits } from 'vue';
 
 import type { CouponInfo } from '@/api/user_coupon';
-import { getDeliveryTasks } from '@/api/user_store_info';
 
 const props = defineProps<{
   subtotal: number;
   selectedCoupon?: CouponInfo | null;
+  deliveryFee: number;
 }>();
+
+console.log(props);
 
 const emit = defineEmits<{
   (e: 'checkout'): void;
 }>();
 
-const deliveryFee = getDeliveryTasks().deliveryFee;
 const discount = computed(() => props.selectedCoupon?.discountAmount ?? 0);
-const total = computed(() => Math.max(0, props.subtotal + deliveryFee - discount.value));
+const total = computed(() => Math.max(0, props.subtotal +  props.deliveryFee - discount.value));
 </script>

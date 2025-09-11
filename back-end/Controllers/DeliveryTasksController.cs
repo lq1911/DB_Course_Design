@@ -22,8 +22,7 @@ namespace BackEnd.Controllers
         {
             try
             {
-                //测试临时设为3
-                var sellerId = 3;
+                var sellerId = 3;  //临时设3
                 var result = await _deliveryService.PublishDeliveryTaskAsync(dto, sellerId);
                 return Ok(new { deliveryTask = result.DeliveryTask, publish = result.Publish });
             }

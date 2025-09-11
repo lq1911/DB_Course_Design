@@ -39,13 +39,14 @@
           />
           <CouponSelector
             :totalAmount="subtotal"
-            :selectedCoupon="selectedCoupon"
+            v-model:selectedCoupon="selectedCoupon"
             @onCouponChange="selectedCoupon = $event"
           />
           <PaymentSelector v-model:selectedMethod="paymentMethod" />
           <OrderSummary
-            :subtotal="subtotal"
+            v-model:subtotal="subtotal"
             :selectedCoupon="selectedCoupon"
+            v-model:deliveryFee="deliveryFee"
             @checkout="checkout"
           />
         </div>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
@@ -65,6 +66,7 @@ import type { CouponInfo } from '@/api/user_coupon';
 import { getAddress } from '@/api/user_address';
 import { getMenuItem, getShoppingCart, addOrUpdateCartItem, removeCartItem } from '@/api/user_checkout';
 import { submitOrder, useCoupon } from '@/api/user_checkout';
+import { getDeliveryTasks } from '@/api/user_store_info';
 
 import DishCard from '@/components/user/Checkout/DishCard.vue';
 import AddressSelector from '@/components/user/Checkout/AddressSelector.vue';
@@ -76,8 +78,9 @@ import OrderSummary from '@/components/user/Checkout/OrderSummary.vue';
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const storeID = route.params.id as string;
 const userID = userStore.getUserID();
+const storeID = computed(() => route.params.id as string);
+const deliveryFee = getDeliveryTasks().deliveryFee;
 
 // 数据
 const menuItems = ref<MenuItem[]>([]);
@@ -105,10 +108,33 @@ const subtotal = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
 );
 
-async function loadData() {
-  selectedAddress.value = await getAddress(userID);
-  menuItems.value = await getMenuItem(storeID);
-  cart.value = await getShoppingCart(storeID, userID);
+watch(
+  storeID,
+  (newID) => {
+    // 只有当 newID 有一个有效值时才加载数据
+    if (newID) {
+      loadData(newID);
+    }
+  },
+  { immediate: true } // 立即执行以处理首次加载
+);
+
+async function loadData(currentStoreID: string) {
+  try {
+    // 并行加载，速度更快
+    const [addressData, menuItemsData, cartData] = await Promise.all([
+      getAddress(userID),
+      getMenuItem(currentStoreID),
+      getShoppingCart(currentStoreID, userID)
+    ]);
+    
+    selectedAddress.value = addressData;
+    menuItems.value = menuItemsData;
+    cart.value = cartData;
+
+  } catch (error) {
+    console.error("加载结算页面数据失败:", error);
+  }
 }
 
 // 增减菜品数量
@@ -119,14 +145,20 @@ async function updateQuantity(dish: MenuItem, quantity: number) {
   } else {
     await removeCartItem(cart.value.cartId, dish.id);
   }
-  await loadData();
+  // 重新加载数据
+  if (storeID.value) {
+    await loadData(storeID.value);
+  }
 }
 
 // 移除菜品
 async function removeItem(dish: MenuItem) {
   if (!cart.value.cartId) return;
   await removeCartItem(cart.value.cartId, dish.id);
-  await loadData();
+  // 重新加载数据
+  if (storeID.value) {
+    await loadData(storeID.value);
+  }
 }
 
 // 支付结算
@@ -142,7 +174,7 @@ async function checkout() {
 
   try {
     await useCoupon(selectedCoupon.value?.couponID ?? null) // 未使用时返回空值
-    await submitOrder(userID, cart.value.cartId, Number(storeID));
+    await submitOrder(userID, cart.value.cartId, Number(storeID.value), deliveryFee);
     cart.value.items = [];
     goBack();
   } catch (error) {
@@ -150,9 +182,10 @@ async function checkout() {
   }
 }
 
+console.log(deliveryFee);
+
 function goBack() {
   router.back();
 }
 
-onMounted(loadData);
 </script>

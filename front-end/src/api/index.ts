@@ -12,7 +12,7 @@ const API: AxiosInstance = axios.create({
 
 // 请求拦截器
 API.interceptors.request.use(config => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('authToken')
     if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
     }

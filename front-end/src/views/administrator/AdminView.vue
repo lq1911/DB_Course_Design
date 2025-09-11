@@ -472,9 +472,6 @@
                                             提交时间</th>
                                         <th
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            处理措施</th>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             状态</th>
                                         <th
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -504,7 +501,6 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.submitTime
                                             }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.punishment || '-' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span :class="getStatusClass(item.status)"
                                                 class="inline-block px-2 py-1 text-xs rounded-full">
@@ -613,9 +609,35 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">管理对象</label>
-                                        <input type="text" v-model="currentUser.managementScope"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
+                                        <div class="relative">
+                                            <!-- 点击的文本框 -->
+                                            <div @click="toggleDropdown" 
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm bg-white cursor-pointer flex justify-between items-center">
+                                                <span class="text-gray-700">
+                                                    {{ getSelectedText() }}
+                                                </span>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </div>
+                                            
+                                            <!-- 下拉选项 -->
+                                            <div v-show="dropdownVisible" 
+                                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                <div v-for="option in managementOptions" 
+                                                    :key="option"
+                                                    @click="toggleOption(option)"
+                                                    class="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                                                    <input type="checkbox" 
+                                                        :checked="isSelected(option)"
+                                                        class="text-orange-500 focus:ring-orange-500 mr-2" readonly>
+                                                    <span class="text-sm text-gray-700">{{ option }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
+
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">处理事项获评均分</label>
                                         <div class="flex items-center space-x-2">
@@ -695,18 +717,44 @@
                 </div>
                 <div class="mb-6">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
-                    <el-input v-model="afterSaleNote" type="textarea" :rows="3" placeholder="请输入处理备注" maxlength="500"
-                        show-word-limit />
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-input 
+                        v-model="afterSaleNote" 
+                        type="textarea" 
+                        :rows="3" 
+                        placeholder="请输入处理备注" 
+                        maxlength="500"
+                        show-word-limit 
+                        :disabled="currentAfterSale.status !== '待处理'"
+                    />
                 </div>
                 <div class="mb-6">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处罚措施</h4>
-                    <el-select v-model="selectedPunishment" class="w-full mb-4" placeholder="请选择处罚措施">
-                        <el-option v-for="option in punishmentOptions.afterSales" :key="option.value"
-                            :label="option.label" :value="option.value" />
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-select 
+                        v-model="selectedPunishment" 
+                        class="w-full mb-4" 
+                        placeholder="请选择处罚措施"
+                        :disabled="currentAfterSale.status !== '待处理'"
+                    >
+                        <el-option 
+                            v-for="option in punishmentOptions.afterSales" 
+                            :key="option.value"
+                            :label="option.label" 
+                            :value="option.value" 
+                        />
                     </el-select>
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处罚原因</h4>
-                    <el-input v-model="punishmentReason" type="textarea" :rows="3" placeholder="请输入处罚原因" maxlength="500"
-                        show-word-limit />
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-input 
+                        v-model="punishmentReason" 
+                        type="textarea" 
+                        :rows="3" 
+                        placeholder="请输入处罚原因" 
+                        maxlength="500"
+                        show-word-limit 
+                        :disabled="currentAfterSale.status !== '待处理'"
+                    />
                 </div>
                 <div class="flex justify-end space-x-4">
                     <el-button @click="showAfterSaleDetail = false">取消</el-button>
@@ -758,16 +806,54 @@
                 </div>
                 <div class="mb-6">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处罚措施</h4>
-                    <el-select v-model="selectedComplaintPunishment" class="w-full mb-4" placeholder="请选择处罚措施">
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-select 
+                        v-model="selectedComplaintPunishment" 
+                        class="w-full mb-4" 
+                        placeholder="请选择处罚措施"
+                        :disabled="currentComplaint.status !== '待处理'"
+                    >
                         <el-option v-for="option in punishmentOptions.complaints" :key="option.value"
                             :label="option.label" :value="option.value" />
                     </el-select>
+                    
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">罚款金额</h4>
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-input-number 
+                        v-model="complaintFine" 
+                        :min="0" 
+                        :precision="2" 
+                        :step="10"
+                        controls-position="right"
+                        placeholder="请输入罚款金额" 
+                        class="w-full mb-4" 
+                        :disabled="currentComplaint.status !== '待处理'"
+                    />
+                    
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处罚原因</h4>
-                    <el-input v-model="complaintPunishmentReason" type="textarea" :rows="3" placeholder="请输入处罚原因"
-                        maxlength="500" show-word-limit class="mb-4" />
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-input 
+                        v-model="complaintPunishmentReason" 
+                        type="textarea" 
+                        :rows="3" 
+                        placeholder="请输入处罚原因"
+                        maxlength="500" 
+                        show-word-limit 
+                        class="mb-4"
+                        :disabled="currentComplaint.status !== '待处理'"
+                    />
+                    
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
-                    <el-input v-model="complaintNote" type="textarea" :rows="3" placeholder="请输入处理备注" maxlength="500"
-                        show-word-limit />
+                    <!-- 【修改】添加 disabled 属性 -->
+                    <el-input 
+                        v-model="complaintNote" 
+                        type="textarea" 
+                        :rows="3" 
+                        placeholder="请输入处理备注" 
+                        maxlength="500"
+                        show-word-limit 
+                        :disabled="currentComplaint.status !== '待处理'"
+                    />
                 </div>
                 <div class="flex justify-end space-x-4">
                     <el-button @click="showComplaintDetail = false">取消</el-button>
@@ -819,35 +905,45 @@
                 <div class="grid grid-cols-2 gap-6 mb-6">
                     <div>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">商家处罚措施</h4>
-                        <el-select v-if="currentViolation?.status === '待处理'" v-model="selectedMerchantPunishment"
-                            class="w-full" placeholder="请选择商家处罚措施">
+                        <!-- 【核心修改】将 v-if 替换为 :disabled -->
+                        <el-select 
+                            v-model="selectedMerchantPunishment"
+                            class="w-full" 
+                            placeholder="请选择商家处罚措施"
+                            :disabled="currentViolation.status !== '待处理'"
+                        >
                             <el-option v-for="option in punishmentOptions.violations.merchant" :key="option.value"
                                 :label="option.label" :value="option.value" />
                         </el-select>
-                        <div v-else class="p-4 bg-gray-50 rounded-lg">
-                            <p class="text-gray-900">
-                                {{ punishmentOptions.violations.merchant.find(item => item.value === selectedMerchantPunishment)?.label || selectedMerchantPunishment || '无' }}
-                            </p>
-                        </div>
+                        <!-- 【修改】删除原来的 v-else 显示区域，因为 el-select 在禁用时会自动显示已选值 -->
                     </div>
                     <div>
                         <h4 class="text-sm font-medium text-gray-700 mb-2">店铺处罚措施</h4>
-                        <el-select v-if="currentViolation?.status === '待处理'" v-model="selectedStorePunishment"
-                            class="w-full" placeholder="请选择店铺处罚措施">
+                        <!-- 【核心修改】将 v-if 替换为 :disabled -->
+                        <el-select 
+                            v-model="selectedStorePunishment"
+                            class="w-full" 
+                            placeholder="请选择店铺处罚措施"
+                            :disabled="currentViolation.status !== '待处理'"
+                        >
                             <el-option v-for="option in punishmentOptions.violations.store" :key="option.value"
                                 :label="option.label" :value="option.value" />
                         </el-select>
-                        <div v-else class="p-4 bg-gray-50 rounded-lg">
-                            <p class="text-gray-900">
-                                {{ punishmentOptions.violations.store.find(o => o.value === selectedStorePunishment)?.label || selectedStorePunishment || '无' }}
-                            </p>
-                        </div>
+                        <!-- 【修改】删除原来的 v-else 显示区域 -->
                     </div>
                 </div>
                 <div class="mb-6">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">处理备注</h4>
-                    <el-input v-model="violationNote" type="textarea" :rows="3" placeholder="请输入处理备注" maxlength="500"
-                        show-word-limit />
+                    <!-- 【修改】禁用条件改为 status === '已完成' -->
+                    <el-input 
+                        v-model="violationNote" 
+                        type="textarea" 
+                        :rows="3" 
+                        placeholder="请输入处理备注" 
+                        maxlength="500"
+                        show-word-limit 
+                        :disabled="currentViolation.status === '已完成'"
+                    />
                 </div>
                 <div class="flex justify-end space-x-4">
                     <el-button @click="showViolationDetail = false">取消</el-button>
@@ -975,6 +1071,7 @@ interface ComplaintItem {
     applicationTime: string;
     status: '待处理' | '已完成';
     punishment: string;
+    fine: string;
     punishmentReason?: string;
     processingNote?: string;
 }
@@ -997,8 +1094,7 @@ interface ReviewItem {
     content: string;
     rating: number;
     submitTime: string;
-    status: '待处理' | '已完成';
-    punishment: string;
+    status: '待处理' | '已完成' | '违规';
 }
 
 // =================================================================
@@ -1013,9 +1109,9 @@ const mockApi = {
         { applicationId: 'AS202401003', orderId: 'ORD202401003', applicationTime: '2024-01-15 12:20', description: '商品与描述不符', status: '已完成', punishment: '全额退款' },
     ]),
     getComplaintsList: async (): Promise<ComplaintItem[]> => ([
-        { complaintId: 'CP202401001', target: '骑手张三', content: '配送员态度恶劣，服务质量差', applicationTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
-        { complaintId: 'CP202401002', target: '商家李记餐厅', content: '商家出餐速度慢，影响配送时效', applicationTime: '2024-01-15 13:45', status: '待处理', punishment: '-' },
-        { complaintId: 'CP202401003', target: '骑手王五', content: '配送员未按时送达，且态度不好', applicationTime: '2024-01-15 12:20', status: '已完成', punishment: '暂停接单 3 天' }
+        { complaintId: 'CP202401001', target: '骑手张三', content: '配送员态度恶劣，服务质量差', applicationTime: '2024-01-15 14:30', status: '待处理', punishment: '-', fine: '' },
+        { complaintId: 'CP202401002', target: '商家李记餐厅', content: '商家出餐速度慢，影响配送时效', applicationTime: '2024-01-15 13:45', status: '待处理', punishment: '-', fine: ''},
+        { complaintId: 'CP202401003', target: '骑手王五', content: '配送员未按时送达，且态度不好', applicationTime: '2024-01-15 12:20', status: '已完成', punishment: '暂停接单 3 天', fine: '' }
     ]),
     getViolationsList: async (): Promise<ViolationItem[]> => ([
         { punishmentId: 'PUN202401001', storeName: '张记小炒', reason: '食品安全问题，使用过期食材制作食品', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 14:30', status: '待处理' },
@@ -1023,9 +1119,9 @@ const mockApi = {
         { punishmentId: 'PUN202401003', storeName: '快送外卖', reason: '配送员私自拆开包装', merchantPunishment: '-', storePunishment: '-', punishmentTime: '2024-01-15 12:20', status: '待处理' }
     ]),
     getReviewsList: async (): Promise<ReviewItem[]> => ([
-        { reviewId: 'RV202401001', username: '用户张三', type:'普通评论', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理', punishment: '-' },
-        { reviewId: 'RV202401002', username: '用户李四', type:'普通评论', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成', punishment: '评论已通过' },
-        { reviewId: 'RV202401003', username: '用户王五', type:'普通评论', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成', punishment: '评论已拒绝' }
+        { reviewId: 'RV202401001', username: '用户张三', type:'普通评论', content: '味道不错，配送也很快，推荐！', rating: 5, submitTime: '2024-01-15 14:30', status: '待处理' },
+        { reviewId: 'RV202401002', username: '用户李四', type:'普通评论', content: '包装很好，食物新鲜，服务态度也不错', rating: 4, submitTime: '2024-01-15 13:45', status: '已完成' },
+        { reviewId: 'RV202401003', username: '用户王五', type:'普通评论', content: '这家店的食物质量有问题，不建议购买', rating: 1, submitTime: '2024-01-15 12:20', status: '已完成' }
     ]),
     getAdminInfo: async (): Promise<AdminInfo> => ({
         id: 'ADM001',
@@ -1194,7 +1290,7 @@ const selectedComplaintPunishment = ref('');
 const complaintPunishmentReason = ref('');
 const selectedMerchantPunishment = ref('');
 const selectedStorePunishment = ref('');
-
+const complaintFine = ref<number | undefined>(undefined);
 
 const router = useRouter(); // 【新增】获取 router 实例
 
@@ -1310,11 +1406,13 @@ const openComplaintDetail = (item: ComplaintItem) => {
         complaintNote.value = '';
         selectedComplaintPunishment.value = '';
         complaintPunishmentReason.value = '';
+        complaintFine.value = 0.00; 
     } else {
         // 已完成：填充已保存的数据，供查看
         complaintNote.value = item.processingNote || '';
         selectedComplaintPunishment.value = item.punishment || '';
         complaintPunishmentReason.value = item.punishmentReason || '';
+        complaintFine.value = item.fine ? Number(item.fine) : 0.00;
     }
     
     showComplaintDetail.value = true;
@@ -1345,6 +1443,53 @@ const openViolationDetail = (item: ViolationItem) => {
 
 
 const openReviewDetail = (item: ReviewItem) => { currentReview.value = { ...item }; showReviewDetail.value = true; };
+
+// 下拉框相关的数据和方法
+const dropdownVisible = ref(false)
+const managementOptions = ['售后处理', '配送投诉', '商家举报', '评论审核']
+
+const toggleDropdown = () => {
+  dropdownVisible.value = !dropdownVisible.value
+}
+
+const getSelectedText = () => {
+  if (!currentUser.value?.managementScope) return '请选择管理对象'
+  
+  // 将用户的管理范围按分隔符拆分
+  const userSelections = currentUser.value.managementScope.split('、')
+  
+  // 只保留在当前选项列表中的项目
+  const validSelections = userSelections.filter(selection => 
+    managementOptions.includes(selection)
+  )
+  
+  // 如果没有有效选项，显示默认文本
+  if (validSelections.length === 0) return '请选择管理对象'
+  
+  // 返回有效的选项，用顿号连接
+  return validSelections.join('、')
+}
+
+const isSelected = (option: string) => {
+  if (!currentUser.value?.managementScope) return false
+  return currentUser.value.managementScope.split('、').includes(option)
+}
+
+const toggleOption = (option: string) => {
+  if (!currentUser.value) return
+  
+  let selected = currentUser.value.managementScope ? currentUser.value.managementScope.split('、') : []
+  const index = selected.indexOf(option)
+  
+  if (index > -1) {
+    selected.splice(index, 1)
+  } else {
+    selected.push(option)
+  }
+  
+  currentUser.value.managementScope = selected.join('、')
+}
+
 // 4.4 ----------------- 修改数据处理函数 (全部完成) -----------------
 
 const handleAfterSaleAction = async () => {
@@ -1481,7 +1626,8 @@ const handleComplaintProcess = async () => {
             status: '已完成',
             punishment: punishmentLabel,
             punishmentReason: complaintPunishmentReason.value,
-            processingNote: complaintNote.value
+            processingNote: complaintNote.value,
+            fine: complaintFine.value !== undefined ? String(complaintFine.value) : ''
         };
 
         // 【核心修改】接收API的返回结果
@@ -1575,8 +1721,8 @@ const processReview = async (decision: 'approve' | 'reject') => {
     if (!currentReview.value) return;
 
     // 根据决定设置提示文字和最终的处罚说明
-    const actionText = decision === 'approve' ? '审核通过' : '判定违规';
-    const punishmentText = decision === 'approve' ? '评论已通过' : '评论内容涉嫌违规';
+    const newStatus = decision === 'approve' ? '已完成' : '违规';
+    const actionText = decision === 'approve' ? '审核通过' : '判定违规'
 
     try {
         // 弹出确认框
@@ -1585,10 +1731,7 @@ const processReview = async (decision: 'approve' | 'reject') => {
         // 准备要发送到后端的数据
         const updatedItem: ReviewItem = {
             ...currentReview.value,
-            status: '已完成',
-            punishment: punishmentText,
-            punishmentReason: '', // 已删除，传空值
-            processingNote: ''    // 已删除，传空值
+            status: newStatus
         };
 
         // 调用API
@@ -1615,6 +1758,7 @@ const processReview = async (decision: 'approve' | 'reject') => {
         }
     }
 };
+
 </script>
 <style scoped>
 .\!rounded-button {

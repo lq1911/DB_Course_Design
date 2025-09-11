@@ -33,6 +33,14 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(a => a.ApplicationID == id);
         }
 
+        public async Task<IEnumerable<AfterSaleApplication>> GetByOrderIdAsync(int orderId)
+        {
+            return await _context.AfterSaleApplications
+                                 .Include(a => a.Order)
+                                 .Where(a => a.OrderID == orderId)
+                                 .ToListAsync();
+        }
+
         public async Task AddAsync(AfterSaleApplication application)
         {
             await _context.AfterSaleApplications.AddAsync(application);

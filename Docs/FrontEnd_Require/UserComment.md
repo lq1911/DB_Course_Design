@@ -29,7 +29,7 @@
 | orderId  | number | 是       | 订单编号 |
 | content  | string | 是       | 评论内容 |
 
-- 接口地址: `POST /api/store/checkout`
+- 接口地址: `POST /api/user/courier/comment`
 
 **3. 用户使用优惠券接口**
 

@@ -31,6 +31,7 @@ export interface Order{
     customerID: number;
     cartID: number;
     storeID: number;
+    deliveryFee: number;
 }
 
 export async function getMenuItem(StoreID: string) {
@@ -58,12 +59,21 @@ export async function removeCartItem(cartId: number, dishId: number) {
     return deleteData<ShoppingCartItem>('/api/store/cart/remove', { cartId, dishId });
 }
 
-export async function submitOrder(customerId: number, cartId: number, storeId: number) {
-    const paymentTime = new Date();
-    return postData<Order>('/api/store/checkout', { paymentTime, customerId, cartId, storeId });
+export async function submitOrder(customerId: number, cartId: number, storeId: number, deliveryFee: number) {
+    const paymentTimeString = new Date().toISOString();
+
+    const requestBody = {
+        PaymentTime: paymentTimeString,
+        CustomerId: customerId,
+        CartId: cartId,
+        StoreId: storeId,
+        DeliveryFee: deliveryFee
+    };
+
+    return postData<Order>('/api/store/checkout', requestBody);
 }
 
 export async function useCoupon(couponId: number | null) {
     if (couponId == null) return;
-    return deleteData(`/api/user/checkout/coupon`, { couponId });
+    return postData(`/api/user/checkout/coupon`, { couponId });
 }

@@ -18,6 +18,11 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(s => s.StoreAddress).HasColumnName("STOREADDRESS").IsRequired().HasMaxLength(100);
 
+            // --- 新增：经纬度配置 ---
+            builder.Property(s => s.Latitude).HasColumnName("LATITUDE").HasColumnType("decimal(10,6)").IsRequired(false);
+            builder.Property(s => s.Longitude).HasColumnName("LONGITUDE").HasColumnType("decimal(10,6)").IsRequired(false);
+            // --- ----------------- ---
+
             builder.Property(s => s.OpenTime).HasColumnName("OPENTIME").IsRequired();
 
             builder.Property(s => s.CloseTime).HasColumnName("CLOSETIME").IsRequired();

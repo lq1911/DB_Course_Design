@@ -46,6 +46,14 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(a => a.UserID == id);
         }
 
+        public async Task<IEnumerable<Administrator>> GetAdministratorsByManagedEntityAsync(string managedEntity)
+        {
+            return await _context.Administrators
+                .Include(a => a.User)
+                .Where(a => a.ManagedEntities.Contains(managedEntity))
+                .ToListAsync();
+        }
+
         public async Task<bool> UpdateAdministratorAsync(Administrator administrator)
         {
             try
