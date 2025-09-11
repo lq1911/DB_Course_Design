@@ -84,8 +84,17 @@
                 <el-table-column prop="id" label="处罚编号" width="150" />
                 <el-table-column prop="reason" label="处罚原因" />
                 <el-table-column prop="time" label="处罚时间" width="180" />
-                <el-table-column prop="merchantAction" label="商家处罚措施" />
-                <el-table-column prop="platformAction" label="店铺处罚措施" />
+                <el-table-column label="商家处罚措施">
+                  <template #default="scope">
+                    {{ punishmentDict[scope.row.merchantAction] || scope.row.merchantAction }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column label="店铺处罚措施">
+                  <template #default="scope">
+                    {{ punishmentDict[scope.row.platformAction] || scope.row.platformAction }}
+                  </template>
+                </el-table-column>
                 <el-table-column label="操作" width="160">
                   <template #default="scope">
                     <el-button size="small" class="modern-btn-secondary" @click.stop="openPenaltyDetail(scope.row)">详情</el-button>
@@ -103,8 +112,8 @@
                       <div><b class="text-gray-600">处罚编号：</b>{{ penaltyDetail.id }}</div>
                       <div><b class="text-gray-600">处罚时间：</b>{{ penaltyDetail.time }}</div>
                       <div><b class="text-gray-600">处罚原因：</b>{{ penaltyDetail.reason }}</div>
-                      <div><b class="text-gray-600">平台措施：</b>{{ penaltyDetail.platformAction }}</div>
-                      <div><b class="text-gray-600">商家措施：</b>{{ penaltyDetail.merchantAction }}</div>
+                      <div><b class="text-gray-600">平台措施：</b>{{ punishmentDict[penaltyDetail.platformAction] || penaltyDetail.platformAction }}</div>
+                      <div><b class="text-gray-600">商家措施：</b>{{ punishmentDict[penaltyDetail.merchantAction] || penaltyDetail.merchantAction }}</div>
                     </div>
                   </div>
                 </div>
@@ -728,6 +737,17 @@ async function submitDecision() {
   asDetail.value = await getAfterSaleDetail(asDetail.value.id);
   clearDecision();
 }
+
+const punishmentDict: Record<string, string> = {
+  verbal_warning: '口头警告',
+  written_warning: '书面警告',
+  fine_500: '罚款500元',
+  fine_1000: '罚款1000元',
+  correction: '限期整改',
+  suspend_3days: '暂停营业3天',
+  suspend_7days: '暂停营业7天',
+  permanent_removal: '永久下架',
+};
 </script>
 
 <style scoped>

@@ -120,7 +120,7 @@ async function submit() {
             }
             const content = riderReport.value.trim();
             const orderId = props.order.orderID;
-            await postRiderReport(userId, orderId, content);
+            await postRiderReport(orderId, content);
         }
 
         submitting.value = true;

@@ -32,12 +32,7 @@ namespace BackEnd.Services
             try
             {
                 // 1. 验证订单是否存在
-                if (!int.TryParse(request.OrderId, out int orderId))
-                {
-                    return Fail("无效的订单ID");
-                }
-
-                var order = await _orderRepository.GetByIdAsync(orderId);
+                var order = await _orderRepository.GetByIdAsync(request.OrderId);
                 if (order == null)
                 {
                     return Fail("订单不存在");
@@ -50,7 +45,7 @@ namespace BackEnd.Services
                 }
 
                 // 3. 检查是否已有待处理的售后申请
-                var existingApplications = await _applicationRepository.GetByOrderIdAsync(orderId);
+                var existingApplications = await _applicationRepository.GetByOrderIdAsync(request.OrderId);
                 if (existingApplications.Any(a => a.AfterSaleState == AfterSaleState.Pending))
                 {
                     return Fail("该订单已有待处理的售后申请");
@@ -59,7 +54,7 @@ namespace BackEnd.Services
                 // 4. 创建售后申请
                 var application = new AfterSaleApplication
                 {
-                    OrderID = orderId,
+                    OrderID = request.OrderId,
                     Description = request.Description,
                     ApplicationTime = DateTime.Now,
                     AfterSaleState = AfterSaleState.Pending

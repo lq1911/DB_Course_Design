@@ -2,7 +2,7 @@ namespace BackEnd.Dtos.AfterSaleApplication
 {
     public class CreateApplicationDto
     {
-        public string OrderId { get; set; } = string.Empty;
+        public int OrderId { get; set; }
         public string Description { get; set; } = string.Empty;
     }
 

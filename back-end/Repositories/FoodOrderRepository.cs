@@ -47,13 +47,38 @@ namespace BackEnd.Repositories
                                  .Include(fo => fo.Comments)
                                  .FirstOrDefaultAsync(fo => fo.OrderID == id);
         }
+
         public async Task<List<FoodOrder>> GetOrdersByCustomerIdOrderedByDateAsync(int customerId)
         {
-            return await _context.FoodOrders
+            var orders = await _context.FoodOrders
                 .Where(o => o.CustomerID == customerId)
                 .OrderByDescending(o => o.OrderTime)
                 .ToListAsync();
+
+            // 单独查 DeliveryTasks
+            var orderIds = orders.Select(o => o.OrderID).ToList();
+            var tasks = await _context.DeliveryTasks
+                .Where(d => orderIds.Contains(d.OrderID))
+                .Select(d => new { d.OrderID, d.TaskID, d.Status })
+                .ToListAsync();
+
+            var taskDict = tasks.ToDictionary(t => t.OrderID);
+
+            foreach (var order in orders)
+            {
+                if (taskDict.TryGetValue(order.OrderID, out var t))
+                {
+                    order.DeliveryTask = new DeliveryTask
+                    {
+                        TaskID = t.TaskID,
+                        Status = t.Status
+                    };
+                }
+            }
+
+            return orders;
         }
+
 
         public async Task<FoodOrder?> GetByCartIdAsync(int cartId)
         {
