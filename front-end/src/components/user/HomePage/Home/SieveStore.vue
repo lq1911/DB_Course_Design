@@ -60,7 +60,7 @@ const ratingOptions = [
 ];
 
 const selectedSort = ref(props.defaultSort || "综合排序");
-const selectedRating = ref<number>(props.defaultRating || 4.5);
+const selectedRating = ref<number>(props.defaultRating || 0);
 
 // 监听变化，传给父组件
 watch(selectedSort, val => emit('update-sort', val), { immediate: true });

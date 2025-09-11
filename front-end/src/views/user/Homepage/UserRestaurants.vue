@@ -3,8 +3,8 @@
     <!-- 筛选组件 -->
     <SieveStore
       class="sticky top-20 w-64"
-      :default-rating="selectedRating"
-      :default-sort="selectedSort"
+      :defaultRating="selectedRating"
+      :defaultSort="selectedSort"
       @update-sort="onSortChange"
       @update-rating="onRatingChange"
     />
@@ -79,7 +79,7 @@ const showLoading = ref(true);
 
 // 父组件选项
 const selectedSort = ref('综合排序');
-const selectedRating = ref(4.5);
+const selectedRating = ref(0);
 
 // 原始列表
 const restaurantList = computed<showStore[]>(() => {
@@ -105,7 +105,7 @@ const filteredRestaurants = computed(() => {
 
 // 分页
 const currentPage = ref(1);
-const pageSize = 12;
+const pageSize = 8;
 const totalPages = computed(() => Math.ceil(filteredRestaurants.value.length / pageSize));
 const pagedRestaurants = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
