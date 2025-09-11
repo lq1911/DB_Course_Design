@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                         </div> -->
-                          <CourierLocationMap /> 
+                        <CourierLocationMap />
 
                     </div>
 
@@ -248,7 +248,7 @@
                                                 <el-icon :size="12">
                                                     <User />
                                                 </el-icon>
-                                            </div>
+                                            </div> 
                                             <div class="flex-1">
                                                 <div class="font-medium text-sm text-gray-900">{{ order.customer }}
                                                 </div>
@@ -262,12 +262,12 @@
                                             <button v-if="order.status === 'pending'"
                                                 @click="handlePickupOrder(order.id)"
                                                 class="bg-orange-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-orange-600">
-                                                取单
+                                                我已到店
                                             </button>
                                             <button v-if="order.status === 'delivering'"
                                                 @click="handleDeliverOrder(order.id)"
                                                 class="bg-green-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-green-600">
-                                                已送达
+                                                我已送达
                                             </button>
                                         </div>
                                     </div>
@@ -369,14 +369,24 @@
 
                     <!-- 个人中心页面 -->
                     <div v-if="currentTab === 'profile' && userProfile" class="mx-4 mt-4">
-                        <!-- 个人资料卡片 -->
+                        <!-- 个人资料卡片 (仅更新头像显示) -->
                         <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
                             <div class="flex items-center space-x-4 mb-4">
-                                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-                                    <el-icon class="text-white text-2xl">
+
+                                <!-- ▼▼▼ 这是唯一需要修改的部分 ▼▼▼ -->
+                                <div
+                                    class="w-16 h-16 rounded-full flex items-center justify-center bg-gray-200 overflow-hidden">
+                                    <!-- 如果 userProfile.avatar 存在 (是一个有效的URL)，就显示图片 -->
+                                    <img v-if="userProfile.avatar" :src="userProfile.avatar" alt="用户头像"
+                                        class="w-full h-full object-cover" />
+                                    <!-- 否则，显示一个默认的 Element Plus 用户图标 -->
+                                    <el-icon v-else class="text-gray-500 text-3xl">
                                         <User />
                                     </el-icon>
                                 </div>
+                                <!-- ▲▲▲ 修改结束 ▲▲▲ -->
+
+                                <!-- 其他部分保持完全不变 -->
                                 <div>
                                     <div class="text-lg font-semibold text-gray-900">{{ userProfile.name }}</div>
                                     <div class="text-sm text-gray-500">ID: {{ userProfile.id }}</div>
@@ -398,7 +408,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- 设置菜单 -->
                         <div class="bg-white rounded-lg shadow-sm">
                             <div class="p-4 space-y-1 divide-y divide-gray-100">
@@ -520,7 +529,20 @@ const api = useMockData ? MockAPI : RealAPI;
 const router = useRouter();
 
 // --- 接口定义 ---
-interface UserProfile { name: string; id: string; registerDate: string; rating: number; creditScore: number; }
+export interface UserProfile {
+    name: string;
+    id: string;
+    registerDate: string;
+    rating: number;
+    creditScore: number;
+
+    // --- 新增的可选属性 ---
+    gender?: string;
+    birthday?: string; // 通常是 ISO 格式的日期字符串，如 '2024-01-15T00:00:00'
+    avatar?: string;   // 头像的 URL
+    vehicleType?: string;
+    // -----------------------
+}
 interface Order {
     id: string;
     status: OrderStatus; // 使用我们更精确的类型

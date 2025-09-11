@@ -7,5 +7,6 @@ namespace BackEnd.Dtos.Courier
         public string RegisterDate { get; set; } = string.Empty;
         public decimal Rating { get; set; }
         public int CreditScore { get; set; }
+        public string? Avatar { get; set; }
     }
 }

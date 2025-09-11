@@ -2,15 +2,28 @@
 
 export type OrderStatus = 'to_be_taken' | 'pending' | 'delivering' | 'completed' | 'cancelled';
 
-/** 用户个人资料 (所有属性均在模板中使用) */
+
 export interface UserProfile {
     name: string;
     id: string;
     registerDate: string;
     rating: number;
     creditScore: number;
-}
 
+    // --- 新增的可选属性 ---
+    gender?: string;
+    birthday?: string; // 通常是 ISO 格式的日期字符串，如 '2024-01-15T00:00:00'
+    avatar?: string;   // 头像的 URL
+    vehicleType?: string;
+    // -----------------------
+}
+export interface UpdateProfilePayload {
+    name: string;
+    gender?: string;
+    birthday?: string;
+    avatar?: string;       // 新增：头像 URL
+    vehicleType?: string;  // 新增：车辆类型
+}
 
 // ▼▼▼ 在其他 interface 定义的旁边，添加下面这个 ▼▼▼
 export interface Complaint {
@@ -89,7 +102,13 @@ const mockUserProfile: UserProfile = {
     id: 'RD20241201',
     registerDate: '2023-08-15',
     rating: 4.8,
-    creditScore: 892
+    creditScore: 892,
+
+    // --- 新增的模拟数据 ---
+    gender: '男',
+    birthday: '1995-10-20',
+    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&q=80', // 一个示例头像URL
+    vehicleType: '电动车'
 };
 
 const mockWorkStatus: WorkStatus = {
