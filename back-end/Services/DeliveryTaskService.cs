@@ -11,14 +11,17 @@ namespace BackEnd.Services
         private readonly IDeliveryTaskRepository _deliveryRepo;
         private readonly IFoodOrderRepository _orderRepo;
         private readonly IStoreRepository _storeRepo;
+        private readonly ICourierRepository _courierRepo;
 
         public DeliveryTaskService(IDeliveryTaskRepository deliveryRepo,
                                   IFoodOrderRepository orderRepo,
-                                  IStoreRepository storeRepo)
+                                  IStoreRepository storeRepo,
+                                  ICourierRepository courierRepo)
         {
             _deliveryRepo = deliveryRepo;
             _orderRepo = orderRepo;
             _storeRepo = storeRepo;
+            _courierRepo = courierRepo;
         }
 
         public async Task<(DeliveryTaskDto? DeliveryTask, PublishTaskDto? Publish)> PublishDeliveryTaskAsync(
@@ -81,18 +84,9 @@ namespace BackEnd.Services
             // 输出任务相关信息
             Console.WriteLine($"[DEBUG] 找到配送任务，任务ID: {task.TaskID}, 客户ID: {task.CustomerID}, 商店ID: {task.StoreID}");
 
-            var courier = task.Courier;
-            var courierUser = courier?.User;
-
-            // 输出是否存在骑手信息
-            if (courier != null)
-            {
-                Console.WriteLine($"[DEBUG] 配送任务的骑手信息: 用户ID: {courier.UserID}, 姓名: {courierUser?.FullName}, 车类型: {courier.VehicleType}");
-            }
-            else
-            {
-                Console.WriteLine("[DEBUG] 配送任务没有分配骑手信息");
-            }
+            var courier = task.CourierID.HasValue
+                              ? await _courierRepo.GetByIdAsync(task.CourierID.Value)
+                              : null;
 
             // 构建返回数据
             var result = new OrderDeliveryInfoDto
@@ -129,8 +123,8 @@ namespace BackEnd.Services
                     AvgDeliveryTime = courier.AvgDeliveryTime,
                     AverageRating = courier.AverageRating,
                     MonthlySalary = courier.MonthlySalary,
-                    FullName = courierUser?.FullName,
-                    PhoneNumber = courierUser?.PhoneNumber
+                    FullName = courier.User?.FullName,
+                    PhoneNumber = courier.User?.PhoneNumber
                 }
             };
 

@@ -5,10 +5,6 @@ using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System; // 【新增】引入基础命名空间
-using System.Collections.Generic; // 【新增】引入集合命名空间
-using System.Linq; // 【新增】引入 LINQ 命名空间
-using System.Threading.Tasks;
 
 namespace BackEnd.Services
 {
@@ -185,6 +181,7 @@ namespace BackEnd.Services
             taskToAccept.CourierID = courierId; // 将当前骑手ID分配给这个任务
             taskToAccept.Status = DeliveryStatus.Pending; // 将状态更新为 "Pending" (待取件)
             taskToAccept.AcceptTime = DateTime.UtcNow; // 记录接单时间 (使用 UTC 时间是好习惯)
+            taskToAccept.Courier = await _courierRepository.GetByIdAsync(courierId);
 
             // 步骤 4: 保存更改到数据库
             await _context.SaveChangesAsync();
@@ -508,11 +505,5 @@ namespace BackEnd.Services
                 VehicleType = user.Courier.VehicleType
             };
         }
-
-
-
-
-
-
     }
 }
