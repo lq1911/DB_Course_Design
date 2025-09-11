@@ -80,10 +80,9 @@ export async function getUserInfo(UserId: number) {
     });
 }
 
-export async function postAfterSaleApplication(userID: number, orderID: number, content: string) {
-    return postData<AfterSale>(`/api/user/order/afterSale`, {
-        userID,
-        orderID,
-        content
+export async function postAfterSaleApplication(orderId: number, description: string) {
+    return postData<AfterSale>(`/api/user/applications/create`, {
+        orderId,
+        description
     })
 }

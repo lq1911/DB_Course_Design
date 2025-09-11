@@ -50,3 +50,11 @@
 
 - 接口地址
 `PUT /api/account/address/save`
+**4.修改用户头像**
+- 输入表单
+| 参数     | 类型            | 必填 | 说明                     |
+| ------ | ------------- | -- | ---------------------- |
+| userId | number        | 是  | 用户 ID（作为 URL 路径参数传递）   |
+| file   | file (binary) | 是  | 头像图片文件，支持 jpg/png/jpeg |
+- 接口地址
+`POST /api/account/avatar/{userId}`

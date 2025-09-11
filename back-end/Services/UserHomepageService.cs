@@ -60,6 +60,7 @@ namespace BackEnd.Services
 
             return (storeResults, dishResults);
         }
+
         public async Task<List<HistoryOrderDto>> GetOrderHistoryAsync(int userId)
         {
             // 获取用户的所有订单
@@ -98,6 +99,16 @@ namespace BackEnd.Services
                     }
                 }
 
+                int orderStatus = 0;
+                if (order.DeliveryTask != null)
+                {
+                    var deliveryTask = order.DeliveryTask;
+                    if (deliveryTask.Status == Models.Enums.DeliveryStatus.Completed)
+                    {
+                        orderStatus = 1;
+                    }
+                }
+
                 result.Add(new HistoryOrderDto
                 {
                     OrderID = order.OrderID,
@@ -109,7 +120,7 @@ namespace BackEnd.Services
                     StoreName = store?.StoreName ?? "",
                     DishImage = dishImages,
                     TotalAmount = totalAmount,
-                    OrderStatus = (int)order.FoodOrderState
+                    OrderStatus = orderStatus
                 });
             }
 

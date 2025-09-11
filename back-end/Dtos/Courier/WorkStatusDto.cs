@@ -1,5 +1,5 @@
 // BackEnd/Dtos/User/WorkStatusDto.cs
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     public class WorkStatusDto
     {

@@ -114,7 +114,7 @@
                         </div>
 
                         <!-- 地图卡片 -->
-                        <div v-if="locationInfo" class="mx-4 mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
+                        <!-- <div v-if="locationInfo" class="mx-4 mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
                             <div class="h-64 relative">
                                 <img src="https://readdy.ai/api/search-image?query=Urban%20delivery%20map%20interface%20showing%20rider%20location%20with%20orange%20markers%20and%20navigation%20routes%2C%20clean%20modern%20GPS%20interface%20design%2C%20realistic%20mobile%20map%20view%20with%20clear%20street%20layout%2C%20professional%20delivery%20app%20aesthetic%2C%20bright%20daylight%20view&width=343&height=256&seq=map001&orientation=landscape"
                                     alt="配送地图" class="w-full h-full object-cover" />
@@ -129,7 +129,9 @@
                                     </el-icon>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+                          <CourierLocationMap /> 
+
                     </div>
 
                     <!-- 可接订单页面 -->
@@ -495,6 +497,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import CourierLocationMap from '@/components/user/CourierLocationMap.vue';
 import { ElMessage, ElLoading ,ElMessageBox} from 'element-plus';
 import {
     User, Bell, Switch, Location, CircleCloseFilled,

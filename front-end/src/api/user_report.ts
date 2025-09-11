@@ -16,6 +16,9 @@ export async function postStoreReport(userId: number, storeId: number, content: 
     return postData<StoreReport>(`/api/user/store/report`, {userId, storeId, content})
 }
 
-export async function postRiderReport(userId: number, orderId: number, content: string) {
-    return postData<RiderReport>(`/api/user/courier/report`, {userId, orderId, content})
+export async function postRiderReport(orderId: number, content: string) {
+  return postData(`/api/user/complaints/create`, {
+    orderId,
+    complaintReason: content
+  })
 }

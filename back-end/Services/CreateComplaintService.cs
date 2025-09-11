@@ -32,9 +32,22 @@ namespace BackEnd.Services
             try
             {
                 // 1. 验证配送任务是否存在
-                if (!int.TryParse(request.DeliveryTaskId, out int deliveryTaskId))
+                int deliveryTaskId;
+
+                if (request.DeliveryTaskId.HasValue)
                 {
-                    return Fail("无效的配送任务ID");
+                    deliveryTaskId = request.DeliveryTaskId.Value;
+                }
+                else if (request.OrderId.HasValue)
+                {
+                    var task = await _deliveryTaskRepository.GetByOrderIdAsync(request.OrderId.Value);
+                    if (task == null)
+                        return Fail("该订单没有对应的配送任务");
+                    deliveryTaskId = task.TaskID;
+                }
+                else
+                {
+                    return Fail("必须提供订单ID或配送任务ID");
                 }
 
                 var deliveryTask = await _deliveryTaskRepository.GetByIdAsync(deliveryTaskId);
@@ -56,21 +69,14 @@ namespace BackEnd.Services
                     return Fail("该配送任务当前状态不支持发起投诉");
                 }
 
-                // 4. 检查是否已有待处理的投诉
-                var existingComplaints = await _complaintRepository.GetByDeliveryTaskIdAsync(deliveryTaskId);
-                if (existingComplaints.Any(c => c.ComplaintState == ComplaintState.Pending))
-                {
-                    return Fail("该配送任务已有待处理的投诉");
-                }
-
-                // 5. 分配给有"投诉处理"权限的管理员
+                // 4. 分配给有"投诉处理"权限的管理员
                 var availableAdmins = await _administratorRepository.GetAdministratorsByManagedEntityAsync("配送投诉");
                 if (!availableAdmins.Any())
                 {
                     return Fail("当前没有可用的投诉处理管理员");
                 }
 
-                // 6. 创建配送投诉
+                // 5. 创建配送投诉
                 var complaint = new DeliveryComplaint
                 {
                     DeliveryTaskID = deliveryTaskId,
@@ -84,7 +90,7 @@ namespace BackEnd.Services
                 await _complaintRepository.AddAsync(complaint);
                 await _complaintRepository.SaveAsync();
 
-                // 7. 随机选择一名管理员并创建分配关系
+                // 6. 随机选择一名管理员并创建分配关系
                 var random = new Random();
                 var adminList = availableAdmins.ToList();
                 var selectedAdmin = adminList[random.Next(adminList.Count)];
@@ -118,6 +124,7 @@ namespace BackEnd.Services
 
         private CreateComplaintResult Fail(string message)
         {
+            Console.WriteLine($"[CreateComplaintService] {message}");
             return new CreateComplaintResult
             {
                 Success = false,
