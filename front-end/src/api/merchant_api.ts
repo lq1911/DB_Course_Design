@@ -53,24 +53,14 @@ export const getShopInfo = async () => {
 };
 
 // 获取商家信息
-export const getMerchantInfo = async () => {
+export const getMerchantInfo = async (): Promise<MerchantInfo> => {
   try {
     console.log('正在请求商家信息...');
     const response = await api.get('/merchant/info');
     console.log('商家信息响应:', response.data);
-    return response.data;
+    return response.data.data as MerchantInfo;
   } catch (error: any) {
-    console.error('获取商家信息失败:');
-    console.error('错误类型:', error.constructor.name);
-    console.error('错误消息:', error.message);
-    if (error.response) {
-      console.error('响应状态:', error.response.status);
-      console.error('响应数据:', error.response.data);
-      console.error('响应头:', error.response.headers);
-    } else if (error.request) {
-      console.error('请求配置:', error.request);
-    }
-    console.error('完整错误对象:', error);
+    console.error('获取商家信息失败:', error);
     throw error;
   }
 };
@@ -111,6 +101,10 @@ export interface FoodOrder {
   cartId: number;         // FoodOrder.CartID
   storeId: number;        // FoodOrder.StoreID
   sellerId: number;       // FoodOrder.SellerID
+  orderState: number;
+
+  deliveryTaskId?: number | null;  // 新增
+  deliveryStatus?: number | null;  // 新增
 }
 
 // 菜品相关类型（对齐数据库 Dish）
@@ -179,6 +173,10 @@ export interface OrderCouponInfo {
   isUsed: boolean;
 }
 
+export interface MerchantInfo {
+  username: string;
+  sellerId: number;
+}
 
 // ==================== 订单管理接口 ====================
 
@@ -195,6 +193,9 @@ export const getOrders = async (params?: { sellerId?: number; storeId?: number }
       cartId: o.CartID ?? o.cartId,
       storeId: o.StoreID ?? o.storeId,
       sellerId: o.SellerID ?? o.sellerId,
+      orderState: o.OrderState ?? o.orderState ?? 0,
+      deliveryTaskId: o.DeliveryTaskId ?? o.deliveryTaskId ?? null,   // 新增
+      deliveryStatus: o.DeliveryStatus ?? o.deliveryStatus ?? null,   // 新增
     })) as FoodOrder[];
     return list;
   } catch (error) {
@@ -216,6 +217,9 @@ export const getOrderById = async (orderId: number) => {
       cartId: o.CartID ?? o.cartId,
       storeId: o.StoreID ?? o.storeId,
       sellerId: o.SellerID ?? o.sellerId,
+      orderState: o.OrderState ?? o.orderState,
+      deliveryTaskId: o.DeliveryTaskId ?? o.deliveryTaskId ?? null,   // 新增
+      deliveryStatus: o.DeliveryStatus ?? o.deliveryStatus ?? null,   // 新增
     };
     return mapped;
   } catch (error) {
@@ -424,7 +428,7 @@ export const publishDeliveryTaskForOrder = async (
       EstimatedDeliveryTime: payload.estimatedDeliveryTime,
     });
     const data = response.data || {};
-    // 预计返回包含 DeliveryTask 与 PublishTask 信息
+    // 预计返回包含 DeliveryTask 
     const mapDelivery = (dt: any): DeliveryTask | undefined =>
       dt
         ? {
@@ -506,7 +510,7 @@ export const getOrderDeliveryInfo = async (orderId: number) => {
 
 export interface OrderDecision {
   orderId: number;
-  decision: 'accepted' | 'rejected';
+  decision: 'accepted' | 'rejected' | 'ready';
   decidedAt: string;
   reason?: string;
 }
@@ -524,6 +528,22 @@ export const acceptOrder = async (orderId: number) => {
     return mapped;
   } catch (error) {
     console.error('商家接单失败:', error);
+    throw error;
+  }
+};
+
+export const markAsReadyApi = async (orderId: number) => {
+  try {
+    const res = await api.post(`/orders/${orderId}/ready`);
+    const d = res.data || {};
+    const mapped: OrderDecision = {
+      orderId: d.OrderID ?? d.orderId ?? orderId,
+      decision: 'ready',
+      decidedAt: d.DecidedAt ?? d.decidedAt ?? new Date().toISOString(),
+    };
+    return mapped;
+  } catch (error) {
+    console.error('标记订单出餐失败:', error);
     throw error;
   }
 };
@@ -787,7 +807,7 @@ export const handleApiError = (error: any) => {
 // 请求拦截器 - 添加认证token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('merchant_token');
+    const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

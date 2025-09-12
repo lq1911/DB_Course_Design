@@ -405,8 +405,8 @@ const fetchAllData = async () => {
     }
     
     // 更新商家信息
-    if (merchant.data) {
-      merchantInfo.value = { ...defaultMerchantInfo, ...merchant.data };
+    if (merchant) {
+      merchantInfo.value = { ...defaultMerchantInfo, ...merchant };
     }
     
   } catch (error) {

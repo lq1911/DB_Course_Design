@@ -105,72 +105,101 @@
               element-loading-background="rgba(255, 255, 255, 0.8)"
             >
               <el-table-column prop="orderId" label="订单ID" width="120" align="center" />
-              <el-table-column prop="paymentTime" label="支付时间" width="160" />
+              <el-table-column prop="paymentTime" label="支付时间" width="160">
+                <template #default="scope">
+                  <!-- 格式化显示支付时间 -->
+                  <span>{{ formatDate(scope.row.paymentTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="customerId" label="客户ID" width="100" align="center" />
               <el-table-column prop="storeId" label="门店ID" width="100" align="center" />
               <el-table-column prop="sellerId" label="商家ID" width="100" align="center" />
-              <el-table-column prop="localStatus" label="接单状态" width="120" align="center">
+              <el-table-column prop="orderState" label="接单状态" width="120" align="center">
                 <template #default="scope">
                   <span
-                    :class="{
-                      'bg-green-100 text-green-600': scope.row.localStatus === 'accepted',
-                      'bg-red-100 text-red-600': scope.row.localStatus === 'rejected',
-                      'bg-gray-100 text-gray-600': !scope.row.localStatus
-                    }"
-                    class="px-3 py-1 rounded-full text-xs font-medium"
+                    :class="[orderStateMap[scope.row.orderState]?.colorClass, 'px-3 py-1 rounded-full text-xs font-medium']"
                   >
-                    {{ scope.row.localStatus === 'accepted' ? '已接单' : scope.row.localStatus === 'rejected' ? '已拒单' : '待处理' }}
+                    {{ orderStateMap[scope.row.orderState]?.label || '未知状态' }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="deliveryStatus" label="配送任务状态" width="140" align="center">
+                <template #default="scope">
+                  <span
+                    :class="[deliveryStatusMap[String(scope.row.deliveryStatus ?? -1)]?.colorClass, 'px-3 py-1 rounded-full text-xs font-medium']"
+                  >
+                    {{ deliveryStatusMap[String(scope.row.deliveryStatus ?? -1)]?.label }}
                   </span>
                 </template>
               </el-table-column>
               <el-table-column prop="remarks" label="备注" min-width="200" />
               <el-table-column label="操作" min-width="520">
-                <template #default="scope">
-                  <div class="flex flex-wrap items-center gap-2">
-                    <button
-                      @click="showOrderDetails(scope.row)"
-                      class="btn-primary btn-small shrink-0"
-                    >
-                      详细信息
-                    </button>
-                    <button
-                      v-if="!scope.row.localStatus || scope.row.localStatus === 'rejected'"
-                      @click="acceptOrder(scope.row)"
-                      class="btn-success btn-small shrink-0"
-                    >
-                      接单
-                    </button>
-                    <button
-                      v-if="!scope.row.localStatus || scope.row.localStatus === 'accepted'"
-                      @click="rejectOrder(scope.row)"
-                      class="btn-danger btn-small shrink-0"
-                    >
-                      拒单
-                    </button>
-                    <button
-                      v-if="!scope.row.deliveryStatus || scope.row.deliveryStatus === 'none'"
-                      @click="openPublishDialog(scope.row)"
-                      class="btn-info btn-small shrink-0"
-                    >
-                      发布配送
-                    </button>
-                    <button
-                      v-else-if="scope.row.deliveryStatus === 'published'"
-                      @click="openDeliveryInfo(scope.row)"
-                      class="btn-warning btn-small shrink-0"
-                    >
-                      骑手已接单
-                    </button>
-                    <button
-                      v-if="scope.row.deliveryStatus === 'published'"
-                      @click="openDeliveryInfo(scope.row)"
-                      class="btn-secondary btn-small shrink-0"
-                    >
-                      骑手信息
-                    </button>
-                  </div>
-                </template>
-              </el-table-column>
+              <template #default="scope">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button
+                    @click="showOrderDetails(scope.row)"
+                    class="btn-primary btn-small shrink-0"
+                  >
+                    订单信息
+                  </button>
+
+                  <!-- 接单/出餐 按钮 -->
+                  <button
+                    v-if="scope.row.orderState === 0"
+                    @click="acceptOrder(scope.row)"
+                    class="btn-success btn-small shrink-0"
+                  >
+                    接单
+                  </button>
+                  <button
+                    v-else-if="scope.row.orderState === 1"
+                    @click="markAsReady(scope.row)"
+                    class="btn-warning btn-small shrink-0"
+                  >
+                    出餐
+                  </button>
+                  <button
+                    v-else-if="scope.row.orderState === 2"
+                    disabled
+                    class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed"
+                  >
+                    已出餐
+                  </button>
+                  <!-- 配送任务按钮 -->
+                 <button
+                    v-if="!scope.row.deliveryTaskId && scope.row.orderState !== 0"
+                    @click="openPublishDialog(scope.row)"
+                    class="btn-info btn-small shrink-0"
+                  >
+                    发布配送
+                  </button>
+                  <button
+                    v-else-if="!scope.row.deliveryTaskId && scope.row.orderState === 0"
+                    disabled
+                    class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed"
+                  >
+                    请先接单
+                  </button>
+                  <button
+                    v-else
+                    disabled
+                    class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed"
+                  >
+                    已发布配送
+                  </button>
+
+                  <!-- 只要发布了配送任务，显示"查看配送"按钮 -->
+                  <button
+                    v-if="scope.row.deliveryTaskId"
+                    @click="openDeliveryInfo(scope.row)"
+                    class="btn-small shrink-0"
+                    style="background-color: #f8bbd0 !important; color: white !important; border-radius: 8px !important; padding: 8px 16px !important;"
+                  >
+                    查看配送
+                  </button>
+                </div>
+              </template>
+            </el-table-column>
             </el-table>
           </div>
         </div>
@@ -444,10 +473,10 @@ import {
 } from '@/api/merchant_api';
 
 // 本地示例数据（与数据库字段对齐）
-const localOrdersSample: (FoodOrder & { localStatus?: string; deliveryStatus?: string })[] = [
-  { orderId: 1001, paymentTime: '2024-12-01 12:30:00', remarks: '不要辣椒', customerId: 1, cartId: 10, storeId: 101, sellerId: 201, localStatus: 'accepted', deliveryStatus: 'published' },
-  { orderId: 1002, paymentTime: '2024-12-01 13:15:00', remarks: '多加米饭', customerId: 2, cartId: 11, storeId: 101, sellerId: 201, localStatus: 'accepted', deliveryStatus: 'published' },
-  { orderId: 1003, paymentTime: '2024-12-01 14:00:00', remarks: '打包带走', customerId: 3, cartId: 12, storeId: 102, sellerId: 202, localStatus: 'accepted', deliveryStatus: 'none' }
+const localOrdersSample: FoodOrder[] = [
+  { orderId: 1001, paymentTime: '2024-12-01 12:30:00', remarks: '不要辣椒', customerId: 1, cartId: 10, storeId: 101, sellerId: 201, orderState: 0 },
+  { orderId: 1002, paymentTime: '2024-12-01 13:15:00', remarks: '多加米饭', customerId: 2, cartId: 11, storeId: 101, sellerId: 201, orderState: 1 },
+  { orderId: 1003, paymentTime: '2024-12-01 14:00:00', remarks: '打包带走', customerId: 3, cartId: 12, storeId: 102, sellerId: 202, orderState: 2 }
 ];
 
 const localDishesSample: Dish[] = [
@@ -602,20 +631,31 @@ const retryLoad = async () => {
 
 // 初始化数据
 onMounted(async () => {
+  await fetchMerchantInfo();
   await Promise.all([loadOrders(), loadDishes()]);
 });
+
+import { getMerchantInfo, type MerchantInfo } from '@/api/merchant_api';
+
+const merchantInfo = ref<MerchantInfo | null>(null);
+
+const fetchMerchantInfo = async () => {
+  merchantInfo.value = await getMerchantInfo();
+  console.log("商家ID:", merchantInfo.value.sellerId);
+};
 
 // 加载订单数据
 const loadOrders = async () => {
   try {
     loading.value.orders = true;
-    const apiOrders = await getOrders();
+    
+    const apiOrders = await getOrders({ sellerId: merchantInfo.value!.sellerId });
+
     if (apiOrders && (apiOrders as any).length > 0) {
       // 为API返回的订单添加本地状态字段
       orders.value = (apiOrders as any).map((order: FoodOrder) => ({
         ...order,
         localStatus: 'accepted', // 默认已接单
-        deliveryStatus: 'none'   // 默认未发布配送
       }));
     }
   } catch (error) {
@@ -658,7 +698,8 @@ const orderTabs = [
 const activeOrderTab = ref('orders');
 const showDishForm = ref(false);
 const showEditForm = ref(false);
-const orders = ref<(FoodOrder & { localStatus?: string; deliveryStatus?: string })[]>(localOrdersSample);
+const orders = ref<(FoodOrder & { localStatus?: string; deliveryStatus?: number | null })[]>(localOrdersSample);
+
 // 前端本地接单状态与自动接单开关（仅前端态，数据库未定义订单状态）
 const autoAcceptOrders = ref(false);
 
@@ -772,6 +813,7 @@ const acceptOrder = async (order: any) => {
   try {
     await acceptOrderApi(order.orderId);
     order.localStatus = 'accepted';
+    order.orderState = 1;
     ElMessage.success('已接单');
   } catch (error) {
     ElMessage.error(handleApiError(error));
@@ -816,10 +858,15 @@ const submitPublish = async () => {
   try {
     // 优先调用后端
     try {
-      await publishDeliveryTaskForOrder(publishTargetOrder.value.orderId, {
+      console.log('[Publish] 准备发布配送任务，订单ID:', publishTargetOrder.value.orderId);
+      console.log('[Publish] 表单内容:', publishForm.value);
+
+      const result = await publishDeliveryTaskForOrder(publishTargetOrder.value.orderId, {
         estimatedArrivalTime: publishForm.value.estimatedArrivalTime,
         estimatedDeliveryTime: publishForm.value.estimatedDeliveryTime,
       });
+
+       console.log('[Publish] 后端返回结果:', result);
     } catch (_) {
       // 后端不可用时，构造本地配送信息样例
       const orderId = publishTargetOrder.value.orderId;
@@ -852,7 +899,7 @@ const submitPublish = async () => {
     if (publishTargetOrder.value) {
       const orderIndex = orders.value.findIndex(o => o.orderId === publishTargetOrder.value!.orderId);
       if (orderIndex !== -1) {
-        orders.value[orderIndex].deliveryStatus = 'published';
+        orders.value[orderIndex].deliveryStatus = 0;
       }
     }
     
@@ -886,6 +933,39 @@ const openDeliveryInfo = async (order: FoodOrder) => {
 const closeDeliveryInfoDialog = () => {
   showDeliveryInfoDialog.value = false;
   deliveryInfo.value = {} as any;
+};
+
+// 订单状态映射
+const orderStateMap: Record<number, { label: string; colorClass: string }> = {
+  0: { label: '未接单', colorClass: 'bg-gray-100 text-gray-600' },
+  1: { label: '备菜中', colorClass: 'bg-yellow-100 text-yellow-600' },
+  2: { label: '已出餐', colorClass: 'bg-green-100 text-green-600' }
+};
+
+import { markAsReadyApi } from '@/api/merchant_api';
+
+const markAsReady = async (order: any) => {
+  try {
+    await markAsReadyApi(order.orderId);
+    order.orderState = 2; // 已出餐
+    ElMessage.success('订单已出餐');
+  } catch (error) {
+    ElMessage.error(handleApiError(error));
+  }
+};
+
+const deliveryStatusMap: Record<string, { label: string; colorClass: string }> = {
+  '-1': { label: '未发布配送', colorClass: 'bg-gray-100 text-gray-400' },
+  '0': { label: '未接单', colorClass: 'bg-gray-100 text-gray-600' },
+  '1': { label: '骑手未取餐', colorClass: 'bg-yellow-100 text-yellow-600' },
+  '2': { label: '配送中', colorClass: 'bg-blue-100 text-blue-600' },
+  '3': { label: '已完成', colorClass: 'bg-green-100 text-green-600' },
+  '4': { label: '已取消', colorClass: 'bg-red-100 text-red-600' },
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString); // 将字符串转换为 Date 对象
+  return date.toLocaleString(); // 使用本地时间格式显示
 };
 
 </script>

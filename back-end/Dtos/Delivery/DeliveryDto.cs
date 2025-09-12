@@ -25,7 +25,7 @@ namespace BackEnd.Dtos.Delivery
 
     public class AcceptTaskDto
     {
-        public int CourierId { get; set; }
+        public int? CourierId { get; set; }
         public int DeliveryTaskId { get; set; }
         public string AcceptTime { get; set; } = null!;
     }

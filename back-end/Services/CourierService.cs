@@ -5,10 +5,6 @@ using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System; // 【新增】引入基础命名空间
-using System.Collections.Generic; // 【新增】引入集合命名空间
-using System.Linq; // 【新增】引入 LINQ 命名空间
-using System.Threading.Tasks;
 
 namespace BackEnd.Services
 {
@@ -131,7 +127,8 @@ namespace BackEnd.Services
         {
             switch (status)
             {
-                case DeliveryStatus.Pending: return "待处理";
+                case DeliveryStatus.To_Be_Taken: return "待处理";
+                case DeliveryStatus.Pending: return "待取餐";
                 case DeliveryStatus.Delivering: return "配送中";
                 case DeliveryStatus.Completed: return "已完成";
                 case DeliveryStatus.Cancelled: return "已取消";
@@ -184,6 +181,7 @@ namespace BackEnd.Services
             taskToAccept.CourierID = courierId; // 将当前骑手ID分配给这个任务
             taskToAccept.Status = DeliveryStatus.Pending; // 将状态更新为 "Pending" (待取件)
             taskToAccept.AcceptTime = DateTime.UtcNow; // 记录接单时间 (使用 UTC 时间是好习惯)
+            taskToAccept.Courier = await _courierRepository.GetByIdAsync(courierId);
 
             // 步骤 4: 保存更改到数据库
             await _context.SaveChangesAsync();
@@ -237,7 +235,7 @@ namespace BackEnd.Services
                 await _deliveryTaskRepository.UpdateAsync(task); // <-- 已添加 await
 
                 // 3. 找到对应的骑手
-                var courier = await _courierRepository.GetByIdAsync(task.CourierID);
+                var courier = await _courierRepository.GetByIdAsync(task.CourierID!.Value);
                 if (courier != null)
                 {
                     // 4. 为骑手累加本月提成
@@ -507,11 +505,5 @@ namespace BackEnd.Services
                 VehicleType = user.Courier.VehicleType
             };
         }
-
-
-
-
-
-
     }
 }

@@ -8,6 +8,7 @@ namespace BackEnd.Controllers
 {
     [ApiController]
     [Route("api/delivery-tasks")]
+    [Authorize]
     public class DeliveryTasksController : ControllerBase
     {
         private readonly IDeliveryTaskService _deliveryService;
@@ -22,7 +23,13 @@ namespace BackEnd.Controllers
         {
             try
             {
-                var sellerId = 3;  //临时设3
+                // 从 Token 中解析商家 ID
+                var sellerIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!int.TryParse(sellerIdString, out int sellerId))
+                {
+                    return Unauthorized(new { code = 401, message = "无效的Token，无法获取商家ID" });
+                }
+
                 var result = await _deliveryService.PublishDeliveryTaskAsync(dto, sellerId);
                 return Ok(new { deliveryTask = result.DeliveryTask, publish = result.Publish });
             }

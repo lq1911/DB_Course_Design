@@ -8,4 +8,4 @@ namespace BackEnd.Dtos.Merchant
         public bool IsOpen { get; set; }          // 营业状态
         public int CreditScore { get; set; }      // 信誉积分
     }
-} 
+}
