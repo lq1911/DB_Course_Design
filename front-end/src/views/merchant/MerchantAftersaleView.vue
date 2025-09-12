@@ -17,7 +17,7 @@
               alt="商家头像"
               class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm"
             />
-            <span class="text-gray-700 font-medium">张老板</span>
+            <span class="text-gray-700 font-medium">{{ merchantInfo.username || '加载中...' }}</span>
           </div>
         </div>
       </div>
@@ -351,6 +351,26 @@ const menuItems = [
   { key: 'profile', label: '商家信息', icon: User, routeName: 'MerchantProfile' }
 ] as const;
 
+import { getMerchantInfo, type MerchantInfo } from '@/api/merchant_api';
+
+const fetchAllData = async () => {
+  try {
+    const merchant = await getMerchantInfo();
+    if (merchant) {
+      merchantInfo.value = { ...defaultMerchantInfo, ...merchant };
+    }
+  } catch (error) {
+    console.error('获取商家信息失败:', error);
+    merchantInfo.value = { ...defaultMerchantInfo };
+  }
+};
+
+const defaultMerchantInfo = {
+  username: ''
+};
+
+const merchantInfo = ref({ ...defaultMerchantInfo });
+
 const handleMenuClick = (menuItem: typeof menuItems[number]) => {
   router.push({ name: menuItem.routeName });
 };
@@ -553,6 +573,7 @@ onMounted(() => {
   fetchReviews();
   loadPenalties();
   loadAfterSales(1);
+  fetchAllData();
 });
 
 const aftersaleTabs = [

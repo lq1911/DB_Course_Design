@@ -1,9 +1,4 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using BackEnd.Dtos.AfterSale;
-using BackEnd.Dtos.Review;
-using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 
@@ -12,8 +7,8 @@ namespace BackEnd.Services
     public class AfterSaleService : IAfterSaleService
     {
         private readonly IAfterSaleApplicationRepository _afterSaleRepository;
-        private readonly IFoodOrderRepository _orderRepository; 
-        private readonly ICustomerRepository _customerRepository; 
+        private readonly IFoodOrderRepository _orderRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public AfterSaleService(
             IAfterSaleApplicationRepository afterSaleRepository,
@@ -25,9 +20,9 @@ namespace BackEnd.Services
             _customerRepository = customerRepository;
         }
 
-        public async Task<APageResultDto<AfterSaleApplicationDto>> GetAfterSalesAsync(int page, int pageSize, string? keyword)
+        public async Task<APageResultDto<AfterSaleApplicationDto>> GetAfterSalesAsync(int sellerId, int page, int pageSize, string? keyword)
         {
-            var applications = await _afterSaleRepository.GetAllAsync();
+            var applications = await _afterSaleRepository.GetBySellerIdAsync(sellerId);
 
             // 应用搜索过滤
             if (!string.IsNullOrEmpty(keyword))
@@ -36,7 +31,7 @@ namespace BackEnd.Services
                     // 先过滤掉本身为null的售后申请
                     .Where(a => a != null)
                     // 多层级属性用?.判断，避免空引用；PhoneNumber为null时返回空字符串，避免ToString()报错
-                    .Where(a => 
+                    .Where(a =>
                         a.OrderID.ToString().Contains(keyword) ||
                         (a.Description ?? "").Contains(keyword) ||
                         (a.Order?.Customer?.User?.PhoneNumber.ToString() ?? "").Contains(keyword))
@@ -53,7 +48,7 @@ namespace BackEnd.Services
             var applicationDtos = paginatedApplications.Select(c => new AfterSaleApplicationDto
             {
                 Id = c.ApplicationID,
-                OrderNo = $"ORD{c.OrderID}", 
+                OrderNo = $"ORD{c.OrderID}",
                 User = new AUserInfoDto
                 {
                     Name = c.Order?.Customer?.User?.Username ?? "未知用户",

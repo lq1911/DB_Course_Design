@@ -90,14 +90,17 @@ namespace BackEnd.Services
             Console.WriteLine($"店铺信息: StoreID={store.StoreID}, Name={store.StoreName}, Address={store.StoreAddress}");
             Console.WriteLine($"商家信息: ReputationPoints={seller.ReputationPoints}");
 
+            Console.WriteLine($"OpenTime原始值: {store.OpenTime}");
+            Console.WriteLine($"CloseTime原始值: {store.CloseTime}");
+
             var result = new ShopInfoResponseDto
             {
                 Id = store.StoreID.ToString(),
                 Name = store.StoreName,
                 CreateTime = store.StoreCreationTime.ToString("yyyy-MM-dd HH:mm:ss"),
                 Address = store.StoreAddress,
-                OpenTime = store.OpenTime.ToString(@"hh\:mm"),
-                CloseTime = store.CloseTime.ToString(@"hh\:mm"),
+                StartTime = store.OpenTime.ToString(@"hh\:mm"),
+                EndTime = store.CloseTime.ToString(@"hh\:mm"),
                 Feature = store.StoreFeatures,
                 CreditScore = seller.ReputationPoints
             };
