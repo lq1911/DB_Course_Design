@@ -53,7 +53,7 @@ const props = defineProps<{
 const defaultImage = "https://media.istockphoto.com/id/520410807/zh/%E7%85%A7%E7%89%87/cheeseburger.jpg?s=612x612&w=0&k=20&c=U5V_0yjY1KGcqKLmNZjuDtNZJpYl3QPc-3_fAOQGKgI=";
 
 
-const isItemSoldOut = (isSoldOut?: number) => isSoldOut !== 0; // 等于0返回False
+const isItemSoldOut = (isSoldOut?: number) => isSoldOut == 0; // 等于0返回False
 
 const getCurrentMenuItems = () => props.menuItems.filter(item => item.categoryId === props.activeCategory);
 
