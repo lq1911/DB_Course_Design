@@ -7,7 +7,7 @@ namespace BackEnd.Repositories.Interfaces
     public interface ICourierRepository
     {
         Task<IEnumerable<Courier>> GetAllAsync();
-        Task<Courier?> GetByIdAsync(int id);
+        Task<Courier?> GetByIdAsync(int? id);
         Task AddAsync(Courier courier);
         Task UpdateAsync(Courier courier);
         Task DeleteAsync(Courier courier);

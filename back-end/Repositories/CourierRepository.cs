@@ -22,7 +22,7 @@ namespace BackEnd.Repositories
                                  .ToListAsync();
         }
 
-        public async Task<Courier?> GetByIdAsync(int id)
+        public async Task<Courier?> GetByIdAsync(int? id)
         {
             return await _context.Couriers
                                  .Include(c => c.User)
