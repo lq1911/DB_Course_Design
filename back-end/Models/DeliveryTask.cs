@@ -52,7 +52,9 @@ namespace BackEnd.Models
         public Store Store { get; set; } = null!;
 
 
-        public int? CourierID { get; set; } 
+        public int? CourierID { get; set; }
+        [ForeignKey("CourierID")]
+        public Courier? Courier { get; set; }
 
         [Required]
         public int OrderID { get; set; }
