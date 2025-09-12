@@ -7,13 +7,13 @@
           <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <el-icon class="text-gray-600 text-xl cursor-pointer"><Bell /></el-icon>
+          <el-icon class="text-gray-600 text-xl cursor-pointer">
+            <Bell />
+          </el-icon>
           <div class="flex items-center space-x-2">
             <img
               src="https://readdy.ai/api/search-image?query=professional%20restaurant%20owner%20portrait%20with%20friendly%20smile%20wearing%20chef%20uniform%20against%20clean%20white%20background%20modern%20lighting&width=40&height=40&seq=merchant-avatar-001&orientation=squarish"
-              alt="商家头像"
-              class="w-10 h-10 rounded-full object-cover"
-            />
+              alt="商家头像" class="w-10 h-10 rounded-full object-cover" />
             <span class="text-gray-700 font-medium">{{ merchantInfo.username || '加载中...' }}</span>
           </div>
         </div>
@@ -25,16 +25,11 @@
       <aside class="w-48 bg-white shadow-sm overflow-y-auto">
         <nav class="p-3">
           <div class="space-y-2">
-            <div
-              v-for="(item, index) in menuItems"
-              :key="index"
-              @click="handleMenuClick(item)"
-              :class="{
+            <div v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)" :class="{
                 'bg-orange-50 text-[#F9771C] border-r-3 border-[#F9771C]': $route.name === item.routeName,
                 'text-gray-700 hover:bg-gray-50': $route.name !== item.routeName
               }"
-              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button"
-            >
+              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button">
               <el-icon class="mr-3 text-lg">
                 <component :is="item.icon" />
               </el-icon>
@@ -42,8 +37,17 @@
             </div>
           </div>
         </nav>
+        <div class="p-4 border-t border-gray-100">
+          <div @click="handleLogout"
+            class="flex items-center px-4 py-3 rounded-lg cursor-pointer transition-colors text-red-500 hover:bg-red-50">
+            <el-icon class="mr-3 text-lg">
+              <SwitchButton />
+            </el-icon>
+            <span class="font-medium">退出登录</span>
+          </div>
+        </div>
       </aside>
-      
+
       <!-- 主内容区 -->
       <main class="flex-1 p-4 overflow-x-hidden">
         <!-- 配券中心 -->
@@ -51,11 +55,11 @@
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold text-gray-800">配券中心</h2>
             <div class="flex items-center space-x-3">
-              <button
-                @click="showCouponForm = true"
-                class="bg-[#F9771C] text-white px-6 py-2 rounded-md hover:bg-[#E16A0E] transition-colors cursor-pointer whitespace-nowrap !rounded-button"
-              >
-                <el-icon class="mr-1"><Plus /></el-icon>
+              <button @click="showCouponForm = true"
+                class="bg-[#F9771C] text-white px-6 py-2 rounded-md hover:bg-[#E16A0E] transition-colors cursor-pointer whitespace-nowrap !rounded-button">
+                <el-icon class="mr-1">
+                  <Plus />
+                </el-icon>
                 新建优惠券
               </button>
             </div>
@@ -69,7 +73,9 @@
                   <p class="text-sm text-gray-500">总优惠券</p>
                   <p class="text-2xl font-bold">{{ stats.total || 0 }}</p>
                 </div>
-                <el-icon class="text-[#F9771C] text-2xl"><Collection /></el-icon>
+                <el-icon class="text-[#F9771C] text-2xl">
+                  <Collection />
+                </el-icon>
               </div>
             </el-card>
             <el-card shadow="hover" class="border-l-4 border-green-500">
@@ -78,7 +84,9 @@
                   <p class="text-sm text-gray-500">有效优惠券</p>
                   <p class="text-2xl font-bold">{{ stats.active || 0 }}</p>
                 </div>
-                <el-icon class="text-green-500 text-2xl"><Check /></el-icon>
+                <el-icon class="text-green-500 text-2xl">
+                  <Check />
+                </el-icon>
               </div>
             </el-card>
             <el-card shadow="hover" class="border-l-4 border-yellow-500">
@@ -87,7 +95,9 @@
                   <p class="text-sm text-gray-500">未开始</p>
                   <p class="text-2xl font-bold">{{ stats.upcoming || 0 }}</p>
                 </div>
-                <el-icon class="text-yellow-500 text-2xl"><Clock /></el-icon>
+                <el-icon class="text-yellow-500 text-2xl">
+                  <Clock />
+                </el-icon>
               </div>
             </el-card>
             <el-card shadow="hover" class="border-l-4 border-gray-500">
@@ -96,7 +106,9 @@
                   <p class="text-sm text-gray-500">已过期</p>
                   <p class="text-2xl font-bold">{{ stats.expired || 0 }}</p>
                 </div>
-                <el-icon class="text-gray-500 text-2xl"><Close /></el-icon>
+                <el-icon class="text-gray-500 text-2xl">
+                  <Close />
+                </el-icon>
               </div>
             </el-card>
           </div>
@@ -107,132 +119,63 @@
               <div class="flex justify-between items-center">
                 <span class="text-lg font-semibold">优惠券列表</span>
                 <div class="flex items-center space-x-2">
-                  <el-button
-                    size="small"
-                    :disabled="selectedCoupons.length === 0"
-                    @click="batchDeleteCoupons"
-                    type="danger"
-                  >
-                    <el-icon class="mr-1"><Delete /></el-icon>
+                  <el-button size="small" :disabled="selectedCoupons.length === 0" @click="batchDeleteCoupons"
+                    type="danger">
+                    <el-icon class="mr-1">
+                      <Delete />
+                    </el-icon>
                     批量删除
                   </el-button>
                 </div>
               </div>
             </template>
 
-            <el-table
-              v-loading="loading"
-              :data="coupons"
-              style="width: 100%"
-              @selection-change="handleSelectionChange"
-              :header-cell-style="{ padding: '8px 0' }"
-              :cell-style="{ padding: '8px 0' }"
-            >
-              <el-table-column 
-                type="selection" 
-                width="70"
-                align="center"
-                header-align="center"
-              />
-              <el-table-column 
-                prop="id" 
-                label="优惠券ID" 
-                width="120"
-                align="center"
-                header-align="center"
-              />
-              <el-table-column 
-                prop="name" 
-                label="优惠券名称" 
-                width="120"
-                align="center"
-                header-align="center"
-              />
-              <el-table-column 
-                label="优惠券类型" 
-                width="120"
-                align="center"
-                header-align="center"
-              >
+            <el-table v-loading="loading" :data="coupons" style="width: 100%" @selection-change="handleSelectionChange"
+              :header-cell-style="{ padding: '8px 0' }" :cell-style="{ padding: '8px 0' }">
+              <el-table-column type="selection" width="70" align="center" header-align="center" />
+              <el-table-column prop="id" label="优惠券ID" width="120" align="center" header-align="center" />
+              <el-table-column prop="name" label="优惠券名称" width="120" align="center" header-align="center" />
+              <el-table-column label="优惠券类型" width="120" align="center" header-align="center">
                 <template #default="scope">
                   <div class="flex justify-center">
-                    <el-tag 
-                      :type="scope.row.type === 'discount' ? 'warning' : 'success'"
-                      class="justify-center"
-                    >
+                    <el-tag :type="scope.row.type === 'discount' ? 'warning' : 'success'" class="justify-center">
                       {{ scope.row.type === 'discount' ? '折扣券' : '满减券' }}
                     </el-tag>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column 
-                label="优惠内容" 
-                width="100"
-                align="center"
-                header-align="center"
-              >
+              <el-table-column label="优惠内容" width="100" align="center" header-align="center">
                 <template #default="scope">
                   <span class="whitespace-nowrap">
-                    {{ scope.row.type === 'discount' ? 
-                      `${(scope.row.value * 10).toFixed(1)}折` : 
-                      `满¥${scope.row.minAmount}减¥${scope.row.value}` 
+                    {{ scope.row.type === 'discount' ?
+                    `${(scope.row.value * 10).toFixed(1)}折` :
+                    `满¥${scope.row.minAmount}减¥${scope.row.value}`
                     }}
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column 
-                prop="startTime" 
-                label="开始时间" 
-                width="230"
-                align="center"
-                header-align="center"
-              />
-              <el-table-column 
-                prop="endTime" 
-                label="结束时间" 
-                width="230"
-                align="center"
-                header-align="center"
-              />
-              <el-table-column 
-                label="状态" 
-                width="70"
-                align="center"
-                header-align="center"
-              >
+              <el-table-column prop="startTime" label="开始时间" width="230" align="center" header-align="center" />
+              <el-table-column prop="endTime" label="结束时间" width="230" align="center" header-align="center" />
+              <el-table-column label="状态" width="70" align="center" header-align="center">
                 <template #default="scope">
                   <div class="flex justify-center">
-                    <el-tag
-                      :type="getStatusTagType(scope.row.status)"
-                      effect="light"
-                    >
+                    <el-tag :type="getStatusTagType(scope.row.status)" effect="light">
                       {{ getStatusText(scope.row.status) }}
                     </el-tag>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column 
-                label="使用情况" 
-                width="120"
-                align="center"
-                header-align="center"
-              >
+              <el-table-column label="使用情况" width="120" align="center" header-align="center">
                 <template #default="scope">
                   <span class="whitespace-nowrap">
-                    {{ scope.row.totalQuantity ? 
-                      `${scope.row.usedQuantity}/${scope.row.totalQuantity}` : 
-                      `${scope.row.usedQuantity}/∞` 
+                    {{ scope.row.totalQuantity ?
+                    `${scope.row.usedQuantity}/${scope.row.totalQuantity}` :
+                    `${scope.row.usedQuantity}/∞`
                     }}
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column 
-                label="操作" 
-                width="170" 
-                fixed="right"
-                align="center"
-                header-align="center"
-              >
+              <el-table-column label="操作" width="170" fixed="right" align="center" header-align="center">
                 <template #default="scope">
                   <div class="flex justify-center space-x-2">
                     <el-button size="small" @click="handleEdit(scope.row)">
@@ -250,144 +193,79 @@
               <div class="text-sm text-gray-500">
                 共 {{ total }} 条记录
               </div>
-              <el-pagination
-                v-model:current-page="currentPage"
-                v-model:page-size="pageSize"
-                :total="total"
-                :page-sizes="[10, 20, 50, 100]"
-                layout="sizes, prev, pager, next, jumper"
-                @size-change="fetchCoupons"
-                @current-change="fetchCoupons"
-              />
+              <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :total="total"
+                :page-sizes="[10, 20, 50, 100]" layout="sizes, prev, pager, next, jumper" @size-change="fetchCoupons"
+                @current-change="fetchCoupons" />
             </div>
           </el-card>
-          
+
         </div>
       </main>
     </div>
 
     <!-- 新建/编辑优惠券弹窗 -->
-    <el-dialog
-      v-model="showCouponForm"
-      :title="isEditMode ? '编辑优惠券' : '新建优惠券'"
-      width="600px"
-      :close-on-click-modal="false"
-    >
-      <el-form
-        ref="couponFormRef"
-        :model="couponForm"
-        :rules="couponRules"
-        label-width="120px"
-        label-position="left"
-      >
+    <el-dialog v-model="showCouponForm" :title="isEditMode ? '编辑优惠券' : '新建优惠券'" width="600px"
+      :close-on-click-modal="false">
+      <el-form ref="couponFormRef" :model="couponForm" :rules="couponRules" label-width="120px" label-position="left">
         <el-form-item label="优惠券名称" prop="name">
           <el-input v-model="couponForm.name" placeholder="请输入优惠券名称" />
         </el-form-item>
-        
+
         <el-form-item label="优惠券类型" prop="type">
           <el-radio-group v-model="couponForm.type">
             <el-radio label="fixed">满减券</el-radio>
             <el-radio label="discount">折扣券</el-radio>
           </el-radio-group>
         </el-form-item>
-        
-        <el-form-item
-          v-if="couponForm.type === 'fixed'"
-          label="优惠金额"
-          prop="value"
-        >
-          <el-input-number
-            v-model="couponForm.value"
-            :min="1"
-            :max="1000"
-            :precision="0"
-            controls-position="right"
-          >
+
+        <el-form-item v-if="couponForm.type === 'fixed'" label="优惠金额" prop="value">
+          <el-input-number v-model="couponForm.value" :min="1" :max="1000" :precision="0" controls-position="right">
             <template #prefix>¥</template>
           </el-input-number>
           <span class="ml-2 text-sm text-gray-500">减去的金额</span>
         </el-form-item>
-        
-        <el-form-item
-          v-if="couponForm.type === 'fixed'"
-          label="最低消费"
-          prop="minAmount"
-        >
-          <el-input-number
-            v-model="couponForm.minAmount"
-            :min="couponForm.value + 1"
-            :max="10000"
-            :precision="0"
-            controls-position="right"
-          >
+
+        <el-form-item v-if="couponForm.type === 'fixed'" label="最低消费" prop="minAmount">
+          <el-input-number v-model="couponForm.minAmount" :min="couponForm.value + 1" :max="10000" :precision="0"
+            controls-position="right">
             <template #prefix>¥</template>
           </el-input-number>
           <span class="ml-2 text-sm text-gray-500">满足此金额才可使用</span>
         </el-form-item>
-        
-        <el-form-item
-          v-if="couponForm.type === 'discount'"
-          label="折扣比例"
-          prop="value"
-        >
-          <el-input-number
-            v-model="couponForm.value"
-            :min="0.1"
-            :max="0.99"
-            :step="0.1"
-            :precision="2"
-            controls-position="right"
-          />
+
+        <el-form-item v-if="couponForm.type === 'discount'" label="折扣比例" prop="value">
+          <el-input-number v-model="couponForm.value" :min="0.1" :max="0.99" :step="0.1" :precision="2"
+            controls-position="right" />
           <span class="ml-2 text-sm text-gray-500">例如: 0.8 表示8折</span>
         </el-form-item>
-        
+
         <el-form-item label="发放数量" prop="totalQuantity">
-          <el-input-number
-            v-model="couponForm.totalQuantity"
-            :min="1"
-            :max="100000"
-            :precision="0"
-            controls-position="right"
-          />
+          <el-input-number v-model="couponForm.totalQuantity" :min="1" :max="100000" :precision="0"
+            controls-position="right" />
           <span class="ml-2 text-sm text-gray-500">不填表示不限量</span>
         </el-form-item>
-        
+
         <el-form-item label="有效期" required>
           <el-col :span="11">
             <el-form-item prop="startTime">
-              <el-date-picker
-                v-model="couponForm.startTime"
-                type="datetime"
-                placeholder="开始时间"
-                style="width: 100%"
-                :disabled-date="disabledStartDate"
-              />
+              <el-date-picker v-model="couponForm.startTime" type="datetime" placeholder="开始时间" style="width: 100%"
+                :disabled-date="disabledStartDate" />
             </el-form-item>
           </el-col>
           <el-col :span="2" class="text-center">-</el-col>
           <el-col :span="11">
             <el-form-item prop="endTime">
-              <el-date-picker
-                v-model="couponForm.endTime"
-                type="datetime"
-                placeholder="结束时间"
-                style="width: 100%"
-                :disabled-date="disabledEndDate"
-              />
+              <el-date-picker v-model="couponForm.endTime" type="datetime" placeholder="结束时间" style="width: 100%"
+                :disabled-date="disabledEndDate" />
             </el-form-item>
           </el-col>
         </el-form-item>
-        
+
         <el-form-item label="优惠券描述" prop="description">
-          <el-input
-            v-model="couponForm.description"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入优惠券使用说明"
-          />
+          <el-input v-model="couponForm.description" type="textarea" :rows="3" placeholder="请输入优惠券使用说明" />
         </el-form-item>
       </el-form>
-      
+
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="showCouponForm = false">取消</el-button>
@@ -417,9 +295,16 @@ import {
   Clock,
   Close,
   Delete,
+  SwitchButton
 } from '@element-plus/icons-vue';
+
+
 import { getMerchantInfo } from '@/api/merchant_api';
 import API from '@/api/index';
+
+
+import loginApi from '@/api/login_api';
+import { removeToken } from '@/utils/jwt';
 
 const router = useRouter();
 const $route = useRoute();
@@ -770,6 +655,43 @@ onMounted(() => {
   initData();
   fetchAllData();
 });
+
+
+async function handleLogout() {
+  try {
+    // 1. 弹出确认框
+    await ElMessageBox.confirm(
+      '您确定要退出当前商家账号吗？', // 提示信息可以针对商家进行微调
+      '退出登录',
+      {
+        confirmButtonText: '确定退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    );
+
+    // 2. 调用后端登出接口
+    await loginApi.logout();
+
+    // 3. 核心：清除本地登录状态
+    removeToken();
+
+    ElMessage.success('您已成功退出登录');
+
+    // 4. 重定向到登录页面
+    router.replace('/login'); // 确保 '/login' 是你的登录页路由
+
+  } catch (error: any) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消退出操作');
+    } else {
+      console.error('登出时发生错误:', error);
+      ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+      removeToken();
+      router.replace('/login');
+    }
+  }
+}
 </script>
 
 <style scoped>
