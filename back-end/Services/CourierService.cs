@@ -104,22 +104,33 @@ namespace BackEnd.Services
             {
                 return new List<OrderListItemDto>();
             }
+
+            // ▼▼▼ 修改点 1: 在查询中加入对 FoodOrder 的 Include ▼▼▼
             var tasksQuery = _deliveryTaskRepository.GetQueryable()
                 .Where(t => t.CourierID == courierId && t.Status == targetStatus)
                 .Include(t => t.Store)
+                .Include(t => t.Order) // <-- 新增 Include
                 .Include(t => t.Customer);
+
             var tasks = await tasksQuery
                 .OrderByDescending(t => t.PublishTime)
                 .ToListAsync();
+
             var orderDtos = tasks.Select(task => new OrderListItemDto
             {
                 Id = task.TaskID.ToString(),
                 Status = task.Status.ToString().ToLower(),
                 Restaurant = task.Store?.StoreName ?? "未知商家",
+                // 注意：这里的 Address 是从 Customer 获取的，我们保持不变
                 Address = task.Customer?.DefaultAddress ?? "未知地址",
                 Fee = task.DeliveryFee.ToString("F2"),
-                StatusText = GetStatusText(task.Status)
+                StatusText = GetStatusText(task.Status),
+
+                // ▼▼▼ 修改点 2: 填充新的布尔字段 ▼▼▼
+                IsReadyForPickup = task.Order != null && task.Order.FoodOrderState == FoodOrderState.Completed
+
             }).ToList();
+
             return orderDtos;
         }
 

@@ -3,7 +3,8 @@ import axios from 'axios';
 
 // --- Axios 实例和拦截器 ---
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5250/api', 
+  // baseURL: 'http://localhost:5250/api', 
+  baseURL: 'http://113.44.82.210:5250/api',  // 服务器后端地址
   timeout: 10000,
 });
 

@@ -9,7 +9,9 @@
           <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <el-icon class="text-gray-600 text-xl cursor-pointer"><Bell /></el-icon>
+          <el-icon class="text-gray-600 text-xl cursor-pointer">
+            <Bell />
+          </el-icon>
           <div class="flex items-center space-x-2">
             <span class="text-gray-700 font-medium">商家中心</span>
           </div>
@@ -21,16 +23,11 @@
       <aside class="fixed left-0 top-16 bottom-0 w-52 bg-white shadow-sm overflow-y-auto z-50">
         <nav class="p-4">
           <div class="space-y-2">
-            <div
-              v-for="(item, index) in menuItems"
-              :key="index"
-              @click="handleMenuClick(item)"
-              :class="{
+            <div v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)" :class="{
                 'bg-orange-50 text-[#F9771C] border-r-3 border-[#F9771C]': $route.name === item.routeName,
                 'text-gray-700 hover:bg-gray-50': $route.name !== item.routeName
               }"
-              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button"
-            >
+              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button">
               <el-icon class="mr-3 text-lg">
                 <component :is="item.icon" />
               </el-icon>
@@ -38,6 +35,16 @@
             </div>
           </div>
         </nav>
+        <div class="p-4 border-t border-gray-100">
+          <div @click="handleLogout"
+            class="flex items-center px-4 py-3 rounded-lg cursor-pointer transition-colors text-red-500 hover:bg-red-50">
+            <el-icon class="mr-3 text-lg">
+              <SwitchButton />
+            </el-icon>
+            <span class="font-medium">退出登录</span>
+          </div>
+        </div>
+
       </aside>
 
       <main class="ml-52 flex-1 p-6">
@@ -47,7 +54,9 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"></path>
               </svg>
               <span class="text-red-800">{{ errorMessage }}</span>
             </div>
@@ -64,46 +73,34 @@
 
         <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div class="flex space-x-4">
-            <button
-              v-for="tab in orderTabs"
-              :key="tab.value"
-              @click="activeOrderTab = tab.value"
-              :class="{
+            <button v-for="tab in orderTabs" :key="tab.value" @click="activeOrderTab = tab.value" :class="{
                 'tab-button active': activeOrderTab === tab.value,
                 'tab-button': activeOrderTab !== tab.value
-              }"
-              class="whitespace-nowrap"
-            >
+              }" class="whitespace-nowrap">
               <span>{{ tab.label }}</span>
             </button>
           </div>
         </div>
 
         <div v-if="activeOrderTab === 'orders'">
-          <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/30 overflow-hidden relative z-10 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.01]">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F9771C] via-[#FF8C42] to-transparent"></div>
+          <div
+            class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/30 overflow-hidden relative z-10 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.01]">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F9771C] via-[#FF8C42] to-transparent">
+            </div>
 
             <!-- 工具栏：自动接单开关 -->
             <div class="p-6 flex items-center justify-end gap-4">
-              <div class="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-yellow-50 px-6 py-3 rounded-2xl border border-orange-200/50 shadow-lg backdrop-blur-sm">
+              <div
+                class="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-yellow-50 px-6 py-3 rounded-2xl border border-orange-200/50 shadow-lg backdrop-blur-sm">
                 <span class="text-sm font-medium text-orange-800">自动接单</span>
-                <el-switch
-                  v-model="autoAcceptOrders"
-                  @change="(v:any)=>onAutoAcceptChange(Boolean(v))"
-                  :style="{ '--el-switch-on-color': '#F9771C', '--el-switch-off-color': '#E5E7EB' }"
-                />
+                <el-switch v-model="autoAcceptOrders" @change="(v:any)=>onAutoAcceptChange(Boolean(v))"
+                  :style="{ '--el-switch-on-color': '#F9771C', '--el-switch-off-color': '#E5E7EB' }" />
               </div>
             </div>
 
-            <el-table 
-              :data="orders" 
-              style="width: 100%" 
-              class="custom-table relative z-10"
-              v-loading="loading.orders"
-              element-loading-text="加载订单中..."
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.8)"
-            >
+            <el-table :data="orders" style="width: 100%" class="custom-table relative z-10" v-loading="loading.orders"
+              element-loading-text="加载订单中..." element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.8)">
               <el-table-column prop="orderId" label="订单ID" width="120" align="center" />
               <el-table-column prop="paymentTime" label="支付时间" width="160">
                 <template #default="scope">
@@ -117,8 +114,7 @@
               <el-table-column prop="orderState" label="接单状态" width="120" align="center">
                 <template #default="scope">
                   <span
-                    :class="[orderStateMap[scope.row.orderState]?.colorClass, 'px-3 py-1 rounded-full text-xs font-medium']"
-                  >
+                    :class="[orderStateMap[scope.row.orderState]?.colorClass, 'px-3 py-1 rounded-full text-xs font-medium']">
                     {{ orderStateMap[scope.row.orderState]?.label || '未知状态' }}
                   </span>
                 </template>
@@ -126,102 +122,72 @@
               <el-table-column prop="deliveryStatus" label="配送任务状态" width="140" align="center">
                 <template #default="scope">
                   <span
-                    :class="[deliveryStatusMap[String(scope.row.deliveryStatus ?? -1)]?.colorClass, 'px-3 py-1 rounded-full text-xs font-medium']"
-                  >
+                    :class="[deliveryStatusMap[String(scope.row.deliveryStatus ?? -1)]?.colorClass, 'px-3 py-1 rounded-full text-xs font-medium']">
                     {{ deliveryStatusMap[String(scope.row.deliveryStatus ?? -1)]?.label }}
                   </span>
                 </template>
               </el-table-column>
               <el-table-column prop="remarks" label="备注" min-width="200" />
               <el-table-column label="操作" min-width="520">
-              <template #default="scope">
-                <div class="flex flex-wrap items-center gap-2">
-                  <button
-                    @click="showOrderDetails(scope.row)"
-                    class="btn-primary btn-small shrink-0"
-                  >
-                    订单信息
-                  </button>
+                <template #default="scope">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <button @click="showOrderDetails(scope.row)" class="btn-primary btn-small shrink-0">
+                      订单信息
+                    </button>
 
-                  <!-- 接单/出餐 按钮 -->
-                  <button
-                    v-if="scope.row.orderState === 0"
-                    @click="acceptOrder(scope.row)"
-                    class="btn-success btn-small shrink-0"
-                  >
-                    接单
-                  </button>
-                  <button
-                    v-else-if="scope.row.orderState === 1"
-                    @click="markAsReady(scope.row)"
-                    class="btn-warning btn-small shrink-0"
-                  >
-                    出餐
-                  </button>
-                  <button
-                    v-else-if="scope.row.orderState === 2"
-                    disabled
-                    class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed"
-                  >
-                    已出餐
-                  </button>
-                  <!-- 配送任务按钮 -->
-                 <button
-                    v-if="!scope.row.deliveryTaskId && scope.row.orderState !== 0"
-                    @click="openPublishDialog(scope.row)"
-                    class="btn-info btn-small shrink-0"
-                  >
-                    发布配送
-                  </button>
-                  <button
-                    v-else-if="!scope.row.deliveryTaskId && scope.row.orderState === 0"
-                    disabled
-                    class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed"
-                  >
-                    请先接单
-                  </button>
-                  <button
-                    v-else
-                    disabled
-                    class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed"
-                  >
-                    已发布配送
-                  </button>
+                    <!-- 接单/出餐 按钮 -->
+                    <button v-if="scope.row.orderState === 0" @click="acceptOrder(scope.row)"
+                      class="btn-success btn-small shrink-0">
+                      接单
+                    </button>
+                    <button v-else-if="scope.row.orderState === 1" @click="markAsReady(scope.row)"
+                      class="btn-warning btn-small shrink-0">
+                      出餐
+                    </button>
+                    <button v-else-if="scope.row.orderState === 2" disabled
+                      class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed">
+                      已出餐
+                    </button>
+                    <!-- 配送任务按钮 -->
+                    <button v-if="!scope.row.deliveryTaskId && scope.row.orderState !== 0"
+                      @click="openPublishDialog(scope.row)" class="btn-info btn-small shrink-0">
+                      发布配送
+                    </button>
+                    <button v-else-if="!scope.row.deliveryTaskId && scope.row.orderState === 0" disabled
+                      class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed">
+                      请先接单
+                    </button>
+                    <button v-else disabled class="btn-secondary btn-small shrink-0 opacity-60 cursor-not-allowed">
+                      已发布配送
+                    </button>
 
-                  <!-- 只要发布了配送任务，显示"查看配送"按钮 -->
-                  <button
-                    v-if="scope.row.deliveryTaskId"
-                    @click="openDeliveryInfo(scope.row)"
-                    class="btn-small shrink-0"
-                    style="background-color: #f8bbd0 !important; color: white !important; border-radius: 8px !important; padding: 8px 16px !important;"
-                  >
-                    查看配送
-                  </button>
-                </div>
-              </template>
-            </el-table-column>
+                    <!-- 只要发布了配送任务，显示"查看配送"按钮 -->
+                    <button v-if="scope.row.deliveryTaskId" @click="openDeliveryInfo(scope.row)"
+                      class="btn-small shrink-0"
+                      style="background-color: #f8bbd0 !important; color: white !important; border-radius: 8px !important; padding: 8px 16px !important;">
+                      查看配送
+                    </button>
+                  </div>
+                </template>
+              </el-table-column>
             </el-table>
           </div>
         </div>
 
         <div v-else-if="activeOrderTab === 'dishes'">
-          <div class="bg-gradient-to-r from-orange-50 to-yellow-50 backdrop-blur-md rounded-3xl p-6 mb-6 shadow-2xl border border-orange-200/30 flex items-center justify-between relative z-10 transform transition-all duration-300 hover:shadow-3xl">
+          <div
+            class="bg-gradient-to-r from-orange-50 to-yellow-50 backdrop-blur-md rounded-3xl p-6 mb-6 shadow-2xl border border-orange-200/30 flex items-center justify-between relative z-10 transform transition-all duration-300 hover:shadow-3xl">
             <div class="text-sm font-medium text-orange-800">管理菜品</div>
             <button @click="showDishForm = true" class="btn-primary btn-medium">
               新增菜品
             </button>
           </div>
 
-          <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden relative z-10 transform transition-all duration-300 hover:shadow-3xl">
-            <el-table 
-              :data="dishes" 
-              style="width: 100%" 
-              class="custom-table"
-              v-loading="loading.dishes"
-              element-loading-text="加载菜品中..."
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.8)"
-            >
+          <div
+            class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden relative z-10 transform transition-all duration-300 hover:shadow-3xl">
+            <el-table :data="dishes" style="width: 100%" class="custom-table" v-loading="loading.dishes"
+              element-loading-text="加载菜品中..." element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.8)">
               <el-table-column prop="dishId" label="菜品ID" width="120" />
               <el-table-column prop="dishName" label="菜品名称" width="200" />
               <el-table-column prop="price" label="价格" width="120">
@@ -230,7 +196,9 @@
               <el-table-column prop="description" label="描述" />
               <el-table-column prop="isSoldOut" label="状态" width="120">
                 <template #default="scope">
-                  <span :class="{ 'text-gray-500': scope.row.isSoldOut === 0, 'text-green-600': scope.row.isSoldOut === 2 }" class="font-medium">
+                  <span
+                    :class="{ 'text-gray-500': scope.row.isSoldOut === 0, 'text-green-600': scope.row.isSoldOut === 2 }"
+                    class="font-medium">
                     {{ scope.row.isSoldOut === 0 ? '售罄' : '在售' }}
                   </span>
                 </template>
@@ -239,7 +207,8 @@
                 <template #default="scope">
                   <div class="flex space-x-2">
                     <button @click="editDish(scope.row)" class="btn-primary btn-small">编辑</button>
-                    <button @click="toggleSoldOut(scope.row)" class="btn-small" :class="{ 'btn-danger': scope.row.isSoldOut === 2, 'btn-success': scope.row.isSoldOut === 0 }">
+                    <button @click="toggleSoldOut(scope.row)" class="btn-small"
+                      :class="{ 'btn-danger': scope.row.isSoldOut === 2, 'btn-success': scope.row.isSoldOut === 0 }">
                       {{ scope.row.isSoldOut === 2 ? '设为售罄' : '设为在售' }}
                     </button>
                   </div>
@@ -249,21 +218,29 @@
           </div>
 
           <!-- 新增菜品弹窗 -->
-          <div v-if="showDishForm" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div class="bg-white rounded-2xl p-8 w-[500px] shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+          <div v-if="showDishForm"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div
+              class="bg-white rounded-2xl p-8 w-[500px] shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
               <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">新增菜品</h3>
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">菜品名称</label>
-                  <input v-model="newDish.dishName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品名称" />
+                  <input v-model="newDish.dishName"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="请输入菜品名称" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">价格</label>
-                  <input v-model="newDish.price" type="number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入价格" />
+                  <input v-model="newDish.price" type="number"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="请输入价格" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">描述</label>
-                  <textarea v-model="newDish.description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品描述"></textarea>
+                  <textarea v-model="newDish.description" rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="请输入菜品描述"></textarea>
                 </div>
                 <div class="flex items-center space-x-2">
                   <input id="newSoldOut" type="checkbox" v-model="newDish.isSoldOut" true-value="0" false-value="2" />
@@ -278,24 +255,33 @@
           </div>
 
           <!-- 编辑菜品弹窗 -->
-          <div v-if="showEditForm" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div class="bg-white rounded-2xl p-8 w-[500px] shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+          <div v-if="showEditForm"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div
+              class="bg-white rounded-2xl p-8 w-[500px] shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
               <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">编辑菜品</h3>
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">菜品名称</label>
-                  <input v-model="editingDish.dishName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品名称" />
+                  <input v-model="editingDish.dishName"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="请输入菜品名称" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">价格</label>
-                  <input v-model="editingDish.price" type="number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入价格" />
+                  <input v-model="editingDish.price" type="number"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="请输入价格" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">描述</label>
-                  <textarea v-model="editingDish.description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white" placeholder="请输入菜品描述"></textarea>
+                  <textarea v-model="editingDish.description" rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm resize-none transition-all duration-200 bg-gray-50 hover:bg-white"
+                    placeholder="请输入菜品描述"></textarea>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <input id="editSoldOut" type="checkbox" v-model="editingDish.isSoldOut" true-value="0" false-value="2" />
+                  <input id="editSoldOut" type="checkbox" v-model="editingDish.isSoldOut" true-value="0"
+                    false-value="2" />
                   <label for="editSoldOut" class="text-sm text-gray-700">售罄</label>
                 </div>
               </div>
@@ -310,9 +296,12 @@
     </div>
 
     <!-- 订单详情对话框 -->
-    <div v-if="showOrderDetailsDialog" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-      <div class="bg-white rounded-2xl w-[720px] max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
-        <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+    <div v-if="showOrderDetailsDialog"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div
+        class="bg-white rounded-2xl w-[720px] max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+        <div
+          class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-yellow-50">
           <div>
             <div class="text-xl font-bold text-gray-900">订单详细信息</div>
             <div class="text-sm text-orange-600 font-medium">订单ID: {{ selectedOrder?.orderId }}</div>
@@ -332,7 +321,8 @@
             </div>
             <div class="bg-gray-50 rounded-lg p-3">
               <div class="text-sm text-gray-700">客户ID: {{ selectedOrder?.customerId }}</div>
-              <div class="text-sm text-gray-700">门店ID: {{ selectedOrder?.storeId }}，商家ID: {{ selectedOrder?.sellerId }}</div>
+              <div class="text-sm text-gray-700">门店ID: {{ selectedOrder?.storeId }}，商家ID: {{ selectedOrder?.sellerId }}
+              </div>
             </div>
           </div>
 
@@ -340,7 +330,8 @@
           <div class="bg-gray-50 rounded-lg p-3">
             <div class="text-sm font-medium text-gray-900 mb-2">优惠券信息</div>
             <div v-if="orderCoupons.length > 0" class="space-y-2">
-              <div v-for="coupon in orderCoupons" :key="coupon.couponId" class="flex items-center justify-between p-2 bg-white rounded border">
+              <div v-for="coupon in orderCoupons" :key="coupon.couponId"
+                class="flex items-center justify-between p-2 bg-white rounded border">
                 <div class="flex-1">
                   <div class="text-sm font-medium text-gray-800">{{ coupon.couponName }}</div>
                   <div class="text-xs text-gray-600">{{ coupon.description }}</div>
@@ -373,12 +364,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                                     <tr v-for="it in orderItems" :key="it.itemId" class="border-t border-gray-200">
-                     <td class="px-3 py-2">{{ it.dish?.dishName || '菜品信息加载中...' }}</td>
-                     <td class="px-3 py-2">{{ it.quantity }}</td>
-                     <td class="px-3 py-2">¥{{ it.dish?.price || 0 }}</td>
-                     <td class="px-3 py-2">¥{{ it.totalPrice }}</td>
-                   </tr>
+                  <tr v-for="it in orderItems" :key="it.itemId" class="border-t border-gray-200">
+                    <td class="px-3 py-2">{{ it.dish?.dishName || '菜品信息加载中...' }}</td>
+                    <td class="px-3 py-2">{{ it.quantity }}</td>
+                    <td class="px-3 py-2">¥{{ it.dish?.price || 0 }}</td>
+                    <td class="px-3 py-2">¥{{ it.totalPrice }}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -393,17 +384,21 @@
     </div>
 
     <!-- 发布配送任务对话框 -->
-    <div v-if="showPublishDialog" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-      <div class="bg-white rounded-2xl w-[520px] p-8 shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+    <div v-if="showPublishDialog"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div
+        class="bg-white rounded-2xl w-[520px] p-8 shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
         <div class="text-xl font-bold text-gray-800 mb-6 text-center">发布配送任务</div>
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">预计到店时间</label>
-            <input v-model="publishForm.estimatedArrivalTime" type="datetime-local" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" />
+            <input v-model="publishForm.estimatedArrivalTime" type="datetime-local"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">预计送达时间</label>
-            <input v-model="publishForm.estimatedDeliveryTime" type="datetime-local" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" />
+            <input v-model="publishForm.estimatedDeliveryTime" type="datetime-local"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F9771C] focus:border-[#F9771C] text-sm transition-all duration-200 bg-gray-50 hover:bg-white" />
           </div>
         </div>
         <div class="flex justify-end space-x-4 mt-8">
@@ -414,12 +409,16 @@
     </div>
 
     <!-- 配送信息对话框（展示骑手信息） -->
-    <div v-if="showDeliveryInfoDialog" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-      <div class="bg-white rounded-2xl w-[640px] p-8 max-h-[80vh] overflow-auto shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
+    <div v-if="showDeliveryInfoDialog"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div
+        class="bg-white rounded-2xl w-[640px] p-8 max-h-[80vh] overflow-auto shadow-2xl border border-gray-100 transform transition-all duration-300 scale-100">
         <div class="flex items-center justify-between mb-6">
           <div class="text-xl font-bold text-gray-800">配送与骑手信息</div>
           <button @click="closeDeliveryInfoDialog" class="btn-icon text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
         <div v-if="deliveryInfo.deliveryTask" class="mb-3 text-sm text-gray-700">
@@ -438,7 +437,8 @@
         <div v-if="deliveryInfo.courier" class="mb-3 text-sm text-gray-700">
           <div>骑手姓名：{{ deliveryInfo.courier?.fullName || '—' }}（ID：{{ deliveryInfo.courier?.userId }}）</div>
           <div>电话：{{ deliveryInfo.courier?.phoneNumber || '—' }}</div>
-          <div>车型：{{ deliveryInfo.courier?.vehicleType }}，信誉：{{ deliveryInfo.courier?.reputationPoints }}，总配送：{{ deliveryInfo.courier?.totalDeliveries }}</div>
+          <div>车型：{{ deliveryInfo.courier?.vehicleType }}，信誉：{{ deliveryInfo.courier?.reputationPoints }}，总配送：{{
+            deliveryInfo.courier?.totalDeliveries }}</div>
           <div>平均时长：{{ deliveryInfo.courier?.avgDeliveryTime }} 分，评分：{{ deliveryInfo.courier?.averageRating }}</div>
         </div>
       </div>
@@ -448,10 +448,13 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
-import { Bell, House, List, Ticket, Warning, User } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
+// ▼▼▼ 修改点 1: 在图标导入中加入 SwitchButton ▼▼▼
+import { Bell, House, List, Ticket, Warning, User, SwitchButton } from '@element-plus/icons-vue';
+// ▼▼▼ 修改点 2: 导入 ElMessageBox 用于确认弹窗 ▼▼▼
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 
+// --- 您已有的 API 导入 (保持不变) ---
 import {
   getOrders,
   getCartItems,
@@ -471,6 +474,10 @@ import {
   type Dish,
   type OrderCouponInfo
 } from '@/api/merchant_api';
+
+// --- ▼▼▼ 修改点 3: 添加登出功能所需的导入 ▼▼▼ ---
+import loginApi from '@/api/login_api';
+import { removeToken } from '@/utils/jwt';
 
 // 本地示例数据（与数据库字段对齐）
 const localOrdersSample: FoodOrder[] = [
@@ -967,6 +974,43 @@ const formatDate = (dateString: string) => {
   const date = new Date(dateString); // 将字符串转换为 Date 对象
   return date.toLocaleString(); // 使用本地时间格式显示
 };
+
+
+async function handleLogout() {
+  try {
+    // 1. 弹出确认框
+    await ElMessageBox.confirm(
+      '您确定要退出当前商家账号吗？', // 提示信息可以针对商家进行微调
+      '退出登录',
+      {
+        confirmButtonText: '确定退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    );
+
+    // 2. 调用后端登出接口
+    await loginApi.logout();
+
+    // 3. 核心：清除本地登录状态
+    removeToken();
+
+    ElMessage.success('您已成功退出登录');
+
+    // 4. 重定向到登录页面
+    router.replace('/login'); // 确保 '/login' 是你的登录页路由
+
+  } catch (error: any) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消退出操作');
+    } else {
+      console.error('登出时发生错误:', error);
+      ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+      removeToken();
+      router.replace('/login');
+    }
+  }
+}
 
 </script>
 
