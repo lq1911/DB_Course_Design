@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using BackEnd.Dtos.Order;
 using BackEnd.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BackEnd.Controllers
 {
@@ -53,6 +51,24 @@ namespace BackEnd.Controllers
             try
             {
                 var result = await _orderService.AcceptOrderAsync(orderId);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { code = 404, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { code = 400, message = ex.Message });
+            }
+        }
+
+        [HttpPost("{orderId}/ready")]
+        public async Task<IActionResult> MarkAsReady(int orderId)
+        {
+            try
+            {
+                var result = await _orderService.MarkAsReadyAsync(orderId);
                 return Ok(result);
             }
             catch (KeyNotFoundException ex)

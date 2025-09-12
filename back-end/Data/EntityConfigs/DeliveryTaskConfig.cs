@@ -34,7 +34,7 @@ namespace BackEnd.Data.EntityConfigs
                   .IsRequired()
                   .HasConversion<string>() // 将枚举存储为字符串
                   .HasMaxLength(20)
-                  .HasDefaultValue(DeliveryStatus.Pending);
+                  .HasDefaultValue(DeliveryStatus.To_Be_Taken);
 
             builder.Property(dt => dt.CompletionTime).HasColumnName("COMPLETIONTIME").IsRequired(false);
 
@@ -44,22 +44,20 @@ namespace BackEnd.Data.EntityConfigs
 
             builder.Property(dt => dt.StoreID).HasColumnName("STOREID").IsRequired();
 
-            builder.Property(dt => dt.CourierID).HasColumnName("COURIERID").IsRequired();
+            builder.Property(dt => dt.CourierID).HasColumnName("COURIERID").IsRequired(false);
+
             builder.Property(dt => dt.OrderID).HasColumnName("ORDERID").IsRequired();
 
-
-            builder.Property(c => c.OrderID).HasColumnName("ORDERID").IsRequired();
-
             // ---------------------------------------------------------------
-                     // 配置外键关系
-                     // ---------------------------------------------------------------
+            // 配置外键关系
+            // ---------------------------------------------------------------
 
             // 关系一: DeliveryTask -> Customer (多对一)
             // Customer 类中有 DeliveryTasks 导航属性
-           builder.HasOne(dt => dt.Customer)
-                   .WithMany(c => c.DeliveryTasks)
-                   .HasForeignKey(dt => dt.CustomerID)
-                   .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(dt => dt.Customer)
+                    .WithMany(c => c.DeliveryTasks)
+                    .HasForeignKey(dt => dt.CustomerID)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             // 关系二: DeliveryTask -> Store (多对一)
             builder.HasOne(dt => dt.Store)
@@ -69,9 +67,9 @@ namespace BackEnd.Data.EntityConfigs
 
             // 关系三: DeliveryTask -> Courier (多对一)
             builder.HasOne(dt => dt.Courier)
-                   .WithMany(c => c.DeliveryTasks)
-                   .HasForeignKey(dt => dt.CourierID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                    .WithMany(c => c.DeliveryTasks)
+                    .HasForeignKey(dt => dt.CourierID)
+                    .OnDelete(DeleteBehavior.SetNull); // 如果骑手被删除，外键置为 null
 
             // 关系四: DeliveryTask -> FoodOrder (一对一)
             builder.HasOne(dt => dt.Order)

@@ -80,7 +80,7 @@ namespace BackEnd.Services
                 var complaint = new DeliveryComplaint
                 {
                     DeliveryTaskID = deliveryTaskId,
-                    CourierID = deliveryTask.CourierID,
+                    CourierID = deliveryTask.CourierID!.Value,
                     CustomerID = userId,
                     ComplaintReason = request.ComplaintReason,
                     ComplaintTime = DateTime.Now,

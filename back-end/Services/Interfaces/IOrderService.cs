@@ -9,6 +9,7 @@ namespace BackEnd.Services.Interfaces
         Task<IEnumerable<FoodOrderDto>> GetOrdersAsync(int? sellerId, int? storeId);
         Task<FoodOrderDto?> GetOrderByIdAsync(int orderId);
         Task<OrderDecisionDto> AcceptOrderAsync(int orderId);
+        Task<OrderDecisionDto> MarkAsReadyAsync(int orderId);
         Task<OrderDecisionDto> RejectOrderAsync(int orderId, string? reason);
         Task<IEnumerable<ShoppingCartItemDto>> GetCartItemsAsync(int cartId);
         Task<IEnumerable<OrderCouponInfoDto>> GetOrderCouponsAsync(int orderId);

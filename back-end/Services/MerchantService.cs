@@ -18,10 +18,10 @@ namespace BackEnd.Services
         public async Task<ShopOverviewResponseDto> GetShopOverviewAsync(int sellerId)
         {
             Console.WriteLine($"=== Service层: 获取店铺概览，商家ID: {sellerId} ===");
-            
+
             // 1. 获取店铺信息
             var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
-            
+
             // 检查店铺是否存在
             if (store == null)
             {
@@ -35,9 +35,9 @@ namespace BackEnd.Services
                     CreditScore = 0
                 };
             }
-            
+
             Console.WriteLine($"店铺信息: StoreID={store.StoreID}, Name={store.StoreName}, Rating={store.AverageRating}, Sales={store.MonthlySales}");
-            
+
             // 2. 获取商家信息（用于信誉积分）
             var seller = await _merchantRepository.GetSellerByIdAsync(sellerId);
             if (seller == null)
@@ -51,20 +51,20 @@ namespace BackEnd.Services
                     CreditScore = 0
                 };
             }
-            
+
             Console.WriteLine($"商家信息: UserID={seller.UserID}, ReputationPoints={seller.ReputationPoints}");
-            
+
             // 3. 组装数据
             var rating = store.AverageRating;
             Console.WriteLine($"店铺评分(从数据库): {rating}");
-            
+
             var monthlySales = store.MonthlySales;
             Console.WriteLine($"月销量(从数据库): {monthlySales}");
-            
+
             // 从数据库的StoreState字段获取营业状态
             var isOpen = store.StoreState == StoreState.IsOperation; // IsOperation=营业中, Closing=休息中
             Console.WriteLine($"营业状态(从数据库): {isOpen} (StoreState={store.StoreState})");
-            
+
             var creditScore = seller.ReputationPoints;
             Console.WriteLine($"信誉积分(从数据库): {creditScore}");
 
@@ -75,7 +75,7 @@ namespace BackEnd.Services
                 IsOpen = isOpen,
                 CreditScore = creditScore
             };
-            
+
             Console.WriteLine($"返回结果: {System.Text.Json.JsonSerializer.Serialize(result)}");
             return result;
         }
@@ -83,10 +83,10 @@ namespace BackEnd.Services
         public async Task<ShopInfoResponseDto?> GetShopInfoAsync(int sellerId)
         {
             Console.WriteLine($"=== Service层: 获取店铺信息，商家ID: {sellerId} ===");
-            
+
             var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
             var seller = await _merchantRepository.GetSellerByIdAsync(sellerId);
-            
+
             Console.WriteLine($"店铺信息: StoreID={store.StoreID}, Name={store.StoreName}, Address={store.StoreAddress}");
             Console.WriteLine($"商家信息: ReputationPoints={seller.ReputationPoints}");
 
@@ -101,7 +101,7 @@ namespace BackEnd.Services
                 Feature = store.StoreFeatures,
                 CreditScore = seller.ReputationPoints
             };
-            
+
             Console.WriteLine($"返回结果: {System.Text.Json.JsonSerializer.Serialize(result)}");
             return result;
         }
@@ -109,15 +109,16 @@ namespace BackEnd.Services
         public async Task<MerchantInfoResponseDto?> GetMerchantInfoAsync(int sellerId)
         {
             Console.WriteLine($"=== Service层: 获取商家信息，商家ID: {sellerId} ===");
-            
+
             var user = await _merchantRepository.GetUserBySellerIdAsync(sellerId);
-            Console.WriteLine($"用户信息: Username={user.Username}");
+            Console.WriteLine($"用户信息: Username={user!.Username}");
 
             var result = new MerchantInfoResponseDto
             {
-                Username = user.Username
+                Username = user.Username,
+                SellerId = sellerId
             };
-            
+
             Console.WriteLine($"返回结果: {System.Text.Json.JsonSerializer.Serialize(result)}");
             return result;
         }
@@ -127,7 +128,7 @@ namespace BackEnd.Services
             try
             {
                 Console.WriteLine($"=== Service层: 切换营业状态，商家ID: {sellerId}, 新状态: {request.IsOpen} ===");
-                
+
                 // 1. 根据商家ID查询店铺信息
                 var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
                 if (store == null)
@@ -135,7 +136,7 @@ namespace BackEnd.Services
                     Console.WriteLine("店铺不存在，切换营业状态失败");
                     return new CommonResponseDto { Success = false };
                 }
-                
+
                 Console.WriteLine($"找到店铺: StoreID={store.StoreID}, Name={store.StoreName}, 当前状态: {store.StoreState}");
 
                 // 2. 根据商家ID查询商家信息
@@ -145,19 +146,19 @@ namespace BackEnd.Services
                     Console.WriteLine($"商家被禁用，BanStatus={seller.BanStatus}，切换营业状态失败");
                     return new CommonResponseDto { Success = false };
                 }
-                
+
                 Console.WriteLine($"商家状态正常，BanStatus={seller?.BanStatus}");
 
                 // 3. 更新营业状态
                 var oldStatus = store.StoreState;
                 store.StoreState = request.IsOpen ? StoreState.IsOperation : StoreState.Closing;  // IsOperation=营业中, Closing=休息中
-                
+
                 Console.WriteLine($"营业状态从 '{oldStatus}' 更新为 '{store.StoreState}' ({(request.IsOpen ? "营业中" : "休息中")})");
 
                 // 4. 保存到数据库
                 var success = await _merchantRepository.UpdateStoreAsync(store);
                 Console.WriteLine($"数据库更新结果: {success}");
-                
+
                 if (success)
                 {
                     Console.WriteLine("=== Service层: 营业状态切换成功 ===");
@@ -166,7 +167,7 @@ namespace BackEnd.Services
                 {
                     Console.WriteLine("=== Service层: 营业状态切换失败 ===");
                 }
-                
+
                 return new CommonResponseDto { Success = success };
             }
             catch (Exception ex)
@@ -182,14 +183,14 @@ namespace BackEnd.Services
             try
             {
                 Console.WriteLine($"=== Service层: 更新店铺字段，商家ID: {sellerId}, 字段: {request.Field}, 值: {request.Value} ===");
-                
+
                 var store = await _merchantRepository.GetStoreBySellerIdAsync(sellerId);
                 if (store == null)
                 {
                     Console.WriteLine("店铺不存在，更新失败");
                     return new CommonResponseDto { Success = false };
                 }
-                
+
                 Console.WriteLine($"找到店铺: StoreID={store.StoreID}, Name={store.StoreName}");
 
                 var seller = await _merchantRepository.GetSellerByIdAsync(sellerId);
@@ -198,7 +199,7 @@ namespace BackEnd.Services
                     Console.WriteLine($"商家被禁用，BanStatus={seller.BanStatus}，更新失败");
                     return new CommonResponseDto { Success = false };
                 }
-                
+
                 Console.WriteLine($"商家状态正常，BanStatus={seller?.BanStatus}");
 
                 switch (request.Field)
@@ -248,7 +249,7 @@ namespace BackEnd.Services
 
                 var success = await _merchantRepository.UpdateStoreAsync(store);
                 Console.WriteLine($"数据库更新结果: {success}");
-                
+
                 return new CommonResponseDto { Success = success };
             }
             catch (Exception ex)
