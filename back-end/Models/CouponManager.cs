@@ -11,7 +11,7 @@ namespace BackEnd.Models
         // 外码：SellerID，StoreID
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CouponManagerID { get; set; }
 
         [Required]

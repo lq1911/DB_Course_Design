@@ -101,6 +101,46 @@ namespace BackEnd.Controllers
         }
 
         /// <summary>
+        /// 数据库健康检查
+        /// GET /api/merchant/health
+        /// </summary>
+        [HttpGet("health")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        public async Task<ActionResult<ApiResponse<object>>> CheckHealth()
+        {
+            try
+            {
+                var isHealthy = await _couponService.CheckDatabaseHealthAsync();
+                if (isHealthy)
+                {
+                    return Ok(new ApiResponse<object>
+                    {
+                        code = 200,
+                        message = "数据库连接正常"
+                    });
+                }
+                else
+                {
+                    return StatusCode(503, new ApiResponse<object>
+                    {
+                        code = 503,
+                        message = "数据库连接异常，可能磁盘空间不足"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "健康检查失败");
+                return StatusCode(503, new ApiResponse<object>
+                {
+                    code = 503,
+                    message = $"数据库健康检查失败: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
         /// 获取优惠券列表（分页）
         /// GET /api/merchant/coupons
         /// </summary>
@@ -240,6 +280,38 @@ namespace BackEnd.Controllers
         }
 
         /// <summary>
+        /// 测试更新优惠券端点
+        /// PUT /api/merchant/coupons/test
+        /// </summary>
+        [HttpPut("coupons/test")]
+        public ActionResult<ApiResponse<object>> TestUpdateCoupon([FromBody] CreateCouponRequestDto request)
+        {
+            _logger.LogInformation("测试更新优惠券请求");
+            _logger.LogInformation("请求数据: {RequestData}", System.Text.Json.JsonSerializer.Serialize(request));
+            
+            // 检查ModelState
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                _logger.LogWarning("模型验证失败: {Errors}", string.Join(", ", errors));
+                
+                return BadRequest(new ApiResponse<object>
+                {
+                    code = 400,
+                    message = "模型验证失败",
+                    data = new { errors = errors.ToList() }
+                });
+            }
+            
+            return Ok(new ApiResponse<object>
+            {
+                code = 200,
+                message = "测试成功",
+                data = request
+            });
+        }
+
+        /// <summary>
         /// 更新优惠券
         /// PUT /api/merchant/coupons/{id}
         /// </summary>
@@ -253,10 +325,12 @@ namespace BackEnd.Controllers
             try
             {
                 _logger.LogInformation("更新优惠券请求 - ID: {Id}, 名称: {Name}", id, request.name);
+                _logger.LogInformation("请求数据: {RequestData}", System.Text.Json.JsonSerializer.Serialize(request));
 
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                    _logger.LogWarning("模型验证失败: {Errors}", string.Join(", ", errors));
                     return BadRequest(new ApiResponse<object>
                     {
                         code = 400,

@@ -55,7 +55,7 @@
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold text-gray-800">配券中心</h2>
             <div class="flex items-center space-x-3">
-              <button @click="showCouponForm = true"
+              <button @click="openCreateForm"
                 class="bg-[#F9771C] text-white px-6 py-2 rounded-md hover:bg-[#E16A0E] transition-colors cursor-pointer whitespace-nowrap !rounded-button">
                 <el-icon class="mr-1">
                   <Plus />
@@ -212,21 +212,30 @@
         </el-form-item>
 
         <el-form-item label="优惠券类型" prop="type">
-          <el-radio-group v-model="couponForm.type">
+          <el-radio-group v-model="couponForm.type" @change="handleTypeChange">
             <el-radio label="fixed">满减券</el-radio>
             <el-radio label="discount">折扣券</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item v-if="couponForm.type === 'fixed'" label="优惠金额" prop="value">
-          <el-input-number v-model="couponForm.value" :min="1" :max="1000" :precision="0" controls-position="right">
+          <el-input-number v-model="couponForm.value" :min="0.01" :max="1000" :precision="2" controls-position="right">
             <template #prefix>¥</template>
           </el-input-number>
           <span class="ml-2 text-sm text-gray-500">减去的金额</span>
         </el-form-item>
 
         <el-form-item v-if="couponForm.type === 'fixed'" label="最低消费" prop="minAmount">
-          <el-input-number v-model="couponForm.minAmount" :min="couponForm.value + 1" :max="10000" :precision="0"
+          <el-input-number v-model="couponForm.minAmount" :min="Math.max(0.01, couponForm.value + 0.01)" :max="10000" :precision="2"
+            controls-position="right">
+            <template #prefix>¥</template>
+          </el-input-number>
+          <span class="ml-2 text-sm text-gray-500">满足此金额才可使用</span>
+        </el-form-item>
+        
+        <!-- 折扣券也需要最低消费字段 -->
+        <el-form-item v-if="couponForm.type === 'discount'" label="最低消费" prop="minAmount">
+          <el-input-number v-model="couponForm.minAmount" :min="0.01" :max="10000" :precision="2"
             controls-position="right">
             <template #prefix>¥</template>
           </el-input-number>
@@ -369,7 +378,7 @@ const couponForm = reactive({
 const couponRules = reactive<FormRules>({
   name: [
     { required: true, message: '请输入优惠券名称', trigger: 'blur' },
-    { max: 20, message: '长度不能超过20个字符', trigger: 'blur' }
+    { max: 100, message: '长度不能超过100个字符', trigger: 'blur' }
   ],
   type: [
     { required: true, message: '请选择优惠券类型', trigger: 'change' }
@@ -393,14 +402,17 @@ const couponRules = reactive<FormRules>({
     { 
       required: true, 
       message: '请输入最低消费金额', 
-      trigger: 'blur',
+      trigger: 'blur'
+    },
+    {
       validator: (rule, value, callback) => {
         if (couponForm.type === 'fixed' && value <= couponForm.value) {
           callback(new Error('最低消费必须大于优惠金额'));
         } else {
           callback();
         }
-      }
+      },
+      trigger: 'blur'
     }
   ],
   startTime: [
@@ -506,6 +518,56 @@ const handleSelectionChange = (val: any[]) => {
   console.log('当前选中的优惠券数量:', selectedCoupons.value.length);
 };
 
+// 重置表单
+const resetCouponForm = () => {
+  Object.assign(couponForm, {
+    name: '',
+    type: 'fixed',
+    value: 5,
+    minAmount: 20, // 确保minAmount有默认值
+    totalQuantity: 100,
+    startTime: '',
+    endTime: '',
+    description: ''
+  });
+  isEditMode.value = false;
+  currentCouponId.value = '';
+};
+
+// 打开创建表单
+const openCreateForm = () => {
+  console.log('打开创建表单，重置所有状态');
+  resetCouponForm();
+  // 强制确保不是编辑模式
+  isEditMode.value = false;
+  currentCouponId.value = '';
+  showCouponForm.value = true;
+  console.log('创建表单状态:', { isEditMode: isEditMode.value, currentCouponId: currentCouponId.value });
+};
+
+// 监听优惠券类型变化
+const handleTypeChange = () => {
+  if (couponForm.type === 'fixed') {
+    // 切换到满减券时，如果value小于0.01，设置为5
+    if (couponForm.value < 0.01) {
+      couponForm.value = 5;
+    }
+    // 确保minAmount大于value
+    if (couponForm.minAmount <= couponForm.value) {
+      couponForm.minAmount = couponForm.value + 1;
+    }
+  } else if (couponForm.type === 'discount') {
+    // 切换到折扣券时，如果value大于等于1，设置为0.8
+    if (couponForm.value >= 1) {
+      couponForm.value = 0.8;
+    }
+    // 确保折扣券也有minAmount值
+    if (!couponForm.minAmount || couponForm.minAmount <= 0) {
+      couponForm.minAmount = 0.01;
+    }
+  }
+};
+
 // 编辑优惠券
 const handleEdit = (row: any) => {
   isEditMode.value = true;
@@ -514,7 +576,7 @@ const handleEdit = (row: any) => {
     name: row.name,
     type: row.type,
     value: row.value,
-    minAmount: row.minAmount,
+    minAmount: row.minAmount || 0.01, // 确保minAmount不为null
     totalQuantity: row.totalQuantity,
     startTime: row.startTime,
     endTime: row.endTime,
@@ -526,27 +588,73 @@ const handleEdit = (row: any) => {
 // 提交表单
 const submitCouponForm = async () => {
   try {
+    console.log('开始提交表单验证...');
+    console.log('当前表单数据:', couponForm);
+    console.log('验证规则:', couponRules);
+    console.log('编辑模式:', isEditMode.value);
+    console.log('当前优惠券ID:', currentCouponId.value);
+    
     await couponFormRef.value?.validate();
+    console.log('表单验证通过');
     
     const payload = {
-      ...couponForm,
+      // id 字段由后端自动生成，前端不需要发送
+      name: couponForm.name,
+      type: couponForm.type,
+      value: couponForm.value,
+      minAmount: couponForm.minAmount,
+      discountAmount: couponForm.type === 'fixed' ? couponForm.value : 0, // 满减券的优惠金额
+      // storeId 字段由后端自动获取，前端不需要发送
+      totalQuantity: couponForm.totalQuantity,
       startTime: new Date(couponForm.startTime).toISOString(),
-      endTime: new Date(couponForm.endTime).toISOString()
+      endTime: new Date(couponForm.endTime).toISOString(),
+      description: couponForm.description
     };
     
+    console.log('发送创建优惠券请求:', payload);
+    console.log('API基础URL:', API.defaults.baseURL);
+    console.log('请求URL:', isEditMode.value ? `/api/merchant/coupons/${currentCouponId.value}` : '/api/merchant/coupons');
+    console.log('请求方法:', isEditMode.value ? 'PUT' : 'POST');
+    
     if (isEditMode.value) {
-      await API.put(`/api/merchant/coupons/${currentCouponId.value}`, payload);
+      console.log('更新优惠券模式');
+      const response = await API.put(`/api/merchant/coupons/${currentCouponId.value}`, payload);
+      console.log('更新响应:', response);
       ElMessage.success('优惠券更新成功');
     } else {
-      await API.post('/api/merchant/coupons', payload);
+      console.log('创建优惠券模式');
+      const response = await API.post('/api/merchant/coupons', payload);
+      console.log('创建响应:', response);
       ElMessage.success('优惠券创建成功');
     }
     
     showCouponForm.value = false;
     fetchCoupons();
     fetchStats();
-  } catch (error) {
+  } catch (error: any) {
     console.error('表单提交失败', error);
+    console.error('错误详情:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      config: error.config
+    });
+    
+    // 详细输出响应数据
+    if (error.response?.data) {
+      console.error('后端响应数据:', JSON.stringify(error.response.data, null, 2));
+    }
+    
+    // 显示详细的错误信息
+    let errorMessage = '操作失败';
+    if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+      console.error('后端错误消息:', errorMessage);
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    ElMessage.error(`操作失败: ${errorMessage}`);
   }
 };
 
