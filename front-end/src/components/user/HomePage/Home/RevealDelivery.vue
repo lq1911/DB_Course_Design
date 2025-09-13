@@ -54,18 +54,21 @@ watch(
           },
           (error) => {
             console.error("定位失败：", error);
+            // 定位失败时默认到同济大学嘉定校区
             mapUrl.value =
-              "https://maps.google.com/maps?q=Shanghai&z=13&output=embed";
+              "https://maps.google.com/maps?q=31.281553,121.213517&z=15&output=embed";
             loading.value = false;
           }
         );
       } else {
         console.error("浏览器不支持定位");
+        // 浏览器不支持定位时默认到同济大学嘉定校区
         mapUrl.value =
-          "https://maps.google.com/maps?q=Beijing&z=13&output=embed";
+          "https://maps.google.com/maps?q=31.281553,121.213517&z=15&output=embed";
         loading.value = false;
       }
     }
   }
 );
+
 </script>
