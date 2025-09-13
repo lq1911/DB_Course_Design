@@ -36,5 +36,10 @@ namespace BackEnd.Services.Interfaces
         /// 批量删除优惠券
         /// </summary>
         Task<BatchDeleteResponseDto> BatchDeleteCouponsAsync(int sellerId, BatchDeleteCouponsRequestDto request);
+
+        /// <summary>
+        /// 检查数据库连接状态
+        /// </summary>
+        Task<bool> CheckDatabaseHealthAsync();
     }
 }

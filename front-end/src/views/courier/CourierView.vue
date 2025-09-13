@@ -256,21 +256,57 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex items-center justify-between pt-2">
-                                        <div class="text-sm font-medium text-orange-500">¥{{ order.fee }}</div>
-                                        <div class="flex space-x-2">
-                                            <button v-if="order.status === 'pending'"
-                                                @click="handlePickupOrder(order.id)"
-                                                class="bg-orange-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-orange-600">
-                                                我已到店
+                                    <!-- ▼▼▼ 替换为这个新的按钮区域代码 ▼▼▼ -->
+                                    <!-- 底部操作区，pt-3 增加一点与上方内容的间距 -->
+                                    <div class="pt-3">
+                                        <!-- 待取单状态 (pending) 的按钮 -->
+                                        <div v-if="order.status === 'pending'" class="text-center">
+                                            <button @click="handlePickupOrder(order.id)"
+                                                :disabled="!order.isReadyForPickup"
+                                                class="w-full text-white px-4 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 transform"
+                                                :class="{
+                                                    'bg-gradient-to-r from-orange-500 to-yellow-500 hover:shadow-lg hover:-translate-y-0.5': order.isReadyForPickup,
+                                                    'bg-gray-400 cursor-not-allowed shadow-none': !order.isReadyForPickup
+                                                }">
+                                                <!-- 按钮内联flex布局，用于放置图标 -->
+                                                <div class="flex items-center justify-center">
+                                                    <!-- 准备就绪时显示摩托车图标 -->
+                                                    <el-icon v-if="order.isReadyForPickup" class="mr-2">
+                                                        <MostlyCloudy />
+                                                    </el-icon>
+                                                    <!-- 等待时显示沙漏图标 -->
+                                                    <el-icon v-else class="mr-2">
+                                                        <Timer />
+                                                    </el-icon>
+
+                                                    <span>{{ order.isReadyForPickup ? '我已取餐' : '等待商家出餐' }}</span>
+                                                </div>
                                             </button>
-                                            <button v-if="order.status === 'delivering'"
-                                                @click="handleDeliverOrder(order.id)"
-                                                class="bg-green-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-green-600">
-                                                我已送达
+                                            <p v-if="!order.isReadyForPickup"
+                                                class="text-xs text-center text-gray-500 mt-2">
+                                                商家正在努力备餐中，请稍候...
+                                            </p>
+                                        </div>
+
+                                        <!-- 配送中状态 (delivering) 的按钮 -->
+                                        <div v-if="order.status === 'delivering'" class="text-center">
+                                            <button @click="handleDeliverOrder(order.id)"
+                                                class="w-full text-white px-4 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 transform bg-gradient-to-r from-green-500 to-teal-500 hover:shadow-lg hover:-translate-y-0.5">
+                                                <div class="flex items-center justify-center">
+                                                    <el-icon class="mr-2">
+                                                        <Position />
+                                                    </el-icon>
+                                                    <span>我已送达</span>
+                                                </div>
                                             </button>
                                         </div>
+
+                                        <!-- 费用信息，移到了按钮下方，作为补充信息 -->
+                                        <div class="text-center text-xs text-gray-400 mt-2">
+                                            配送费: <span class="font-semibold text-gray-600">¥{{ order.fee }}</span>
+                                        </div>
                                     </div>
+                                    <!-- ▲▲▲ 替换结束 ▲▲▲ -->
                                     <div v-if="order.status === 'pending' || order.status === 'delivering'"
                                         class="mt-3">
                                         <div class="relative">
@@ -524,8 +560,16 @@ import { ref, computed, onMounted, watch } from 'vue';
 import CourierLocationMap from '@/components/courier/CourierLocationMap.vue';
 import { ElMessage, ElLoading ,ElMessageBox} from 'element-plus';
 import {
+    // 您已有的图标
     User, Bell, Switch, Location, CircleCloseFilled,
-    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit
+    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit,
+
+    // ▼▼▼ 新增/补全的图标 ▼▼▼
+    ArrowRight,     // 用于个人中心菜单的右箭头
+    SwitchButton,   // 用于退出登录按钮
+    MostlyCloudy,   // 用于“我已取餐”按钮
+    Timer,          // 用于“等待出餐”按钮
+    Position        // 用于“我已送达”按钮
 } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import loginApi from '@/api/login_api';      // 导入我们定义好的通用认证API
@@ -569,6 +613,7 @@ interface Order {
     fee: string;
     distance: string;        // 配送距离
     time: string;            // 预计时间
+    isReadyForPickup: boolean;
 }
 
 interface Complaint {

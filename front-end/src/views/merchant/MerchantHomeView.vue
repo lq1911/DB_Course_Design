@@ -387,16 +387,33 @@ const fetchAllData = async () => {
     // 更新店铺信息
     if (shop.data) {
       const { id, name, createTime, address, startTime, endTime, feature } = shop.data;
+
+      // 处理时间字段 - 确保转换为 HH:mm 格式
+      const formatTime = (timeValue: any) => {
+        if (!timeValue) return '';
+        
+        // 如果是 DateTime 对象或包含日期的字符串
+        if (timeValue.includes('T') || timeValue.includes(' ')) {
+          const date = new Date(timeValue);
+          return date.toTimeString().substring(0, 5); // 提取 HH:mm
+        }
+        
+        // 如果已经是时间字符串格式
+        return timeValue.substring(0, 5);
+      };
+
       shopInfo.value = {
         ...shopInfo.value, // 保留现有值（包括可能已更新的rating等）
         id: id || defaultShopInfo.id,
         name: name || defaultShopInfo.name,
         createTime: createTime || defaultShopInfo.createTime,
         address: address || defaultShopInfo.address,
-        startTime: startTime || defaultShopInfo.startTime,
-        endTime: endTime || defaultShopInfo.endTime,
+        startTime: formatTime(startTime),
+        endTime: formatTime(endTime),
         feature: feature || defaultShopInfo.feature
       };
+
+      console.log('更新后的店铺信息:', shopInfo.value);
     }
     
     // 更新商家信息

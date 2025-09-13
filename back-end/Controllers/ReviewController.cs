@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using BackEnd.Dtos.Review;
 using BackEnd.Services.Interfaces;
+using System.Security.Claims;
 
 namespace BackEnd.Controllers
 {
@@ -25,7 +26,14 @@ namespace BackEnd.Controllers
                 return BadRequest(new { code = 400, message = "页码和每页数量必须大于0" });
             }
 
-            var result = await _reviewService.GetReviewsAsync(page, pageSize, keyword);
+            var sellerIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(sellerIdString, out int sellerId))
+            {
+                return Unauthorized("无效的Token");
+            }
+
+            var result = await _reviewService.GetReviewsAsync(sellerId, page, pageSize, keyword);
             return Ok(result);
         }
 

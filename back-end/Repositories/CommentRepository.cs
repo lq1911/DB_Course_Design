@@ -1,5 +1,6 @@
 using BackEnd.Data;
 using BackEnd.Models;
+using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,19 @@ namespace BackEnd.Repositories
                                  .Include(c => c.ReviewComments)
                                      .ThenInclude(rc => rc.Admin)
                                  .FirstOrDefaultAsync(c => c.CommentID == id);
+        }
+
+        public async Task<IEnumerable<Comment>> GetBySellerAsync(int sellerId)
+        {
+            return await _context.Comments
+                                .Include(c => c.Store)          // 加载评论所属的店铺
+                                    .ThenInclude(s => s!.Seller)
+                                .Include(c => c.FoodOrder)      // 加载评论所属的订单
+                                .Include(c => c.Commenter)      // 加载发表评论的顾客
+                                .Where(c => c.Store!.SellerID == sellerId
+                                    && c.CommentState == CommentState.Completed)
+                                .OrderBy(c => c.CommentID)
+                                .ToListAsync();
         }
 
         public async Task AddAsync(Comment comment)

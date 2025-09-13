@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BackEnd.Dtos.Penalty;
-using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 
@@ -18,14 +13,14 @@ namespace BackEnd.Services
             _penaltyRepository = penaltyRepository;
         }
 
-        public async Task<List<PenaltyRecordDto>> GetPenaltiesAsync(string? keyword)
+        public async Task<List<PenaltyRecordDto>> GetPenaltiesAsync(int sellerId, string? keyword)
         {
-            var penalties = await _penaltyRepository.GetAllAsync();
-            
+            var penalties = await _penaltyRepository.GetBySellerIdAsync(sellerId);
+
             if (!string.IsNullOrEmpty(keyword))
             {
-                penalties = penalties.Where(p => 
-                    p.PenaltyID.ToString().Contains(keyword) || 
+                penalties = penalties.Where(p =>
+                    p.PenaltyID.ToString().Contains(keyword) ||
                     p.PenaltyReason.Contains(keyword))
                     .ToList();
             }
@@ -76,7 +71,7 @@ namespace BackEnd.Services
             {
                 return null;
             }
-            
+
             return new AppealResponseDto
             {
                 Success = true,
