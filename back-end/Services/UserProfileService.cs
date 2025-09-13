@@ -37,12 +37,6 @@ namespace BackEnd.Services
             
             var customer = userWithCustomer.Customer;
             
-            // 检查默认地址是否存在
-            if (customer.DefaultAddress == null)
-            {
-                return null;
-            }
-            
             // 使用用户的全名作为收货人姓名，如果没有全名则使用用户名
             string recipientName = !string.IsNullOrEmpty(userWithCustomer.FullName) ? 
                 userWithCustomer.FullName : userWithCustomer.Username;
@@ -51,7 +45,7 @@ namespace BackEnd.Services
             {
                 Name = recipientName,
                 PhoneNumber = userWithCustomer.PhoneNumber, // 使用用户的电话号码
-                Address = customer.DefaultAddress
+                Address = customer.DefaultAddress == null ? "xx市xx区xx街道xx号" : customer.DefaultAddress
             };
         }
     }
