@@ -169,7 +169,8 @@ onMounted(() => {
 const getOrderStatusText = (statusNum: number) => {
     const map: Record<number, string> = {
         0: "配送中",
-        1: "已完成",
+        1: "配送中",
+        2: "已完成",
     };
     return map[statusNum] || "未知状态";
 };
@@ -191,12 +192,12 @@ const filteredOrders = computed(() => {
         console.log(orders);
         return orders.value;
     } else {
-        const statusMap: Record<string, number> = {
-            delivering: 0,
-            completed: 1,
+        const statusMap: Record<string, number[]> = {
+            delivering: [0, 1],
+            completed: [2],
         };
         const statusNum = statusMap[activeOrderStatus.value];
-        return orders.value.filter(order => order.orderStatus === statusNum);
+        return orders.value.filter(order => statusNum.includes(order.orderStatus));
     }
 });
 
