@@ -31,15 +31,7 @@
       </svg>
       正在获取您的实时位置...
     </div>
-
-    <!-- 错误信息 -->
-    <div
-      v-else-if="errorMsg"
-      class="flex items-center justify-center h-48 text-red-500 bg-red-50 p-4 rounded"
-    >
-      {{ errorMsg }}
-    </div>
-
+    
     <!-- 地图 -->
     <iframe
       v-else
