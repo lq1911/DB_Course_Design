@@ -31,7 +31,7 @@
       </svg>
       正在获取您的实时位置...
     </div>
-    
+
     <!-- 地图 -->
     <iframe
       v-else
@@ -56,7 +56,6 @@ const DEFAULT_LNG = 121.213517
 
 const mapUrl = ref('')
 const loading = ref(true)
-const errorMsg = ref('')
 const lastUpdated = ref('')
 
 let locationUpdateTimer: number | null = null
@@ -65,7 +64,6 @@ async function updateLocation() {
   console.log('开始更新位置...')
 
   if (!navigator.geolocation) {
-    errorMsg.value = '您的浏览器不支持地理定位功能。'
     mapUrl.value = `https://maps.google.com/maps?q=${DEFAULT_LAT},${DEFAULT_LNG}&z=15&output=embed`
     loading.value = false
     return
@@ -83,17 +81,14 @@ async function updateLocation() {
         await updateCourierLocationAPI(lat, lng)
         console.log('后端位置更新成功！')
         lastUpdated.value = new Date().toLocaleTimeString()
-        errorMsg.value = ''
       } catch (apiError) {
         console.error('向后端更新位置失败:', apiError)
-        errorMsg.value = '无法同步位置到服务器。'
       } finally {
         loading.value = false
       }
     },
     (geoError) => {
       console.error('定位失败：', geoError)
-      errorMsg.value = '定位失败，已为您展示同济大学嘉定校区。'
       // fallback
       mapUrl.value = `https://maps.google.com/maps?q=${DEFAULT_LAT},${DEFAULT_LNG}&z=15&output=embed`
       loading.value = false
