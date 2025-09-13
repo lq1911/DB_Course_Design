@@ -1146,7 +1146,7 @@ const mockApi = {
 };
 
 // 3.2 ----------------- 真实API实现 -----------------
-const apiClient = axios.create({ baseURL: 'http://localhost:5250/api', timeout: 5000 }); // 根据你的后端地址修改 baseURL
+const apiClient = axios.create({ baseURL: 'http://113.44.82.210:5250/api', timeout: 5000 }); // 根据你的后端地址修改 baseURL
 
 apiClient.interceptors.request.use(
     (config) => {
