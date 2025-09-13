@@ -1,3 +1,5 @@
+using BackEnd.Models.Enums;
+
 namespace BackEnd.Dtos.Order
 {
     public class FoodOrderDto
@@ -9,7 +11,7 @@ namespace BackEnd.Dtos.Order
         public int CartId { get; set; }
         public int StoreId { get; set; }
         public int SellerId { get; set; }
-        public int OrderState { get; set; }
+        public FoodOrderState OrderState { get; set; }
         public int? DeliveryTaskId { get; set; }  // 没有配送任务时为 null
         public int? DeliveryStatus { get; set; }
     }
