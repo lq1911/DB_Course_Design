@@ -48,8 +48,7 @@ namespace BackEnd.Repositories
                 Console.WriteLine($"- ValidTo: {couponManager.ValidTo} (类型: {couponManager.ValidTo.GetType()})");
                 Console.WriteLine($"- Description: '{couponManager.Description}' (类型: {couponManager.Description?.GetType()}, 是否NULL: {couponManager.Description == null})");
                 Console.WriteLine($"- StoreID: {couponManager.StoreID} (类型: {couponManager.StoreID.GetType()}, 是否NULL: {couponManager.StoreID == null})");
-                Console.WriteLine($"- SellerID: {couponManager.SellerID} (类型: {couponManager.SellerID.GetType()}, 是否NULL: {couponManager.SellerID == null})");
-                
+
                 await _context.CouponManagers.AddAsync(couponManager);
                 await SaveAsync();
             }
@@ -81,10 +80,10 @@ namespace BackEnd.Repositories
         /// <summary>
         /// 根据商家ID获取优惠券列表（分页）
         /// </summary>
-        public async Task<(IEnumerable<CouponManager> coupons, int total)> GetBySellerIdAsync(int sellerId, int page, int pageSize)
+        public async Task<(IEnumerable<CouponManager> coupons, int total)> GetByStoreIdAsync(int storeId, int page, int pageSize)
         {
             var query = _context.CouponManagers
-                .Where(cm => cm.SellerID == sellerId)
+                .Where(cm => cm.StoreID == storeId)
                 .OrderByDescending(cm => cm.CouponManagerID);
 
             var total = await query.CountAsync();
@@ -99,15 +98,15 @@ namespace BackEnd.Repositories
         /// <summary>
         /// 根据商家ID获取优惠券统计信息
         /// </summary>
-        public async Task<(int total, int active, int expired, int upcoming, int totalUsed, decimal totalDiscountAmount)> GetStatsBySellerIdAsync(int sellerId)
+        public async Task<(int total, int active, int expired, int upcoming, int totalUsed, decimal totalDiscountAmount)> GetStatsByStoreIdAsync(int storeId)
         {
             var coupons = await _context.CouponManagers
-                .Where(cm => cm.SellerID == sellerId)
+                .Where(cm => cm.StoreID == storeId)
                 .ToListAsync();
 
             var total = coupons.Count;
             var now = DateTime.Now;
-            
+
             var active = coupons.Count(c => c.ValidFrom <= now && c.ValidTo >= now);
             var expired = coupons.Count(c => c.ValidTo < now);
             var upcoming = coupons.Count(c => c.ValidFrom > now);
@@ -120,24 +119,24 @@ namespace BackEnd.Repositories
         /// <summary>
         /// 根据商家ID和优惠券ID获取优惠券
         /// </summary>
-        public async Task<CouponManager?> GetByIdAndSellerIdAsync(int id, int sellerId)
+        public async Task<CouponManager?> GetByIdAndStoreIdAsync(int id, int storeId)
         {
             return await _context.CouponManagers
-                .FirstOrDefaultAsync(cm => cm.CouponManagerID == id && cm.SellerID == sellerId);
+                .FirstOrDefaultAsync(cm => cm.CouponManagerID == id && cm.StoreID == storeId);
         }
 
         /// <summary>
         /// 批量删除优惠券
         /// </summary>
-        public async Task<int> BatchDeleteAsync(IEnumerable<int> ids, int sellerId)
+        public async Task<int> BatchDeleteAsync(IEnumerable<int> ids, int storeId)
         {
             var coupons = await _context.CouponManagers
-                .Where(cm => ids.Contains(cm.CouponManagerID) && cm.SellerID == sellerId)
+                .Where(cm => ids.Contains(cm.CouponManagerID) && cm.StoreID == storeId)
                 .ToListAsync();
 
             _context.CouponManagers.RemoveRange(coupons);
             await SaveAsync();
-            
+
             return coupons.Count;
         }
     }

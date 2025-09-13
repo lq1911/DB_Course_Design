@@ -2,8 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // baseURL: 'http://localhost:5250/api',
-  baseURL: 'http://113.44.82.210:5250/api',  // 服务器后端地址
+  baseURL: 'http://localhost:5250/api',
   timeout: 5000,
 });
 
