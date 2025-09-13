@@ -47,8 +47,8 @@ namespace BackEnd.Dtos.Merchant
     /// </summary>
     public class CreateCouponRequestDto
     {
-        [Required(ErrorMessage = "优惠券ID不能为空")]
-        public int id { get; set; }
+        // 优惠券ID由后端自动生成，前端不需要提供
+        public int? id { get; set; }
 
         [Required(ErrorMessage = "优惠券名称不能为空")]
         [MaxLength(100, ErrorMessage = "优惠券名称长度不能超过100个字符")]
@@ -61,16 +61,14 @@ namespace BackEnd.Dtos.Merchant
         [Range(0.01, 999999.99, ErrorMessage = "优惠值必须在0.01-999999.99之间")]
         public decimal value { get; set; }
 
-        [Required(ErrorMessage = "最低消费金额不能为空")]
         [Range(0.01, 999999.99, ErrorMessage = "最低消费金额必须在0.01-999999.99之间")]
-        public decimal minAmount { get; set; }
+        public decimal? minAmount { get; set; }
 
-        [Required(ErrorMessage = "优惠金额不能为空")]
-        [Range(0.00, 999999.99, ErrorMessage = "优惠金额必须在0.00-999999.99之间")]
-        public decimal discountAmount { get; set; }
+        // 优惠金额由后端根据类型自动计算，前端不需要提供
+        public decimal? discountAmount { get; set; }
 
-        [Required(ErrorMessage = "店铺ID不能为空")]
-        public int storeId { get; set; }
+        // 店铺ID由后端自动获取，前端不需要提供
+        public int? storeId { get; set; }
 
         [Required(ErrorMessage = "发放数量不能为空")]
         [Range(1, 100000, ErrorMessage = "发放数量必须在1-100000之间")]

@@ -42,7 +42,7 @@ namespace BackEnd.Services
                 CartId = o.CartID ?? 0,
                 StoreId = o.StoreID,
                 SellerId = o.Store.SellerID,
-                OrderState = (int)o.FoodOrderState,
+                OrderState = o.FoodOrderState,
                 DeliveryTaskId = o.DeliveryTask?.TaskID,
                 DeliveryStatus = o.DeliveryTask != null ? (int)o.DeliveryTask.Status : -1
             });
@@ -62,7 +62,7 @@ namespace BackEnd.Services
                 CartId = order.CartID ?? 0,
                 StoreId = order.StoreID,
                 SellerId = order.Store.SellerID,
-                OrderState = (int)order.FoodOrderState,
+                OrderState = order.FoodOrderState,
                 DeliveryTaskId = order.DeliveryTask?.TaskID,
                 DeliveryStatus = order.DeliveryTask != null ? (int)order.DeliveryTask.Status : -1
             };

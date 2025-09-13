@@ -137,7 +137,7 @@ import axios from 'axios';
 import loginApi from '@/api/login_api';
 import { removeToken } from '@/utils/jwt';
 const api = axios.create({
-  baseURL: 'http://localhost:5250/api',
+  baseURL: 'http://113.44.82.210:5250/api',
   timeout: 5000,
 });
 

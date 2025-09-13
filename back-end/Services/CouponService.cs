@@ -100,16 +100,26 @@ namespace BackEnd.Services
                 // 保存到数据库
                 await _couponRepository.AddAsync(coupon);
 
-                _logger.LogInformation("优惠券创建成功，ID: {CouponId}", coupon.CouponManagerID);
+                // 获取数据库生成的ID
+                var generatedId = coupon.CouponManagerID;
+                _logger.LogInformation("优惠券创建成功，ID: {CouponId}", generatedId);
 
                 return new CreateCouponResponseDto
                 {
-                    id = coupon.CouponManagerID
+                    id = generatedId
                 };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "商家 {SellerId} 创建优惠券失败: {CouponName}", sellerId, request.name);
+                
+                // 特殊处理Oracle磁盘空间不足错误
+                if (ex.Message.Contains("ORA-01114") && ex.Message.Contains("No space left on device"))
+                {
+                    _logger.LogCritical("数据库磁盘空间不足，无法创建优惠券");
+                    throw new InvalidOperationException("数据库磁盘空间不足，请联系管理员清理空间后重试。错误详情：ORA-01114 - 磁盘空间不足");
+                }
+                
                 throw;
             }
         }
@@ -127,7 +137,7 @@ namespace BackEnd.Services
                 ValidateCouponRequest(request);
 
                 // 获取优惠券
-                var coupon = await _couponRepository.GetByIdAndSellerIdAsync(request.id, sellerId);
+                var coupon = await _couponRepository.GetByIdAndSellerIdAsync(request.id ?? 0, sellerId);
                 if (coupon == null)
                 {
                     throw new ArgumentException($"优惠券 {request.id} 不存在或不属于商家 {sellerId}");
@@ -206,6 +216,31 @@ namespace BackEnd.Services
         }
 
         /// <summary>
+        /// 检查数据库连接状态
+        /// </summary>
+        public async Task<bool> CheckDatabaseHealthAsync()
+        {
+            try
+            {
+                // 尝试执行一个简单的查询来检查数据库连接
+                var testResult = await _couponRepository.GetStatsBySellerIdAsync(1);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "数据库健康检查失败");
+                
+                // 检查是否是磁盘空间问题
+                if (ex.Message.Contains("ORA-01114") && ex.Message.Contains("No space left on device"))
+                {
+                    _logger.LogCritical("数据库磁盘空间不足，系统无法正常运行");
+                }
+                
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 获取商家默认店铺ID
         /// </summary>
         private async Task<int> GetDefaultStoreIdForSeller(int sellerId)
@@ -233,13 +268,10 @@ namespace BackEnd.Services
             if (request.value <= 0)
                 throw new ArgumentException("优惠值必须大于0");
 
-            if (request.type == "fixed" && request.value >= 1)
-                throw new ArgumentException("满减券的优惠金额不能大于等于1");
-
             if (request.type == "discount" && (request.value <= 0 || request.value >= 1))
                 throw new ArgumentException("折扣券的折扣比例必须在0-1之间");
 
-            if (request.type == "fixed" && request.minAmount <= request.value)
+            if (request.type == "fixed" && request.minAmount.HasValue && request.minAmount <= request.value)
                 throw new ArgumentException("满减券的最低消费必须大于优惠金额");
 
             if (request.totalQuantity <= 0)
