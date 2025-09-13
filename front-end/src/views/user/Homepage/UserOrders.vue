@@ -36,8 +36,9 @@
                             </div>
                         </div>
                         <span :class="{
-                            'text-orange-500': order.orderStatus === 0,
-                            'text-green-500': order.orderStatus === 1,
+                            'text-gray-500': order.orderStatus === 0,
+                            'text-orange-500': order.orderStatus === 1,
+                            'text-green-500': order.orderStatus === 2,
                         }" class="font-medium">
                             {{ getOrderStatusText(order.orderStatus) }}
                         </span>
@@ -55,8 +56,24 @@
                             <div class="text-right">
                                 <p class="font-bold text-lg">¥{{ order.totalAmount }}</p>
                                 <div class="flex space-x-2 mt-2">
+                                    <!--已接单-->
+                                    <div v-if="order.orderStatus ===  0" class="flex items-center justify-center gap-2">
+                                        <button
+                                            @click="dialogVisibleMerchant=true"
+                                            class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full text-sm transition-colors cursor-pointer"
+                                            title="联系商家">
+                                            <i class="fas fa-store"></i>
+                                        </button>
+
+                                        <!-- 联系商家 -->
+                                        <ReplyDialog v-model="dialogVisibleMerchant" title="联系商家" identity="user"
+                                            :chatMessages="merchantChat" :quickPhrases="['您好，有什么能帮您？', '请稍等一下']"
+                                            :emojis="['😊', '👍', '❤️', '🎉']" @submit="handleMerchantReply" />
+                                    </div>
+                                </div>
+
                                     <!-- 配送中 -->
-                                    <div v-if="order.orderStatus === 0 || 1" class="flex items-center justify-center gap-2">
+                                    <div v-if="order.orderStatus ===  1" class="flex items-center justify-center gap-2">
                                         <button
                                             @click="dialogVisibleMerchant=true"
                                             class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full text-sm transition-colors cursor-pointer"
@@ -158,6 +175,7 @@ const showAfterSale = ref<Record<number, boolean>>({});
 const showRevealDelivery = ref(false);
 const orderStatuses = [
     { key: "all", label: "全部订单" },
+    { key: "pending", label: "已接单" },
     { key: "delivering", label: "配送中" },
     { key: "completed", label: "已完成" },
 ];
@@ -168,7 +186,7 @@ onMounted(() => {
 
 const getOrderStatusText = (statusNum: number) => {
     const map: Record<number, string> = {
-        0: "配送中",
+        0: "已接单",
         1: "配送中",
         2: "已完成",
     };
