@@ -56,7 +56,7 @@
                                 <p class="font-bold text-lg">¥{{ order.totalAmount }}</p>
                                 <div class="flex space-x-2 mt-2">
                                     <!-- 配送中 -->
-                                    <div v-if="order.orderStatus === 0" class="flex items-center justify-center gap-2">
+                                    <div v-if="order.orderStatus === 0 || 1" class="flex items-center justify-center gap-2">
                                         <button
                                             @click="dialogVisibleMerchant=true"
                                             class="bg-orange-500 hover:bg-orange-600 text-white w-8 h-8 rounded-full text-sm transition-colors cursor-pointer"
@@ -90,7 +90,7 @@
                                 </div>
 
                                 <!-- 已完成 -->
-                                <div v-if="order.orderStatus === 1" class="flex gap-1">
+                                <div v-if="order.orderStatus === 2" class="flex gap-1">
                                     <!-- 售后按钮 -->
                                     <button @click="openAfterSale(order.orderID)"
                                         class="relative w-8 h-8 flex items-center justify-center cursor-pointer"
