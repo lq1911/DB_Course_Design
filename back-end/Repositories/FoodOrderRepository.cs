@@ -22,6 +22,7 @@ namespace BackEnd.Repositories
                                        .Include(fo => fo.Coupons)                // 优惠券
                                        .Include(fo => fo.AfterSaleApplications)  // 售后申请
                                        .Include(fo => fo.Comments)               // 评论
+                                       .OrderByDescending(fo => fo.OrderID)
                                        .ToListAsync();
 
             // 批量加载 DeliveryTasks

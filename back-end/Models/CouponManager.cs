@@ -50,10 +50,6 @@ namespace BackEnd.Models
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
 
-        public int SellerID { get; set; }
-        [ForeignKey("SellerID")]
-        public Seller Seller { get; set; } = null!;
-
         // 一对多导航属性
         // 优惠券
         public ICollection<Coupon>? Coupons { get; set; }
