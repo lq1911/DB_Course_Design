@@ -868,6 +868,8 @@ const closePublishDialog = () => {
 const submitPublish = async () => {
   if (!publishTargetOrder.value) return;
   try {
+    let taskId: number | undefined;
+
     // 优先调用后端
     try {
       console.log('[Publish] 准备发布配送任务，订单ID:', publishTargetOrder.value.orderId);
@@ -879,6 +881,7 @@ const submitPublish = async () => {
       });
 
        console.log('[Publish] 后端返回结果:', result);
+       taskId = result?.deliveryTask?.taskId || (5000 + publishTargetOrder.value.orderId);
     } catch (_) {
       // 后端不可用时，构造本地配送信息样例
       const orderId = publishTargetOrder.value.orderId;
@@ -912,6 +915,7 @@ const submitPublish = async () => {
       const orderIndex = orders.value.findIndex(o => o.orderId === publishTargetOrder.value!.orderId);
       if (orderIndex !== -1) {
         orders.value[orderIndex].deliveryStatus = 0;
+        orders.value[orderIndex].deliveryTaskId = taskId;
       }
     }
     
