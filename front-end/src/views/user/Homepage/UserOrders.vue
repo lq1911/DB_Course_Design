@@ -206,12 +206,13 @@ const filteredOrders = computed(() => {
         console.log(orders);
         return orders.value;
     } else {
-        const statusMap: Record<string, number[]> = {
-            delivering: [0, 1],
-            completed: [2],
+        const statusMap: Record<string, number> = {
+            pending: 0,
+            delivering: 1,
+            completed: 2,
         };
         const statusNum = statusMap[activeOrderStatus.value];
-        return orders.value.filter(order => statusNum.includes(order.orderStatus));
+        return orders.value.filter(order => order.orderStatus === statusNum);
     }
 });
 
