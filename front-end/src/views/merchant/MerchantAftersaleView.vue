@@ -8,7 +8,7 @@
       class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 h-16 border-b border-gray-100">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
           <el-icon class="text-gray-600 text-xl cursor-pointer hover:text-[#F9771C] transition-colors">
@@ -309,6 +309,8 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, reactive, onMounted, nextTick } from 'vue';
 // ▼▼▼ 修改点 1: 在图标导入中加入 SwitchButton ▼▼▼
 import { Bell, House, List, Ticket, Warning, User, SwitchButton } from '@element-plus/icons-vue';
@@ -335,6 +337,9 @@ interface LocalChatMessage {
 const activeMenu = ref('aftersale');
 const router = useRouter();
 const $route = useRoute();
+
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
 
 const menuItems = [
   { key: 'overview', label: '店铺概况', icon: House, routeName: 'MerchantHome' },
