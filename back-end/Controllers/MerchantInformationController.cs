@@ -8,6 +8,7 @@ namespace BackEnd.Controllers
 {
     [ApiController]
     [Route("api/merchant")]
+    [Authorize]
     public class MerchantInformationController : ControllerBase
     {
         private readonly IMerchantInformationService _merchantInformationService;
@@ -21,7 +22,7 @@ namespace BackEnd.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> FetchMerchantInfo()
         {
-             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!int.TryParse(userIdString, out int userId))
             {
