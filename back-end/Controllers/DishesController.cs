@@ -24,18 +24,23 @@ namespace BackEnd.Controllers
                 if (sellerId.HasValue && sellerId == 3)
                 {
                     var dishes = await _dishService.GetAllDishesAsync();
-                    return Ok(dishes);
+
+                    // 确保返回的是数组
+                    var dishDtos = dishes?.Select(d => new DishDto
+                    {
+                        DishId = d.DishId,
+                        DishName = d.DishName,
+                        Price = d.Price,
+                        Description = d.Description,
+                        IsSoldOut = (int)d.IsSoldOut,
+                    }).ToList() ?? new List<DishDto>();
+
+                    return Ok(dishDtos);
                 }
                 else
                 {
-                    return Ok(new DishDto
-                {
-                    DishId = 0,
-                    DishName = string.Empty,
-                    Price = 0,
-                    Description = string.Empty,
-                    IsSoldOut = 0,
-                });
+                    // 返回空数组而不是单个对象
+                    return Ok(new List<DishDto>());
                 }
             }
             catch (Exception ex)
