@@ -860,7 +860,7 @@ api.interceptors.response.use(
 
     // 如果是401错误，清除token并跳转到登录页
     if (error.response?.status === 401) {
-      localStorage.removeItem('merchant_token');
+      localStorage.removeItem('authToken');
       // 这里可以添加路由跳转到登录页的逻辑
       // router.push('/login');
     }
