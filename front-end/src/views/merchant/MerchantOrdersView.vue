@@ -89,14 +89,14 @@
             </div>
 
             <!-- 工具栏：自动接单开关 -->
-            <div class="p-6 flex items-center justify-end gap-4">
+            <!-- <div class="p-6 flex items-center justify-end gap-4">
               <div
                 class="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-yellow-50 px-6 py-3 rounded-2xl border border-orange-200/50 shadow-lg backdrop-blur-sm">
                 <span class="text-sm font-medium text-orange-800">自动接单</span>
                 <el-switch v-model="autoAcceptOrders" @change="(v:any)=>onAutoAcceptChange(Boolean(v))"
                   :style="{ '--el-switch-on-color': '#F9771C', '--el-switch-off-color': '#E5E7EB' }" />
               </div>
-            </div>
+            </div> -->
 
             <el-table :data="orders" style="width: 100%" class="custom-table relative z-10" v-loading="loading.orders"
               element-loading-text="加载订单中..." element-loading-spinner="el-icon-loading"
