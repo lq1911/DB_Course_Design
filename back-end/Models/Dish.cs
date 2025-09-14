@@ -29,10 +29,6 @@ namespace BackEnd.Models
         public DishIsSoldOut IsSoldOut { get; set; } = DishIsSoldOut.IsSoldOut;
         public DishTypes Type { get; set; } = DishTypes.SignatureRecommendation;
 
-        // 商家ID，关联到Seller表
-        [Required]
-        public int SellerID { get; set; }
-
         // 新增菜品图片
         public string? DishImage { get; set; }
 

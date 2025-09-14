@@ -25,23 +25,9 @@ namespace BackEnd.Services
                 Price = d.Price,
                 Description = d.Description,
                 IsSoldOut = (int)d.IsSoldOut,
-                SellerID = d.SellerID
             });
         }
 
-        public async Task<IEnumerable<DishDto>> GetDishesBySellerIdAsync(int sellerId)
-        {
-            var dishes = await _dishRepo.GetBySellerIdAsync(sellerId);
-            return dishes.Select(d => new DishDto
-            {
-                DishId = d.DishID,
-                DishName = d.DishName,
-                Price = d.Price,
-                Description = d.Description,
-                IsSoldOut = (int)d.IsSoldOut,
-                SellerID = d.SellerID
-            });
-        }
 
         public async Task<DishDto> CreateDishAsync(CreateDishDto dto)
         {
@@ -51,7 +37,6 @@ namespace BackEnd.Services
                 Price = dto.Price,
                 Description = dto.Description,
                 IsSoldOut = (DishIsSoldOut)dto.IsSoldOut,
-                SellerID = dto.SellerID
             };
 
             await _dishRepo.AddAsync(dish);
@@ -62,7 +47,6 @@ namespace BackEnd.Services
                 Price = dish.Price,
                 Description = dish.Description,
                 IsSoldOut = (int)dish.IsSoldOut,
-                SellerID = dish.SellerID
             };
         }
 
@@ -75,7 +59,6 @@ namespace BackEnd.Services
             if (dto.Price.HasValue) dish.Price = dto.Price.Value;
             if (dto.Description != null) dish.Description = dto.Description;
             if (dto.IsSoldOut.HasValue) dish.IsSoldOut = (DishIsSoldOut)dto.IsSoldOut.Value;
-            if (dto.SellerID.HasValue) dish.SellerID = dto.SellerID.Value;
 
             await _dishRepo.UpdateAsync(dish);
             return new DishDto
@@ -85,11 +68,10 @@ namespace BackEnd.Services
                 Price = dish.Price,
                 Description = dish.Description,
                 IsSoldOut = (int)dish.IsSoldOut,
-                SellerID = dish.SellerID
             };
         }
 
-        public async Task<(bool Success, string? Message, DishDto? Data)> ToggleSoldOutAsync(int dishId, int isSoldOut, int sellerId)
+        public async Task<(bool Success, string? Message, DishDto? Data)> ToggleSoldOutAsync(int dishId, int isSoldOut)
         {
             if (isSoldOut != 0 && isSoldOut != 2)
                 return (false, "售罄状态错误", null);
@@ -97,10 +79,6 @@ namespace BackEnd.Services
             var dish = await _dishRepo.GetByIdAsync(dishId);
             if (dish == null)
                 return (false, "菜品不存在", null);
-
-            // 验证菜品是否属于该商家
-            if (dish.SellerID != sellerId)
-                return (false, "无权限操作此菜品", null);
 
             dish.IsSoldOut = (DishIsSoldOut)isSoldOut;
             await _dishRepo.UpdateAsync(dish);
@@ -112,7 +90,6 @@ namespace BackEnd.Services
                 Price = dish.Price,
                 Description = dish.Description,
                 IsSoldOut = (int)dish.IsSoldOut,
-                SellerID = dish.SellerID
             });
         }
 
@@ -126,7 +103,6 @@ namespace BackEnd.Services
                 Price = dish.Price,
                 Description = dish.Description,
                 IsSoldOut = (int)dish.IsSoldOut,
-                SellerID = dish.SellerID
             };
         }
     }

@@ -23,16 +23,6 @@ namespace BackEnd.Repositories
                                  .ToListAsync();
         }
 
-        public async Task<IEnumerable<Dish>> GetBySellerIdAsync(int sellerId)
-        {
-            return await _context.Dishes
-                                 .Where(d => d.SellerID == sellerId)
-                                 .Include(d => d.ShoppingCartItems) // 一对多：购物车项
-                                 .Include(d => d.MenuDishes)        // 多对多中间表
-                                     .ThenInclude(md => md.Menu)    // 另一端：菜单
-                                 .ToListAsync();
-        }
-
         public async Task<Dish?> GetByIdAsync(int id)
         {
             return await _context.Dishes

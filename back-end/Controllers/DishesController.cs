@@ -21,15 +21,21 @@ namespace BackEnd.Controllers
         {
             try
             {
-                if (sellerId.HasValue)
+                if (sellerId.HasValue && sellerId == 3)
                 {
-                    var dishes = await _dishService.GetDishesBySellerIdAsync(sellerId.Value);
+                    var dishes = await _dishService.GetAllDishesAsync();
                     return Ok(dishes);
                 }
                 else
                 {
-                    var dishes = await _dishService.GetAllDishesAsync();
-                    return Ok(dishes);
+                    return Ok(new DishDto
+                {
+                    DishId = 0,
+                    DishName = string.Empty,
+                    Price = 0,
+                    Description = string.Empty,
+                    IsSoldOut = 0,
+                });
                 }
             }
             catch (Exception ex)
@@ -85,7 +91,7 @@ namespace BackEnd.Controllers
         {
             try
             {
-                var result = await _dishService.ToggleSoldOutAsync(dishId, dto.IsSoldOut, dto.SellerID);
+                var result = await _dishService.ToggleSoldOutAsync(dishId, dto.IsSoldOut);
                 return !result.Success ? BadRequest(new { code = 400, message = result.Message }) : Ok(result.Data);
             }
             catch (Exception ex)
