@@ -2,6 +2,8 @@ using BackEnd.Dtos.Merchant;
 using BackEnd.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BackEnd.Controllers
 {
@@ -10,6 +12,7 @@ namespace BackEnd.Controllers
     /// </summary>
     [ApiController]
     [Route("api/merchant")]
+    [Authorize]
     public class MerchantCouponController : ControllerBase
     {
         private readonly ICouponService _couponService;
@@ -27,8 +30,14 @@ namespace BackEnd.Controllers
         /// </summary>
         private int GetCurrentSellerId()
         {
-            // 临时写死为3进行测试，后续需要从JWT Token或Session中获取
-            return 3;
+            var sellerIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(sellerIdString, out int sellerId))
+            {
+                return -1;
+            }
+
+            return sellerId;
         }
 
         /// <summary>
@@ -37,25 +46,25 @@ namespace BackEnd.Controllers
         private string GetDetailedErrorMessage(Exception ex)
         {
             var errorDetails = new List<string>();
-            
+
             // 添加主要错误信息
             errorDetails.Add($"错误类型: {ex.GetType().Name}");
             errorDetails.Add($"错误消息: {ex.Message}");
-            
+
             // 处理Entity Framework相关错误
             if (ex is Microsoft.EntityFrameworkCore.DbUpdateException dbEx)
             {
                 errorDetails.Add("数据库更新错误:");
                 errorDetails.Add($"- 内部异常: {dbEx.InnerException?.GetType().Name}");
                 errorDetails.Add($"- 内部消息: {dbEx.InnerException?.Message}");
-                
+
                 // 处理Oracle特定错误
                 if (dbEx.InnerException is Oracle.ManagedDataAccess.Client.OracleException oracleEx)
                 {
                     errorDetails.Add("Oracle数据库错误:");
                     errorDetails.Add($"- 错误代码: {oracleEx.Number}");
                     errorDetails.Add($"- 错误消息: {oracleEx.Message}");
-                    
+
                     // 根据错误代码提供具体说明
                     switch (oracleEx.Number)
                     {
@@ -77,7 +86,7 @@ namespace BackEnd.Controllers
                     }
                 }
             }
-            
+
             // 处理验证错误
             if (ex is ArgumentException argEx)
             {
@@ -85,7 +94,7 @@ namespace BackEnd.Controllers
                 errorDetails.Add($"- 参数名: {argEx.ParamName ?? "未知"}");
                 errorDetails.Add($"- 错误消息: {argEx.Message}");
             }
-            
+
             // 添加堆栈跟踪（仅前几行，避免信息过多）
             if (ex.StackTrace != null)
             {
@@ -96,8 +105,48 @@ namespace BackEnd.Controllers
                     errorDetails.Add($"- {line.Trim()}");
                 }
             }
-            
+
             return string.Join("; ", errorDetails);
+        }
+
+        /// <summary>
+        /// 数据库健康检查
+        /// GET /api/merchant/health
+        /// </summary>
+        [HttpGet("health")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        public async Task<ActionResult<ApiResponse<object>>> CheckHealth()
+        {
+            try
+            {
+                var isHealthy = await _couponService.CheckDatabaseHealthAsync();
+                if (isHealthy)
+                {
+                    return Ok(new ApiResponse<object>
+                    {
+                        code = 200,
+                        message = "数据库连接正常"
+                    });
+                }
+                else
+                {
+                    return StatusCode(503, new ApiResponse<object>
+                    {
+                        code = 503,
+                        message = "数据库连接异常，可能磁盘空间不足"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "健康检查失败");
+                return StatusCode(503, new ApiResponse<object>
+                {
+                    code = 503,
+                    message = $"数据库健康检查失败: {ex.Message}"
+                });
+            }
         }
 
         /// <summary>
@@ -226,10 +275,10 @@ namespace BackEnd.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "创建优惠券失败");
-                
+
                 // 提供详细的错误信息
                 var errorMessage = GetDetailedErrorMessage(ex);
-                
+
                 return StatusCode(500, new ApiResponse<CreateCouponResponseDto>
                 {
                     code = 500,
@@ -237,6 +286,38 @@ namespace BackEnd.Controllers
                     data = null
                 });
             }
+        }
+
+        /// <summary>
+        /// 测试更新优惠券端点
+        /// PUT /api/merchant/coupons/test
+        /// </summary>
+        [HttpPut("coupons/test")]
+        public ActionResult<ApiResponse<object>> TestUpdateCoupon([FromBody] CreateCouponRequestDto request)
+        {
+            _logger.LogInformation("测试更新优惠券请求");
+            _logger.LogInformation("请求数据: {RequestData}", System.Text.Json.JsonSerializer.Serialize(request));
+
+            // 检查ModelState
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                _logger.LogWarning("模型验证失败: {Errors}", string.Join(", ", errors));
+
+                return BadRequest(new ApiResponse<object>
+                {
+                    code = 400,
+                    message = "模型验证失败",
+                    data = new { errors = errors.ToList() }
+                });
+            }
+
+            return Ok(new ApiResponse<object>
+            {
+                code = 200,
+                message = "测试成功",
+                data = request
+            });
         }
 
         /// <summary>
@@ -253,10 +334,12 @@ namespace BackEnd.Controllers
             try
             {
                 _logger.LogInformation("更新优惠券请求 - ID: {Id}, 名称: {Name}", id, request.name);
+                _logger.LogInformation("请求数据: {RequestData}", System.Text.Json.JsonSerializer.Serialize(request));
 
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                    _logger.LogWarning("模型验证失败: {Errors}", string.Join(", ", errors));
                     return BadRequest(new ApiResponse<object>
                     {
                         code = 400,
@@ -308,10 +391,10 @@ namespace BackEnd.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "更新优惠券失败 - ID: {Id}", id);
-                
+
                 // 提供详细的错误信息
                 var errorMessage = GetDetailedErrorMessage(ex);
-                
+
                 return StatusCode(500, new ApiResponse<object>
                 {
                     code = 500,

@@ -26,5 +26,10 @@ namespace BackEnd.Services.Interfaces
 
         // 在 ICourierService.cs 接口中添加或替换为这个版本
         Task<IEnumerable<AvailableOrderDto>> GetAvailableOrdersAsync(int courierId, decimal latitude, decimal longitude, decimal maxDistance);
+
+        Task<bool> UpdateProfileAsync(int courierId, UpdateProfileDto profileDto);
+
+        Task<UpdateProfileDto?> GetProfileForEditAsync(int courierId);
+
     }
 }

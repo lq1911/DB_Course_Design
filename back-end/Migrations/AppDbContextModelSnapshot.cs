@@ -482,7 +482,7 @@ namespace BackEnd.Migrations
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("COMPLETIONTIME");
 
-                    b.Property<int>("CourierID")
+                    b.Property<int?>("CourierID")
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("COURIERID");
 
@@ -517,7 +517,7 @@ namespace BackEnd.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .HasColumnType("NVARCHAR2(20)")
-                        .HasDefaultValue("Pending")
+                        .HasDefaultValue("To_Be_Taken")
                         .HasColumnName("STATUS");
 
                     b.Property<int>("StoreID")
@@ -575,6 +575,14 @@ namespace BackEnd.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("PRICE");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR2(30)")
+                        .HasDefaultValue("SignatureRecommendation")
+                        .HasColumnName("TYPE");
 
                     b.HasKey("DishID");
 
@@ -1294,8 +1302,7 @@ namespace BackEnd.Migrations
                     b.HasOne("BackEnd.Models.Courier", "Courier")
                         .WithMany("DeliveryTasks")
                         .HasForeignKey("CourierID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("BackEnd.Models.Customer", "Customer")
                         .WithMany("DeliveryTasks")

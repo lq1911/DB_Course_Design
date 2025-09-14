@@ -99,15 +99,6 @@ namespace BackEnd.Services
                     }
                 }
 
-                int orderStatus = 0;
-                if (order.DeliveryTask != null)
-                {
-                    var deliveryTask = order.DeliveryTask;
-                    if (deliveryTask.Status == Models.Enums.DeliveryStatus.Completed)
-                    {
-                        orderStatus = 1;
-                    }
-                }
 
                 result.Add(new HistoryOrderDto
                 {
@@ -120,7 +111,7 @@ namespace BackEnd.Services
                     StoreName = store?.StoreName ?? "",
                     DishImage = dishImages,
                     TotalAmount = totalAmount,
-                    OrderStatus = orderStatus
+                    OrderStatus = order.FoodOrderState
                 });
             }
 

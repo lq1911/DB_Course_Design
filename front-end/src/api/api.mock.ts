@@ -2,15 +2,28 @@
 
 export type OrderStatus = 'to_be_taken' | 'pending' | 'delivering' | 'completed' | 'cancelled';
 
-/** 用户个人资料 (所有属性均在模板中使用) */
+
 export interface UserProfile {
     name: string;
     id: string;
     registerDate: string;
     rating: number;
     creditScore: number;
-}
 
+    // --- 新增的可选属性 ---
+    gender?: string;
+    birthday?: string; // 通常是 ISO 格式的日期字符串，如 '2024-01-15T00:00:00'
+    avatar?: string;   // 头像的 URL
+    vehicleType?: string;
+    // -----------------------
+}
+export interface UpdateProfilePayload {
+    name: string;
+    gender?: string;
+    birthday?: string;
+    avatar?: string;       // 新增：头像 URL
+    vehicleType?: string;  // 新增：车辆类型
+}
 
 // ▼▼▼ 在其他 interface 定义的旁边，添加下面这个 ▼▼▼
 export interface Complaint {
@@ -59,6 +72,7 @@ export interface Order {
   fee: string;
   distance: string;        // 配送距离
   time: string;            // 预计时间
+  isReadyForPickup: boolean;
 }
 // ▲▲▲ 替换结束 ▲▲▲
 
@@ -89,7 +103,13 @@ const mockUserProfile: UserProfile = {
     id: 'RD20241201',
     registerDate: '2023-08-15',
     rating: 4.8,
-    creditScore: 892
+    creditScore: 892,
+
+    // --- 新增的模拟数据 ---
+    gender: '男',
+    birthday: '1995-10-20',
+    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&q=80', // 一个示例头像URL
+    vehicleType: '电动车'
 };
 
 const mockWorkStatus: WorkStatus = {
@@ -101,54 +121,30 @@ const mockIncomeData: IncomeData = {
 };
 
 const mockOrders: Order[] = [
-    // 您的 to_be_taken 订单 (这些是正确的，保留)
     {
         id: 'AVAIL-001', status: 'to_be_taken', restaurant: '模拟-一点点奶茶',
         pickupAddress: '模拟-科技园路1号', deliveryAddress: '模拟-软件大厦A座 10楼',
-        customer: '李先生', fee: '15.00', distance: '1.5', time: '10'
+        customer: '李先生', fee: '15.00', distance: '1.5', time: '10',
+        isReadyForPickup: true // 示例
     },
-    {
-        id: 'AVAIL-002', status: 'to_be_taken', restaurant: '模拟-肯德基宅急送',
-        pickupAddress: '模拟-人民广场1号', deliveryAddress: '模拟-市政府大楼 3楼',
-        customer: '王女士', fee: '12.50', distance: '2.3', time: '18'
-    },
-
-    // --- 以下是修正后的旧订单 ---
+    // ...
     {
         id: 'ORD-MOCK-001', status: 'pending', restaurant: '模拟-肯德基',
         pickupAddress: '模拟-人民广场1号', deliveryAddress: '模拟-客户家A',
-        customer: '客户A', fee: '10.00', distance: '2.0', time: '15'
+        customer: '客户A', fee: '10.00', distance: '2.0', time: '15',
+        isReadyForPickup: false // 示例
     },
     {
         id: 'ORD-MOCK-002', status: 'pending', restaurant: '模拟-麦当劳',
         pickupAddress: '模拟-南京路2号', deliveryAddress: '模拟-客户家B',
-        customer: '客户B', fee: '8.50', distance: '1.2', time: '10'
+        customer: '客户B', fee: '8.50', distance: '1.2', time: '10',
+        isReadyForPickup: true // 示例
     },
-    {
-        id: 'ORD-MOCK-003', status: 'delivering', restaurant: '模拟-星巴克',
-        pickupAddress: '模拟-淮海路3号', deliveryAddress: '模拟-客户家C',
-        customer: '客户C', fee: '15.00', distance: '3.1', time: '20'
-    },
-    {
-        id: 'ORD-MOCK-004', status: 'completed', restaurant: '模拟-必胜客',
-        pickupAddress: '模拟-西藏中路4号', deliveryAddress: '模拟-客户家D',
-        customer: '客户D', fee: '12.00', distance: '2.5', time: '18'
-    },
-        // ▼▼▼ 新增已取消订单数据 ▼▼▼
-    {
-        id: 'ORD-CXL-001', status: 'cancelled', restaurant: '模拟-汉堡王',
-        pickupAddress: '模拟-陆家嘴环路5号', deliveryAddress: '模拟-客户家E',
-        customer: '客户E', fee: '9.00', distance: '0.8', time: '8'
-    },
-    {
-        id: 'ORD-CXL-002', status: 'cancelled', restaurant: '模拟-海底捞外送',
-        pickupAddress: '模拟-世纪大道6号', deliveryAddress: '模拟-客户家F',
-        customer: '客户F', fee: '25.00', distance: '4.5', time: '30'
-    },
+    // ... etc. ...
 ];
 
 
-// ▼▼▼ 在 mockOrders, mockLocationInfo 等数据的旁边，添加下面这个 ▼▼▼
+//▼▼▼ 在 mockOrders, mockLocationInfo 等数据的旁边，添加下面这个 ▼▼▼
 const mockComplaints: Complaint[] = [
     {
         complaintID: 'CPL-001',

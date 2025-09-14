@@ -20,7 +20,7 @@
       <div v-else class="grid grid-cols-2 gap-6">
         <div v-for="restaurant in pagedRestaurants" :key="restaurant.id" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
           <img :src="restaurant.image" :alt="restaurant.name" class="w-full h-48 object-cover object-top" />
-          <div class="p-6">
+          <div class="p-4">
             <div class="flex justify-between items-start mb-3">
               <h3 class="font-bold text-xl">{{ restaurant.name }}</h3>
             </div>
@@ -30,7 +30,7 @@
                   <i class="fas fa-star text-yellow-400 mr-1"></i>
                   {{ restaurant.averageRating > 0 ? restaurant.averageRating.toFixed(1) : '暂无评分' }}
                 </span>
-                <span>月售 {{ restaurant.monthlySales }}</span>
+                <span class="flex items-center">月售 {{ restaurant.monthlySales }}</span>
               </div>
               <button
                 class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer whitespace-nowrap"

@@ -4,20 +4,23 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- 顶部导航栏 -->
-    <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 h-16 border-b border-gray-100">
+    <header
+      class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 h-16 border-b border-gray-100">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <el-icon class="text-gray-600 text-xl cursor-pointer hover:text-[#F9771C] transition-colors"><Bell /></el-icon>
+          <el-icon class="text-gray-600 text-xl cursor-pointer hover:text-[#F9771C] transition-colors">
+            <Bell />
+          </el-icon>
           <div class="flex items-center space-x-2">
             <img
               src="https://readdy.ai/api/search-image?query=professional%20restaurant%20owner%20portrait%20with%20friendly%20smile%20wearing%20chef%20uniform%20against%20clean%20white%20background%20modern%20lighting&width=40&height=40&seq=merchant-avatar-001&orientation=squarish"
               alt="商家头像"
               class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm"
             />
-            <span class="text-gray-700 font-medium">张老板</span>
+            <span class="text-gray-700 font-medium">{{ merchantInfo.username || '加载中...' }}</span>
           </div>
         </div>
       </div>
@@ -25,19 +28,14 @@
 
     <div class="flex pt-16">
       <!-- 左侧导航菜单 -->
-      <aside class="fixed left-0 top-16 bottom-0 w-52 bg-white/80 backdrop-blur-md shadow-sm overflow-y-auto border-r border-gray-100">
+      <aside
+        class="fixed left-0 top-16 bottom-0 w-52 bg-white/80 backdrop-blur-md shadow-sm overflow-y-auto border-r border-gray-100">
         <nav class="p-4">
           <div class="space-y-2">
-            <div
-              v-for="(item, index) in menuItems"
-              :key="index"
-              @click="handleMenuClick(item)"
-              :class="{
+            <div v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)" :class="{
                 'bg-orange-50 text-[#F9771C] border-r-3 border-[#F9771C]': $route.name === item.routeName,
                 'text-gray-700 hover:bg-gray-50/80 hover:text-[#F9771C]': $route.name !== item.routeName
-              }"
-              class="flex items-center px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 font-medium"
-            >
+              }" class="flex items-center px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 font-medium">
               <el-icon class="mr-3 text-lg">
                 <component :is="item.icon" />
               </el-icon>
@@ -45,6 +43,16 @@
             </div>
           </div>
         </nav>
+        <!-- 退出登录区域 -->
+        <div class="p-4 border-t border-gray-100">
+          <div @click="handleLogout"
+            class="flex items-center px-4 py-3 rounded-lg cursor-pointer transition-colors text-red-500 hover:bg-red-50">
+            <el-icon class="mr-3 text-lg">
+              <SwitchButton />
+            </el-icon>
+            <span class="font-medium">退出登录</span>
+          </div>
+        </div>
       </aside>
 
       <!-- 主内容区 -->
@@ -52,20 +60,14 @@
         <!-- 订单售后 -->
         <div v-if="activeMenu === 'aftersale'">
           <h2 class="text-2xl font-bold text-gray-800 mb-6">订单售后</h2>
-          
+
           <!-- 切换标签 -->
           <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
             <div class="flex space-x-4">
-              <button
-                v-for="tab in aftersaleTabs"
-                :key="tab.value"
-                @click="activeAftersaleTab = tab.value"
-                :class="{
+              <button v-for="tab in aftersaleTabs" :key="tab.value" @click="activeAftersaleTab = tab.value" :class="{
                   'bg-gradient-to-r from-[#F9771C] to-orange-500 text-white shadow-lg': activeAftersaleTab === tab.value,
                   'bg-gray-100/80 text-gray-700 hover:bg-gray-200/80 hover:text-[#F9771C]': activeAftersaleTab !== tab.value
-                }"
-                class="px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-sm"
-              >
+                }" class="px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-sm">
                 {{ tab.label }}
               </button>
             </div>
@@ -97,8 +99,10 @@
                 </el-table-column>
                 <el-table-column label="操作" width="160">
                   <template #default="scope">
-                    <el-button size="small" class="modern-btn-secondary" @click.stop="openPenaltyDetail(scope.row)">详情</el-button>
-                    <el-button size="small" class="modern-btn-primary" @click.stop="openPenaltyAppeal(scope.row)">申诉</el-button>
+                    <el-button size="small" class="modern-btn-secondary"
+                      @click.stop="openPenaltyDetail(scope.row)">详情</el-button>
+                    <el-button size="small" class="modern-btn-primary"
+                      @click.stop="openPenaltyAppeal(scope.row)">申诉</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -112,8 +116,10 @@
                       <div><b class="text-gray-600">处罚编号：</b>{{ penaltyDetail.id }}</div>
                       <div><b class="text-gray-600">处罚时间：</b>{{ penaltyDetail.time }}</div>
                       <div><b class="text-gray-600">处罚原因：</b>{{ penaltyDetail.reason }}</div>
-                      <div><b class="text-gray-600">平台措施：</b>{{ punishmentDict[penaltyDetail.platformAction] || penaltyDetail.platformAction }}</div>
-                      <div><b class="text-gray-600">商家措施：</b>{{ punishmentDict[penaltyDetail.merchantAction] || penaltyDetail.merchantAction }}</div>
+                      <div><b class="text-gray-600">平台措施：</b>{{ punishmentDict[penaltyDetail.platformAction] ||
+                        penaltyDetail.platformAction }}</div>
+                      <div><b class="text-gray-600">商家措施：</b>{{ punishmentDict[penaltyDetail.merchantAction] ||
+                        penaltyDetail.merchantAction }}</div>
                     </div>
                   </div>
                 </div>
@@ -123,12 +129,14 @@
             <el-dialog v-model="penaltyAppealVisible" title="处罚申诉" width="460px" class="modern-dialog">
               <div class="space-y-4">
                 <div>
-                  <el-input v-model="penaltyAppealReason" type="textarea" placeholder="请填写申诉理由" :rows="4" class="modern-textarea" />
+                  <el-input v-model="penaltyAppealReason" type="textarea" placeholder="请填写申诉理由" :rows="4"
+                    class="modern-textarea" />
                 </div>
               </div>
               <template #footer>
                 <el-button @click="penaltyAppealVisible = false" class="modern-btn-secondary">取消</el-button>
-                <el-button class="modern-btn-primary" :disabled="!penaltyAppealReason" @click="submitPenaltyAppeal">提交申诉</el-button>
+                <el-button class="modern-btn-primary" :disabled="!penaltyAppealReason"
+                  @click="submitPenaltyAppeal">提交申诉</el-button>
               </template>
             </el-dialog>
           </div>
@@ -154,7 +162,8 @@
                 <el-table-column label="用户" width="120">
                   <template #default="scope">
                     <div class="flex items-center gap-2">
-                      <img v-if="scope.row.user?.avatar" :src="scope.row.user.avatar" class="w-8 h-8 rounded-full object-cover border shadow-sm" />
+                      <img v-if="scope.row.user?.avatar" :src="scope.row.user.avatar"
+                        class="w-8 h-8 rounded-full object-cover border shadow-sm" />
                       <span>{{ scope.row.user?.name }}</span>
                     </div>
                   </template>
@@ -163,22 +172,15 @@
                 <el-table-column prop="createdAt" label="申请时间" width="160" />
                 <el-table-column label="操作" width="100">
                   <template #default="scope">
-                    <el-button size="small" class="modern-btn-primary" @click="openAsDetail(scope.row.id)">详情</el-button>
+                    <el-button size="small" class="modern-btn-primary"
+                      @click="openAsDetail(scope.row.id)">详情</el-button>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="flex justify-between items-center p-4 border-t border-gray-100">
                 <div></div>
-                <el-pagination
-                  background
-                  layout="prev, pager, next"
-                  :page-size="asPageSize"
-                  :current-page="asPage"
-                  :total="asTotal"
-                  @current-change="loadAfterSales"
-                  :pager-count="5"
-                  class="modern-pagination"
-                />
+                <el-pagination background layout="prev, pager, next" :page-size="asPageSize" :current-page="asPage"
+                  :total="asTotal" @current-change="loadAfterSales" :pager-count="5" class="modern-pagination" />
               </div>
             </div>
             <!-- 详情抽屉 -->
@@ -189,7 +191,8 @@
                     <div class="grid grid-cols-2 gap-4 text-sm">
                       <div><b class="text-gray-600">订单号：</b>{{ asDetail.orderNo }}</div>
                       <div><b class="text-gray-600">申请时间：</b>{{ asDetail.createdAt }}</div>
-                      <div class="col-span-2"><b class="text-gray-600">用户：</b>{{ asDetail.user?.name }}（{{ asDetail.user?.phone }}）</div>
+                      <div class="col-span-2"><b class="text-gray-600">用户：</b>{{ asDetail.user?.name }}（{{
+                        asDetail.user?.phone }}）</div>
                     </div>
                   </div>
                   <div class="bg-gray-50 rounded-xl p-4">
@@ -204,7 +207,8 @@
                       <el-radio label="negotiate" class="modern-radio">协商</el-radio>
                     </el-radio-group>
                     <el-input v-model="decision.remark" placeholder="处理意见（必填）" class="modern-input" />
-                    <el-button class="modern-btn-primary" :disabled="!decision.action || !decision.remark" @click="submitDecision">提交处理</el-button>
+                    <el-button class="modern-btn-primary" :disabled="!decision.action || !decision.remark"
+                      @click="submitDecision">提交处理</el-button>
                   </div>
                 </div>
               </div>
@@ -226,7 +230,8 @@
                 <el-table-column label="用户" width="120">
                   <template #default="scope">
                     <div class="flex items-center gap-2">
-                      <img v-if="scope.row.user?.avatar" :src="scope.row.user.avatar" class="w-8 h-8 rounded-full object-cover border shadow-sm" />
+                      <img v-if="scope.row.user?.avatar" :src="scope.row.user.avatar"
+                        class="w-8 h-8 rounded-full object-cover border shadow-sm" />
                       <span>{{ scope.row.user?.name }}</span>
                     </div>
                   </template>
@@ -236,23 +241,17 @@
                 <el-table-column label="操作" width="120">
                   <template #default="scope">
                     <div class="flex items-center gap-1">
-                      <el-button size="small" class="modern-btn-primary" @click="openReplyDialog(scope.row)">回复</el-button>
+                      <el-button size="small" class="modern-btn-primary"
+                        @click="openReplyDialog(scope.row)">回复</el-button>
                     </div>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="flex justify-between items-center p-4 border-t border-gray-100">
                 <div></div>
-                <el-pagination
-                  background
-                  layout="prev, pager, next"
-                  :page-size="reviewPageSize"
-                  :current-page="reviewPage"
-                  :total="reviewTotal"
-                  @current-change="fetchReviews"
-                  :pager-count="5"
-                  class="modern-pagination"
-                />
+                <el-pagination background layout="prev, pager, next" :page-size="reviewPageSize"
+                  :current-page="reviewPage" :total="reviewTotal" @current-change="fetchReviews" :pager-count="5"
+                  class="modern-pagination" />
               </div>
             </div>
             <!-- 回复弹窗 -->
@@ -260,11 +259,13 @@
               <div class="space-y-4">
                 <div>
                   <span class="font-bold text-gray-700 text-sm">历史聊天记录：</span>
-                  <div id="reply-chat-container" class="mt-2 max-h-60 overflow-y-auto rounded-xl border border-gray-100 bg-gray-50 p-3 space-y-2">
+                  <div id="reply-chat-container"
+                    class="mt-2 max-h-60 overflow-y-auto rounded-xl border border-gray-100 bg-gray-50 p-3 space-y-2">
                     <div v-if="chatLoading" class="text-center text-gray-500 text-sm py-4">加载中...</div>
                     <template v-else>
                       <div v-if="!chatMessages.length" class="text-center text-gray-400 text-sm py-4">暂无聊天记录</div>
-                      <div v-for="(msg, idx) in chatMessages" :key="idx" class="flex" :class="msg.sender === 'merchant' ? 'justify-end' : 'justify-start'">
+                      <div v-for="(msg, idx) in chatMessages" :key="idx" class="flex"
+                        :class="msg.sender === 'merchant' ? 'justify-end' : 'justify-start'">
                         <div :class="[
                           'px-3 py-2 rounded-2xl text-sm shadow-sm max-w-[75%]',
                           msg.sender === 'merchant' ? 'bg-[#FEECDC] text-gray-800 rounded-br-sm' : 'bg-white text-gray-800 rounded-bl-sm border'
@@ -279,41 +280,26 @@
                 <div>
                   <span class="font-bold text-gray-700 text-sm">常用语：</span>
                   <div class="flex flex-wrap gap-2 mt-2">
-                    <el-tag
-                      v-for="(phrase, idx) in quickPhrases"
-                      :key="idx"
-                      size="small"
-                      class="modern-tag"
-                      @click="insertToReply(phrase)"
-                    >{{ phrase }}</el-tag>
+                    <el-tag v-for="(phrase, idx) in quickPhrases" :key="idx" size="small" class="modern-tag"
+                      @click="insertToReply(phrase)">{{ phrase }}</el-tag>
                   </div>
                 </div>
                 <div>
                   <span class="font-bold text-gray-700 text-sm">表情：</span>
                   <div class="flex flex-wrap gap-2 mt-2">
-                    <span
-                      v-for="(emoji, idx) in emojis"
-                      :key="emoji"
-                      @click="insertToReply(emoji)"
-                      class="text-2xl cursor-pointer hover:scale-110 transition-transform"
-                    >{{ emoji }}</span>
+                    <span v-for="(emoji, idx) in emojis" :key="emoji" @click="insertToReply(emoji)"
+                      class="text-2xl cursor-pointer hover:scale-110 transition-transform">{{ emoji }}</span>
                   </div>
                 </div>
-                <el-input
-                  id="reply-content-textarea"
-                  v-model="replyContent"
-                  type="textarea"
-                  placeholder="回复内容"
-                  :rows="4"
-                  class="modern-textarea"
-                />
+                <el-input id="reply-content-textarea" v-model="replyContent" type="textarea" placeholder="回复内容"
+                  :rows="4" class="modern-textarea" />
               </div>
               <template #footer>
                 <el-button @click="replyDialogVisible = false" class="modern-btn-secondary">取消</el-button>
                 <el-button class="modern-btn-primary" @click="submitReply">发送</el-button>
               </template>
             </el-dialog>
-            
+
           </div>
         </div>
 
@@ -323,15 +309,24 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, reactive, onMounted, nextTick } from 'vue';
-import { Bell, House, List, Ticket, Warning, User } from '@element-plus/icons-vue';
+// ▼▼▼ 修改点 1: 在图标导入中加入 SwitchButton ▼▼▼
+import { Bell, House, List, Ticket, Warning, User, SwitchButton } from '@element-plus/icons-vue';
 import { useRouter, useRoute } from 'vue-router';
+// ▼▼▼ 修改点 2: 导入 ElMessageBox 用于确认弹窗 ▼▼▼
+import { ElMessage, ElMessageBox } from 'element-plus'; // 假设您可能需要ElMessage, 一并导入
+
+// --- 您已有的 API 导入 (保持不变) ---
 import { replyReview, getReviewList, getPenaltyList, getPenaltyDetail, appealPenalty, type Review } from '@/api/merchant_api';
-// 1. 引入接口和类型
 import type { AfterSaleApplication, AfterSaleListParams } from '@/api/merchant_api';
 import { getAfterSaleList, getAfterSaleDetail, decideAfterSale } from '@/api/merchant_api';
 import { type PenaltyRecord } from '@/api/merchant_api';
 
+// --- 您已有的登出逻辑相关导入 (保持不变) ---
+import loginApi from '@/api/login_api';
+import { removeToken } from '@/utils/jwt';
 // 本地聊天消息类型
 interface LocalChatMessage {
   sender: 'user' | 'merchant';
@@ -343,6 +338,9 @@ const activeMenu = ref('aftersale');
 const router = useRouter();
 const $route = useRoute();
 
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
+
 const menuItems = [
   { key: 'overview', label: '店铺概况', icon: House, routeName: 'MerchantHome' },
   { key: 'orders', label: '订单中心', icon: List, routeName: 'MerchantOrders' },
@@ -351,28 +349,37 @@ const menuItems = [
   { key: 'profile', label: '商家信息', icon: User, routeName: 'MerchantProfile' }
 ] as const;
 
+import { getMerchantInfo, type MerchantInfo } from '@/api/merchant_api';
+
+const fetchAllData = async () => {
+  try {
+    console.log('开始获取商家信息...');
+    const merchant = await getMerchantInfo();
+    console.log('获取到的商家信息:', merchant);
+    
+    if (merchant) {
+      merchantInfo.value = { ...defaultMerchantInfo, ...merchant };
+      console.log('设置后的商家信息:', merchantInfo.value);
+    }
+  } catch (error) {
+    console.error('获取商家信息失败:', error);
+    merchantInfo.value = { ...defaultMerchantInfo };
+  }
+};
+
+const defaultMerchantInfo = {
+  username: '',
+  sellerId: 0
+};
+
+const merchantInfo = ref({ ...defaultMerchantInfo });
+
 const handleMenuClick = (menuItem: typeof menuItems[number]) => {
   router.push({ name: menuItem.routeName });
 };
 
-// 处罚记录（支持后端 + 本地样例回退）
+// 处罚记录
 const penaltyList = ref<PenaltyRecord[]>([]);
-const samplePenaltyList: PenaltyRecord[] = [
-  {
-    id: 'PEN20241201001',
-    reason: '食品安全问题',
-    time: '2024-11-15 16:30:00',
-    merchantAction: '整改厨房卫生',
-    platformAction: '警告处理'
-  },
-  {
-    id: 'PEN20241201002',
-    reason: '超时配送',
-    time: '2024-11-20 10:15:00',
-    merchantAction: '加强配送管理',
-    platformAction: '扣除信用分'
-  }
-];
 const penaltyFilters = reactive<{ keyword: string }>({ keyword: '' });
 const penaltyDetailVisible = ref(false);
 const penaltyDetail = ref<PenaltyRecord | null>(null);
@@ -382,32 +389,20 @@ async function loadPenalties() {
   if (penaltyFilters.keyword) params.keyword = penaltyFilters.keyword.trim();
   try {
     const list = await getPenaltyList(params);
-    if (Array.isArray(list) && list.length > 0) {
-      penaltyList.value = list;
-      return;
-    }
-    usePenaltySampleFallback();
-  } catch {
-    usePenaltySampleFallback();
+    penaltyList.value = list || [];
+  } catch (error) {
+    console.error('加载处罚记录失败:', error);
+    penaltyList.value = [];
   }
-}
-
-function usePenaltySampleFallback() {
-  let list = samplePenaltyList.slice();
-  if (penaltyFilters.keyword) {
-    const kw = penaltyFilters.keyword.trim();
-    list = list.filter(p => p.id.includes(kw) || p.reason.includes(kw));
-  }
-  penaltyList.value = list;
 }
 
 async function openPenaltyDetail(row: PenaltyRecord) {
   try {
     penaltyDetail.value = await getPenaltyDetail(row.id);
-  } catch {
-    penaltyDetail.value = row;
+    penaltyDetailVisible.value = true;
+  } catch (error) {
+    console.error('获取处罚详情失败:', error);
   }
-  penaltyDetailVisible.value = true;
 }
 
 // 处罚申诉弹窗
@@ -431,62 +426,47 @@ async function submitPenaltyAppeal() {
   }
 }
 
-// 评论管理增强
-const allReviews: Review[] = [
-  {
-    id: 1,
-    orderNo: 'ORD20240601001',
-    user: { name: '美食达人', phone: '13800000001', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-    content: '菜品新鲜美味，配送很快，五星好评！',
-    createdAt: '2024-06-01 12:30:00'
-  },
-  {
-    id: 2,
-    orderNo: 'ORD20240601002',
-    user: { name: '吃货小王', phone: '13800000002', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-    content: '味道一般，分量偏少。',
-    createdAt: '2024-06-01 13:10:00'
-  },
-  {
-    id: 3,
-    orderNo: 'ORD20240601003',
-    user: { name: '匿名用户', phone: '13800000003' },
-    content: '送餐太慢了，菜都凉了。',
-    createdAt: '2024-06-01 14:00:00'
-  }
-];
+// 评论管理
 const reviews = ref<Review[]>([]);
 const reviewPage = ref(1);
 const reviewPageSize = ref(10);
-const reviewTotal = ref(3);
+const reviewTotal = ref(0);
 const reviewFilters = reactive({
   keyword: ''
 });
 
 async function fetchReviews(page = 1) {
   reviewPage.value = page;
+  
+  // 检查是否有商家ID
+  console.log('当前商家信息:', merchantInfo.value);
+  console.log('商家ID:', merchantInfo.value.sellerId);
+  
+  if (!merchantInfo.value.sellerId) {
+    console.warn('商家ID未获取到，无法加载评论');
+    reviews.value = [];
+    reviewTotal.value = 0;
+    return;
+  }
+  
   try {
-    const params: any = {
+    const params = {
       page: reviewPage.value,
       pageSize: reviewPageSize.value,
-      keyword: reviewFilters.keyword || undefined
+      keyword: reviewFilters.keyword || undefined,
+      sellerId: merchantInfo.value.sellerId
     };
+    
+    console.log('发送评论请求参数:', params);
     const res = await getReviewList(params);
-    reviews.value = res.list;
-    reviewTotal.value = res.total;
-  } catch {
-    // 后端不可用时退回到本地过滤
-    let filtered = allReviews.slice();
-    if (reviewFilters.keyword) {
-      const kw = reviewFilters.keyword.trim();
-      filtered = filtered.filter(r =>
-        r.content.includes(kw) ||
-        r.orderNo.includes(kw) ||
-        (r.user?.name && r.user.name.includes(kw))
-      );
-    }
-    reviewTotal.value = filtered.length;
-    reviews.value = filtered.slice((reviewPage.value - 1) * reviewPageSize.value, reviewPage.value * reviewPageSize.value);
+    console.log('评论API响应:', res);
+    
+    reviews.value = res.list || [];
+    reviewTotal.value = res.total || 0;
+  } catch (error) {
+    console.error('获取评论列表失败:', error);
+    reviews.value = [];
+    reviewTotal.value = 0;
   }
 }
 
@@ -549,7 +529,8 @@ async function submitReply() {
     if (el) el.scrollTop = el.scrollHeight;
   });
 }
-onMounted(() => {
+onMounted(async () => {
+  await fetchAllData();
   fetchReviews();
   loadPenalties();
   loadAfterSales(1);
@@ -603,44 +584,6 @@ const asFilters = reactive({
   keyword: ''
 });
 
-// 本地参考用样例数据（后端无数据或联调前展示）
-const sampleAfterSaleList: AfterSaleApplication[] = [
-  {
-    id: 101,
-    orderNo: 'ORD20240602001',
-    user: { name: '赵六', phone: '13800000006', avatar: 'https://randomuser.me/api/portraits/men/12.jpg' },
-    reason: '口味不合适，申请退款',
-    createdAt: '2024-06-02 11:20:00'
-  },
-  {
-    id: 102,
-    orderNo: 'ORD20240602002',
-    user: { name: '钱七', phone: '13800000007', avatar: 'https://randomuser.me/api/portraits/women/52.jpg' },
-    reason: '打包盒破损，汤洒出',
-    createdAt: '2024-06-02 12:05:00'
-  },
-  {
-    id: 103,
-    orderNo: 'ORD20240602003',
-    user: { name: '孙二', phone: '13800000008', avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
-    reason: '配送态度不佳',
-    createdAt: '2024-06-02 12:18:00'
-  },
-  {
-    id: 104,
-    orderNo: 'ORD20240602004',
-    user: { name: '周九', phone: '13800000009', avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
-    reason: '餐品分量不足，申请部分退款',
-    createdAt: '2024-06-02 12:40:00'
-  },
-  {
-    id: 105,
-    orderNo: 'ORD20240602005',
-    user: { name: '吴十', phone: '13800000010', avatar: 'https://randomuser.me/api/portraits/women/28.jpg' },
-    reason: '送错餐品，申请退货退款',
-    createdAt: '2024-06-02 13:05:00'
-  }
-];
 
 async function loadAfterSales(page = 1) {
   asPage.value = page;
@@ -651,31 +594,13 @@ async function loadAfterSales(page = 1) {
   };
   try {
     const res = await getAfterSaleList(params);
-    if (Array.isArray(res.list) && res.list.length > 0) {
-      aftersaleList.value = res.list;
-      asTotal.value = res.total;
-      return;
-    }
-    // 若后端返回空列表，则使用本地样例做占位
-    useSampleFallback();
-  } catch {
-    // 后端不可用时使用本地样例
-    useSampleFallback();
+    aftersaleList.value = res.list || [];
+    asTotal.value = res.total || 0;
+  } catch (error) {
+    console.error('获取售后申请列表失败:', error);
+    aftersaleList.value = [];
+    asTotal.value = 0;
   }
-}
-
-function useSampleFallback() {
-  let filtered = sampleAfterSaleList.slice();
-  if (asFilters.keyword) {
-    const kw = asFilters.keyword.trim();
-    filtered = filtered.filter(a =>
-      a.orderNo.includes(kw) ||
-      (a.user?.name && a.user.name.includes(kw)) ||
-      (a.user?.phone && a.user.phone.includes(kw))
-    );
-  }
-  asTotal.value = filtered.length;
-  aftersaleList.value = filtered.slice((asPage.value - 1) * asPageSize.value, asPage.value * asPageSize.value);
 }
 
 function resetAsFilters() {
@@ -693,9 +618,9 @@ async function openAsDetail(id: number) {
   try {
     const detail = await getAfterSaleDetail(id);
     asDetail.value = detail;
-  } catch (e) {
-    // 后端不可用或无此记录时，回退到本地样例
-    asDetail.value = sampleAfterSaleList.find(a => a.id === id) || null;
+  } catch (error) {
+    console.error('获取售后申请详情失败:', error);
+    asDetail.value = null;
   }
 }
 
@@ -714,28 +639,17 @@ const decision = reactive<{
 
 async function submitDecision() {
   if (!asDetail.value || !decision.action) return;
-  const isSample = sampleAfterSaleList.some(a => a.id === asDetail.value?.id);
-  if (isSample) {
-    // 本地样例模拟流程 - 由于数据库中无status字段，这里只做基本处理
-    const target = sampleAfterSaleList.find(a => a.id === asDetail.value!.id);
-    if (target) {
-      // 模拟处理完成
-      console.log('处理完成:', decision.action, decision.remark);
-    }
-    // 以本地样例刷新展示
-    useSampleFallback();
-    asDetail.value = target ? { ...target } : null;
+  
+  try {
+    await decideAfterSale(asDetail.value.id, decision.action as any, {
+      remark: decision.remark
+    });
+    await loadAfterSales(asPage.value);
+    asDetail.value = await getAfterSaleDetail(asDetail.value.id);
     clearDecision();
-    return;
+  } catch (error) {
+    console.error('处理售后申请失败:', error);
   }
-
-  // 正常后端流程
-  await decideAfterSale(asDetail.value.id, decision.action as any, {
-    remark: decision.remark
-  });
-  await loadAfterSales(asPage.value);
-  asDetail.value = await getAfterSaleDetail(asDetail.value.id);
-  clearDecision();
 }
 
 const punishmentDict: Record<string, string> = {
@@ -748,6 +662,43 @@ const punishmentDict: Record<string, string> = {
   suspend_7days: '暂停营业7天',
   permanent_removal: '永久下架',
 };
+
+
+async function handleLogout() {
+  try {
+    // 1. 弹出确认框
+    await ElMessageBox.confirm(
+      '您确定要退出当前商家账号吗？', // 提示信息可以针对商家进行微调
+      '退出登录',
+      {
+        confirmButtonText: '确定退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    );
+
+    // 2. 调用后端登出接口
+    await loginApi.logout();
+    
+    // 3. 核心：清除本地登录状态
+    removeToken();
+
+    ElMessage.success('您已成功退出登录');
+
+    // 4. 重定向到登录页面
+    router.replace('/login'); // 确保 '/login' 是你的登录页路由
+
+  } catch (error: any) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消退出操作');
+    } else {
+      console.error('登出时发生错误:', error);
+      ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+      removeToken();
+      router.replace('/login');
+    }
+  }
+}
 </script>
 
 <style scoped>

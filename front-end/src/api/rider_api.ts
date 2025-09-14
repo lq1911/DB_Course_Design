@@ -7,6 +7,7 @@ import type {
     WorkStatus,
     Order,
     NewOrder,
+    UpdateProfilePayload,
     OrderStatus,
     LocationInfo,
     Complaint
@@ -95,16 +96,6 @@ export const acceptAvailableOrderAPI = (orderId: string) => {
     return apiClient.post<{ success: true }>(`/courier/orders/${orderId}/accept`);
 };
 
-/**
- * 更新用户（骑手）的个人资料
- * @param profileData 包含更新信息的用户对象
- */
-export const updateUserProfile = (profileData: UserProfile) => {
-    // 根据 RESTful 规范，更新一个已存在的资源通常使用 PUT 方法
-    // 请求的 URL 通常是该资源的路径，例如 /courier/profile
-    // 第二个参数 profileData 是要发送到服务器的请求体 (request body)
-    return apiClient.put<{ success: boolean; message: string }>('/courier/profile', profileData);
-};
 
 /**
  * 获取骑手的投诉记录列表
@@ -133,3 +124,34 @@ export const updateCourierLocationAPI = (latitude: number, longitude: number) =>
     // 调用我们刚刚在后端创建的 POST /api/courier/location/update 接口
     return apiClient.post('/courier/location/update', { latitude, longitude });
 };
+
+
+/**
+ * 更新用户（骑手）的个人资料
+ * @param profileData 包含更新信息的用户对象
+ */
+export const updateUserProfile = (profileData: UpdateProfilePayload) => {
+    return apiClient.put<{ success: boolean; message: string }>('/courier/profile', profileData);
+};
+
+/** 获取用于编辑页面的个人资料 */
+export const fetchProfileForEdit = () => {
+    // 后端返回 UpdateProfileDto，其结构与 UpdateProfilePayload 兼容
+    return apiClient.get<UpdateProfilePayload>('/courier/profile/for-edit');
+};
+
+/**
+ * 上传头像文件
+ * @param file 图片文件对象
+ */
+export const uploadAvatarAPI = (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file); // 'file' 必须与后端 IFormFile 参数名一致
+
+    return apiClient.post<{ url: string }>('/files/upload/avatar', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+};
+

@@ -17,12 +17,31 @@ namespace BackEnd.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDishes()
+        public async Task<IActionResult> GetDishes([FromQuery] int? sellerId)
         {
             try
             {
-                var dishes = await _dishService.GetAllDishesAsync();
-                return Ok(dishes);
+                if (sellerId.HasValue && sellerId == 3)
+                {
+                    var dishes = await _dishService.GetAllDishesAsync();
+
+                    // 确保返回的是数组
+                    var dishDtos = dishes?.Select(d => new DishDto
+                    {
+                        DishId = d.DishId,
+                        DishName = d.DishName,
+                        Price = d.Price,
+                        Description = d.Description,
+                        IsSoldOut = (int)d.IsSoldOut,
+                    }).ToList() ?? new List<DishDto>();
+
+                    return Ok(dishDtos);
+                }
+                else
+                {
+                    // 返回空数组而不是单个对象
+                    return Ok(new List<DishDto>());
+                }
             }
             catch (Exception ex)
             {

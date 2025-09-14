@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using BackEnd.Dtos.Review;
-using BackEnd.Models;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
 
@@ -11,7 +7,7 @@ namespace BackEnd.Services
     public class ReviewService : IReviewService
     {
         private readonly ICommentRepository _commentRepository;
-        private readonly IFoodOrderRepository _orderRepository; 
+        private readonly IFoodOrderRepository _orderRepository;
 
         public ReviewService(ICommentRepository commentRepository, IFoodOrderRepository orderRepository)
         {
@@ -19,14 +15,14 @@ namespace BackEnd.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<RPageResultDto<ReviewDto>> GetReviewsAsync(int page, int pageSize, string? keyword)
+        public async Task<RPageResultDto<ReviewDto>> GetReviewsAsync(int sellerId, int page, int pageSize, string? keyword)
         {
-            var comments = await _commentRepository.GetAllAsync();
-            
+            var comments = await _commentRepository.GetBySellerAsync(sellerId);
+
             // 应用搜索过滤
             if (!string.IsNullOrEmpty(keyword))
             {
-                comments = comments.Where(c => 
+                comments = comments.Where(c =>
                     c.Content.Contains(keyword) ||
                     c.CommentID.ToString().Contains(keyword))
                     .ToList();
@@ -48,7 +44,7 @@ namespace BackEnd.Services
                 {
                     Name = c.Commenter?.User?.Username ?? "未知用户",
                     Phone = c.Commenter?.User?.PhoneNumber.ToString() ?? "未知电话",
-                    Avatar = c.Commenter?.User?.Avatar ?? "" 
+                    Avatar = c.Commenter?.User?.Avatar ?? ""
                 },
                 Content = c.Content ?? "无评论内容",
                 CreatedAt = c.PostedAt.ToString("yyyy-MM-dd HH:mm:ss")
@@ -72,7 +68,7 @@ namespace BackEnd.Services
                     Message = "评论不存在"
                 };
             }
-            
+
             // 更新原评论的回复数
             comment.Replies++;
             await _commentRepository.UpdateAsync(comment);

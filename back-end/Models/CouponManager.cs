@@ -11,7 +11,7 @@ namespace BackEnd.Models
         // 外码：SellerID，StoreID
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CouponManagerID { get; set; }
 
         [Required]
@@ -49,10 +49,6 @@ namespace BackEnd.Models
         public int StoreID { get; set; }
         [ForeignKey("StoreID")]
         public Store Store { get; set; } = null!;
-
-        public int SellerID { get; set; }
-        [ForeignKey("SellerID")]
-        public Seller Seller { get; set; } = null!;
 
         // 一对多导航属性
         // 优惠券

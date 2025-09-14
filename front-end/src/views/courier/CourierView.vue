@@ -23,10 +23,11 @@
             <!-- 主要内容区域 -->
             <div class="min-h-screen bg-gray-50">
 
-                <!-- 顶部导航栏 -->
+                <!-- 顶部导航栏 (已移除今日收入) -->
                 <div v-if="userProfile"
                     class="fixed top-0 left-0 right-0 bg-gradient-to-r from-orange-500 to-orange-400 z-50 px-4 py-4">
                     <div class="flex items-center justify-between">
+                        <!-- 左侧：头像和姓名 -->
                         <div class="flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -35,21 +36,15 @@
                                 </el-icon>
                             </div>
                             <div>
-                                <!-- 这部分数据您已经有了，可以直接用 -->
                                 <div class="text-base font-medium text-white">
                                     {{ userProfile.name }}
                                 </div>
                                 <div class="text-xs text-white/80">ID: {{ userProfile.id }}</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-5">
-                            <div class="text-right">
-                                <div class="text-xs text-white/80">今日收入</div>
-                                <!-- 修改点: 直接使用计算属性 todayIncome -->
-                                <div class="text-base font-semibold text-white">
-                                    ¥{{ todayIncome.toFixed(2) }}
-                                </div>
-                            </div>
+
+                        <!-- 右侧：只保留通知铃铛图标 -->
+                        <div class="flex items-center">
                             <div
                                 class="w-9 h-9 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                                 <el-icon class="text-white text-xl cursor-pointer">
@@ -130,7 +125,7 @@
                                 </div>
                             </div>
                         </div> -->
-                          <CourierLocationMap /> 
+                        <CourierLocationMap />
 
                     </div>
 
@@ -256,21 +251,57 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex items-center justify-between pt-2">
-                                        <div class="text-sm font-medium text-orange-500">¥{{ order.fee }}</div>
-                                        <div class="flex space-x-2">
-                                            <button v-if="order.status === 'pending'"
-                                                @click="handlePickupOrder(order.id)"
-                                                class="bg-orange-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-orange-600">
-                                                取单
+                                    <!-- ▼▼▼ 替换为这个新的按钮区域代码 ▼▼▼ -->
+                                    <!-- 底部操作区，pt-3 增加一点与上方内容的间距 -->
+                                    <div class="pt-3">
+                                        <!-- 待取单状态 (pending) 的按钮 -->
+                                        <div v-if="order.status === 'pending'" class="text-center">
+                                            <button @click="handlePickupOrder(order.id)"
+                                                :disabled="!order.isReadyForPickup"
+                                                class="w-full text-white px-4 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 transform"
+                                                :class="{
+                                                    'bg-gradient-to-r from-orange-500 to-yellow-500 hover:shadow-lg hover:-translate-y-0.5': order.isReadyForPickup,
+                                                    'bg-gray-400 cursor-not-allowed shadow-none': !order.isReadyForPickup
+                                                }">
+                                                <!-- 按钮内联flex布局，用于放置图标 -->
+                                                <div class="flex items-center justify-center">
+                                                    <!-- 准备就绪时显示摩托车图标 -->
+                                                    <el-icon v-if="order.isReadyForPickup" class="mr-2">
+                                                        <MostlyCloudy />
+                                                    </el-icon>
+                                                    <!-- 等待时显示沙漏图标 -->
+                                                    <el-icon v-else class="mr-2">
+                                                        <Timer />
+                                                    </el-icon>
+
+                                                    <span>{{ order.isReadyForPickup ? '我已取餐' : '等待商家出餐' }}</span>
+                                                </div>
                                             </button>
-                                            <button v-if="order.status === 'delivering'"
-                                                @click="handleDeliverOrder(order.id)"
-                                                class="bg-green-500 text-white px-4 py-2 text-xs rounded-lg shadow-sm hover:bg-green-600">
-                                                已送达
+                                            <p v-if="!order.isReadyForPickup"
+                                                class="text-xs text-center text-gray-500 mt-2">
+                                                商家正在努力备餐中，请稍候...
+                                            </p>
+                                        </div>
+
+                                        <!-- 配送中状态 (delivering) 的按钮 -->
+                                        <div v-if="order.status === 'delivering'" class="text-center">
+                                            <button @click="handleDeliverOrder(order.id)"
+                                                class="w-full text-white px-4 py-2.5 text-sm font-semibold rounded-lg shadow-md transition-all duration-300 transform bg-gradient-to-r from-green-500 to-teal-500 hover:shadow-lg hover:-translate-y-0.5">
+                                                <div class="flex items-center justify-center">
+                                                    <el-icon class="mr-2">
+                                                        <Position />
+                                                    </el-icon>
+                                                    <span>我已送达</span>
+                                                </div>
                                             </button>
                                         </div>
+
+                                        <!-- 费用信息，移到了按钮下方，作为补充信息 -->
+                                        <div class="text-center text-xs text-gray-400 mt-2">
+                                            配送费: <span class="font-semibold text-gray-600">¥{{ order.fee }}</span>
+                                        </div>
                                     </div>
+                                    <!-- ▲▲▲ 替换结束 ▲▲▲ -->
                                     <div v-if="order.status === 'pending' || order.status === 'delivering'"
                                         class="mt-3">
                                         <div class="relative">
@@ -369,14 +400,24 @@
 
                     <!-- 个人中心页面 -->
                     <div v-if="currentTab === 'profile' && userProfile" class="mx-4 mt-4">
-                        <!-- 个人资料卡片 -->
+                        <!-- 个人资料卡片 (仅更新头像显示) -->
                         <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
                             <div class="flex items-center space-x-4 mb-4">
-                                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-                                    <el-icon class="text-white text-2xl">
+
+                                <!-- ▼▼▼ 这是唯一需要修改的部分 ▼▼▼ -->
+                                <div
+                                    class="w-16 h-16 rounded-full flex items-center justify-center bg-gray-200 overflow-hidden">
+                                    <!-- 如果 userProfile.avatar 存在 (是一个有效的URL)，就显示图片 -->
+                                    <img v-if="userProfile.avatar" :src="userProfile.avatar" alt="用户头像"
+                                        class="w-full h-full object-cover" />
+                                    <!-- 否则，显示一个默认的 Element Plus 用户图标 -->
+                                    <el-icon v-else class="text-gray-500 text-3xl">
                                         <User />
                                     </el-icon>
                                 </div>
+                                <!-- ▲▲▲ 修改结束 ▲▲▲ -->
+
+                                <!-- 其他部分保持完全不变 -->
                                 <div>
                                     <div class="text-lg font-semibold text-gray-900">{{ userProfile.name }}</div>
                                     <div class="text-sm text-gray-500">ID: {{ userProfile.id }}</div>
@@ -398,7 +439,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- 设置菜单 -->
                         <div class="bg-white rounded-lg shadow-sm">
                             <div class="p-4 space-y-1 divide-y divide-gray-100">
@@ -429,6 +469,21 @@
                                         <ArrowRight />
                                     </el-icon>
                                 </div>
+
+                                <div @click="handleLogout"
+                                    class="flex items-center justify-between cursor-pointer py-3 text-red-500">
+                                    <div class="flex items-center space-x-3">
+                                        <el-icon class="text-red-400">
+                                            <SwitchButton />
+                                        </el-icon>
+                                        <span class="font-semibold">退出登录</span>
+                                    </div>
+                                    <el-icon class="text-red-400">
+                                        <ArrowRight />
+                                    </el-icon>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -497,14 +552,23 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import CourierLocationMap from '@/components/user/CourierLocationMap.vue';
+import CourierLocationMap from '@/components/courier/CourierLocationMap.vue';
 import { ElMessage, ElLoading ,ElMessageBox} from 'element-plus';
 import {
+    // 您已有的图标
     User, Bell, Switch, Location, CircleCloseFilled,
-    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit
+    HomeFilled, DocumentCopy, Coin, UserFilled, Close, Shop, List, Refresh, Warning, Edit,
+
+    // ▼▼▼ 新增/补全的图标 ▼▼▼
+    ArrowRight,     // 用于个人中心菜单的右箭头
+    SwitchButton,   // 用于退出登录按钮
+    MostlyCloudy,   // 用于“我已取餐”按钮
+    Timer,          // 用于“等待出餐”按钮
+    Position        // 用于“我已送达”按钮
 } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
-
+import loginApi from '@/api/login_api';      // 导入我们定义好的通用认证API
+import { removeToken } from '@/utils/jwt'; 
 // ===================================================================
 //  数据源切换开关
 // ===================================================================
@@ -520,7 +584,20 @@ const api = useMockData ? MockAPI : RealAPI;
 const router = useRouter();
 
 // --- 接口定义 ---
-interface UserProfile { name: string; id: string; registerDate: string; rating: number; creditScore: number; }
+export interface UserProfile {
+    name: string;
+    id: string;
+    registerDate: string;
+    rating: number;
+    creditScore: number;
+
+    // --- 新增的可选属性 ---
+    gender?: string;
+    birthday?: string; // 通常是 ISO 格式的日期字符串，如 '2024-01-15T00:00:00'
+    avatar?: string;   // 头像的 URL
+    vehicleType?: string;
+    // -----------------------
+}
 interface Order {
     id: string;
     status: OrderStatus; // 使用我们更精确的类型
@@ -531,6 +608,7 @@ interface Order {
     fee: string;
     distance: string;        // 配送距离
     time: string;            // 预计时间
+    isReadyForPickup: boolean;
 }
 
 interface Complaint {
@@ -913,6 +991,46 @@ const acceptAvailableOrder = async (order: Order) => {
         ElMessage.error("接单失败，可能已被他人抢走，请刷新");
     }
 };
+
+async function handleLogout() {
+    try {
+        // 1. 弹出确认框，提供更好的用户体验
+        await ElMessageBox.confirm(
+            '您确定要退出当前账号吗？',
+            '退出登录',
+            {
+                confirmButtonText: '确定退出',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        );
+
+        // 2. (推荐) 调用后端登出接口，通知服务器
+        await loginApi.logout();
+
+        // 3. (核心) 从本地存储中删除 Token，清除登录状态
+        removeToken();
+
+        ElMessage.success('您已成功退出登录');
+
+        // 4. 重定向到登录页面
+        // 使用 replace 而不是 push，这样用户无法通过浏览器“后退”按钮回到之前的页面
+        router.replace('/login'); // <-- 请确保 '/login' 是你登录页面的正确路由
+
+    } catch (error: any) {
+        // 如果用户点击了“取消”，或者API调用失败
+        if (error === 'cancel') { 
+            ElMessage.info('已取消退出操作');
+        } else {
+            console.error('登出时发生错误:', error);
+            // 即便通知后端失败，也要强制执行前端登出
+            ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+            removeToken();
+            router.replace('/login');
+        }
+    }
+}
+
 
 </script>
 

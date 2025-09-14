@@ -10,5 +10,6 @@ namespace BackEnd.Dtos.Courier
         public string Time { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string StatusText { get; set; } = string.Empty;
+        public bool IsReadyForPickup { get; set; }
     }
 }

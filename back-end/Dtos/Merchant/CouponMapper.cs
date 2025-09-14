@@ -19,7 +19,7 @@ namespace BackEnd.Dtos.Merchant
                 name = coupon.CouponName,
                 type = coupon.CouponType == CouponType.Fixed ? "fixed" : "discount",
                 value = coupon.CouponType == CouponType.Fixed ? coupon.DiscountAmount : (coupon.DiscountRate ?? 0),
-                minAmount = coupon.CouponType == CouponType.Fixed ? coupon.MinimumSpend : null,
+                minAmount = coupon.MinimumSpend,
                 startTime = coupon.ValidFrom.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 endTime = coupon.ValidTo.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 totalQuantity = coupon.TotalQuantity,
@@ -35,14 +35,14 @@ namespace BackEnd.Dtos.Merchant
         public static CouponManager ToModel(this CreateCouponRequestDto dto, int sellerId, int storeId)
         {
             var couponType = dto.type == "fixed" ? CouponType.Fixed : CouponType.Discount;
-            
+
             return new CouponManager
             {
-                CouponManagerID = dto.id,  // 使用前端提供的主键
+                // CouponManagerID 将由数据库自动生成
                 CouponName = dto.name,
                 CouponType = couponType,
-                MinimumSpend = dto.minAmount,
-                DiscountAmount = dto.discountAmount,
+                MinimumSpend = dto.minAmount ?? 0,
+                DiscountAmount = dto.discountAmount ?? 0,
                 DiscountRate = couponType == CouponType.Discount ? dto.value : null,
                 TotalQuantity = dto.totalQuantity,
                 UsedQuantity = 0,
@@ -50,7 +50,6 @@ namespace BackEnd.Dtos.Merchant
                 ValidTo = DateTime.Parse(dto.endTime),
                 Description = dto.description,
                 StoreID = storeId,  // 使用传入的storeId参数
-                SellerID = sellerId
             };
         }
 
@@ -60,11 +59,11 @@ namespace BackEnd.Dtos.Merchant
         public static void UpdateModel(this CouponManager model, CreateCouponRequestDto dto)
         {
             var couponType = dto.type == "fixed" ? CouponType.Fixed : CouponType.Discount;
-            
+
             model.CouponName = dto.name;
             model.CouponType = couponType;
-            model.MinimumSpend = dto.minAmount;
-            model.DiscountAmount = dto.discountAmount;
+            model.MinimumSpend = dto.minAmount ?? 0;
+            model.DiscountAmount = dto.discountAmount ?? 0;
             model.DiscountRate = couponType == CouponType.Discount ? dto.value : null;
             model.TotalQuantity = dto.totalQuantity;
             model.ValidFrom = DateTime.Parse(dto.startTime);

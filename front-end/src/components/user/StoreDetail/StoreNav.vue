@@ -100,7 +100,7 @@ const tabs = computed( () => [
 ]);
 
 function goBack() {
-    router.push(`/home`);
+    goToPage('/home/restaurants');
 }
 
 function goToPage(path: string) {

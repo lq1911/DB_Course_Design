@@ -30,6 +30,13 @@ namespace BackEnd.Data.EntityConfigs
                    .HasMaxLength(20)
                    .HasDefaultValue(DishIsSoldOut.IsSoldOut); // 使用强类型枚举设置默认值
 
+            builder.Property(d => d.Type)
+                   .HasColumnName("TYPE")
+                   .IsRequired()
+                   .HasConversion<string>() // 将枚举存储为字符串（如 "SignatureRecommendation", "Meat"），更具可读性
+                   .HasMaxLength(30)
+                   .HasDefaultValue(DishTypes.SignatureRecommendation); // 使用强类型枚举设置默认值
+
             // ---------------------------------------------------------------
             // 关系配置
             // ---------------------------------------------------------------

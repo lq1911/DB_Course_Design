@@ -100,7 +100,7 @@ namespace BackEnd.Dtos.User
         public decimal TotalAmount { get; set; }
 
         [Required]
-        public int OrderStatus { get; set; }
+        public FoodOrderState OrderStatus { get; set; }
     }
 
     public class HistoryOrderGetDto

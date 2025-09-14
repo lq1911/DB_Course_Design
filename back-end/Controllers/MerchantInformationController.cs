@@ -8,6 +8,7 @@ namespace BackEnd.Controllers
 {
     [ApiController]
     [Route("api/merchant")]
+    [Authorize]
     public class MerchantInformationController : ControllerBase
     {
         private readonly IMerchantInformationService _merchantInformationService;
@@ -21,8 +22,12 @@ namespace BackEnd.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> FetchMerchantInfo()
         {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userId = 3; //临时为3
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized("无效的Token");
+            }
 
             var result = await _merchantInformationService.GetMerchantInfoAsync(userId);
             if (!result.Success)
@@ -35,8 +40,12 @@ namespace BackEnd.Controllers
         [HttpPut("profile")]
         public async Task<IActionResult> SaveShopInfo([FromBody] UpdateMerchantProfileDto dto)
         {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userId = 3; //临时为3
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized("无效的Token");
+            }
 
             var result = await _merchantInformationService.UpdateMerchantInfoAsync(userId, dto);
             if (!result.Success)

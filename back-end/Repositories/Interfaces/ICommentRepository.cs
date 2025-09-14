@@ -6,6 +6,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<Comment>> GetAllAsync();
         Task<Comment?> GetByIdAsync(int id);
+        Task<IEnumerable<Comment>> GetBySellerAsync(int sellerId);
         Task AddAsync(Comment comment);
         Task UpdateAsync(Comment comment);
         Task DeleteAsync(Comment comment);

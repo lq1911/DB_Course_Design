@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using BackEnd.Dtos.Penalty;
 using BackEnd.Services.Interfaces;
+using System.Security.Claims;
 
 namespace BackEnd.Controllers
 {
@@ -20,7 +21,14 @@ namespace BackEnd.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPenalties([FromQuery] string? keyword)
         {
-            var penalties = await _penaltyService.GetPenaltiesAsync(keyword);
+            var sellerIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(sellerIdString, out int sellerId))
+            {
+                return Unauthorized("无效的Token");
+            }
+
+            var penalties = await _penaltyService.GetPenaltiesAsync(sellerId, keyword);
             return Ok(penalties);
         }
 

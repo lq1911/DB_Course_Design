@@ -24,9 +24,10 @@ namespace BackEnd.Services
                 DishName = d.DishName,
                 Price = d.Price,
                 Description = d.Description,
-                IsSoldOut = (int)d.IsSoldOut
+                IsSoldOut = (int)d.IsSoldOut,
             });
         }
+
 
         public async Task<DishDto> CreateDishAsync(CreateDishDto dto)
         {
@@ -35,7 +36,7 @@ namespace BackEnd.Services
                 DishName = dto.DishName,
                 Price = dto.Price,
                 Description = dto.Description,
-                IsSoldOut = (DishIsSoldOut)dto.IsSoldOut
+                IsSoldOut = (DishIsSoldOut)dto.IsSoldOut,
             };
 
             await _dishRepo.AddAsync(dish);
@@ -45,7 +46,7 @@ namespace BackEnd.Services
                 DishName = dish.DishName,
                 Price = dish.Price,
                 Description = dish.Description,
-                IsSoldOut = (int)dish.IsSoldOut
+                IsSoldOut = (int)dish.IsSoldOut,
             };
         }
 
@@ -66,7 +67,7 @@ namespace BackEnd.Services
                 DishName = dish.DishName,
                 Price = dish.Price,
                 Description = dish.Description,
-                IsSoldOut = (int)dish.IsSoldOut
+                IsSoldOut = (int)dish.IsSoldOut,
             };
         }
 
@@ -88,7 +89,7 @@ namespace BackEnd.Services
                 DishName = dish.DishName,
                 Price = dish.Price,
                 Description = dish.Description,
-                IsSoldOut = (int)dish.IsSoldOut
+                IsSoldOut = (int)dish.IsSoldOut,
             });
         }
 
@@ -101,7 +102,7 @@ namespace BackEnd.Services
                 DishName = dish.DishName,
                 Price = dish.Price,
                 Description = dish.Description,
-                IsSoldOut = (int)dish.IsSoldOut
+                IsSoldOut = (int)dish.IsSoldOut,
             };
         }
     }
