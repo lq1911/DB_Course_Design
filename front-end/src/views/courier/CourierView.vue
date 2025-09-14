@@ -23,10 +23,11 @@
             <!-- 主要内容区域 -->
             <div class="min-h-screen bg-gray-50">
 
-                <!-- 顶部导航栏 -->
+                <!-- 顶部导航栏 (已移除今日收入) -->
                 <div v-if="userProfile"
                     class="fixed top-0 left-0 right-0 bg-gradient-to-r from-orange-500 to-orange-400 z-50 px-4 py-4">
                     <div class="flex items-center justify-between">
+                        <!-- 左侧：头像和姓名 -->
                         <div class="flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -35,21 +36,15 @@
                                 </el-icon>
                             </div>
                             <div>
-                                <!-- 这部分数据您已经有了，可以直接用 -->
                                 <div class="text-base font-medium text-white">
                                     {{ userProfile.name }}
                                 </div>
                                 <div class="text-xs text-white/80">ID: {{ userProfile.id }}</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-5">
-                            <div class="text-right">
-                                <div class="text-xs text-white/80">今日收入</div>
-                                <!-- 修改点: 直接使用计算属性 todayIncome -->
-                                <div class="text-base font-semibold text-white">
-                                    ¥{{ todayIncome.toFixed(2) }}
-                                </div>
-                            </div>
+
+                        <!-- 右侧：只保留通知铃铛图标 -->
+                        <div class="flex items-center">
                             <div
                                 class="w-9 h-9 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                                 <el-icon class="text-white text-xl cursor-pointer">

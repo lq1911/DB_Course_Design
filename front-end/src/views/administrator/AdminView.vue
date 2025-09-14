@@ -11,7 +11,7 @@
                         <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                             <i class="fas fa-utensils text-white text-sm"></i>
                         </div>
-                        <h1 class="text-xl font-semibold text-gray-800">外卖管理系统</h1>
+                        <h1 class="text-xl font-semibold text-gray-800">{{ projectName }}</h1>
                     </div>
                 </div>
 
@@ -1025,6 +1025,8 @@
 
 </template>
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 // =================================================================
 // 步骤 1: 导入必要的模块
 // =================================================================
@@ -1032,6 +1034,9 @@ import { ref, computed, onMounted, readonly } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter } from 'vue-router';
 import axios from 'axios'; // 导入axios用于真实API请求
+
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
 
 // =================================================================
 // 步骤 2: 定义数据类型
@@ -1146,7 +1151,7 @@ const mockApi = {
 };
 
 // 3.2 ----------------- 真实API实现 -----------------
-const apiClient = axios.create({ baseURL: 'http://localhost:5250/api', timeout: 5000 }); // 根据你的后端地址修改 baseURL
+const apiClient = axios.create({ baseURL: 'http://113.44.82.210:5250/api', timeout: 5000 }); // 根据你的后端地址修改 baseURL
 
 apiClient.interceptors.request.use(
     (config) => {

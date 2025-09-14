@@ -10,6 +10,7 @@ namespace BackEnd.Repositories.Interfaces
         // 效率很差，不建议使用
         Task<Store?> GetByIdAsync(int id);
         Task<Store?> GetBySellerIdAsync(int sellerId);
+        Task<int?> GetStoreIdBySellerIdAsync(int sellerId);
         Task<Store?> GetStoreInfoForUserAsync(int storeId);
         Task<IEnumerable<Dish>> GetDishesByStoreIdAsync(int storeId);
         Task AddAsync(Store store);

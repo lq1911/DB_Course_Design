@@ -4,7 +4,7 @@
     <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 h-16">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
           <el-icon class="text-gray-600 text-xl cursor-pointer">
@@ -288,6 +288,8 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
@@ -318,6 +320,9 @@ import { removeToken } from '@/utils/jwt';
 const router = useRouter();
 const $route = useRoute();
 const couponFormRef = ref<FormInstance>();
+
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
 
 // 菜单项
 const activeMenu = ref('coupons');

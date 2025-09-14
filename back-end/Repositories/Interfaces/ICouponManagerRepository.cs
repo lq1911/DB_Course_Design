@@ -12,9 +12,9 @@ namespace BackEnd.Repositories.Interfaces
         Task SaveAsync();
 
         // 商家优惠券管理相关方法
-        Task<(IEnumerable<CouponManager> coupons, int total)> GetBySellerIdAsync(int sellerId, int page, int pageSize);
-        Task<(int total, int active, int expired, int upcoming, int totalUsed, decimal totalDiscountAmount)> GetStatsBySellerIdAsync(int sellerId);
-        Task<CouponManager?> GetByIdAndSellerIdAsync(int id, int sellerId);
-        Task<int> BatchDeleteAsync(IEnumerable<int> ids, int sellerId);
+        Task<(IEnumerable<CouponManager> coupons, int total)> GetByStoreIdAsync(int storeId, int page, int pageSize);
+        Task<(int total, int active, int expired, int upcoming, int totalUsed, decimal totalDiscountAmount)> GetStatsByStoreIdAsync(int storeId);
+        Task<CouponManager?> GetByIdAndStoreIdAsync(int id, int storeId);
+        Task<int> BatchDeleteAsync(IEnumerable<int> ids, int storeId);
     }
 }

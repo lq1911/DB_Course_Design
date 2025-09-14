@@ -6,7 +6,7 @@
     <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 h-16">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
           <el-icon class="text-gray-600 text-xl cursor-pointer">
@@ -447,6 +447,8 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, computed, onMounted } from 'vue';
 // ▼▼▼ 修改点 1: 在图标导入中加入 SwitchButton ▼▼▼
 import { Bell, House, List, Ticket, Warning, User, SwitchButton } from '@element-plus/icons-vue';
@@ -479,132 +481,9 @@ import {
 import loginApi from '@/api/login_api';
 import { removeToken } from '@/utils/jwt';
 
-// 本地示例数据（与数据库字段对齐）
-const localOrdersSample: FoodOrder[] = [
-  { orderId: 1001, paymentTime: '2024-12-01 12:30:00', remarks: '不要辣椒', customerId: 1, cartId: 10, storeId: 101, sellerId: 201, orderState: 0 },
-  { orderId: 1002, paymentTime: '2024-12-01 13:15:00', remarks: '多加米饭', customerId: 2, cartId: 11, storeId: 101, sellerId: 201, orderState: 1 },
-  { orderId: 1003, paymentTime: '2024-12-01 14:00:00', remarks: '打包带走', customerId: 3, cartId: 12, storeId: 102, sellerId: 202, orderState: 2 }
-];
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
 
-const localDishesSample: Dish[] = [
-  { dishId: 1, dishName: '麻婆豆腐', price: 28, description: '特制豆瓣酱，麻辣鲜香', isSoldOut: 2 },
-  { dishId: 2, dishName: '宫保鸡丁', price: 32, description: '鸡丁花生，鲜辣爽口', isSoldOut: 2 },
-  { dishId: 3, dishName: '水煮鱼', price: 58, description: '草鱼片，辣而不燥', isSoldOut: 0 }
-];
-
-const localCartItemsByCartId: Record<number, ShoppingCartItem[]> = {
-  10: [
-    { itemId: 10001, quantity: 1, totalPrice: 28, dishId: 1, cartId: 10, dish: localDishesSample[0] },
-    { itemId: 10002, quantity: 2, totalPrice: 64, dishId: 2, cartId: 10, dish: localDishesSample[1] }
-  ],
-  11: [
-    { itemId: 11001, quantity: 1, totalPrice: 58, dishId: 3, cartId: 11, dish: localDishesSample[2] }
-  ],
-  12: [
-    { itemId: 12001, quantity: 2, totalPrice: 56, dishId: 1, cartId: 12, dish: localDishesSample[0] }
-  ]
-};
-
-// 本地示例：订单优惠券信息（作为API不可用时的回退）
-const localOrderCouponsByOrderId: Record<number, OrderCouponInfo[]> = {
-  1001: [
-    {
-      couponId: 1,
-      couponName: '新用户专享券',
-      description: '新用户首次下单专享优惠',
-      discountType: 'percentage',
-      discountValue: 10,
-      validFrom: '2024-12-01',
-      validTo: '2024-12-31',
-      isUsed: true
-    }
-  ],
-  1002: [
-    {
-      couponId: 2,
-      couponName: '满减优惠券',
-      description: '满50减10元',
-      discountType: 'fixed',
-      discountValue: 10,
-      validFrom: '2024-12-01',
-      validTo: '2024-12-31',
-      isUsed: true
-    }
-  ],
-  1003: [] // 第三个订单没有使用优惠券
-};
-
-// 本地样例：骑手与配送任务信息（用于无后端时的演示）
-const localCourierSamples = [
-  {
-    userId: 3001,
-    courierRegistrationTime: '2024-01-01T00:00:00Z',
-    vehicleType: '电动车',
-    reputationPoints: 96,
-    totalDeliveries: 1280,
-    avgDeliveryTime: 28,
-    averageRating: 4.8,
-    monthlySalary: 6800,
-    fullName: '王强',
-    phoneNumber: 13800000001,
-  },
-  {
-    userId: 3002,
-    courierRegistrationTime: '2024-01-15T00:00:00Z',
-    vehicleType: '摩托车',
-    reputationPoints: 90,
-    totalDeliveries: 980,
-    avgDeliveryTime: 31,
-    averageRating: 4.6,
-    monthlySalary: 6200,
-    fullName: '李敏',
-    phoneNumber: 13800000002,
-  },
-];
-
-const localDeliveryInfoByOrderId: Record<number, OrderDeliveryInfo> = {
-  // 为前两个订单添加骑手信息（已发布配送的订单）
-  1001: {
-    deliveryTask: {
-      taskId: 5001,
-      estimatedArrivalTime: '2024-12-01 12:40:00',
-      estimatedDeliveryTime: '2024-12-01 13:00:00',
-      customerId: 1,
-      storeId: 101,
-    },
-    publish: {
-      sellerId: 201,
-      deliveryTaskId: 5001,
-      publishTime: '2024-12-01 12:35:00',
-    },
-    accept: {
-      courierId: 3001,
-      deliveryTaskId: 5001,
-      acceptTime: '2024-12-01 12:36:00',
-    },
-    courier: localCourierSamples[0],
-  },
-  1002: {
-    deliveryTask: {
-      taskId: 5002,
-      estimatedArrivalTime: '2024-12-01 13:25:00',
-      estimatedDeliveryTime: '2024-12-01 13:45:00',
-      customerId: 2,
-      storeId: 101,
-    },
-    publish: {
-      sellerId: 201,
-      deliveryTaskId: 5002,
-      publishTime: '2024-12-01 13:20:00',
-    },
-    accept: {
-      courierId: 3002,
-      deliveryTaskId: 5002,
-      acceptTime: '2024-12-01 13:21:00',
-    },
-    courier: localCourierSamples[1],
-  },
-};
 
 const router = useRouter();
 const $route = useRoute();
@@ -669,6 +548,7 @@ const loadOrders = async () => {
     const errorMsg = handleApiError(error);
     ElMessage.error(errorMsg);
     errorMessage.value = `加载订单失败: ${errorMsg}`;
+    orders.value = [];
   } finally {
     loading.value.orders = false;
   }
@@ -678,14 +558,26 @@ const loadOrders = async () => {
 const loadDishes = async () => {
   try {
     loading.value.dishes = true;
-    const apiDishes = await getDishes();
+    
+    // 检查是否有商家ID
+    if (!merchantInfo.value?.sellerId) {
+      console.warn('商家ID未获取到，无法加载菜品');
+      dishes.value = [];
+      return;
+    }
+    
+    console.log('加载菜品，商家ID:', merchantInfo.value.sellerId);
+    const apiDishes = await getDishes(merchantInfo.value.sellerId);
     if (apiDishes && (apiDishes as any).length > 0) {
       dishes.value = apiDishes as any;
+    } else {
+      dishes.value = [];
     }
   } catch (error) {
     const errorMsg = handleApiError(error);
     ElMessage.error(errorMsg);
     errorMessage.value = `加载菜品失败: ${errorMsg}`;
+    dishes.value = [];
   } finally {
     loading.value.dishes = false;
   }
@@ -705,7 +597,7 @@ const orderTabs = [
 const activeOrderTab = ref('orders');
 const showDishForm = ref(false);
 const showEditForm = ref(false);
-const orders = ref<(FoodOrder & { localStatus?: string; deliveryStatus?: number | null })[]>(localOrdersSample);
+const orders = ref<(FoodOrder & { localStatus?: string; deliveryStatus?: number | null })[]>([]);
 
 // 前端本地接单状态与自动接单开关（仅前端态，数据库未定义订单状态）
 const autoAcceptOrders = ref(false);
@@ -727,11 +619,7 @@ const showOrderDetails = async (order: FoodOrder) => {
   } catch (error) {
     const errorMsg = handleApiError(error);
     ElMessage.error(errorMsg);
-    // 使用本地购物车条目样例作为回退
-    orderItems.value = localCartItemsByCartId[order.cartId] ?? [];
-    // 使用本地优惠券样例作为回退
-    orderCoupons.value = localOrderCouponsByOrderId[order.orderId] ?? [];
-    showOrderDetailsDialog.value = true;
+    showOrderDetailsDialog.value = false;
   } finally {
     loading.value.orders = false;
   }
@@ -745,7 +633,7 @@ const closeOrderDetailsDialog = () => {
 };
 
 // 菜品管理
-const dishes = ref<Dish[]>(localDishesSample);
+const dishes = ref<Dish[]>([]);
 
 const newDish = ref({ dishName: '', price: '', description: '', isSoldOut: 2 as any });
 const editingDish = ref({ dishId: 0, dishName: '', price: 0 as any, description: '', isSoldOut: 0 as any });
@@ -756,12 +644,18 @@ const createDishHandler = async () => {
       ElMessage.error('请填写完整的菜品信息');
       return;
     }
+    
+    if (!merchantInfo.value?.sellerId) {
+      ElMessage.error('商家信息未获取到，无法创建菜品');
+      return;
+    }
+    
     const created = await createDishApi({
       dishName: newDish.value.dishName,
       price: newDish.value.price,
       description: newDish.value.description,
       isSoldOut: Number(newDish.value.isSoldOut) || 0,
-    });
+    }, merchantInfo.value.sellerId);
     dishes.value.push(created as any);
     showDishForm.value = false;
     newDish.value = { dishName: '', price: '', description: '', isSoldOut: 2 } as any;
@@ -779,12 +673,18 @@ const editDish = (dish: any) => {
 const updateDishHandler = async () => {
   try {
     if (!editingDish.value.dishId) return;
+    
+    if (!merchantInfo.value?.sellerId) {
+      ElMessage.error('商家信息未获取到，无法更新菜品');
+      return;
+    }
+    
     const updated = await updateDishApi(editingDish.value.dishId, {
       dishName: editingDish.value.dishName,
       price: Number(editingDish.value.price),
       description: editingDish.value.description,
       isSoldOut: Number(editingDish.value.isSoldOut) || 0,
-    });
+    }, merchantInfo.value.sellerId);
     const idx = dishes.value.findIndex(d => d.dishId === updated.dishId);
     if (idx !== -1) dishes.value[idx] = updated as any;
     showEditForm.value = false;
@@ -796,8 +696,13 @@ const updateDishHandler = async () => {
 
 const toggleSoldOut = async (dish: any) => {
   try {
+    if (!merchantInfo.value?.sellerId) {
+      ElMessage.error('商家信息未获取到，无法更新菜品状态');
+      return;
+    }
+    
     const newValue = dish.isSoldOut === 0 ? 2 : 0;
-    await toggleDishSoldOut(dish.dishId, newValue);
+    await toggleDishSoldOut(dish.dishId, newValue, merchantInfo.value.sellerId);
     dish.isSoldOut = newValue;
     ElMessage.success('状态更新成功');
   } catch (error) {
@@ -863,6 +768,8 @@ const closePublishDialog = () => {
 const submitPublish = async () => {
   if (!publishTargetOrder.value) return;
   try {
+    let taskId: number | undefined;
+
     // 优先调用后端
     try {
       console.log('[Publish] 准备发布配送任务，订单ID:', publishTargetOrder.value.orderId);
@@ -874,32 +781,10 @@ const submitPublish = async () => {
       });
 
        console.log('[Publish] 后端返回结果:', result);
-    } catch (_) {
-      // 后端不可用时，构造本地配送信息样例
-      const orderId = publishTargetOrder.value.orderId;
-      const courier = localCourierSamples[(orderId % localCourierSamples.length)];
-      const eta = publishForm.value.estimatedArrivalTime;
-      const etd = publishForm.value.estimatedDeliveryTime;
-      localDeliveryInfoByOrderId[orderId] = {
-        deliveryTask: {
-          taskId: 5000 + orderId,
-          estimatedArrivalTime: eta,
-          estimatedDeliveryTime: etd,
-          customerId: publishTargetOrder.value.customerId,
-          storeId: publishTargetOrder.value.storeId,
-        },
-        publish: {
-          sellerId: publishTargetOrder.value.sellerId,
-          deliveryTaskId: 5000 + orderId,
-          publishTime: new Date().toISOString(),
-        },
-        accept: {
-          courierId: courier.userId,
-          deliveryTaskId: 5000 + orderId,
-          acceptTime: new Date().toISOString(),
-        },
-        courier,
-      } as OrderDeliveryInfo;
+       taskId = result?.deliveryTask?.taskId || (5000 + publishTargetOrder.value.orderId);
+    } catch (error) {
+      ElMessage.error(handleApiError(error));
+      return;
     }
     
     // 更新订单的配送状态为已发布
@@ -907,6 +792,7 @@ const submitPublish = async () => {
       const orderIndex = orders.value.findIndex(o => o.orderId === publishTargetOrder.value!.orderId);
       if (orderIndex !== -1) {
         orders.value[orderIndex].deliveryStatus = 0;
+        orders.value[orderIndex].deliveryTaskId = taskId;
       }
     }
     
@@ -925,12 +811,7 @@ const deliveryInfo = ref<OrderDeliveryInfo>({});
 
 const openDeliveryInfo = async (order: FoodOrder) => {
   try {
-    const local = localDeliveryInfoByOrderId[order.orderId];
-    if (local) {
-      deliveryInfo.value = local;
-    } else {
-      deliveryInfo.value = await getOrderDeliveryInfo(order.orderId);
-    }
+    deliveryInfo.value = await getOrderDeliveryInfo(order.orderId);
     showDeliveryInfoDialog.value = true;
   } catch (error) {
     ElMessage.error(handleApiError(error));

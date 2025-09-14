@@ -8,7 +8,7 @@
       class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 h-16 border-b border-gray-100">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
           <el-icon class="text-gray-600 text-xl cursor-pointer hover:text-[#F9771C] transition-colors">
@@ -309,6 +309,8 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, reactive, onMounted, nextTick } from 'vue';
 // ▼▼▼ 修改点 1: 在图标导入中加入 SwitchButton ▼▼▼
 import { Bell, House, List, Ticket, Warning, User, SwitchButton } from '@element-plus/icons-vue';
@@ -336,6 +338,9 @@ const activeMenu = ref('aftersale');
 const router = useRouter();
 const $route = useRoute();
 
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
+
 const menuItems = [
   { key: 'overview', label: '店铺概况', icon: House, routeName: 'MerchantHome' },
   { key: 'orders', label: '订单中心', icon: List, routeName: 'MerchantOrders' },
@@ -348,9 +353,13 @@ import { getMerchantInfo, type MerchantInfo } from '@/api/merchant_api';
 
 const fetchAllData = async () => {
   try {
+    console.log('开始获取商家信息...');
     const merchant = await getMerchantInfo();
+    console.log('获取到的商家信息:', merchant);
+    
     if (merchant) {
       merchantInfo.value = { ...defaultMerchantInfo, ...merchant };
+      console.log('设置后的商家信息:', merchantInfo.value);
     }
   } catch (error) {
     console.error('获取商家信息失败:', error);
@@ -359,7 +368,8 @@ const fetchAllData = async () => {
 };
 
 const defaultMerchantInfo = {
-  username: ''
+  username: '',
+  sellerId: 0
 };
 
 const merchantInfo = ref({ ...defaultMerchantInfo });
@@ -368,24 +378,8 @@ const handleMenuClick = (menuItem: typeof menuItems[number]) => {
   router.push({ name: menuItem.routeName });
 };
 
-// 处罚记录（支持后端 + 本地样例回退）
+// 处罚记录
 const penaltyList = ref<PenaltyRecord[]>([]);
-const samplePenaltyList: PenaltyRecord[] = [
-  {
-    id: 'PEN20241201001',
-    reason: '食品安全问题',
-    time: '2024-11-15 16:30:00',
-    merchantAction: '整改厨房卫生',
-    platformAction: '警告处理'
-  },
-  {
-    id: 'PEN20241201002',
-    reason: '超时配送',
-    time: '2024-11-20 10:15:00',
-    merchantAction: '加强配送管理',
-    platformAction: '扣除信用分'
-  }
-];
 const penaltyFilters = reactive<{ keyword: string }>({ keyword: '' });
 const penaltyDetailVisible = ref(false);
 const penaltyDetail = ref<PenaltyRecord | null>(null);
@@ -395,32 +389,20 @@ async function loadPenalties() {
   if (penaltyFilters.keyword) params.keyword = penaltyFilters.keyword.trim();
   try {
     const list = await getPenaltyList(params);
-    if (Array.isArray(list) && list.length > 0) {
-      penaltyList.value = list;
-      return;
-    }
-    usePenaltySampleFallback();
-  } catch {
-    usePenaltySampleFallback();
+    penaltyList.value = list || [];
+  } catch (error) {
+    console.error('加载处罚记录失败:', error);
+    penaltyList.value = [];
   }
-}
-
-function usePenaltySampleFallback() {
-  let list = samplePenaltyList.slice();
-  if (penaltyFilters.keyword) {
-    const kw = penaltyFilters.keyword.trim();
-    list = list.filter(p => p.id.includes(kw) || p.reason.includes(kw));
-  }
-  penaltyList.value = list;
 }
 
 async function openPenaltyDetail(row: PenaltyRecord) {
   try {
     penaltyDetail.value = await getPenaltyDetail(row.id);
-  } catch {
-    penaltyDetail.value = row;
+    penaltyDetailVisible.value = true;
+  } catch (error) {
+    console.error('获取处罚详情失败:', error);
   }
-  penaltyDetailVisible.value = true;
 }
 
 // 处罚申诉弹窗
@@ -444,62 +426,47 @@ async function submitPenaltyAppeal() {
   }
 }
 
-// 评论管理增强
-const allReviews: Review[] = [
-  {
-    id: 1,
-    orderNo: 'ORD20240601001',
-    user: { name: '美食达人', phone: '13800000001', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-    content: '菜品新鲜美味，配送很快，五星好评！',
-    createdAt: '2024-06-01 12:30:00'
-  },
-  {
-    id: 2,
-    orderNo: 'ORD20240601002',
-    user: { name: '吃货小王', phone: '13800000002', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-    content: '味道一般，分量偏少。',
-    createdAt: '2024-06-01 13:10:00'
-  },
-  {
-    id: 3,
-    orderNo: 'ORD20240601003',
-    user: { name: '匿名用户', phone: '13800000003' },
-    content: '送餐太慢了，菜都凉了。',
-    createdAt: '2024-06-01 14:00:00'
-  }
-];
+// 评论管理
 const reviews = ref<Review[]>([]);
 const reviewPage = ref(1);
 const reviewPageSize = ref(10);
-const reviewTotal = ref(3);
+const reviewTotal = ref(0);
 const reviewFilters = reactive({
   keyword: ''
 });
 
 async function fetchReviews(page = 1) {
   reviewPage.value = page;
+  
+  // 检查是否有商家ID
+  console.log('当前商家信息:', merchantInfo.value);
+  console.log('商家ID:', merchantInfo.value.sellerId);
+  
+  if (!merchantInfo.value.sellerId) {
+    console.warn('商家ID未获取到，无法加载评论');
+    reviews.value = [];
+    reviewTotal.value = 0;
+    return;
+  }
+  
   try {
-    const params: any = {
+    const params = {
       page: reviewPage.value,
       pageSize: reviewPageSize.value,
-      keyword: reviewFilters.keyword || undefined
+      keyword: reviewFilters.keyword || undefined,
+      sellerId: merchantInfo.value.sellerId
     };
+    
+    console.log('发送评论请求参数:', params);
     const res = await getReviewList(params);
-    reviews.value = res.list;
-    reviewTotal.value = res.total;
-  } catch {
-    // 后端不可用时退回到本地过滤
-    let filtered = allReviews.slice();
-    if (reviewFilters.keyword) {
-      const kw = reviewFilters.keyword.trim();
-      filtered = filtered.filter(r =>
-        r.content.includes(kw) ||
-        r.orderNo.includes(kw) ||
-        (r.user?.name && r.user.name.includes(kw))
-      );
-    }
-    reviewTotal.value = filtered.length;
-    reviews.value = filtered.slice((reviewPage.value - 1) * reviewPageSize.value, reviewPage.value * reviewPageSize.value);
+    console.log('评论API响应:', res);
+    
+    reviews.value = res.list || [];
+    reviewTotal.value = res.total || 0;
+  } catch (error) {
+    console.error('获取评论列表失败:', error);
+    reviews.value = [];
+    reviewTotal.value = 0;
   }
 }
 
@@ -562,11 +529,11 @@ async function submitReply() {
     if (el) el.scrollTop = el.scrollHeight;
   });
 }
-onMounted(() => {
+onMounted(async () => {
+  await fetchAllData();
   fetchReviews();
   loadPenalties();
   loadAfterSales(1);
-  fetchAllData();
 });
 
 const aftersaleTabs = [
@@ -617,44 +584,6 @@ const asFilters = reactive({
   keyword: ''
 });
 
-// 本地参考用样例数据（后端无数据或联调前展示）
-const sampleAfterSaleList: AfterSaleApplication[] = [
-  {
-    id: 101,
-    orderNo: 'ORD20240602001',
-    user: { name: '赵六', phone: '13800000006', avatar: 'https://randomuser.me/api/portraits/men/12.jpg' },
-    reason: '口味不合适，申请退款',
-    createdAt: '2024-06-02 11:20:00'
-  },
-  {
-    id: 102,
-    orderNo: 'ORD20240602002',
-    user: { name: '钱七', phone: '13800000007', avatar: 'https://randomuser.me/api/portraits/women/52.jpg' },
-    reason: '打包盒破损，汤洒出',
-    createdAt: '2024-06-02 12:05:00'
-  },
-  {
-    id: 103,
-    orderNo: 'ORD20240602003',
-    user: { name: '孙二', phone: '13800000008', avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
-    reason: '配送态度不佳',
-    createdAt: '2024-06-02 12:18:00'
-  },
-  {
-    id: 104,
-    orderNo: 'ORD20240602004',
-    user: { name: '周九', phone: '13800000009', avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
-    reason: '餐品分量不足，申请部分退款',
-    createdAt: '2024-06-02 12:40:00'
-  },
-  {
-    id: 105,
-    orderNo: 'ORD20240602005',
-    user: { name: '吴十', phone: '13800000010', avatar: 'https://randomuser.me/api/portraits/women/28.jpg' },
-    reason: '送错餐品，申请退货退款',
-    createdAt: '2024-06-02 13:05:00'
-  }
-];
 
 async function loadAfterSales(page = 1) {
   asPage.value = page;
@@ -665,31 +594,13 @@ async function loadAfterSales(page = 1) {
   };
   try {
     const res = await getAfterSaleList(params);
-    if (Array.isArray(res.list) && res.list.length > 0) {
-      aftersaleList.value = res.list;
-      asTotal.value = res.total;
-      return;
-    }
-    // 若后端返回空列表，则使用本地样例做占位
-    useSampleFallback();
-  } catch {
-    // 后端不可用时使用本地样例
-    useSampleFallback();
+    aftersaleList.value = res.list || [];
+    asTotal.value = res.total || 0;
+  } catch (error) {
+    console.error('获取售后申请列表失败:', error);
+    aftersaleList.value = [];
+    asTotal.value = 0;
   }
-}
-
-function useSampleFallback() {
-  let filtered = sampleAfterSaleList.slice();
-  if (asFilters.keyword) {
-    const kw = asFilters.keyword.trim();
-    filtered = filtered.filter(a =>
-      a.orderNo.includes(kw) ||
-      (a.user?.name && a.user.name.includes(kw)) ||
-      (a.user?.phone && a.user.phone.includes(kw))
-    );
-  }
-  asTotal.value = filtered.length;
-  aftersaleList.value = filtered.slice((asPage.value - 1) * asPageSize.value, asPage.value * asPageSize.value);
 }
 
 function resetAsFilters() {
@@ -707,9 +618,9 @@ async function openAsDetail(id: number) {
   try {
     const detail = await getAfterSaleDetail(id);
     asDetail.value = detail;
-  } catch (e) {
-    // 后端不可用或无此记录时，回退到本地样例
-    asDetail.value = sampleAfterSaleList.find(a => a.id === id) || null;
+  } catch (error) {
+    console.error('获取售后申请详情失败:', error);
+    asDetail.value = null;
   }
 }
 
@@ -728,28 +639,17 @@ const decision = reactive<{
 
 async function submitDecision() {
   if (!asDetail.value || !decision.action) return;
-  const isSample = sampleAfterSaleList.some(a => a.id === asDetail.value?.id);
-  if (isSample) {
-    // 本地样例模拟流程 - 由于数据库中无status字段，这里只做基本处理
-    const target = sampleAfterSaleList.find(a => a.id === asDetail.value!.id);
-    if (target) {
-      // 模拟处理完成
-      console.log('处理完成:', decision.action, decision.remark);
-    }
-    // 以本地样例刷新展示
-    useSampleFallback();
-    asDetail.value = target ? { ...target } : null;
+  
+  try {
+    await decideAfterSale(asDetail.value.id, decision.action as any, {
+      remark: decision.remark
+    });
+    await loadAfterSales(asPage.value);
+    asDetail.value = await getAfterSaleDetail(asDetail.value.id);
     clearDecision();
-    return;
+  } catch (error) {
+    console.error('处理售后申请失败:', error);
   }
-
-  // 正常后端流程
-  await decideAfterSale(asDetail.value.id, decision.action as any, {
-    remark: decision.remark
-  });
-  await loadAfterSales(asPage.value);
-  asDetail.value = await getAfterSaleDetail(asDetail.value.id);
-  clearDecision();
 }
 
 const punishmentDict: Record<string, string> = {

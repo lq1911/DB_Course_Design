@@ -63,6 +63,15 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(s => s.SellerID == sellerId);
         }
 
+        public async Task<int?> GetStoreIdBySellerIdAsync(int sellerId)
+        {
+            return await _context.Stores
+                                .AsNoTracking()
+                                .Where(s => s.SellerID == sellerId)
+                                .Select(s => s.StoreID)
+                                .FirstOrDefaultAsync();
+        }
+
         public async Task<Store?> GetStoreInfoForUserAsync(int storeId)
         {
             // 这个查询非常简单和快速，因为它没有加载任何关联数据

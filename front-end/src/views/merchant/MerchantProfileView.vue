@@ -7,7 +7,7 @@
     <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 h-16">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
           <el-icon class="text-gray-600 text-xl cursor-pointer">
@@ -125,6 +125,8 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, onMounted } from 'vue';
 // ▼▼▼ 修改点 1: 在图标导入中加入 SwitchButton ▼▼▼
 import { Bell, House, List, Ticket, Warning, User, Edit, Check, SwitchButton } from '@element-plus/icons-vue';
@@ -137,13 +139,16 @@ import axios from 'axios';
 import loginApi from '@/api/login_api';
 import { removeToken } from '@/utils/jwt';
 const api = axios.create({
-  baseURL: 'http://localhost:5250/api',
+  baseURL: 'http://113.44.82.210:5250/api',
   timeout: 5000,
 });
 
 const activeMenu = ref('profile');
 const router = useRouter();
 const $route = useRoute();
+
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
 
 const menuItems = [
   { key: 'overview', label: '店铺概况', icon: House, routeName: 'MerchantHome' },
@@ -261,6 +266,14 @@ async function handleLogout() {
     }
   }
 }
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken'); // 从本地存储取 token
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 </script>
 
 <style scoped>
