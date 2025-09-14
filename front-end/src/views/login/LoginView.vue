@@ -84,10 +84,10 @@
                         <form v-if="activeTab === 'login'" @submit.prevent="handleLogin" class="space-y-4">
                             <div>
 
-                                <label class="block text-sm font-medium text-gray-700 mb-1">手机号 / 邮箱</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">手机号</label>
 
                                 <div class="relative">
-                                    <input type="text" v-model="loginForm.account" placeholder="请输入手机号或邮箱"
+                                    <input type="text" v-model="loginForm.account" placeholder="请输入手机号"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
 
                                     <i
