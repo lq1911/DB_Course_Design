@@ -266,6 +266,14 @@ async function handleLogout() {
     }
   }
 }
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken'); // 从本地存储取 token
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 </script>
 
 <style scoped>
