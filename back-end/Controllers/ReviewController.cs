@@ -9,6 +9,7 @@ namespace BackEnd.Controllers
 {
     [ApiController]
     [Route("api/reviews")]
+    [Authorize]
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService _reviewService;

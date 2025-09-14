@@ -17,7 +17,7 @@ namespace BackEnd.Services
 
         public async Task<RPageResultDto<ReviewDto>> GetReviewsAsync(int sellerId, int page, int pageSize, string? keyword)
         {
-            var comments = await _commentRepository.GetAllAsync();
+            var comments = await _commentRepository.GetBySellerAsync(sellerId);
 
             // 应用搜索过滤
             if (!string.IsNullOrEmpty(keyword))
