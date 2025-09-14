@@ -17,12 +17,20 @@ namespace BackEnd.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDishes()
+        public async Task<IActionResult> GetDishes([FromQuery] int? sellerId)
         {
             try
             {
-                var dishes = await _dishService.GetAllDishesAsync();
-                return Ok(dishes);
+                if (sellerId.HasValue)
+                {
+                    var dishes = await _dishService.GetDishesBySellerIdAsync(sellerId.Value);
+                    return Ok(dishes);
+                }
+                else
+                {
+                    var dishes = await _dishService.GetAllDishesAsync();
+                    return Ok(dishes);
+                }
             }
             catch (Exception ex)
             {
@@ -77,7 +85,7 @@ namespace BackEnd.Controllers
         {
             try
             {
-                var result = await _dishService.ToggleSoldOutAsync(dishId, dto.IsSoldOut);
+                var result = await _dishService.ToggleSoldOutAsync(dishId, dto.IsSoldOut, dto.SellerID);
                 return !result.Success ? BadRequest(new { code = 400, message = result.Message }) : Ok(result.Data);
             }
             catch (Exception ex)

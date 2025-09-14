@@ -7,6 +7,7 @@ namespace BackEnd.Dtos.Dish
         public decimal Price { get; set; }
         public string Description { get; set; } = null!;
         public int IsSoldOut { get; set; }
+        public int SellerID { get; set; }
     }
 
     public class CreateDishDto
@@ -15,6 +16,7 @@ namespace BackEnd.Dtos.Dish
         public decimal Price { get; set; }
         public string Description { get; set; } = null!;
         public int IsSoldOut { get; set; } = 0;
+        public int SellerID { get; set; }
     }
 
     public class UpdateDishDto
@@ -23,10 +25,12 @@ namespace BackEnd.Dtos.Dish
         public decimal? Price { get; set; }
         public string? Description { get; set; }
         public int? IsSoldOut { get; set; }
+        public int? SellerID { get; set; }
     }
 
     public class ToggleSoldOutDto
     {
         public int IsSoldOut { get; set; }
+        public int SellerID { get; set; }
     }
 }
