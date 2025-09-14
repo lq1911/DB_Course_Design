@@ -21,8 +21,12 @@ namespace BackEnd.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> FetchMerchantInfo()
         {
+             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userId = 3; //临时为3
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized("无效的Token");
+            }
 
             var result = await _merchantInformationService.GetMerchantInfoAsync(userId);
             if (!result.Success)
