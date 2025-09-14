@@ -29,6 +29,16 @@ namespace BackEnd.Repositories
                                  .FirstOrDefaultAsync(p => p.PenaltyID == id);
         }
 
+        public async Task<IEnumerable<StoreViolationPenalty>> GetBySellerIdAsync(int sellerId)
+        {
+            return await _context.StoreViolationPenalties
+                                 .Include(p => p.Store)
+                                     .ThenInclude(s => s.Seller)
+                                 .Where(p => p.Store.SellerID == sellerId)
+                                 .OrderBy(p => p.PenaltyID)
+                                 .ToListAsync();
+        }
+
         public async Task AddAsync(StoreViolationPenalty storeViolationPenalty)
         {
             await _context.StoreViolationPenalties.AddAsync(storeViolationPenalty);

@@ -1,4 +1,5 @@
 import { getData } from '@/api/multiuse_function'
+import { postData } from '@/api/multiuse_function'
 
 export interface showStore{
     id: number
@@ -13,11 +14,11 @@ export interface RecomStore {
 }
 
 export interface AllStore{
-    allStore: showStore[]
+    allStores: showStore[]
 }
 
 export interface SearchStore {
-    searchStore: showStore[]
+    searchStores: showStore[]
 }
 
 export interface OrderInfo {
@@ -36,10 +37,17 @@ export interface UserInfo {
     name: string
     phoneNumber: number
     image: string
+    defaultAddress: string
+}
+
+export interface AfterSale{
+    userID: number;
+    orderID: number;
+    content: string;
 }
 
 export async function getAllStore() {
-    return getData<AllStore>(`//api/user/home/stores`);
+    return getData<AllStore>(`/api/user/home/stores`);
 }
 
 export async function getRecomStore() {
@@ -70,4 +78,11 @@ export async function getUserInfo(UserId: number) {
             userId: UserId
         }
     });
+}
+
+export async function postAfterSaleApplication(orderId: number, description: string) {
+    return postData<AfterSale>(`/api/user/applications/create`, {
+        orderId,
+        description
+    })
 }

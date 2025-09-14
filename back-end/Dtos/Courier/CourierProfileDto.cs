@@ -1,4 +1,4 @@
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     public class CourierProfileDto
     {
@@ -7,5 +7,6 @@ namespace BackEnd.DTOs.Courier
         public string RegisterDate { get; set; } = string.Empty;
         public decimal Rating { get; set; }
         public int CreditScore { get; set; }
+        public string? Avatar { get; set; }
     }
 }

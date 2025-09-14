@@ -22,7 +22,7 @@ namespace BackEnd.Models
         public string Password { get; set; } = null!;
 
         [Required]
-        public string PhoneNumber { get; set; }
+        public long PhoneNumber { get; set; }
 
         [Required]
         [MaxLength(30)]
@@ -34,7 +34,7 @@ namespace BackEnd.Models
         [MaxLength(6)]
         public string? FullName { get; set; }
 
-        [MaxLength(255)]
+        [MaxLength(1000)]
         public string? Avatar { get; set; }
 
         public DateTime? Birthday { get; set; }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -14,30 +15,31 @@ namespace BackEnd.Models
         public int OrderID { get; set; }
 
         [Required]
-        public DateTime PaymentTime { get; set; }
+        public DateTime OrderTime { get; set; } = DateTime.Now;
+
+        public DateTime? PaymentTime { get; set; } // 改为可空，支付后才有值
 
         [StringLength(255)]
         public string? Remarks { get; set; }
 
-        // 订单评分相关字段
-        [Range(1, 5)]  // 限制评分范围为1-5
-        [Column(TypeName = "decimal(2,1)")]
-        public decimal? Rating { get; set; }
+        [Required]
+        [Column(TypeName = "decimal(5,2)")] // 精确定义数据库类型，最大值为 999.99
+        public decimal DeliveryFee { get; set; } = 0.00m; // 默认为 0
 
-        [StringLength(500)]
-        public string? RatingComment { get; set; }  // 评价内容
+        [Required]
+        public FoodOrderState FoodOrderState { get; set; } = FoodOrderState.Pending;
 
-        public DateTime? RatingTime { get; set; }  // 评价时间
+        // 新增配送任务的导航属性
+        public DeliveryTask? DeliveryTask { get; set; }
 
         [Required]
         public int CustomerID { get; set; }
         [ForeignKey("CustomerID")]
         public Customer Customer { get; set; } = null!;
 
-        [Required]
-        public int CartID { get; set; }
+        public int? CartID { get; set; }
         [ForeignKey("CartID")]
-        public ShoppingCart Cart { get; set; } = null!;
+        public ShoppingCart? Cart { get; set; } = null!;
 
         [Required]
         public int StoreID { get; set; }
@@ -50,5 +52,8 @@ namespace BackEnd.Models
 
         // 售后申请
         public ICollection<AfterSaleApplication>? AfterSaleApplications { get; set; }
+
+        // 评论
+        public ICollection<Comment>? Comments { get; set; }
     }
 }

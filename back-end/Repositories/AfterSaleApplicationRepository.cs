@@ -28,9 +28,32 @@ namespace BackEnd.Repositories
         {
             return await _context.AfterSaleApplications
                                  .Include(a => a.Order)
+                                     .ThenInclude(o => o.Customer)
+                                         .ThenInclude(c => c.User)
                                  .Include(a => a.EvaluateAfterSales)
                                      .ThenInclude(eas => eas.Admin)
                                  .FirstOrDefaultAsync(a => a.ApplicationID == id);
+        }
+
+        public async Task<IEnumerable<AfterSaleApplication>> GetByOrderIdAsync(int orderId)
+        {
+            return await _context.AfterSaleApplications
+                                 .Include(a => a.Order)
+                                 .Where(a => a.OrderID == orderId)
+                                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AfterSaleApplication>> GetBySellerIdAsync(int sellerId)
+        {
+            return await _context.AfterSaleApplications
+                .Include(a => a.Order)
+                    .ThenInclude(o => o.Customer)
+                        .ThenInclude(c => c.User)
+                .Include(a => a.Order)
+                    .ThenInclude(o => o.Store)
+                        .ThenInclude(s => s.Seller)
+                .Where(a => a.Order.Store.SellerID == sellerId)
+                .ToListAsync();
         }
 
         public async Task AddAsync(AfterSaleApplication application)

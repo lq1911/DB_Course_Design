@@ -1,5 +1,5 @@
 // BackEnd/DTOs/Courier/OrderListItemDto.cs
-namespace BackEnd.DTOs.Courier
+namespace BackEnd.Dtos.Courier
 {
     public class OrderListItemDto
     {
@@ -10,5 +10,6 @@ namespace BackEnd.DTOs.Courier
         public string Time { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string StatusText { get; set; } = string.Empty;
+        public bool IsReadyForPickup { get; set; }
     }
 }

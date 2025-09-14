@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BackEnd.Services.Interfaces;
-using BackEnd.Dtos.UserHomepage;
+using BackEnd.Dtos.User;
 
 namespace BackEnd.Controllers
 {
@@ -42,7 +42,7 @@ namespace BackEnd.Controllers
         /// GET: /api/user/home/search
         /// </summary>
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromBody] HomeSearchDto searchDto)
+        public async Task<IActionResult> Search([FromQuery] HomeSearchDto searchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -64,16 +64,16 @@ namespace BackEnd.Controllers
                 });
             }
 
+            // 合并商家和菜品到一个数组
+            var searchStores = new List<object>();
+            if (stores != null && stores.Any()) searchStores.AddRange(stores);
+            if (dishes != null && dishes.Any()) searchStores.AddRange(dishes);
+
+            // 返回对象里包含 searchStores 属性
             return Ok(new
-                {
-                    code = 200,
-                    message = "Search results retrieved successfully",
-                    data = new
-                    {
-                        Stores = stores,
-                        Dishes = dishes
-                    }
-                });
+            {
+                searchStores
+            });
         }
         // 输入：用户id
         // 输出：用户的历史订单
@@ -119,17 +119,9 @@ namespace BackEnd.Controllers
                 return NotFound(new { code = 404, message = "User not found" });
             }
 
-            return Ok(new
-            {
-                code = 200,
-                message = "success",
-                data = new
-                {
-                    User = userInfo
-                }
-            });
+            return Ok(userInfo);
         }
-        
+
         [HttpGet("couponInfo")]
         public async Task<IActionResult> GetUserCoupons([FromQuery] UserIdDto userIdDto)
         {
@@ -152,12 +144,21 @@ namespace BackEnd.Controllers
                     message = "There's No Coupon For User.",
                 });
             }
-            return Ok(new
+            return Ok(coupons);
+        }
+        [HttpGet("stores")]
+        public async Task<ActionResult<StoresResponseDto>> GetAllStores()
+        {
+            try
             {
-                code = 200,
-                massage = "Coupons retrieved successfully",
-                data = coupons
-            });
+                var stores = await _userHomepageService.GetAllStoresAsync();
+                return Ok(stores);
+            }
+            catch (Exception ex)
+            {
+                // 记录异常日志
+                return StatusCode(500, "获取商店信息时发生错误");
+            }
         }
 
     }

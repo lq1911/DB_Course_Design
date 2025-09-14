@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BackEnd.Models.Enums;
 
 namespace BackEnd.Models
 {
@@ -23,14 +24,30 @@ namespace BackEnd.Models
         public int Likes { get; set; } = 0;
         public int Replies { get; set; } = 0;
 
-        public int? ReplyToCommentID { get; set; }
-        [ForeignKey("ReplyToCommentID")]
-        public Comment ReplyToComment { get; set; } = null!;
+        // 新增属性
+        [Range(1, 5)]
+        public int? Rating { get; set; }
+
+        [StringLength(1000)] // 假设所有URL加起来总长度不超过1000个字符，你可以根据需要调整
+        public string? CommentImage { get; set; }
 
         [Required]
-        public int StoreID { get; set; }
+        public CommentType CommentType { get; set; }
+
+        [Required]
+        public CommentState CommentState { get; set; } = CommentState.Pending;
+
+        public int? StoreID { get; set; }
         [ForeignKey("StoreID")]
-        public Store Store { get; set; } = null!;
+        public Store? Store { get; set; }
+
+        public int? FoodOrderID { get; set; }
+        [ForeignKey("FoodOrderID")]
+        public FoodOrder? FoodOrder { get; set; }
+
+        public int? ReplyToCommentID { get; set; }
+        [ForeignKey("ReplyToCommentID")]
+        public Comment? ReplyToComment { get; set; }
 
         [Required]
         public int CommenterID { get; set; }
@@ -44,5 +61,4 @@ namespace BackEnd.Models
         // 可以由多个管理员负责
         public ICollection<Review_Comment> ReviewComments { get; set; } = new List<Review_Comment>();
     }
-
 }

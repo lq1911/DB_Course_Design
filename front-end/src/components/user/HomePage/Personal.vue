@@ -60,15 +60,29 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 
-import type { UserInfo } from "@/api/user_home";
+import { useUserStore } from "@/stores/user";
 import { getUserInfo } from "@/api/user_home";
 
 import AddrSetting from "./PersonalTransition/AddrSetting.vue";
 import CouponSetting from "./PersonalTransition/CouponSetting.vue";
 import AccountSetting from "./PersonalTransition/AccountSetting.vue";
 import ExitAccount from "./PersonalTransition/ExitAccount.vue";
+
+const userStore = useUserStore();
+const userID = userStore.getUserID();
+
+const userInfo = ref({
+  name: "张小明",
+  phoneNumber: 1234556,
+  image: '',
+  defaultAddress: "同济大学"
+});
+
+onMounted(async () => {
+  userInfo.value = await getUserInfo(userID);
+});
 
 const showUserPanel = ref(false);
 const showAddressForm = ref(false);
@@ -87,11 +101,4 @@ function openForm(f: { value: Boolean }) {
   f.value = true;
 }
 
-// 用户信息, 测试用
-const userInfo = reactive({
-  name: "张小明",
-  phoneNumber: 1234556,
-  image: '',
-  defaultAddress: "同济大学"
-});
 </script>

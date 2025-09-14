@@ -32,8 +32,32 @@ namespace BackEnd.Repositories
 
         public async Task AddAsync(CouponManager couponManager)
         {
-            await _context.CouponManagers.AddAsync(couponManager);
-            await SaveAsync();
+            try
+            {
+                // 记录要插入的数据
+                Console.WriteLine($"准备插入优惠券数据:");
+                Console.WriteLine($"- CouponManagerID: {couponManager.CouponManagerID} (类型: {couponManager.CouponManagerID.GetType()})");
+                Console.WriteLine($"- CouponName: '{couponManager.CouponName}' (类型: {couponManager.CouponName?.GetType()}, 是否NULL: {couponManager.CouponName == null})");
+                Console.WriteLine($"- CouponType: {couponManager.CouponType} (类型: {couponManager.CouponType.GetType()}, 是否NULL: {couponManager.CouponType == null})");
+                Console.WriteLine($"- MinimumSpend: {couponManager.MinimumSpend} (类型: {couponManager.MinimumSpend.GetType()})");
+                Console.WriteLine($"- DiscountAmount: {couponManager.DiscountAmount} (类型: {couponManager.DiscountAmount.GetType()})");
+                Console.WriteLine($"- DiscountRate: {couponManager.DiscountRate} (类型: {couponManager.DiscountRate?.GetType()}, 是否NULL: {couponManager.DiscountRate == null})");
+                Console.WriteLine($"- TotalQuantity: {couponManager.TotalQuantity} (类型: {couponManager.TotalQuantity.GetType()}, 是否NULL: {couponManager.TotalQuantity == null})");
+                Console.WriteLine($"- UsedQuantity: {couponManager.UsedQuantity} (类型: {couponManager.UsedQuantity.GetType()}, 是否NULL: {couponManager.UsedQuantity == null})");
+                Console.WriteLine($"- ValidFrom: {couponManager.ValidFrom} (类型: {couponManager.ValidFrom.GetType()})");
+                Console.WriteLine($"- ValidTo: {couponManager.ValidTo} (类型: {couponManager.ValidTo.GetType()})");
+                Console.WriteLine($"- Description: '{couponManager.Description}' (类型: {couponManager.Description?.GetType()}, 是否NULL: {couponManager.Description == null})");
+                Console.WriteLine($"- StoreID: {couponManager.StoreID} (类型: {couponManager.StoreID.GetType()}, 是否NULL: {couponManager.StoreID == null})");
+
+                await _context.CouponManagers.AddAsync(couponManager);
+                await SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"插入优惠券数据时发生错误: {ex.Message}");
+                Console.WriteLine($"错误详情: {ex}");
+                throw;
+            }
         }
 
         public async Task UpdateAsync(CouponManager couponManager)
@@ -53,6 +77,67 @@ namespace BackEnd.Repositories
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 根据商家ID获取优惠券列表（分页）
+        /// </summary>
+        public async Task<(IEnumerable<CouponManager> coupons, int total)> GetByStoreIdAsync(int storeId, int page, int pageSize)
+        {
+            var query = _context.CouponManagers
+                .Where(cm => cm.StoreID == storeId)
+                .OrderByDescending(cm => cm.CouponManagerID);
 
+            var total = await query.CountAsync();
+            var coupons = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (coupons, total);
+        }
+
+        /// <summary>
+        /// 根据商家ID获取优惠券统计信息
+        /// </summary>
+        public async Task<(int total, int active, int expired, int upcoming, int totalUsed, decimal totalDiscountAmount)> GetStatsByStoreIdAsync(int storeId)
+        {
+            var coupons = await _context.CouponManagers
+                .Where(cm => cm.StoreID == storeId)
+                .ToListAsync();
+
+            var total = coupons.Count;
+            var now = DateTime.Now;
+
+            var active = coupons.Count(c => c.ValidFrom <= now && c.ValidTo >= now);
+            var expired = coupons.Count(c => c.ValidTo < now);
+            var upcoming = coupons.Count(c => c.ValidFrom > now);
+            var totalUsed = coupons.Sum(c => c.UsedQuantity);
+            var totalDiscountAmount = coupons.Sum(c => c.DiscountAmount * c.UsedQuantity);
+
+            return (total, active, expired, upcoming, totalUsed, totalDiscountAmount);
+        }
+
+        /// <summary>
+        /// 根据商家ID和优惠券ID获取优惠券
+        /// </summary>
+        public async Task<CouponManager?> GetByIdAndStoreIdAsync(int id, int storeId)
+        {
+            return await _context.CouponManagers
+                .FirstOrDefaultAsync(cm => cm.CouponManagerID == id && cm.StoreID == storeId);
+        }
+
+        /// <summary>
+        /// 批量删除优惠券
+        /// </summary>
+        public async Task<int> BatchDeleteAsync(IEnumerable<int> ids, int storeId)
+        {
+            var coupons = await _context.CouponManagers
+                .Where(cm => ids.Contains(cm.CouponManagerID) && cm.StoreID == storeId)
+                .ToListAsync();
+
+            _context.CouponManagers.RemoveRange(coupons);
+            await SaveAsync();
+
+            return coupons.Count;
+        }
     }
 }

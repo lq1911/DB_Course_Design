@@ -6,8 +6,11 @@ namespace BackEnd.Repositories.Interfaces
 {
     public interface IFoodOrderRepository
     {
+        Task<IEnumerable<FoodOrder>> GetByUserIdAsync(int userId);
         Task<IEnumerable<FoodOrder>> GetAllAsync();
         Task<FoodOrder?> GetByIdAsync(int id);
+        Task<List<FoodOrder>> GetOrdersByCustomerIdOrderedByDateAsync(int customerId);
+        Task<FoodOrder?> GetByCartIdAsync(int cartId);
         Task AddAsync(FoodOrder foodorder);
         Task UpdateAsync(FoodOrder foodorder);
         Task DeleteAsync(FoodOrder foodorder);

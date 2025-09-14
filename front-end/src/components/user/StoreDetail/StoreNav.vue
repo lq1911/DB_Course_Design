@@ -93,8 +93,6 @@ const props = defineProps<{
     storeID: string;
 }>()
 
-const storeID = computed(() => route.params.id as string);
-
 const tabs = computed( () => [
     { path: `/store/${props.storeID}/order`, label: "点餐" },
     { path: `/store/${props.storeID}/comment`, label: "评价" },
@@ -102,7 +100,7 @@ const tabs = computed( () => [
 ]);
 
 function goBack() {
-    router.push(`/home`);
+    goToPage('/home/restaurants');
 }
 
 function goToPage(path: string) {

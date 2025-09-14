@@ -137,7 +137,7 @@
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
                                 </div>
                                 <!-- 新增：真实姓名输入框 (仅当非消费者时显示) -->
-                                <div v-if="selectedRole !== 'consumer'">
+                                <div v-if="selectedRole !== 'customer'">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">真实姓名</label>
                                     <input type="text" v-model="registerForm.realName" placeholder="请输入真实姓名"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm" />
@@ -147,8 +147,8 @@
                                     <select v-model="registerForm.gender"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm appearance-none bg-white cursor-pointer">
                                         <option value="">请选择</option>
-                                        <option value="male">男</option>
-                                        <option value="female">女</option>
+                                        <option value="M">男</option>
+                                        <option value="F">女</option>
                                     </select>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
 
 
                             <!-- 角色特殊信息 -->
-                            <div v-if="selectedRole !== 'consumer'" class="border-t pt-4 mt-6">
+                            <div v-if="selectedRole !== 'customer'" class="border-t pt-4 mt-6">
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">{{ getRoleSpecificTitle() }}</h3>
 
 
@@ -223,22 +223,30 @@
                                 <div v-if="selectedRole === 'admin'" class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">管理对象</label>
-                                        <select v-model="adminInfo.managementObject"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm">
-                                            <option value="">请选择管理对象</option>
-                                            <option value="riders">骑手管理</option>
-                                            <option value="comments">评论审核</option>
-                                            <option value="reports">举报处理</option>
-                                            <option value="aftersales">售后服务</option>
-                                        </select>
+                                        <div class="relative">
+                                            <button type="button" @click="showManagementDropdown = !showManagementDropdown"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm text-left bg-white cursor-pointer flex items-center justify-between">
+                                                <span :class="{ 'text-gray-400': !adminInfo.managementObject }">
+                                                    {{ getManagementLabel() || '请选择管理对象' }}
+                                                </span>
+                                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                            </button>
+                                            <div v-if="showManagementDropdown"
+                                                class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                                <div @click="selectManagementObject('riders')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">售后处理</div>
+                                                <div @click="selectManagementObject('comments')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">配送投诉</div>
+                                                <div @click="selectManagementObject('reports')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">商家举报</div>
+                                                <div @click="selectManagementObject('aftersales')"
+                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">评论审核</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">处理事项说明</label>
-                                        <textarea v-model="adminInfo.handledItems" placeholder="请简要说明您将负责处理的主要事项"
-                                            rows="3"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none"></textarea>
-                                    </div>
+                                    <!-- 处理事项说明保持不变 -->
                                 </div>
+
 
 
                                 <!-- 商家特殊信息 -->
@@ -292,16 +300,6 @@
                                         <textarea v-model="storeInfo.address" placeholder="请输入详细店铺地址" rows="3"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm resize-none">
                                         </textarea>
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">营业执照</label>
-                                        <div
-                                            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors duration-200">
-                                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm text-gray-600">点击或拖拽上传营业执照</p>
-                                            <p class="text-xs text-gray-500 mt-1">支持 JPG、PNG 格式，文件大小不超过 5MB</p>
-                                            <input type="file" class="hidden" accept="image/*" />
-                                        </div>
                                     </div>
                                 </div>
 
@@ -398,8 +396,11 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import api from '@/api/api'; // 导入我们的 API 服务
+import api from '@/api/login_api'; // 导入我们的 API 服务
+import { useRouter } from 'vue-router';
 import axios from 'axios';
+
+const router = useRouter();
 
 // 响应式数据
 const activeTab = ref('login');
@@ -419,7 +420,7 @@ const roles = [
     { value: 'admin', label: '管理员', icon: 'fas fa-user-shield' },
     { value: 'merchant', label: '商家', icon: 'fas fa-store' },
     { value: 'rider', label: '骑手', icon: 'fas fa-motorcycle' },
-    { value: 'consumer', label: '消费者', icon: 'fas fa-user' }
+    { value: 'customer', label: '消费者', icon: 'fas fa-user' }
 ];
 // 经营类别
 const categories = [
@@ -462,7 +463,6 @@ const storeInfo = reactive({
     closingTime: '', // <-- 新增
     businessHours: '', // 营业时间
     establishmentDate: '', // 店铺建立时间
-    businessLicense: null,
     category: ''// 经营类别
 });
 
@@ -631,6 +631,11 @@ const selectCategory = (category: string) => {
 
 
 // 处理登录
+import { getUserIdFromToken, getUserInfoFromToken } from '@/utils/jwt';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
+
 const handleLogin = async () => {
     if (!loginForm.account || !loginForm.password) {
         alert('请填写完整的登录信息');
@@ -639,76 +644,134 @@ const handleLogin = async () => {
     isLoading.value = true;
 
     try {
-        // 1. 发送登录请求
         const response = await api.login({
-            account: loginForm.account,
+            phoneNum: loginForm.account,
             password: loginForm.password,
-            role: selectedRole.value // 同时告诉后端以哪个角色身份登录
+            role: selectedRole.value
         });
 
-        // 2. 处理成功响应
-        // 登录成功后，后端通常会返回一个 token
         const { token, user, message } = response.data;
-
-        // 2.1 将 token 存储起来（例如，在浏览器的 localStorage 中）
-        // 这样用户刷新页面或访问其他页面时，我们能知道他已经登录了
         localStorage.setItem('authToken', token);
 
-        alert(message || `${user.nickname}，欢迎回来！`);
-
-        // 2.2 登录成功后跳转到主页或其他页面
-        // router.push('/dashboard'); // (需要先引入 vue-router 的 useRouter)
-
-    } catch (error) {
-        // 3. 处理错误响应
-        if (axios.isAxiosError(error))
-            alert(error.response?.data?.error || '登录失败，账号或密码错误。');
-        else {
-            alert("发生未知错误，请稍后再试。")
+        // 从token中解析userID，无需额外API调用
+        const userID = getUserIdFromToken(token);
+        if (userID) {
+            const numericUserID = parseInt(userID, 10);
+            userStore.login(numericUserID);
         }
 
+        // 第1步：我们先在控制台打印日志，确认代码执行到了这里
+        console.log("登录成功！用户信息:", user);
+        console.log("准备根据角色进行跳转，角色是:", user.role);
+        
+        // 【核心修改】我们把 alert 和 router.push 的顺序换一下！
+        // 先执行跳转，再弹出提示。这样可以避免 alert 阻塞路由。
+
+        let targetPath = '/'; // 默认跳转路径
+
+        switch (user.role) {
+            case 'customer':
+                targetPath = '/home';
+                break;
+            case 'merchant':
+                targetPath = '/MerchantHome';
+                break;
+            case 'courier':
+                targetPath = '/courier';
+                break;
+            case 'administrator':
+                targetPath = '/admin';
+                break;
+        }
+
+        console.log("计算出的目标跳转路径是:", targetPath);
+
+        // 第2步：执行跳转
+        router.push(targetPath);
+
+        // 第3步：跳转执行后，再弹出提示
+        // 我们甚至可以用 setTimeout 延迟一下弹窗，确保路由有足够的时间开始工作
+        setTimeout(() => {
+            alert(message || `${user.username}，欢迎回来！`);
+        }, 100); // 延迟100毫秒
+
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            alert(error.response?.data?.message || '登录失败，服务器返回未知错误。');
+        } else {
+            alert("发生未知错误，请稍后再试。");
+        }
     } finally {
-        // 4. 结束加载状态
         isLoading.value = false;
     }
 };
 
 
-// 处理注册
+
 const handleRegister = async () => {
-    // ... 省略验证代码，但您可以暂时移除对 realName 和角色信息的验证 ...
+    if (!agreeTerms.value) {
+        return alert('请先阅读并同意用户协议和隐私政策');
+    }
     isLoading.value = true;
 
-    // 1. 【核心变化】只准备基础账号信息
-    // 注意看，我们从 registerForm 中剔除了 realName
-    const { realName, ...baseRegisterForm } = registerForm; 
-
-    const registrationData = {
-        ...baseRegisterForm,
-        role: selectedRole.value,
-    };
-
     try {
-        // 2. 第一步：只发送基础信息进行注册
-        const registerResponse = await api.register(registrationData);
-        alert(registerResponse.data.message || '账号创建成功！现在请登录以完善资料。');
+        const role = selectedRole.value;
 
-        // 3. 注册成功，自动切换到登录 Tab，让用户登录
+        // 步骤1：构建一个所有角色通用的基础 payload (JSON 对象)
+        const payload: any = {
+            nickname: registerForm.nickname,
+            password: registerForm.password,
+            confirmPassword: registerForm.confirmPassword,
+            phone: registerForm.phone,
+            email: registerForm.email,
+            gender: registerForm.gender,
+            birthday: registerForm.birthday,
+            verificationCode: registerForm.verificationCode,
+            role: role,
+            isPublic: 1, // 假设默认公开
+        };
+
+        // 步骤2：根据选择的角色，向 payload 中添加特定的信息
+        if (role === 'rider') {
+            payload.riderInfo = {
+                vehicleType: riderInfo.vehicleType,
+                name: registerForm.realName
+            };
+        } else if (role === 'admin') {
+            // 这是您这次测试的分支
+            payload.adminInfo = {
+                managementObject: adminInfo.managementObject,
+                name: registerForm.realName,
+                // 【注意】确保 adminInfo 里的字段和后端 DTO 匹配
+                handledItems: adminInfo.handledItems
+            };
+        } else if (role === 'merchant') {
+            payload.storeInfo = {
+                SellerName: registerForm.realName,
+                StoreName: storeInfo.name,
+                Address: storeInfo.address,
+                OpenTime: storeInfo.openingTime,
+                CloseTime: storeInfo.closingTime,
+                EstablishmentDate: storeInfo.establishmentDate,
+                Category: storeInfo.category
+            };
+        }
+        
+        // 步骤3：发送统一的 JSON 请求
+        const response = await api.register(payload);
+
+        // 处理成功响应...
+        alert(response.data.message || '注册成功！现在请登录。');
         activeTab.value = 'login';
-        // 自动填充刚注册的账号，提升体验
-        loginForm.account = registerForm.phone || registerForm.email;
-        loginForm.password = ''; // 清空密码框让用户输入
-
-        // 【重要】到此，账号创建完成。
-        // 真实姓名、店铺信息等，应该在用户【登录后】再提交。
-        // 你可以在登录后跳转的页面（比如用户中心）提供一个表单，
-        // 让用户填写 realName, storeInfo 等，然后调用 api.updateUserProfile() 等新接口。
+        loginForm.account = registerForm.phone;
+        loginForm.password = '';
 
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            alert(error.response?.data?.error || '注册失败，服务器返回错误。');
+            const errorMsg = error.response?.data?.message || `注册失败，服务器返回错误代码: ${error.response?.status}`;
+            alert(errorMsg);
         } else {
-            console.error('An unexpected error occurred:', error);
+            console.error('注册时发生未知错误:', error);
             alert('发生未知错误，请稍后再试。');
         }
     } finally {
@@ -830,6 +893,24 @@ const validateRoleSpecificInfo = () => {
     }
     return true;
 };
+
+const showManagementDropdown = ref(false);
+
+const selectManagementObject = (value: string) => {
+    adminInfo.managementObject = value;
+    showManagementDropdown.value = false;
+};
+
+const getManagementLabel = () => {
+    const labels: { [key: string]: string } = {
+        'riders': '售后处理',
+        'comments': '配送投诉', 
+        'reports': '商家举报',
+        'aftersales': '评论审核'
+    };
+    return labels[adminInfo.managementObject];
+};
+
 </script>
 
 

@@ -22,6 +22,7 @@ namespace BackEnd.Repositories
                                  .Include(c => c.Coupons)
                                  .Include(c => c.FavoritesFolders)
                                  .Include(c => c.Comments)
+                                 .Include(c => c.ShoppingCarts)
                                  .ToListAsync();
         }
 
@@ -33,6 +34,7 @@ namespace BackEnd.Repositories
                                  .Include(c => c.Coupons)
                                  .Include(c => c.FavoritesFolders)
                                  .Include(c => c.Comments)
+                                 .Include(c => c.ShoppingCarts)
                                  .FirstOrDefaultAsync(c => c.UserID == id);
         }
 

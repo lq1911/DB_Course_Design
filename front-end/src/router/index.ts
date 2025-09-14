@@ -1,33 +1,37 @@
-// src/router/index.ts
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router' 
 import { getProjectName } from '@/stores/name'
 import LoginView from '@/views/login/LoginView.vue'
 
-//分解的各部分路由
+// 分解的各部分路由
 import userRoutes from './userRoutes'
 import courierRoutes from './courierRoutes'
 import inStoreRoutes from './inStoreRoutes'
 import merchantRoutes from './merchantRoutes'
 import checkoutRoutes from './checkoutRoute'
-import managerRoutes from './managerRoute'
+import managerRoutes from './adminRoute'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/login' // 默认进入登录页
   },
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
-    meta: { title: '登录' }
+    meta: {
+      title: '登录'
+    }
   },
+  
+  // 用户路由
   ...userRoutes,
   ...courierRoutes,
   ...inStoreRoutes,
   ...merchantRoutes,
   ...checkoutRoutes,
-  ...managerRoutes
+  ...managerRoutes,
+  ...courierRoutes,
 ]
 
 const router = createRouter({
@@ -37,11 +41,7 @@ const router = createRouter({
 
 router.afterEach((to) => {
   const name = getProjectName().projectName;
-  let title = to.meta.title as string;
-
-  if (!title) {
-    title = "热爱每一餐"
-  }
+  const title = to.meta.title as string;
 
   document.title = (`${name} - ${title}`);
 });

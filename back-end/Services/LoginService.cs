@@ -1,5 +1,6 @@
 using BackEnd.Dtos.AuthRequest;
 using BackEnd.Dtos.User;
+using BackEnd.Models;
 using BackEnd.Models.Enums;
 using BackEnd.Repositories.Interfaces;
 using BackEnd.Services.Interfaces;
@@ -29,8 +30,9 @@ namespace BackEnd.Services
                 return Fail("手机号或密码错误", 401);
 
             // 2. 验证密码
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (!await IsPasswordValid(request.Password, user))
                 return Fail("手机号或密码错误", 401);
+
 
             // 3. 验证角色
             if (!IsRoleMatch(user.Role, request.Role))
@@ -58,9 +60,9 @@ namespace BackEnd.Services
         {
             var roleMapping = new Dictionary<string, UserIdentity>
             {
-                { "consumer", UserIdentity.Customer },
+                { "customer", UserIdentity.Customer },
                 { "rider", UserIdentity.Courier },
-                { "merchant", UserIdentity.Seller },
+                { "merchant", UserIdentity.Merchant },
                 { "admin", UserIdentity.Administrator }
             };
 
@@ -108,6 +110,53 @@ namespace BackEnd.Services
                 User = null
             };
         }
+
+        // 兼容明文密码的验证密码方法
+        private async Task<bool> IsPasswordValid(string inputPassword, Models.User user)
+        {
+            string storedPassword = user.Password;
+
+            // 检查存储的密码是否是BCrypt格式
+            if (storedPassword.StartsWith("$2a$") ||
+                storedPassword.StartsWith("$2b$") ||
+                storedPassword.StartsWith("$2y$"))
+            {
+                // 使用BCrypt验证加密密码
+                return BCrypt.Net.BCrypt.Verify(inputPassword, storedPassword);
+            }
+            else
+            {
+                // 处理明文密码（临时兼容方案）
+                bool isMatch = inputPassword == storedPassword;
+
+                // 如果明文密码匹配，立即升级为加密密码
+                if (isMatch)
+                {
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(inputPassword, 12);
+                    await UpdateUserPasswordAsync(user.UserID, hashedPassword);
+                }
+
+                return isMatch;
+            }
+        }
+
+        private async Task UpdateUserPasswordAsync(int userId, string hashedPassword)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.Password = hashedPassword;
+                await _userRepository.UpdateAsync(user);
+            }
+        }
+
+        public async Task LogoutAsync(int userId)
+        {
+            // 目前，基于JWT的无状态登出，后端无需特殊处理。
+            // Token的失效由前端删除Token来完成。
+            // 此处可以添加登出日志记录等操作。
+            Console.WriteLine($"用户 {userId} 在 {DateTime.UtcNow} 登出。");
+            await Task.CompletedTask; // 表示一个已完成的异步操作
+        }
     }
 }
-

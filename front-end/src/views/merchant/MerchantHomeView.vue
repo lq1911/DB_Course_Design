@@ -4,16 +4,16 @@
     <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 h-16">
       <div class="flex items-center justify-between h-full px-6">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-[#F9771C]">FoodDelivery Pro</h1>
+          <h1 class="text-xl font-bold text-[#F9771C]">{{ projectName }}</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <el-icon class="text-gray-600 text-xl cursor-pointer"><Bell /></el-icon>
+          <el-icon class="text-gray-600 text-xl cursor-pointer">
+            <Bell />
+          </el-icon>
           <div class="flex items-center space-x-2">
             <img
               src="https://readdy.ai/api/search-image?query=professional%20restaurant%20owner%20portrait%20with%20friendly%20smile%20wearing%20chef%20uniform%20against%20clean%20white%20background%20modern%20lighting&width=40&height=40&seq=merchant-avatar-001&orientation=squarish"
-              alt="商家头像"
-              class="w-10 h-10 rounded-full object-cover"
-            />
+              alt="商家头像" class="w-10 h-10 rounded-full object-cover" />
             <!-- 商家姓名：默认“加载中” -->
             <span class="text-gray-700 font-medium">{{ merchantInfo.username || '加载中...' }}</span>
           </div>
@@ -27,16 +27,11 @@
         <nav class="p-4">
           <div class="space-y-2">
 
-          <div
-              v-for="(item, index) in menuItems"
-              :key="index"
-              @click="handleMenuClick(item)"
-              :class="{
+            <div v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)" :class="{
                 'bg-orange-50 text-[#F9771C] border-r-3 border-[#F9771C]': $route.name === item.routeName,
                 'text-gray-700 hover:bg-gray-50': $route.name !== item.routeName
               }"
-              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button"
-            >
+              class="flex items-center px-4 py-3 rounded-l-lg cursor-pointer transition-colors whitespace-nowrap !rounded-button">
               <el-icon class="mr-3 text-lg">
                 <component :is="item.icon" />
               </el-icon>
@@ -44,6 +39,16 @@
             </div>
           </div>
         </nav>
+
+        <div class="p-4 border-t border-gray-100">
+          <div @click="handleLogout"
+            class="flex items-center px-4 py-3 rounded-lg cursor-pointer transition-colors text-red-500 hover:bg-red-50">
+            <el-icon class="mr-3 text-lg">
+              <SwitchButton />
+            </el-icon>
+            <span class="font-medium">退出登录</span>
+          </div>
+        </div>
       </aside>
 
       <!-- 主内容区 -->
@@ -51,7 +56,7 @@
         <!-- 店铺概况 -->
         <div v-if="activeMenu === 'overview'">
           <h2 class="text-2xl font-bold text-gray-800 mb-6">店铺概况</h2>
-          
+
           <!-- 数据卡片区 -->
           <div class="grid grid-cols-4 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow-sm p-6">
@@ -60,30 +65,36 @@
                   <p class="text-gray-600 text-sm">店铺评分</p>
                   <p class="text-2xl font-bold text-orange-500">{{ shopInfo.rating }}</p>
                 </div>
-                <el-icon class="text-orange-500 text-3xl"><Star /></el-icon>
+                <el-icon class="text-orange-500 text-3xl">
+                  <Star />
+                </el-icon>
               </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-sm p-6">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-gray-600 text-sm">月销量</p>
                   <p class="text-2xl font-bold text-green-500">{{ shopInfo.monthlySales }}</p>
                 </div>
-                <el-icon class="text-green-500 text-3xl"><TrendCharts /></el-icon>
+                <el-icon class="text-green-500 text-3xl">
+                  <TrendCharts />
+                </el-icon>
               </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-sm p-6">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-gray-600 text-sm">信誉积分</p>
                   <p class="text-2xl font-bold text-blue-500">{{ shopInfo.creditScore }}</p>
                 </div>
-                <el-icon class="text-blue-500 text-3xl"><Medal /></el-icon>
+                <el-icon class="text-blue-500 text-3xl">
+                  <Medal />
+                </el-icon>
               </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-sm p-6">
               <div class="flex items-center justify-between">
                 <div>
@@ -92,16 +103,12 @@
                     {{ isOpen ? '营业中' : '休息中' }}
                   </p>
                 </div>
-                <el-switch
-                  v-model="isOpen"
-                  active-color="#F9771C"
-                  inactive-color="#DCDFE6"
-                  @change="toggleBusinessStatus"
-                />
+                <el-switch v-model="isOpen" active-color="#F9771C" inactive-color="#DCDFE6"
+                  @change="toggleBusinessStatus" />
               </div>
             </div>
           </div>
-          
+
           <!-- 店铺基本信息 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">店铺基本信息</h3>
@@ -122,22 +129,19 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">店铺地址</label>
                 <div class="flex items-center">
-                  <input
-                    v-model="shopInfo.address"
-                    :disabled="!isEditingAddress"
-                    :class="{
+                  <input v-model="shopInfo.address" :disabled="!isEditingAddress" :class="{
                       'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm': true,
                       'bg-gray-100 cursor-not-allowed': !isEditingAddress,
                       'bg-white': isEditingAddress
-                    }"
-                    placeholder="请输入店铺地址"
-                  />
-                  <button
-                    @click="toggleEdit('address')"
-                    class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors"
-                  >
-                    <el-icon v-if="!isEditingAddress"><Edit /></el-icon>
-                    <el-icon v-else><Check /></el-icon>
+                    }" placeholder="请输入店铺地址" />
+                  <button @click="toggleEdit('address')"
+                    class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors">
+                    <el-icon v-if="!isEditingAddress">
+                      <Edit />
+                    </el-icon>
+                    <el-icon v-else>
+                      <Check />
+                    </el-icon>
                   </button>
                 </div>
               </div>
@@ -145,41 +149,33 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">营业时间</label>
                 <div class="flex items-center space-x-2">
                   <!-- 开始时间 -->
-                  <el-time-select
-                    v-model="shopInfo.startTime"
-                    :disabled="!isEditingHours"
-                    placeholder="开始时间"
+                  <el-time-select v-model="shopInfo.startTime" :disabled="!isEditingHours" placeholder="开始时间"
                     :picker-options="{
                       start: '00:00',
                       step: '00:30',
                       end: '23:30'
-                    }"
-                    class="w-32"
-                  />
+                    }" class="w-32" />
 
                   <span class="text-gray-600">-</span>
 
                   <!-- 结束时间 -->
-                  <el-time-select
-                    v-model="shopInfo.endTime"
-                    :disabled="!isEditingHours"
-                    placeholder="结束时间"
+                  <el-time-select v-model="shopInfo.endTime" :disabled="!isEditingHours" placeholder="结束时间"
                     :picker-options="{
                       start: '00:30',
                       step: '00:30',
                       end: '23:59',
                       minTime: shopInfo.startTime
-                    }"
-                    class="w-32"
-                  />
+                    }" class="w-32" />
 
                   <!-- 编辑按钮 -->
-                  <button
-                    @click="toggleEdit('hours')"
-                    class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors"
-                  >
-                    <el-icon v-if="!isEditingHours"><Edit /></el-icon>
-                    <el-icon v-else><Check /></el-icon>
+                  <button @click="toggleEdit('hours')"
+                    class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors">
+                    <el-icon v-if="!isEditingHours">
+                      <Edit />
+                    </el-icon>
+                    <el-icon v-else>
+                      <Check />
+                    </el-icon>
                   </button>
                 </div>
               </div>
@@ -188,22 +184,19 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">店铺特色</label>
                 <div class="flex items-center">
-                  <input
-                    v-model="shopInfo.feature"
-                    :disabled="!isEditingFeature"
-                    :class="{
+                  <input v-model="shopInfo.feature" :disabled="!isEditingFeature" :class="{
                       'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F9771C] text-sm': true,
                       'bg-gray-100 cursor-not-allowed': !isEditingFeature,
                       'bg-white': isEditingFeature
-                    }"
-                    placeholder="请输入店铺特色（选填）"
-                  />
-                  <button
-                    @click="toggleEdit('feature')"
-                    class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors"
-                  >
-                    <el-icon v-if="!isEditingFeature"><Edit /></el-icon>
-                    <el-icon v-else><Check /></el-icon>
+                    }" placeholder="请输入店铺特色（选填）" />
+                  <button @click="toggleEdit('feature')"
+                    class="ml-2 text-[#F9771C] hover:text-[#E16A0E] transition-colors">
+                    <el-icon v-if="!isEditingFeature">
+                      <Edit />
+                    </el-icon>
+                    <el-icon v-else>
+                      <Check />
+                    </el-icon>
                   </button>
                 </div>
               </div>
@@ -216,10 +209,14 @@
 </template>
 
 <script lang="ts" setup>
+import { getProjectName } from '@/stores/name';
+
 import { ref, onMounted } from 'vue';
 import { Bell, Star, TrendCharts, Medal, House, List, Ticket, Warning, User } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
+import loginApi from '@/api/login_api';      // 导入通用认证API
+import { removeToken } from '@/utils/jwt';   // 导入Token移除工具
 import { 
   getShopOverview, 
   getShopInfo, 
@@ -250,6 +247,9 @@ const defaultMerchantInfo = {
 const activeMenu = ref('overview');
 const router = useRouter();
 const $route = useRoute();
+
+const useProjectName = getProjectName();
+const projectName = useProjectName.projectName;
 
 const menuItems = [
   { key: 'overview', label: '店铺概况', icon: House, routeName: 'MerchantHome' },
@@ -392,21 +392,38 @@ const fetchAllData = async () => {
     // 更新店铺信息
     if (shop.data) {
       const { id, name, createTime, address, startTime, endTime, feature } = shop.data;
+
+      // 处理时间字段 - 确保转换为 HH:mm 格式
+      const formatTime = (timeValue: any) => {
+        if (!timeValue) return '';
+        
+        // 如果是 DateTime 对象或包含日期的字符串
+        if (timeValue.includes('T') || timeValue.includes(' ')) {
+          const date = new Date(timeValue);
+          return date.toTimeString().substring(0, 5); // 提取 HH:mm
+        }
+        
+        // 如果已经是时间字符串格式
+        return timeValue.substring(0, 5);
+      };
+
       shopInfo.value = {
         ...shopInfo.value, // 保留现有值（包括可能已更新的rating等）
         id: id || defaultShopInfo.id,
         name: name || defaultShopInfo.name,
         createTime: createTime || defaultShopInfo.createTime,
         address: address || defaultShopInfo.address,
-        startTime: startTime || defaultShopInfo.startTime,
-        endTime: endTime || defaultShopInfo.endTime,
+        startTime: formatTime(startTime),
+        endTime: formatTime(endTime),
         feature: feature || defaultShopInfo.feature
       };
+
+      console.log('更新后的店铺信息:', shopInfo.value);
     }
     
     // 更新商家信息
-    if (merchant.data) {
-      merchantInfo.value = { ...defaultMerchantInfo, ...merchant.data };
+    if (merchant) {
+      merchantInfo.value = { ...defaultMerchantInfo, ...merchant };
     }
     
   } catch (error) {
@@ -452,4 +469,40 @@ const toggleBusinessStatus = async (value: string | number | boolean) => {
 onMounted(() => {
   fetchAllData();
 });
+
+async function handleLogout() {
+  try {
+    // 1. 弹出确认框
+    await ElMessageBox.confirm(
+      '您确定要退出当前商家账号吗？', // 提示信息可以针对商家进行微调
+      '退出登录',
+      {
+        confirmButtonText: '确定退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    );
+
+    // 2. 调用后端登出接口
+    await loginApi.logout();
+
+    // 3. 核心：清除本地登录状态
+    removeToken();
+
+    ElMessage.success('您已成功退出登录');
+
+    // 4. 重定向到登录页面
+    router.replace('/login'); // 确保 '/login' 是你的登录页路由
+
+  } catch (error: any) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消退出操作');
+    } else {
+      console.error('登出时发生错误:', error);
+      ElMessage.warning('与服务器通信失败，但已在本地强制退出');
+      removeToken();
+      router.replace('/login');
+    }
+  }
+}
 </script>

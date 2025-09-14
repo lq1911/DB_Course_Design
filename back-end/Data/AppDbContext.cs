@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using BackEnd.Models;
-using BackEnd.Data.SetConfigs;
 using BackEnd.Data.EntityConfigs;
 
 namespace BackEnd.Data
@@ -30,14 +29,10 @@ namespace BackEnd.Data
         public DbSet<Seller> Sellers { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
-        public DbSet<Store> Stores { get; set; }
         public DbSet<StoreViolationPenalty> StoreViolationPenalties { get; set; }
         public DbSet<Supervise_> Supervise_s { get; set; }
-
-
         public DbSet<User> Users { get; set; }
-
-
+        public DbSet<Store> Stores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,10 +60,10 @@ namespace BackEnd.Data
             modelBuilder.ApplyConfiguration(new ShoppingCartItemConfig());
             modelBuilder.ApplyConfiguration(new StoreConfig());
             modelBuilder.ApplyConfiguration(new StoreViolationPenaltyConfig());
+            modelBuilder.ApplyConfiguration(new Supervise_Config());
             modelBuilder.ApplyConfiguration(new UserConfig());
-
-            base.OnModelCreating(modelBuilder); // 调用基类方法
+            
+            base.OnModelCreating(modelBuilder);
         }
-
     }
 }

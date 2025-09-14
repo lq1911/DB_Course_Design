@@ -8,6 +8,7 @@ namespace BackEnd.Repositories.Interfaces
     {
         Task<IEnumerable<StoreViolationPenalty>> GetAllAsync();
         Task<StoreViolationPenalty?> GetByIdAsync(int id);
+        Task<IEnumerable<StoreViolationPenalty>> GetBySellerIdAsync(int sellerId);
         Task AddAsync(StoreViolationPenalty storeviolationpenalty);
         Task UpdateAsync(StoreViolationPenalty storeviolationpenalty);
         Task DeleteAsync(StoreViolationPenalty storeviolationpenalty);

@@ -104,8 +104,22 @@
 - **接口地址(URL)**: `/api/user/home/orders`
 - **请求方式**: `GET`
 ### 返回结果
-- 
+
 ### 响应说明
+| 参数名 | 类型 | 是否必填 | 说明 |
+|--------|------|----------|------|
+| `code` | int | 是 | 状态码 |
+| `message` | int | 是 | 接口返回说明信息 |
+| `orderID` | int | 是 | 订单编号 |
+| `paymentTime` | DateTime | 是 | 支付时间 |
+| `cartID` | int | 是 | 对应购物车编号 |
+| `storeID` | int | 是 | 店铺编号 |
+| `storeImage` | string | 是 | 店铺封面图片 URL |
+| `storeName` | string | 是 | 店铺名称 |
+| `dishImage` | string[] | 是 | 已购商品图片列表，每个元素为商品图片 URL |
+**totalAmount和orderStatus在哪？**
+| `totalAmount` | number | 是 | 订单的总金额        |
+| `orderStatus` | number | 是 | 订单的状态(待数据库添加) |
 
 
 ## 4. 用户信息接口
@@ -114,8 +128,39 @@
 - **接口地址(URL)**: `/api/user/home/userInfo`
 - **请求方式**: `GET`
 ### 返回结果
-### 响应说明
+- 成功
+```json
+{
+  "name": "张三",
+  "phonenumber": 010597779034,
+  "image": ""
+}
+```
 
+- 输入有误
+```json
+{
+  "code": 400, 
+  "message":"Invalid request format"
+}
+```
+
+- 无此用户
+```json
+{
+  "code": 404, 
+  "message":"User not found"
+}
+```
+
+### 响应说明
+| 参数名 | 类型 | 是否必填 | 说明 |
+|--------|------|----------|------|
+| `code` | int | 是 | 状态码 |
+| `message` | string | 是 | 接口返回说明信息 |
+| `name` | string | 否 | 用户昵称 |
+| `phoneNumber` | long | 是 | 用户电话号码 |
+| `image` | string | 否 | 用户头像 URL |
 
 ## 5. 优惠券接口
 - **接口名称**: coupon

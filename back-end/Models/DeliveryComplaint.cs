@@ -1,3 +1,4 @@
+using BackEnd.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,6 +20,25 @@ namespace BackEnd.Models
 
         [Required]
         public DateTime ComplaintTime { get; set; }
+
+        // 新增配送投诉状态
+        [Required]
+        public ComplaintState ComplaintState { get; set; } = ComplaintState.Pending;
+
+        // 处理措施
+        [StringLength(255)]
+        public string? ProcessingResult { get; set; } = "-";
+
+        // 处理原因
+        [StringLength(255)]
+        public string? ProcessingReason { get; set; }
+
+        // 处理备注
+        [StringLength(255)]
+        public string? ProcessingRemark { get; set; }
+
+        // 罚金
+        public decimal? FineAmount { get; set; }
 
         [Required]
         public int CourierID { get; set; }

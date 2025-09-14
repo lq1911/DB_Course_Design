@@ -29,6 +29,12 @@ namespace BackEnd.Models
         [Required]
         public TimeSpan CloseTime { get; set; } = TimeSpan.FromHours(22); // 22:00
 
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? Latitude { get; set; }
+
+        [Column(TypeName = "decimal(10,6)")]
+        public decimal? Longitude { get; set; }
+
         [NotMapped]  // 表示该属性不会映射到数据库表中
         public bool IsOpen
         {
@@ -53,9 +59,8 @@ namespace BackEnd.Models
         [Required]
         public int MonthlySales { get; set; }
 
-        [Required]
         [StringLength(500)]
-        public string StoreFeatures { get; set; } = null!;
+        public string? StoreFeatures { get; set; }
 
         [Required]
         public DateTime StoreCreationTime { get; set; }
@@ -66,7 +71,10 @@ namespace BackEnd.Models
 
         // 店铺种类
         [Required]
-        public StoreCategory StoreCategory { get; set; }
+        public string StoreCategory { get; set; } = null!;
+
+        // 新增店铺图片
+        public string? StoreImage { get; set; }
 
         [Required]
         public int SellerID { get; set; }
@@ -94,5 +102,8 @@ namespace BackEnd.Models
 
         // 配送任务
         public ICollection<DeliveryTask>? DeliveryTasks { get; set; }
+
+        // 购物车
+        public ICollection<ShoppingCart>? ShoppingCarts { get; set; }
     }
 }

@@ -27,6 +27,10 @@ namespace BackEnd.Models
 
         [Required]
         public DishIsSoldOut IsSoldOut { get; set; } = DishIsSoldOut.IsSoldOut;
+        public DishTypes Type { get; set; } = DishTypes.SignatureRecommendation;
+
+        // 新增菜品图片
+        public string? DishImage { get; set; }
 
         // 一对多导航属性
         // 购物车项
